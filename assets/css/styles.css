@@ -29,3 +29,15 @@
 .main-content{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
 @media(min-width:700px){.bottom-nav{bottom:24px;width:min(calc(100% - 56px),520px);border-radius:999px}.main-content{padding-bottom:128px}}
 @media(prefers-reduced-motion:reduce){.bottom-nav,.nav-item,.nav-item svg,.nav-indicator{transition:none!important}.nav-item.active svg{animation:none!important}}
+
+/* Catalog header: compact search-first layout */
+.topbar{display:none!important}
+#screen-catalog{padding-top:16px}
+#screen-catalog .search-box{min-height:48px;margin:0 0 22px;padding:0 17px;border:1px solid var(--line);border-radius:999px;background:var(--panel);gap:11px}
+#screen-catalog .search-box svg{width:20px;height:20px;stroke:var(--secondary)}
+#screen-catalog .search-box input{font-size:14px}
+#screen-catalog .catalog-section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 14px}
+#screen-catalog .catalog-section-heading h2{margin:0;color:var(--text);font-size:17px;line-height:1.2;font-weight:680;letter-spacing:-.035em}
+#screen-catalog #toggle-catalog{flex:0 0 auto;padding:5px 0;border:0;background:transparent;color:var(--bright);font-size:13px;font-weight:570;cursor:pointer}
+#screen-catalog .filter-strip[hidden]{display:none}
+#screen-catalog .filter-strip{margin-top:-3px}

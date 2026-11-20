@@ -36,10 +36,10 @@ function money(value) {
 function haptic() {
   try { tg?.HapticFeedback?.selectionChanged(); } catch (_) {}
 }
-function showScreen(name) {
+function showScreen(name, options = {}) {
   const navBar = document.querySelector(".bottom-nav");
   const alreadyActive = nav.some(button => button.dataset.go === name && button.classList.contains("active"));
-  if (!alreadyActive && navBar) {
+  if (!alreadyActive && navBar && !options.drag) {
     navBar.classList.remove("is-switching");
     void navBar.offsetWidth;
     navBar.classList.add("is-switching");
@@ -58,9 +58,51 @@ function showScreen(name) {
     else button.removeAttribute("aria-current");
   });
   haptic();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  if (!options.drag) window.scrollTo({ top: 0, behavior: "smooth" });
   if (name === "favorites") renderFavorites();
   if (name === "compare") renderCompare();
+}
+const navBar = document.querySelector(".bottom-nav");
+if (navBar) {
+  const indicator = document.createElement("span");
+  indicator.className = "nav-indicator";
+  indicator.setAttribute("aria-hidden", "true");
+  navBar.prepend(indicator);
+  let draggingNav = false;
+  let lastDragTarget = "";
+  const moveIndicator = () => {
+    const activeIndex = nav.findIndex(button => button.classList.contains("active"));
+    if (activeIndex >= 0) indicator.style.transform = `translateX(${activeIndex * 100}%)`;
+  };
+  moveIndicator();
+  const switchFromPointer = event => {
+    const underFinger = document.elementFromPoint(event.clientX, event.clientY);
+    const target = underFinger?.closest?.(".nav-item");
+    if (target && navBar.contains(target) && target.dataset.go !== lastDragTarget) {
+      lastDragTarget = target.dataset.go;
+      showScreen(lastDragTarget, { drag: true });
+      moveIndicator();
+    }
+  };
+  navBar.addEventListener("pointerdown", event => {
+    const item = event.target.closest(".nav-item");
+    if (!item || !item.classList.contains("active") || event.pointerType === "mouse") return;
+    draggingNav = true;
+    lastDragTarget = item.dataset.go;
+    navBar.setPointerCapture?.(event.pointerId);
+  });
+  navBar.addEventListener("pointermove", event => {
+    if (draggingNav) switchFromPointer(event);
+  });
+  const stopDragging = event => {
+    if (!draggingNav) return;
+    draggingNav = false;
+    try { navBar.releasePointerCapture?.(event.pointerId); } catch (_) {}
+    moveIndicator();
+  };
+  navBar.addEventListener("pointerup", stopDragging);
+  navBar.addEventListener("pointercancel", stopDragging);
+  navBar.addEventListener("lostpointercapture", () => { draggingNav = false; });
 }
 document.querySelectorAll("[data-go]").forEach(button => {
   button.addEventListener("click", () => showScreen(button.dataset.go));

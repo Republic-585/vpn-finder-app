@@ -216,6 +216,34 @@ function visibleServices() {
   });
 }
 
+const serviceAvatars = {
+  "VPN-001": "https://cdn4.telesco.pe/file/HFTCXNtS1l9FyWHH7x1wQZnBUel9c00BMEdkAAfnPj6cHNr7yJdVnYz9dnAAhqA6_P525XMcW62zfrgrQEiWsuy_6HF45E2Yq8r80-UqknwyAUi8FVIOyOosRm-chouDIOxakBrSdOYFXYvw7EIB2nkqY9-LUx5qRP2WHzBVbAJD7N0ihDAyMQcTthgc4YCboAJwm1r46Jw5BasipUyZ7q4HHCZA9QW6sxH-Bb9YvmXAot4nvPAmzoqSQ9I0k4Quhql27J2GB6GZGq6nzkVBk9EkYRhqvk0cdwK0xFjjsBdABUP4svtgdEq9Vl91OiVo4BiZmZUzT-lrK9hYzUMckw.jpg",
+  "VPN-002": "https://cdn4.telesco.pe/file/ehp8fYyDFuBitN9x8A4gavi--vbavvJdNd_r5_t105Jtt7NlVaDSh7tXUmU99TAZcew1PGSssPuLPC6_sNEBp8MsZlDjud-ua3mnqqHAJNr019vlAV6b7v3Xl39t0uH0vdKfXyhig6NUCJBc-wpYVuYPiZlGz_7u3d5WA0WC4tOTl8NO_SMidnw3q6aiZTzPNgUkzn2HFLy0_GlXWVVTceLUD5sMrzgBhElIk4fnAX4MqX3Bnp7MOUMpVs65eq6IPf79D_N_m0XxMcjDIkOgP_NW91grdAx5RCmeWrhI4oTnqVhpJBNQKo52Axq1AXLCTVj-Ne42L2T1FLPvevABqQ.jpg",
+  "VPN-003": "https://cdn4.telesco.pe/file/Sdc14QR0UrUo0dGbcB9RtCyzqLSxvl-UF7tSGueCrZTXDECfK_QyQY269ZXmfJhaCSAD6WQZmmiEAbZvHh4zdcqQQ8P_VeLhj5iIt2j26jIf0qfndjrmyLQeDi_GFz33tcUiiPps-O-IjGOljuQ6AIbIrlTbOqPKP3lqS3YCoFQc25j2jrWQfNO8ye9klms2r1XSe27aInb-YgrS2fYy5dOJRngz6P1EbGfIsXsRBQmq_cZU8kcIinP8g9LfXH3030ZU6eB-ejleZk-6X0N4jeQBT6kC55ShDhIYGrFRjgi_9PxiSH0NiWnUMvYgtknSW3lPVWTKtQv26_KG6sxaKg.jpg",
+  "VPN-004": "https://cdn4.telesco.pe/file/NJ2FgzPSeDiOrVJ0rKjFOunN8pdhXHFKDZRZWUSY1e8z8pQLL0sPgxRbbv5hXMLEHuk51_ptdK2ce6uTziYAY_SUqDP6MXP7ZqBCellsIN_PozZx7ZoAncBD7OJJBgCkyiXIqs6TRQM9kjF3X88g1giMFl7vtdgv4MNcl-hcxm5A5rtnAM-Cc4DFdoYv6qpQd6_ao6jPe0naAtlL5bL14Mw5kJIUeoHCM3HXGgHvksoJgUzn1tMjP-mRacP3NsxfmcC9dCHPOSkb2DOqNqoybZDzq5X33u3pM0QDsdPUvgwkxggeIqzwQcfvsYh5Zmyl1j0JwpdJK0gizbtNU6KD7w.jpg"
+};
+function serviceAvatar(service, className = "service-avatar") {
+  const url = serviceAvatars[service.id];
+  const initial = esc((service.name || "V").slice(0, 1).toUpperCase());
+  return url
+    ? `<img class="${className}" src="${url}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${className} avatar-fallback',textContent:'${initial}'}))">`
+    : `<span class="${className} avatar-fallback">${initial}</span>`;
+}
+function serviceMiniCard(service) {
+  const id = esc(service.id);
+  return `<button class="service-mini-card" type="button" data-action="connect" data-id="${id}">
+    ${serviceAvatar(service)}
+    <span class="service-mini-name">${esc(service.name)}</span>
+    <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
+  </button>`;
+}
+function serviceFeaturedItem(service) {
+  const id = esc(service.id);
+  return `<button class="popular-service" type="button" data-action="connect" data-id="${id}">
+    ${serviceAvatar(service, "popular-avatar")}
+    <span>${esc(service.name)}</span>
+  </button>`;
+}
 function serviceCard(service, context = "catalog") {
   const id = esc(service.id);
   const favorite = state.favorites.has(service.id);
@@ -226,10 +254,9 @@ function serviceCard(service, context = "catalog") {
   if (service.countries_count) details.push(service.countries_count + "+ стран");
   if (service.trial_days) details.push("Тест " + service.trial_days + " дн.");
   if (service.whitelist_support) details.push("Белые списки");
-  const initial = esc((service.name || "V").slice(0, 1).toUpperCase());
   return `<article class="vpn-card" data-service="${id}">
     <div class="vpn-card-top">
-      <div class="service-mark">${initial}</div>
+      ${serviceAvatar(service, "service-mark")}
       <div class="service-title"><h3>${esc(service.name)}</h3><div class="service-price">${price}</div></div>
       <div class="card-tools">
         <button class="round-action ${favorite ? "selected" : ""}" type="button" data-action="favorite" data-id="${id}" aria-label="Избранное" aria-pressed="${favorite}">
@@ -247,13 +274,11 @@ function serviceCard(service, context = "catalog") {
     </div>
   </article>`;
 }
-
 function renderCatalog() {
   const items = visibleServices();
   const hasQuery = Boolean(state.query);
-  const shownItems = !state.catalogExpanded && !hasQuery && state.filter === "all"
-    ? items.slice(0, 3)
-    : items;
+  const isFiltered = state.filter !== "all";
+  const showCompactResults = hasQuery || isFiltered;
   const filterStrip = document.querySelector("#screen-catalog .filter-strip");
   if (filterStrip) filterStrip.hidden = !state.catalogExpanded || hasQuery;
   if (toggleCatalog) {
@@ -261,9 +286,21 @@ function renderCatalog() {
     toggleCatalog.textContent = state.catalogExpanded ? "Свернуть" : "Посмотреть все";
     toggleCatalog.setAttribute("aria-expanded", String(state.catalogExpanded));
   }
-  byId("provider-list").innerHTML = shownItems.length
-    ? shownItems.map(service => serviceCard(service)).join("")
-    : '<div class="empty-state"><h3>Ничего не найдено</h3></div>';
+  const list = byId("provider-list");
+  if (!items.length) {
+    list.innerHTML = '<div class="empty-state"><h3>Ничего не найдено</h3></div>';
+    return;
+  }
+  if (showCompactResults) {
+    list.innerHTML = `<div class="catalog-compact-list">${items.map(serviceMiniCard).join("")}</div>`;
+    return;
+  }
+  const featured = state.services.slice(0, 4);
+  const rest = state.catalogExpanded ? state.services.slice(4) : [];
+  list.innerHTML = `<section class="popular-card">
+    <div class="popular-grid">${featured.map(serviceFeaturedItem).join("")}</div>
+    ${rest.length ? `<div class="catalog-compact-list catalog-rest-list">${rest.map(serviceMiniCard).join("")}</div>` : ""}
+  </section>`;
 }
 function renderFavorites() {
   const items = state.services.filter(service => state.favorites.has(service.id));

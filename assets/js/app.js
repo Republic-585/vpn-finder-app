@@ -35,6 +35,9 @@ function esc(value) {
 function money(value) {
   return new Intl.NumberFormat("ru-RU").format(value);
 }
+function displayServiceName(service) {
+  return String(service?.name || "").replace(/\\bVPN\\b/gi, "").replace(/\\s{2,}/g, " ").trim();
+}
 function haptic() {
   try { tg?.HapticFeedback?.selectionChanged(); } catch (_) {}
 }
@@ -231,7 +234,7 @@ const serviceAvatars = {
 };
 function serviceAvatar(service, className = "service-avatar") {
   const url = serviceAvatars[service.id];
-  const initial = esc((service.name || "V").slice(0, 1).toUpperCase());
+  const initial = esc((displayServiceName(service) || "V").slice(0, 1).toUpperCase());
   return url
     ? `<img class="${className}" src="${url}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${className} avatar-fallback',textContent:'${initial}'}))">`
     : `<span class="${className} avatar-fallback">${initial}</span>`;
@@ -240,7 +243,7 @@ function serviceMiniCard(service) {
   const id = esc(service.id);
   return `<button class="service-mini-card" type="button" data-action="connect" data-id="${id}">
     ${serviceAvatar(service)}
-    <span class="service-mini-name">${esc(service.name)}</span>
+    <span class="service-mini-name">${esc(displayServiceName(service))}</span>
     <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
   </button>`;
 }
@@ -248,7 +251,7 @@ function serviceFeaturedItem(service) {
   const id = esc(service.id);
   return `<button class="popular-service" type="button" data-action="connect" data-id="${id}">
     ${serviceAvatar(service, "popular-avatar")}
-    <span>${esc(service.name)}</span>
+    <span>${esc(displayServiceName(service))}</span>
   </button>`;
 }
 function serviceCard(service, context = "catalog") {
@@ -264,7 +267,7 @@ function serviceCard(service, context = "catalog") {
   return `<article class="vpn-card" data-service="${id}">
     <div class="vpn-card-top">
       <div class="service-mark">${esc((service.name || "V").slice(0, 1).toUpperCase())}</div>
-      <div class="service-title"><h3>${esc(service.name)}</h3><div class="service-price">${price}</div></div>
+      <div class="service-title"><h3>${esc(displayServiceName(service))}</h3><div class="service-price">${price}</div></div>
       <div class="card-tools">
         <button class="round-action ${favorite ? "selected" : ""}" type="button" data-action="favorite" data-id="${id}" aria-label="Избранное" aria-pressed="${favorite}">
           <svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.1-8.8 10.2-8.8 10.2S3.2 13.9 3.2 8.8A4.5 4.5 0 0 1 12 6.5a4.5 4.5 0 0 1 8.8 2.3Z"></path></svg>
@@ -333,7 +336,7 @@ function renderCompare() {
   ];
   byId("compare-list").innerHTML = `
     <div class="compare-table-wrap"><table class="compare-table">
-      <thead><tr><th></th>${items.map(service => `<th><span>${esc(service.name)}</span><button type="button" data-action="remove-compare" data-id="${esc(service.id)}" aria-label="Убрать">×</button></th>`).join("")}</tr></thead>
+      <thead><tr><th></th>${items.map(service => `<th><span>${esc(displayServiceName(service))}</span><button type="button" data-action="remove-compare" data-id="${esc(service.id)}" aria-label="Убрать">×</button></th>`).join("")}</tr></thead>
       <tbody>${rows.map(([label, getter]) => `<tr><th>${label}</th>${items.map(service => `<td>${esc(getter(service))}</td>`).join("")}</tr>`).join("")}</tbody>
     </table></div>`;
   updateCounts();

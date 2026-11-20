@@ -16,6 +16,7 @@ const state = {
   filter: "all",
   query: "",
   catalogExpanded: false,
+  featuredIds: [],
   favorites: new Set(readSet("vpn-finder-favorites")),
   compare: new Set(readSet("vpn-finder-compare"))
 };
@@ -301,8 +302,10 @@ function renderCatalog() {
     list.innerHTML = `<div class="catalog-compact-list">${items.map(serviceMiniCard).join("")}</div>`;
     return;
   }
-  const featured = state.services.slice(0, 4);
-  const rest = state.catalogExpanded ? state.services.slice(4) : [];
+  if (!state.featuredIds.length) state.featuredIds = state.services.slice(0, 4).map(service => service.id);
+  const featured = state.featuredIds.map(id => state.services.find(service => service.id === id)).filter(Boolean);
+  const featuredSet = new Set(featured.map(service => service.id));
+  const rest = state.catalogExpanded ? state.services.filter(service => !featuredSet.has(service.id)) : [];
   list.innerHTML = `<section class="popular-card">
     <div class="popular-grid">${featured.map(serviceFeaturedItem).join("")}</div>
     ${rest.length ? `<div class="catalog-compact-list catalog-rest-list">${rest.map(serviceMiniCard).join("")}</div>` : ""}
@@ -395,6 +398,7 @@ async function loadServices() {
     const response = await fetch(url, { headers: { apikey: SUPABASE_KEY } });
     if (!response.ok) throw new Error("Catalog request failed");
     state.services = await response.json();
+    state.featuredIds = state.services.slice(0, 4).map(service => service.id);
     renderCatalog();
     updateCounts();
   } catch (_) {
@@ -403,4 +407,21 @@ async function loadServices() {
   }
 }
 loadServices();
+
+function rotateFeaturedServices() {
+  if (document.visibilityState !== "visible") return;
+  const catalog = byId("screen-catalog");
+  if (!catalog?.classList.contains("active") || state.query || state.filter !== "all" || state.services.length <= 4) return;
+  const previous = new Set(state.featuredIds);
+  let pool = state.services.filter(service => !previous.has(service.id));
+  if (pool.length < 4) pool = [...state.services];
+  const next = [];
+  while (next.length < 4 && pool.length) {
+    const index = Math.floor(Math.random() * pool.length);
+    next.push(pool.splice(index, 1)[0]);
+  }
+  state.featuredIds = next.map(service => service.id);
+  renderCatalog();
+}
+window.setInterval(rotateFeaturedServices, 7000);
 })();

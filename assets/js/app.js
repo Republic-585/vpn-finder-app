@@ -3,7 +3,7 @@
   if (tg) {
     tg.ready();
     tg.expand();
-    try { tg.setHeaderColor("#ffffff"); tg.setBackgroundColor("#ffffff"); } catch (_) {}
+    try { tg.setHeaderColor("#17212B"); tg.setBackgroundColor("#17212B"); } catch (_) {}
   }
 
   const byId = (id) => document.getElementById(id);

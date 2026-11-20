@@ -57,6 +57,7 @@ function showScreen(name, options = {}) {
     if (active) button.setAttribute("aria-current", "page");
     else button.removeAttribute("aria-current");
   });
+  if (typeof moveIndicator === "function") moveIndicator();
   haptic();
   if (!options.drag) window.scrollTo({ top: 0, behavior: "smooth" });
   if (name === "favorites") renderFavorites();

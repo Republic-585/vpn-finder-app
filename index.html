@@ -12,25 +12,20 @@
 </head>
 <body>
 <div class="app-shell">
-<header class="topbar">
-  <a class="brand" href="#" aria-label="VPN Finder"><span class="brand-mark">V</span><span class="brand-name">VPN Finder</span></a>
-  <button class="profile-shortcut" id="profile-shortcut" type="button" aria-label="Профиль"><span class="avatar" id="avatar-initial">V</span></button>
-</header>
 <main class="main-content">
   <section class="screen active" id="screen-catalog" data-screen="catalog">
-    <div class="page-heading catalog-heading"><h1>Каталог</h1></div>
     <label class="search-box">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 4 4"></path></svg>
       <input id="search" type="search" placeholder="Поиск" autocomplete="off">
       <button id="clear-search" class="clear-search" type="button" aria-label="Очистить" hidden>×</button>
     </label>
-    <div class="filter-strip" role="group" aria-label="Фильтры">
+    <div class="catalog-section-heading"><h2>Популярный выбор</h2><button id="toggle-catalog" type="button" aria-expanded="false">Посмотреть все</button></div>
+    <div class="filter-strip" role="group" aria-label="Фильтры" hidden>
       <button class="filter-chip active" type="button" data-filter="all">Все</button>
       <button class="filter-chip" type="button" data-filter="trial">Пробный</button>
       <button class="filter-chip" type="button" data-filter="multi">2+ устройства</button>
       <button class="filter-chip" type="button" data-filter="whitelist">Белые списки</button>
     </div>
-    <div class="catalog-toolbar"><span id="result-count"></span></div>
     <div class="provider-list" id="provider-list"><div class="loading-state"><span class="loader"></span></div></div>
   </section>
 

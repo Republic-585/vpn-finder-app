@@ -15,3 +15,12 @@
 @media(min-width:700px){body{padding:24px 0}.app-shell{min-height:calc(100vh - 48px);border:1px solid var(--line);border-radius:26px;overflow:hidden}.topbar{padding:0 28px}.main-content{padding-left:28px;padding-right:28px}.bottom-nav{bottom:24px;border-radius:0 0 26px 26px}}
 @media(max-width:360px){.main-content{padding-left:14px;padding-right:14px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+/* Floating Walt-style bottom navigation */
+.bottom-nav{position:fixed;z-index:20;left:50%;bottom:calc(8px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(calc(100% - 28px),520px);min-height:62px;padding:6px 7px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;border:1px solid rgba(255,255,255,.075);border-radius:23px;background:rgba(38,38,41,.94);backdrop-filter:blur(26px) saturate(145%);-webkit-backdrop-filter:blur(26px) saturate(145%);box-shadow:0 8px 30px rgba(0,0,0,.34),0 1px 0 rgba(255,255,255,.035) inset}
+.nav-item{position:relative;isolation:isolate;min-width:0;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:4px 2px;border:0;border-radius:17px;background:transparent;color:#929297;font-size:9px;line-height:1.1;font-weight:550;letter-spacing:-.01em;cursor:pointer;transition:color .2s ease,background .2s ease,transform .2s ease}
+.nav-item svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:color .2s ease,transform .2s ease}
+.nav-item.active{background:rgba(83,137,213,.13);color:#438df5}
+.nav-item.active svg{stroke-width:2}
+.nav-item:active{transform:scale(.94)}
+.main-content{padding-bottom:calc(104px + env(safe-area-inset-bottom))}
+@media(min-width:700px){.bottom-nav{bottom:24px;width:min(calc(100% - 56px),520px);border:1px solid rgba(255,255,255,.075);border-radius:23px}.main-content{padding-bottom:120px}}

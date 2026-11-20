@@ -81,3 +81,51 @@ h2 { margin: 0; font-size: 27px; line-height: 1.05; letter-spacing: -.06em; }
   .topbar { padding: 0 32px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+
+/* VPN Finder — Telegram dark theme */
+:root {
+  color-scheme: dark;
+  --ink: #F5F5F5;
+  --muted: #708499;
+  --line: #2B3948;
+  --surface: #232E3C;
+  --accent: #5288C1;
+  --accent-soft: #2B4055;
+}
+html, body { background: #17212B; color: #F5F5F5; }
+.app-shell { background: #17212B; box-shadow: none; }
+.topbar {
+  background: rgba(23,33,43,.94);
+  border-bottom-color: #2B3948;
+}
+.brand { color: #F5F5F5; }
+.brand-mark { background: #5288C1; color: #FFFFFF; }
+.avatar, .profile-avatar { background: #2B4055; color: #6AB2F2; }
+.search-box { background: #232E3C; border-color: #354454; }
+.search-icon, .clear-search { color: #708499; }
+.search-box input { color: #F5F5F5; }
+.search-box input::placeholder { color: #708499; }
+.filter-chip {
+  background: #232E3C;
+  border-color: #354454;
+  color: #B7C4D1;
+}
+.filter-chip.active { background: #5288C1; border-color: #5288C1; color: #FFFFFF; }
+.text-button, .nav-item.active, .intro h1 span { color: #6AB2F2; }
+.sort-button { color: #B7C4D1; }
+.empty-state { background: #232E3C; border-color: #354454; }
+.empty-art, .empty-symbol { background: #2B4055; color: #6AB2F2; }
+.empty-art i { border-color: #232E3C; background: #354D64; color: #F5F5F5; }
+.empty-state h3, .profile-card strong, .settings-row strong { color: #F5F5F5; }
+.primary-button { background: #5288C1; color: #FFFFFF; }
+.profile-card { border-color: #354454; background: #232E3C; }
+.settings-list, .settings-row { border-color: #354454; }
+.bottom-nav {
+  background: rgba(23,33,43,.97);
+  border-top-color: #2B3948;
+}
+.nav-item { color: #708499; }
+@media (min-width: 700px) {
+  .app-shell { border-color: #2B3948; }
+}

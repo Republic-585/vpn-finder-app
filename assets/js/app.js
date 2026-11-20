@@ -15,6 +15,7 @@ const state = {
   services: [],
   filter: "all",
   query: "",
+  catalogExpanded: false,
   favorites: new Set(readSet("vpn-finder-favorites")),
   compare: new Set(readSet("vpn-finder-compare"))
 };
@@ -175,6 +176,12 @@ byId("platform-value").textContent = tg?.platform && tg.platform !== "unknown" ?
 
 const search = byId("search");
 const clearSearch = byId("clear-search");
+const toggleCatalog = byId("toggle-catalog");
+toggleCatalog?.addEventListener("click", () => {
+  state.catalogExpanded = !state.catalogExpanded;
+  haptic();
+  renderCatalog();
+});
 search?.addEventListener("input", () => {
   state.query = search.value.trim().toLowerCase();
   clearSearch.hidden = !search.value;
@@ -243,9 +250,19 @@ function serviceCard(service, context = "catalog") {
 
 function renderCatalog() {
   const items = visibleServices();
-  byId("result-count").textContent = items.length + " сервисов";
-  byId("provider-list").innerHTML = items.length
-    ? items.map(service => serviceCard(service)).join("")
+  const hasQuery = Boolean(state.query);
+  const shownItems = !state.catalogExpanded && !hasQuery && state.filter === "all"
+    ? items.slice(0, 3)
+    : items;
+  const filterStrip = document.querySelector("#screen-catalog .filter-strip");
+  if (filterStrip) filterStrip.hidden = !state.catalogExpanded || hasQuery;
+  if (toggleCatalog) {
+    toggleCatalog.hidden = hasQuery;
+    toggleCatalog.textContent = state.catalogExpanded ? "Свернуть" : "Посмотреть все";
+    toggleCatalog.setAttribute("aria-expanded", String(state.catalogExpanded));
+  }
+  byId("provider-list").innerHTML = shownItems.length
+    ? shownItems.map(service => serviceCard(service)).join("")
     : '<div class="empty-state"><h3>Ничего не найдено</h3></div>';
 }
 function renderFavorites() {

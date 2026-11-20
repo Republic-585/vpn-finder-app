@@ -168,7 +168,7 @@ if (user) {
   const name = [user.first_name, user.last_name].filter(Boolean).join(" ") || "Пользователь";
   const initial = (user.first_name || "V").slice(0, 1).toUpperCase();
   byId("profile-name").textContent = name;
-  byId("avatar-initial")?.textContent = initial;
+  if (byId("avatar-initial")) byId("avatar-initial").textContent = initial;
   byId("profile-avatar").textContent = initial;
   byId("profile-status").textContent = "Telegram";
 }

@@ -3,7 +3,7 @@ const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
   tg.expand();
-  try { tg.setHeaderColor("#17212B"); tg.setBackgroundColor("#17212B"); } catch (_) {}
+  try { tg.setHeaderColor("#202124"); tg.setBackgroundColor("#202124"); } catch (_) {}
 }
 
 const SUPABASE_URL = "https://januqesxribuqzmmmdun.supabase.co";

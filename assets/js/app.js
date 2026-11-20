@@ -63,7 +63,7 @@ if (user) {
   byId("profile-avatar").textContent = initial;
   byId("profile-status").textContent = "Telegram";
 }
-if (tg?.platform) byId("platform-value").textContent = tg.platform;
+byId("platform-value").textContent = tg?.platform && tg.platform !== "unknown" ? tg.platform : "Telegram";
 
 const search = byId("search");
 const clearSearch = byId("clear-search");
@@ -156,8 +156,8 @@ function renderCompare() {
   }
   const rows = [
     ["Цена", service => service.min_price_rub == null ? "В боте" : "от " + money(service.min_price_rub) + " ₽"],
-    ["Устройства", service => service.devices_limit ? service.devices_limit : "—"],
-    ["Страны", service => service.countries_count ? service.countries_count + "+" : "—"],
+    ["Устройства", service => service.devices_limit ? service.devices_limit : "Нет данных"],
+    ["Страны", service => service.countries_count ? service.countries_count + "+" : "Нет данных"],
     ["Белые списки", service => service.whitelist_support ? "Да" : "Нет"]
   ];
   byId("compare-list").innerHTML = `

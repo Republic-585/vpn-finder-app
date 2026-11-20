@@ -38,6 +38,13 @@ function haptic() {
 }
 let moveIndicator = () => {};
 function showScreen(name) {
+  const navBar = document.querySelector(".bottom-nav");
+  const alreadyActive = nav.some(button => button.dataset.go === name && button.classList.contains("active"));
+  if (!alreadyActive && navBar) {
+    navBar.classList.remove("is-switching");
+    void navBar.offsetWidth;
+    navBar.classList.add("is-switching");
+  }
   screens.forEach(screen => screen.classList.toggle("active", screen.dataset.screen === name));
   nav.forEach(button => {
     const active = button.dataset.go === name;
@@ -57,6 +64,11 @@ if (navBar) {
   indicator.className = "nav-indicator";
   indicator.setAttribute("aria-hidden", "true");
   navBar.prepend(indicator);
+  navBar.addEventListener("animationend", event => {
+    if (event.target === navBar && event.animationName === "nav-panel-switch") {
+      navBar.classList.remove("is-switching");
+    }
+  });
 
   let draggingNav = false;
   let dragMoved = false;

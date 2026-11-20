@@ -415,7 +415,7 @@ loadServices();
 function rotateFeaturedServices() {
   if (document.visibilityState !== "visible") return;
   const catalog = byId("screen-catalog");
-  if (!catalog?.classList.contains("active") || state.query || state.filter !== "all" || state.services.length <= 4) return;
+  if (!catalog?.classList.contains("active") || state.catalogExpanded || state.query || state.filter !== "all" || state.services.length <= 4) return;
   const previous = new Set(state.featuredIds);
   let pool = state.services.filter(service => !previous.has(service.id));
   if (pool.length < 4) pool = [...state.services];

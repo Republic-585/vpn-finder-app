@@ -1,32 +1,76 @@
 <!doctype html>
-<html lang="ru"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#17212B"><meta name="description" content="VPN Finder — каталог и сравнение VPN-сервисов.">
-<title>VPN Finder</title><link rel="stylesheet" href="./assets/css/styles.css">
-<script src="https://telegram.org/js/telegram-web-app.js"></script><script defer src="./assets/js/app.js"></script>
-</head><body><div class="app-shell">
-<header class="topbar"><a class="brand" href="#" aria-label="VPN Finder"><span class="brand-mark">V</span><span class="brand-name">VPN Finder</span></a><button class="profile-shortcut" id="profile-shortcut" type="button" aria-label="Профиль"><span class="avatar" id="avatar-initial">V</span></button></header>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#17212B">
+<meta name="description" content="VPN Finder">
+<title>VPN Finder</title>
+<link rel="stylesheet" href="./assets/css/styles.css">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script defer src="./assets/js/app.js"></script>
+</head>
+<body>
+<div class="app-shell">
+<header class="topbar">
+  <a class="brand" href="#" aria-label="VPN Finder"><span class="brand-mark">V</span><span class="brand-name">VPN Finder</span></a>
+  <button class="profile-shortcut" id="profile-shortcut" type="button" aria-label="Профиль"><span class="avatar" id="avatar-initial">V</span></button>
+</header>
 <main class="main-content">
-<section class="screen active" id="screen-catalog" data-screen="catalog">
-<div class="balance-panel"><div class="balance-topline"><span class="eyebrow">VPN Finder</span><span class="live-indicator"><i></i> Каталог</span></div><h1>Найди свой VPN</h1><p>Сервисы, тарифы и возможности — в одном месте</p>
-<label class="search-box"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 4 4"></path></svg><input id="search" type="search" placeholder="Поиск VPN-сервиса" autocomplete="off"><button id="clear-search" class="clear-search" type="button" aria-label="Очистить поиск" hidden>×</button></label></div>
-<div class="quick-actions">
-<button class="quick-action" type="button" data-go="catalog" data-focus-search="true"><span class="quick-icon blue"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 4 4"></path></svg></span><span>Найти VPN</span></button>
-<button class="quick-action" type="button" data-go="compare"><span class="quick-icon"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 17h14M9 3 5 7l4 4M15 13l4 4-4 4"></path></svg></span><span>Сравнить</span></button>
-<button class="quick-action" type="button" data-go="favorites"><span class="quick-icon"><svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.1-8.8 10.2-8.8 10.2S3.2 13.9 3.2 8.8A4.5 4.5 0 0 1 12 6.5a4.5 4.5 0 0 1 8.8 2.3Z"></path></svg></span><span>Избранное</span></button>
-<button class="quick-action" type="button" data-go="profile"><span class="quick-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.8-3.2 3.2-5 7-5s6.2 1.8 7 5"></path></svg></span><span>Профиль</span></button></div>
-<div class="section-heading"><div><span class="eyebrow">Обзор</span><h2>Каталог VPN</h2></div><button class="icon-button" id="open-filters" type="button" aria-label="Фильтры"><svg viewBox="0 0 24 24"><path d="M4 7h16M7 12h10m-7 5h4"></path><circle cx="8" cy="7" r="1.5"></circle><circle cx="15" cy="12" r="1.5"></circle><circle cx="12" cy="17" r="1.5"></circle></svg></button></div>
-<div class="filter-strip"><button class="filter-chip active" type="button" data-filter="all">Все</button><button class="filter-chip" type="button" data-filter="free">Бесплатные</button><button class="filter-chip" type="button" data-filter="multi">Для нескольких устройств</button><button class="filter-chip" type="button" data-filter="streaming">Для стриминга</button></div>
-<div class="catalog-toolbar"><span id="result-count">Сервисы появятся здесь</span><button class="sort-button" id="sort-button" type="button">Рекомендуемые <span>⌄</span></button></div>
-<div class="provider-list" id="provider-list"><div class="empty-state"><div class="empty-symbol"><svg viewBox="0 0 24 24"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3Z"></path><path d="m4.5 7.8 7.5 4.4 7.5-4.4M12 12.2V21"></path></svg></div><h3>Каталог готовится</h3></div></div>
-</section>
-<section class="screen" id="screen-compare" data-screen="compare"><div class="page-heading"><span class="eyebrow">Инструменты</span><h1>Сравнение</h1></div><div class="empty-state large"><div class="empty-symbol"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 17h14M9 3 5 7l4 4M15 13l4 4-4 4"></path></svg></div><h3>Список сравнения пуст</h3><button class="primary-button" type="button" data-go="catalog">Открыть каталог</button></div></section>
-<section class="screen" id="screen-favorites" data-screen="favorites"><div class="page-heading"><span class="eyebrow">Твоя коллекция</span><h1>Избранное</h1></div><div class="empty-state large"><div class="empty-symbol"><svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.1-8.8 10.2-8.8 10.2S3.2 13.9 3.2 8.8A4.5 4.5 0 0 1 12 6.5a4.5 4.5 0 0 1 8.8 2.3Z"></path></svg></div><h3>Пока ничего нет</h3><button class="primary-button" type="button" data-go="catalog">Найти VPN</button></div></section>
-<section class="screen" id="screen-profile" data-screen="profile"><div class="page-heading"><span class="eyebrow">Личный раздел</span><h1>Профиль</h1></div><div class="profile-card"><div class="profile-avatar" id="profile-avatar">V</div><div class="profile-identity"><strong id="profile-name">Пользователь</strong><span id="profile-status">Telegram</span></div><svg class="chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"></path></svg></div><div class="settings-list"><div class="settings-row"><span>Платформа</span><strong id="platform-value">—</strong></div><div class="settings-row"><span>Избранное</span><strong>0</strong></div><div class="settings-row"><span>Сравнение</span><strong>0</strong></div></div></section>
+  <section class="screen active" id="screen-catalog" data-screen="catalog">
+    <div class="page-heading catalog-heading"><h1>Каталог</h1></div>
+    <label class="search-box">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 4 4"></path></svg>
+      <input id="search" type="search" placeholder="Поиск" autocomplete="off">
+      <button id="clear-search" class="clear-search" type="button" aria-label="Очистить" hidden>×</button>
+    </label>
+    <div class="filter-strip" role="group" aria-label="Фильтры">
+      <button class="filter-chip active" type="button" data-filter="all">Все</button>
+      <button class="filter-chip" type="button" data-filter="trial">Пробный</button>
+      <button class="filter-chip" type="button" data-filter="multi">2+ устройства</button>
+      <button class="filter-chip" type="button" data-filter="whitelist">Белые списки</button>
+    </div>
+    <div class="catalog-toolbar"><span id="result-count"></span></div>
+    <div class="provider-list" id="provider-list"><div class="loading-state"><span class="loader"></span></div></div>
+  </section>
+
+  <section class="screen" id="screen-compare" data-screen="compare">
+    <div class="page-heading"><h1>Сравнение</h1></div>
+    <div id="compare-list"></div>
+  </section>
+
+  <section class="screen" id="screen-favorites" data-screen="favorites">
+    <div class="page-heading"><h1>Избранное</h1></div>
+    <div id="favorites-list"></div>
+  </section>
+
+  <section class="screen" id="screen-profile" data-screen="profile">
+    <div class="page-heading"><h1>Профиль</h1></div>
+    <div class="profile-card">
+      <div class="profile-avatar" id="profile-avatar">V</div>
+      <div class="profile-identity"><strong id="profile-name">Пользователь</strong><span id="profile-status">Telegram</span></div>
+    </div>
+    <div class="settings-list">
+      <div class="settings-row"><span>Платформа</span><strong id="platform-value">Telegram</strong></div>
+      <div class="settings-row"><span>Избранное</span><strong id="favorites-count">0</strong></div>
+      <div class="settings-row"><span>Сравнение</span><strong id="compare-count">0</strong></div>
+    </div>
+  </section>
 </main>
-<nav class="bottom-nav" aria-label="Основная навигация">
-<button class="nav-item active" type="button" data-go="catalog" aria-current="page"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 4 4"></path></svg><span>Каталог</span></button>
-<button class="nav-item" type="button" data-go="compare"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 17h14M9 3 5 7l4 4M15 13l4 4-4 4"></path></svg><span>Сравнить</span></button>
-<button class="nav-item" type="button" data-go="favorites"><svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.1-8.8 10.2-8.8 10.2S3.2 13.9 3.2 8.8A4.5 4.5 0 0 1 12 6.5a4.5 4.5 0 0 1 8.8 2.3Z"></path></svg><span>Избранное</span></button>
-<button class="nav-item" type="button" data-go="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.8-3.2 3.2-5 7-5s6.2 1.8 7 5"></path></svg><span>Профиль</span></button></nav>
-</div></body></html>
+<nav class="bottom-nav" aria-label="Навигация">
+  <button class="nav-item active" type="button" data-go="catalog" aria-current="page">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1.5"></rect><rect x="14" y="4" width="6" height="6" rx="1.5"></rect><rect x="4" y="14" width="6" height="6" rx="1.5"></rect><rect x="14" y="14" width="6" height="6" rx="1.5"></rect></svg><span>Каталог</span>
+  </button>
+  <button class="nav-item" type="button" data-go="compare">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h3M16 4h3a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3M8 12h8"></path><path d="m12 8 4 4-4 4"></path></svg><span>Сравнить</span>
+  </button>
+  <button class="nav-item" type="button" data-go="favorites">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.1-8.8 10.2-8.8 10.2S3.2 13.9 3.2 8.8A4.5 4.5 0 0 1 12 6.5a4.5 4.5 0 0 1 8.8 2.3Z"></path></svg><span>Избранное</span>
+  </button>
+  <button class="nav-item" type="button" data-go="profile">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.8-3.2 3.2-5 7-5s6.2 1.8 7 5"></path></svg><span>Профиль</span>
+  </button>
+</nav>
+</div>
+</body>
+</html>

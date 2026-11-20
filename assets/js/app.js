@@ -168,7 +168,7 @@ if (user) {
   const name = [user.first_name, user.last_name].filter(Boolean).join(" ") || "Пользователь";
   const initial = (user.first_name || "V").slice(0, 1).toUpperCase();
   byId("profile-name").textContent = name;
-  byId("avatar-initial").textContent = initial;
+  byId("avatar-initial")?.textContent = initial;
   byId("profile-avatar").textContent = initial;
   byId("profile-status").textContent = "Telegram";
 }
@@ -346,7 +346,7 @@ document.addEventListener("click", event => {
 
 async function loadServices() {
   const list = byId("provider-list");
-  list.innerHTML = '<div class="loading-state"><span class="loader"></span></div>';
+  list.innerHTML = '<div class="loading-state"><svg class="loader-shield" viewBox="0 0 24 24" role="img" aria-label="Загрузка"><path class="shield-outline" d="M12 2.8 20 6v5.2c0 5-3.2 8.2-8 10-4.8-1.8-8-5-8-10V6l8-3.2Z"></path><path class="shield-check" d="m8.5 11.8 2.3 2.3 4.8-4.8"></path></svg></div>';
   try {
     const url = SUPABASE_URL + "/rest/v1/vpn_services?select=id,slug,name,logo_url,description,min_price_rub,devices_limit,countries_count,trial_days,traffic_limit,platforms,plans,features,whitelist_support,status,sort_order&status=eq.active&order=sort_order.asc";
     const response = await fetch(url, { headers: { apikey: SUPABASE_KEY } });

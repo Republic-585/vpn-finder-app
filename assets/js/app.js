@@ -256,7 +256,7 @@ function serviceCard(service, context = "catalog") {
   if (service.whitelist_support) details.push("Белые списки");
   return `<article class="vpn-card" data-service="${id}">
     <div class="vpn-card-top">
-      ${serviceAvatar(service, "service-mark")}
+      <div class="service-mark">${esc((service.name || "V").slice(0, 1).toUpperCase())}</div>
       <div class="service-title"><h3>${esc(service.name)}</h3><div class="service-price">${price}</div></div>
       <div class="card-tools">
         <button class="round-action ${favorite ? "selected" : ""}" type="button" data-action="favorite" data-id="${id}" aria-label="Избранное" aria-pressed="${favorite}">

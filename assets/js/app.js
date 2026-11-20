@@ -37,8 +37,21 @@ function haptic() {
   try { tg?.HapticFeedback?.selectionChanged(); } catch (_) {}
 }
 let moveIndicator = () => {};
-function showScreen(name, options = {}) {
-  const navBar = document.querySelector(".bottom-nav");
+function showScreen(name) {
+  screens.forEach(screen => screen.classList.toggle("active", screen.dataset.screen === name));
+  nav.forEach(button => {
+    const active = button.dataset.go === name;
+    button.classList.toggle("active", active);
+    if (active) button.setAttribute("aria-current", "page");
+    else button.removeAttribute("aria-current");
+  });
+  moveIndicator();
+  haptic();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  if (name === "favorites") renderFavorites();
+  if (name === "compare") renderCompare();
+}
+const navBar = document.querySelector(".bottom-nav");
 if (navBar) {
   const indicator = document.createElement("span");
   indicator.className = "nav-indicator";
@@ -48,7 +61,6 @@ if (navBar) {
   let draggingNav = false;
   let dragMoved = false;
   let startX = 0;
-  let startIndex = 0;
   let suppressNavClickUntil = 0;
 
   const setIndicator = (left, width) => {
@@ -57,34 +69,32 @@ if (navBar) {
   };
   moveIndicator = () => {
     const active = nav.find(button => button.classList.contains("active"));
-    if (!active) return;
-    setIndicator(active.offsetLeft, active.offsetWidth);
+    if (active) setIndicator(active.offsetLeft, active.offsetWidth);
   };
   const slideIndicatorToFinger = clientX => {
-    const rect = navBar.getBoundingClientRect();
-    const centers = nav.map(item => {
-      const r = item.getBoundingClientRect();
-      return { left: item.offsetLeft, width: item.offsetWidth, center: r.left + r.width / 2 - rect.left };
+    const navRect = navBar.getBoundingClientRect();
+    const points = nav.map(item => {
+      const rect = item.getBoundingClientRect();
+      return { left: item.offsetLeft, width: item.offsetWidth, center: rect.left + rect.width / 2 - navRect.left };
     });
-    if (!centers.length) return;
-    const x = Math.max(centers[0].center, Math.min(clientX - rect.left, centers[centers.length - 1].center));
-    let right = centers.findIndex(point => point.center >= x);
+    if (!points.length) return;
+    const x = Math.max(points[0].center, Math.min(clientX - navRect.left, points[points.length - 1].center));
+    const right = points.findIndex(point => point.center >= x);
     if (right <= 0) {
-      setIndicator(centers[0].left, centers[0].width);
+      setIndicator(points[0].left, points[0].width);
       return;
     }
-    if (right < 0) right = centers.length - 1;
-    const a = centers[right - 1];
-    const b = centers[right];
+    const a = points[right - 1];
+    const b = points[right];
     const t = (x - a.center) / (b.center - a.center);
     setIndicator(a.left + (b.left - a.left) * t, a.width + (b.width - a.width) * t);
   };
   const nearestItem = () => {
-    const indicatorRect = indicator.getBoundingClientRect();
-    const center = indicatorRect.left + indicatorRect.width / 2;
+    const rect = indicator.getBoundingClientRect();
+    const center = rect.left + rect.width / 2;
     return nav.reduce((best, item) => {
-      const r = item.getBoundingClientRect();
-      const distance = Math.abs(center - (r.left + r.width / 2));
+      const itemRect = item.getBoundingClientRect();
+      const distance = Math.abs(center - (itemRect.left + itemRect.width / 2));
       return !best || distance < best.distance ? { item, distance } : best;
     }, null)?.item;
   };
@@ -97,8 +107,7 @@ if (navBar) {
     draggingNav = true;
     dragMoved = false;
     startX = event.clientX;
-    startIndex = nav.indexOf(item);
-    navBar.setPointerCapture?.(event.pointerId);
+    try { navBar.setPointerCapture(event.pointerId); } catch (_) {}
   });
   navBar.addEventListener("pointermove", event => {
     if (!draggingNav) return;
@@ -108,17 +117,15 @@ if (navBar) {
   const stopDragging = event => {
     if (!draggingNav) return;
     draggingNav = false;
-    try { navBar.releasePointerCapture?.(event.pointerId); } catch (_) {}
-    if (event.type === "pointercancel") {
+    try { navBar.releasePointerCapture(event.pointerId); } catch (_) {}
+    if (event.type === "pointercancel" || !dragMoved) {
       moveIndicator();
       return;
     }
-    if (dragMoved) {
-      const target = nearestItem();
-      if (target) {
-        suppressNavClickUntil = Date.now() + 450;
-        showScreen(target.dataset.go);
-      }
+    const target = nearestItem();
+    if (target) {
+      suppressNavClickUntil = Date.now() + 450;
+      showScreen(target.dataset.go);
     } else {
       moveIndicator();
     }

@@ -307,11 +307,12 @@ function renderCatalog() {
   }
   if (!state.featuredIds.length) state.featuredIds = state.services.slice(0, 4).map(service => service.id);
   const featured = state.featuredIds.map(id => state.services.find(service => service.id === id)).filter(Boolean);
-  const featuredSet = new Set(featured.map(service => service.id));
-  const rest = state.catalogExpanded ? state.services.filter(service => !featuredSet.has(service.id)) : [];
+  if (state.catalogExpanded) {
+    list.innerHTML = `<section class="popular-card"><div class="catalog-compact-list catalog-rest-list">${items.map(serviceMiniCard).join("")}</div></section>`;
+    return;
+  }
   list.innerHTML = `<section class="popular-card">
     <div class="popular-grid">${featured.map(serviceFeaturedItem).join("")}</div>
-    ${rest.length ? `<div class="catalog-compact-list catalog-rest-list">${rest.map(serviceMiniCard).join("")}</div>` : ""}
   </section>`;
 }
 function renderFavorites() {

@@ -36,7 +36,7 @@ function money(value) {
   return new Intl.NumberFormat("ru-RU").format(value);
 }
 function displayServiceName(service) {
-  return String(service?.name || "").replace(/\\bVPN\\b/gi, "").replace(/\\s{2,}/g, " ").trim();
+  return String(service?.name || "").replace(/\bVPN\b/gi, "").replace(/\s{2,}/g, " ").trim();
 }
 function haptic() {
   try { tg?.HapticFeedback?.selectionChanged(); } catch (_) {}

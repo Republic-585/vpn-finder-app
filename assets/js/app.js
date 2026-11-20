@@ -36,6 +36,7 @@ function money(value) {
 function haptic() {
   try { tg?.HapticFeedback?.selectionChanged(); } catch (_) {}
 }
+let moveIndicator = () => {};
 function showScreen(name, options = {}) {
   const navBar = document.querySelector(".bottom-nav");
   const alreadyActive = nav.some(button => button.dataset.go === name && button.classList.contains("active"));
@@ -71,7 +72,7 @@ if (navBar) {
   navBar.prepend(indicator);
   let draggingNav = false;
   let lastDragTarget = "";
-  const moveIndicator = () => {
+  moveIndicator = () => {
     const activeIndex = nav.findIndex(button => button.classList.contains("active"));
     if (activeIndex >= 0) indicator.style.transform = `translateX(${activeIndex * 100}%)`;
   };

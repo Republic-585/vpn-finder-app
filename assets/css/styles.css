@@ -41,3 +41,22 @@
 #screen-catalog #toggle-catalog{flex:0 0 auto;padding:5px 0;border:0;background:transparent;color:var(--bright);font-size:13px;font-weight:570;cursor:pointer}
 #screen-catalog .filter-strip[hidden]{display:none}
 #screen-catalog .filter-strip{margin-top:-3px}
+
+
+/* Search-first catalogue: one featured panel and compact service rows */
+#screen-catalog .catalog-section-heading h2{color:#A7A9AE}
+#screen-catalog .provider-list{display:block}
+.popular-card{padding:17px 13px 12px;border:1px solid var(--line);border-radius:20px;background:var(--panel)}
+.popular-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.popular-service{min-width:0;padding:3px 1px 7px;display:flex;flex-direction:column;align-items:center;gap:9px;border:0;background:transparent;color:var(--text);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.popular-avatar{width:52px;height:52px;display:block;flex:0 0 auto;object-fit:cover;border-radius:50%;background:var(--raised);border:1px solid rgba(255,255,255,.1)}
+.popular-service span:last-child{width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;color:#F5F5F5;font-size:11px;line-height:1.2;font-weight:620;letter-spacing:-.02em}
+.avatar-fallback{display:grid;place-items:center;color:var(--bright);font-size:17px;font-weight:700}
+.catalog-compact-list{display:grid;gap:7px}
+.catalog-rest-list{margin-top:13px;padding-top:12px;border-top:1px solid var(--line)}
+.service-mini-card{width:100%;min-height:58px;padding:7px 11px;display:flex;align-items:center;gap:11px;border:1px solid rgba(255,255,255,.055);border-radius:14px;background:var(--raised);text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .16s ease,background .16s ease}
+.service-mini-card:active{transform:scale(.99);background:#3B3D43}
+.service-avatar{width:40px;height:40px;display:block;flex:0 0 40px;object-fit:cover;border-radius:50%;background:#414349;border:1px solid rgba(255,255,255,.08)}
+.service-mini-name{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-size:13px;font-weight:620;letter-spacing:-.02em}
+.service-mini-arrow{width:17px;height:17px;flex:0 0 auto;fill:none;stroke:var(--muted);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:360px){.popular-avatar{width:46px;height:46px}.popular-grid{gap:4px}.popular-service span:last-child{font-size:10px}}

@@ -37,6 +37,19 @@ function haptic() {
   try { tg?.HapticFeedback?.selectionChanged(); } catch (_) {}
 }
 function showScreen(name) {
+  const navBar = document.querySelector(".bottom-nav");
+  const alreadyActive = nav.some(button => button.dataset.go === name && button.classList.contains("active"));
+  if (!alreadyActive && navBar) {
+    navBar.classList.remove("is-switching");
+    void navBar.offsetWidth;
+    navBar.classList.add("is-switching");
+    const finishPanelAnimation = event => {
+      if (event.target !== navBar) return;
+      navBar.classList.remove("is-switching");
+      navBar.removeEventListener("animationend", finishPanelAnimation);
+    };
+    navBar.addEventListener("animationend", finishPanelAnimation);
+  }
   screens.forEach(screen => screen.classList.toggle("active", screen.dataset.screen === name));
   nav.forEach(button => {
     const active = button.dataset.go === name;

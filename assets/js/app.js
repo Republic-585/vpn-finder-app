@@ -663,9 +663,12 @@ function serviceCard(service, context = "catalog") {
   if (service.trial_days) details.push(t("Тест ") + service.trial_days + t(" дн."));
   return `<article class="vpn-card" data-service="${id}">
     <div class="vpn-card-top">
-      ${serviceAvatar(service, "service-avatar", true)}
+      <div class="service-mark">${esc((displayServiceName(service) || "V").slice(0, 1))}</div>
       <div class="service-title"><h3>${esc(displayServiceName(service))}</h3><div class="service-price">${price}</div></div>
       <div class="card-tools">
+        <button class="round-action ${favorite ? "selected" : ""}" type="button" data-action="favorite" data-id="${id}" aria-label="${t("Избранное")}" aria-pressed="${favorite}">
+          <svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.1-8.8 10.2-8.8 10.2S3.2 13.9 3.2 8.8A4.5 4.5 0 0 1 12 6.5a4.5 4.5 0 0 1 8.8 2.3Z"></path></svg>
+        </button>
         <button class="round-action ${compared ? "selected" : ""}" type="button" data-action="compare" data-id="${id}" aria-label="${t("Сравнить")}" aria-pressed="${compared}">
           <svg viewBox="0 0 24 24"><path d="M5 7h14M5 17h14M9 3 5 7l4 4M15 13l4 4-4 4"></path></svg>
         </button>
@@ -673,12 +676,7 @@ function serviceCard(service, context = "catalog") {
     </div>
     ${details.length ? `<div class="vpn-tags">${details.map(item => `<span class="vpn-tag">${esc(item)}</span>`).join("")}</div>` : ""}
     <div class="vpn-card-bottom">
-      <div class="vpn-card-actions">
-        <button class="round-action favorite-action ${favorite ? "selected" : ""}" type="button" data-action="favorite" data-id="${id}" aria-label="${t("Избранное")}" aria-pressed="${favorite}">
-          <svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.1-8.8 10.2-8.8 10.2S3.2 13.9 3.2 8.8A4.5 4.5 0 0 1 12 6.5a4.5 4.5 0 0 1 8.8 2.3Z"></path></svg>
-        </button>
-        <button class="connect-button" type="button" data-action="connect" data-id="${id}">${t("Подключить")}</button>
-      </div>
+      <button class="connect-button" type="button" data-action="connect" data-id="${id}">${t("Подключить")}</button>
       ${context !== "catalog" ? `<button class="remove-button" type="button" data-action="remove-${context}" data-id="${id}">${t("Убрать")}</button>` : ""}
     </div>
   </article>`;

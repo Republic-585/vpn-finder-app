@@ -760,8 +760,8 @@ async function saveServiceRating(serviceId, value) {
     if (byId("screen-favorites")?.classList.contains("active")) renderFavorites();
   }
 }
-function serviceAvatarWithRating(service, index = 0) {
-  return `<span class="service-avatar-rating">${serviceAvatar(service, "service-avatar", index < 4)}${ratingMarkup(service.id, true)}</span>`;
+function serviceAvatarWithRating(service, index = 0, interactive = true) {
+  return `<span class="service-avatar-rating">${serviceAvatar(service, "service-avatar", index < 4)}${ratingMarkup(service.id, interactive)}</span>`;
 }
 function serviceMiniCard(service, index = 0) {
   const id = esc(service.id);
@@ -784,7 +784,7 @@ function serviceMiniCard(service, index = 0) {
 function serviceFeaturedItem(service) {
   const id = esc(service.id);
   return `<div class="popular-service" data-featured-service="${id}">
-    <button class="popular-service-open" type="button" data-action="connect" data-id="${id}">${serviceAvatarWithRating(service, 0)}<span>${esc(displayServiceName(service))}</span></button>
+    <button class="popular-service-open" type="button" data-action="connect" data-id="${id}">${serviceAvatarWithRating(service, 0, false)}<span>${esc(displayServiceName(service))}</span></button>
   </div>`;
 }
 function serviceCard(service, context = "catalog") {

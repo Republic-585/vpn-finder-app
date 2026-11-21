@@ -398,3 +398,9 @@ body{font-size:var(--type-body);line-height:1.45}
 .service-mini-title-row .service-rating{margin:0!important}
 .popular-service .service-rating{justify-content:center;margin:1px auto 0!important}
 @media(prefers-reduced-motion:reduce){.service-rating-badge,.popular-service-open{transition:none!important}}
+
+
+/* Non-interactive rating stars outside the expanded catalog row. */
+.service-rating-badge.is-static{cursor:default!important;pointer-events:none!important;}
+.service-rating.is-static{pointer-events:none!important;}
+.service-rating-badge.is-static:active{transform:none!important;}

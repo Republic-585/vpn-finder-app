@@ -283,3 +283,45 @@ body{font-size:var(--type-body);line-height:1.45}
 
 /* The favorites action row must stay hidden when its expanded card is open. */
 #screen-favorites .favorites-card-actions[hidden]{display:none!important}
+
+
+/* Three-tab navigation with a separate Telegram-green profile button */
+.bottom-nav-dock{
+  position:fixed;z-index:20;left:50%;bottom:calc(9px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);width:min(calc(100% - 28px),520px);
+  display:flex;align-items:stretch;gap:10px;
+}
+.bottom-nav-dock .bottom-nav{
+  position:relative;inset:auto;left:auto;bottom:auto;transform:none;
+  width:auto;min-width:0;min-height:62px;flex:1;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+.bottom-nav-dock .bottom-nav:has(.nav-item:active){transform:scale(1.012)}
+.bottom-nav-dock .profile-nav-button{
+  position:relative;flex:0 0 62px;width:62px;height:62px;min-width:62px;
+  display:grid;place-items:center;padding:3px;overflow:hidden;
+  border:0;border-radius:50%;background:#24C563;color:#fff;
+  box-shadow:0 8px 26px rgba(0,0,0,.34),inset 0 0 0 1px rgba(255,255,255,.28);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:transform .18s ease,filter .18s ease;
+}
+.profile-nav-button:active{transform:scale(.94);filter:brightness(1.08)}
+.profile-nav-button img,.profile-nav-button span{
+  width:100%;height:100%;border-radius:50%;
+}
+.profile-nav-button img{display:block;object-fit:cover;border:2px solid #24C563}
+.profile-nav-button span{
+  display:grid;place-items:center;background:#24C563;color:#fff;
+  font-size:22px;font-weight:650;letter-spacing:-.04em;
+}
+.profile-nav-button img[hidden],.profile-nav-button span[hidden]{display:none}
+.bottom-nav .nav-indicator[hidden]{display:none}
+.main-content{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
+@media(min-width:700px){
+  .bottom-nav-dock{bottom:24px;width:min(calc(100% - 56px),520px)}
+  .bottom-nav-dock .bottom-nav{width:auto;border-radius:999px}
+  .main-content{padding-bottom:128px}
+}
+@media(prefers-reduced-motion:reduce){
+  .bottom-nav-dock .profile-nav-button{transition:none!important}
+}

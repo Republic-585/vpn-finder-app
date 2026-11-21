@@ -979,7 +979,8 @@ document.addEventListener("click", event => {
         previousCard.classList.remove("expanded");
         previousCard.querySelector(".service-mini-card")?.setAttribute("aria-expanded", "false");
         previousCard.querySelector(".service-detail-panel")?.remove();
-        previousCard.querySelector(".service-avatar-rating")?.replaceWith(serviceAvatar(state.services.find(item => item.id === state.expandedServiceId), "service-avatar", false));
+        const previousAvatarWrap = previousCard.querySelector(".service-avatar-rating");
+        if (previousAvatarWrap) previousAvatarWrap.outerHTML = serviceAvatar(state.services.find(item => item.id === state.expandedServiceId), "service-avatar", false);
       }
     }
     if (wasExpanded) {
@@ -987,7 +988,7 @@ document.addEventListener("click", event => {
       currentCard?.querySelector(".service-detail-panel")?.remove();
       button.setAttribute("aria-expanded", "false");
       const avatarWrap = currentCard?.querySelector(".service-avatar-rating");
-      if (avatarWrap) avatarWrap.replaceWith(serviceAvatar(service, "service-avatar", false));
+      if (avatarWrap) avatarWrap.outerHTML = serviceAvatar(service, "service-avatar", false);
       state.expandedServiceId = null;
     } else {
       currentCard?.classList.add("expanded");

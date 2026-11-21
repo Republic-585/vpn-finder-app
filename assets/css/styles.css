@@ -368,4 +368,4 @@ body{font-size:var(--type-body);line-height:1.45}
 .bottom-nav-dock .profile-nav-button:active,.bottom-nav-dock .profile-nav-button:focus-visible{border-color:var(--telegram-accent)!important}
 .bottom-nav-dock .profile-nav-button.is-pressed{border-color:var(--telegram-accent)!important;box-shadow:0 0 0 2px rgba(0,122,255,.3),0 8px 26px rgba(0,0,0,.34)!important}
 .bottom-nav-dock .profile-nav-button{border-width:2px!important}
-.bottom-nav-dock .profile-nav-button.is-current{border-width:3px!important;border-color:var(--telegram-accent)!important;box-shadow:0 0 0 2px rgba(0,122,255,.16),0 8px 26px rgba(0,0,0,.34)!important}
+.bottom-nav-dock .profile-nav-button.is-current{border-width:3px!important;border-color:var(--telegram-accent)!important;box-shadow:0 8px 26px rgba(0,0,0,.34)!important}

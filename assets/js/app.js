@@ -219,7 +219,7 @@ function visibleServices() {
     const queryMatch = !state.query ||
       [service.name, service.description, ...(service.features || [])].join(" ").toLowerCase().includes(state.query);
     if (!queryMatch) return false;
-    if (state.filter === "free") return Number(service.min_price_rub) === 0 || (service.plans || []).some(plan => Number(plan.price_rub) === 0);
+    if (state.filter === "free") return false;
     return true;
   });
 }

@@ -158,3 +158,6 @@
 .analytics-table-wrap th,.analytics-table-wrap td{padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
 .analytics-table-wrap th{color:var(--muted);font-weight:600}
 .analytics-table-wrap tr:last-child td{border-bottom:0}
+
+/* Keep the owner-only analytics menu item hidden despite .profile-menu-row display:flex. */
+#analytics-menu-row[hidden]{display:none!important}

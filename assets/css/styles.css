@@ -62,8 +62,8 @@
 .service-mini-card:active{background:rgba(255,255,255,.035)}
 .service-avatar{width:44px;height:44px;display:block;flex:0 0 44px;object-fit:cover;border-radius:50%;background:#414349;border:1px solid rgba(255,255,255,.09)}
 .service-mini-copy{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
-.service-mini-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-size:14px;font-weight:640;letter-spacing:-.025em}
-.service-mini-subtitle{display:flex;align-items:center;flex-wrap:wrap;column-gap:6px;row-gap:2px;color:var(--muted);font-size:10.5px;line-height:1.35;font-weight:500}
+.service-mini-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-size:15.5px;font-weight:640;letter-spacing:-.025em}
+.service-mini-subtitle{display:flex;align-items:center;flex-wrap:wrap;column-gap:7px;row-gap:3px;color:var(--muted);font-size:12.5px;line-height:1.4;font-weight:500}
 .service-mini-dot{color:#656870}.service-mini-whitelist{color:var(--bright)}
 .service-mini-arrow{width:18px;height:18px;flex:0 0 auto;fill:none;stroke:#858991;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:transform .28s cubic-bezier(.2,.8,.2,1),stroke .2s}
 .service-list-card.expanded .service-mini-arrow{transform:rotate(90deg);stroke:var(--bright)}

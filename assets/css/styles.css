@@ -146,18 +146,42 @@
 .contact-tile{background:#31b65c}
 .owners-tile{background:#8b70d6}
 
-/* Owner-only analytics dashboard */
-.analytics-dashboard{display:grid;gap:16px;color:var(--text);font-size:12px}
-.analytics-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.analytics-summary article{display:grid;gap:5px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
-.analytics-summary strong{font-size:22px;line-height:1.1}
-.analytics-summary span{color:var(--muted)}
-.analytics-dashboard h2{margin:4px 0 0;font-size:14px}
-.analytics-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
-.analytics-table-wrap table{width:100%;border-collapse:collapse;font-size:11px;text-align:left}
-.analytics-table-wrap th,.analytics-table-wrap td{padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
-.analytics-table-wrap th{color:var(--muted);font-weight:600}
-.analytics-table-wrap tr:last-child td{border-bottom:0}
+/* Owner-only analytics dashboard: Apple Minimal × Plausible */
+.analytics-dashboard{display:grid;gap:14px;color:var(--text);font-size:12px}
+.analytics-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.analytics-summary article{min-width:0;display:grid;gap:7px;padding:15px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+.analytics-summary article:last-child{grid-column:1/-1}
+.analytics-summary strong{font-size:25px;line-height:1.05;font-weight:700;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.analytics-summary span{color:var(--muted);font-size:11px;line-height:1.3}
+.analytics-section{display:grid;gap:10px}
+.analytics-dashboard h2{margin:0;font-size:14px;line-height:1.3;font-weight:650;letter-spacing:-.02em}
+.analytics-sources{display:grid;gap:13px;padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--panel)}
+.analytics-source-row{display:grid;gap:7px;min-width:0}
+.analytics-source-meta{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.analytics-source-meta span{min-width:0;overflow-wrap:anywhere;color:var(--secondary);font-size:12px}
+.analytics-source-meta strong{font-size:12px;font-variant-numeric:tabular-nums}
+.analytics-source-track{height:6px;overflow:hidden;border-radius:99px;background:var(--raised)}
+.analytics-source-track span{display:block;height:100%;border-radius:inherit;background:var(--bright)}
+.analytics-disclosure{overflow:hidden;border:1px solid var(--line);border-radius:15px;background:var(--panel)}
+.analytics-disclosure summary{min-height:52px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;list-style:none;cursor:pointer;font-size:13px;font-weight:620;-webkit-tap-highlight-color:transparent}
+.analytics-disclosure summary::-webkit-details-marker{display:none}
+.analytics-disclosure summary:after{content:"";width:8px;height:8px;margin-left:4px;border-right:1.6px solid var(--muted);border-bottom:1.6px solid var(--muted);transform:rotate(45deg);transition:transform .2s ease}
+.analytics-disclosure[open] summary:after{transform:rotate(225deg)}
+.analytics-disclosure-count{margin-left:auto;color:var(--muted);font-size:11px;font-weight:550;font-variant-numeric:tabular-nums}
+.analytics-list{display:grid;padding:0 14px 5px}
+.analytics-list-item{min-width:0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.analytics-list-main{min-width:0;display:grid;gap:4px}
+.analytics-list-main strong{overflow-wrap:anywhere;font-size:12px;font-weight:620;line-height:1.35}
+.analytics-list-main span,.analytics-list-time,.analytics-list-meta{color:var(--muted);font-size:10px;line-height:1.4}
+.analytics-list-time{flex:0 0 auto;text-align:right}
+.analytics-list-meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:5px 12px}
+.analytics-list-meta time{font-variant-numeric:tabular-nums}
+.analytics-empty{margin:0;padding:12px 0;color:var(--muted);font-size:12px}
+@media(min-width:520px){
+  .analytics-summary{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .analytics-summary article:last-child{grid-column:auto}
+}
+@media(prefers-reduced-motion:reduce){.analytics-disclosure summary:after{transition:none}}
 
 /* Keep the owner-only analytics menu item hidden despite .profile-menu-row display:flex. */
 #analytics-menu-row[hidden]{display:none!important}

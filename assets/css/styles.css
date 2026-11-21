@@ -262,5 +262,5 @@ body{font-size:var(--type-body);line-height:1.45}
 /* Telegram-red favorite heart in the top-right corner of favorite cards */
 #screen-favorites .vpn-card{position:relative}
 #screen-favorites .vpn-card-top{padding-right:38px}
-#screen-favorites .favorites-favorite-action{position:absolute;top:9px;right:9px;color:#e53935!important;background:rgba(229,57,53,.10)!important}
-#screen-favorites .favorites-favorite-action svg{stroke:#e53935}
+#screen-favorites .favorites-favorite-action{position:absolute;top:9px;right:9px;color:#e53935!important;background:transparent!important;box-shadow:none!important;border:0!important}
+#screen-favorites .favorites-favorite-action svg{stroke:#e53935;fill:#e53935}

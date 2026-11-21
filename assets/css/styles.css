@@ -383,7 +383,7 @@ body{font-size:var(--type-body);line-height:1.45}
 .service-rating-badge svg{display:block!important;width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;max-width:36px!important;max-height:36px!important;overflow:visible}
 .service-rating-badge .telegram-star-shadow{fill:#9C5700;transform:translateY(.65px)}
 .service-rating-badge .telegram-star-face{stroke:#D98A00;stroke-width:.55;stroke-linejoin:round}
-.service-rating-badge .telegram-star-glint{fill:#FFF8D6;opacity:.72}
+.service-rating-badge .telegram-star-glint{opacity:.7}
 .service-rating-badge span{position:absolute!important;top:50%!important;left:50%!important;display:block!important;width:auto!important;height:auto!important;min-width:0!important;max-width:none!important;margin:0!important;padding:0!important;transform:translate(-50%,-48%)!important;color:#754000!important;font-family:inherit!important;font-size:13px!important;line-height:1!important;font-weight:900!important;letter-spacing:0!important;text-shadow:0 1px 0 rgba(255,255,255,.45);font-variant-numeric:tabular-nums;white-space:nowrap}
 
 .service-rating-badge:active{transform:scale(.92)}

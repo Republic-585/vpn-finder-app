@@ -340,3 +340,9 @@ body{font-size:var(--type-body);line-height:1.45}
 .bottom-nav-dock.profile-press-active{transform:translateX(-50%) scale(1.025)!important;}
 .bottom-nav-dock .profile-nav-button.is-pressed{border-color:#5288C1!important;box-shadow:0 0 0 2px rgba(82,136,193,.28),0 8px 26px rgba(0,0,0,.34)!important;transform:scale(.94)!important;filter:brightness(1.18)!important;}
 .bottom-nav-dock .profile-nav-button.is-pressed img,.bottom-nav-dock .profile-nav-button.is-pressed span{transform:scale(.98);}
+
+
+/* Persistent selected state: the profile ring follows the active tab. */
+.bottom-nav-dock .profile-nav-button.is-current{
+  border-color:var(--blue)!important;
+}

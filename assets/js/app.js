@@ -8,6 +8,7 @@ if (tg) {
 
 const SUPABASE_URL = "https://januqesxribuqzmmmdun.supabase.co";
 const SUPABASE_KEY = "sb_publishable_BaYxtXvRZCmfEzMHJbSCog_ebs4k6oK";
+const SERVICE_RATINGS_URL = SUPABASE_URL + "/functions/v1/service-ratings";
 const ANALYTICS_SESSION_KEY = "vpn-finder-analytics-session";
 const ANALYTICS_SESSION_ACTIVITY_KEY = "vpn-finder-analytics-session-activity";
 const ANALYTICS_SESSION_IDLE_MS = 30 * 60 * 1000;
@@ -294,6 +295,8 @@ const screens = [...document.querySelectorAll("[data-screen]")];
 const nav = [...document.querySelectorAll(".nav-item")];
 const state = {
   services: [],
+  ratings: new Map(),
+  ratingPending: new Set(),
   filter: "all",
   query: "",
   catalogExpanded: false,
@@ -665,6 +668,53 @@ function serviceDetails(service, hideFavoriteAction = false) {
     <button class="connect-button service-detail-connect" type="button" data-action="connect" data-id="${esc(service.id)}">${t("Подключить")}</button>
   </div>`;
 }
+function ratingMarkup(serviceId) {
+  const rating = state.ratings.get(serviceId) || {};
+  const personal = Number(rating.my_rating) || 0;
+  const shown = personal || Math.round(Number(rating.average) || 0);
+  const disabled = state.ratingPending.has(serviceId);
+  return `<div class="service-rating" role="group" aria-label="Оценка сервиса">${[1,2,3,4,5].map(value => `<button class="service-rating-star ${value <= shown ? "is-filled" : ""} ${personal === value ? "is-mine" : ""}" type="button" data-action="rate" data-id="${esc(serviceId)}" data-rating="${value}" aria-label="Оценка ${value} из 5" aria-pressed="${personal === value}" ${disabled ? "disabled" : ""}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.7 14.9 8.6l6.5.9-4.7 4.6 1.1 6.5L12 17.5l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9L12 2.7Z"></path></svg></button>`).join("")}</div>`;
+}
+async function loadServiceRatings() {
+  if (!tg?.initData || !state.services.length) return;
+  try {
+    await syncTelegramProfile();
+    if (!profileReady) return;
+    const response = await fetch(SERVICE_RATINGS_URL, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "list", initData: tg.initData, service_ids: state.services.map(service => service.id) })
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.ok) return;
+    state.ratings = new Map((result.ratings || []).map(item => [item.service_id, item]));
+    renderCatalog();
+    if (byId("screen-favorites")?.classList.contains("active")) renderFavorites();
+  } catch (_) { /* Ratings must never interrupt catalog loading. */ }
+}
+async function saveServiceRating(serviceId, value) {
+  if (!tg?.initData || state.ratingPending.has(serviceId)) return;
+  state.ratingPending.add(serviceId);
+  renderCatalog();
+  if (byId("screen-favorites")?.classList.contains("active")) renderFavorites();
+  try {
+    await syncTelegramProfile();
+    if (!profileReady) throw new Error("Profile unavailable");
+    const response = await fetch(SERVICE_RATINGS_URL, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "vote", initData: tg.initData, service_id: serviceId, rating: value })
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.ok || !result.rating) throw new Error("Rating save failed");
+    state.ratings.set(serviceId, result.rating);
+    haptic();
+  } catch (_) {
+    try { tg?.showAlert?.("Не удалось сохранить оценку. Попробуйте ещё раз."); } catch (_) {}
+  } finally {
+    state.ratingPending.delete(serviceId);
+    renderCatalog();
+    if (byId("screen-favorites")?.classList.contains("active")) renderFavorites();
+  }
+}
 function serviceMiniCard(service, index = 0) {
   const id = esc(service.id);
   const expanded = state.expandedServiceId === service.id;
@@ -677,7 +727,7 @@ function serviceMiniCard(service, index = 0) {
   return `<article class="service-list-card ${expanded ? "expanded" : ""}" data-service-id="${id}">
     <button class="service-mini-card" type="button" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">
       ${serviceAvatar(service, "service-avatar", index < 4)}
-      <span class="service-mini-copy"><span class="service-mini-name">${esc(displayServiceName(service))}</span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span></span>
+      <span class="service-mini-copy"><span class="service-mini-name">${esc(displayServiceName(service))}</span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span>${ratingMarkup(service.id)}</span>
       <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
     </button>
     ${expanded ? serviceDetails(service) : ""}
@@ -685,10 +735,10 @@ function serviceMiniCard(service, index = 0) {
 }
 function serviceFeaturedItem(service) {
   const id = esc(service.id);
-  return `<button class="popular-service" type="button" data-action="connect" data-id="${id}">
-    ${serviceAvatar(service, "popular-avatar", true)}
-    <span>${esc(displayServiceName(service))}</span>
-  </button>`;
+  return `<div class="popular-service">
+    <button class="popular-service-open" type="button" data-action="connect" data-id="${id}">${serviceAvatar(service, "popular-avatar", true)}<span>${esc(displayServiceName(service))}</span></button>
+    ${ratingMarkup(service.id)}
+  </div>`;
 }
 function serviceCard(service, context = "catalog") {
   const id = esc(service.id);
@@ -715,6 +765,7 @@ function serviceCard(service, context = "catalog") {
         <svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.1-8.8 10.2-8.8 10.2S3.2 13.9 3.2 8.8A4.5 4.5 0 0 1 12 6.5a4.5 4.5 0 0 1 8.8 2.3Z"></path></svg>
       </button>` : ""}
     </div>
+    ${ratingMarkup(service.id)}
     ${details.length ? `<div class="vpn-tags">${details.map(item => `<span class="vpn-tag">${esc(item)}</span>`).join("")}</div>` : ""}
     ${context === "favorites" ? (!expanded ? `<div class="vpn-card-bottom favorites-card-actions">
       <button class="connect-button" type="button" data-action="connect" data-id="${id}">${t("Подключить")}</button>
@@ -818,6 +869,12 @@ document.addEventListener("click", event => {
   const service = state.services.find(item => item.id === button.dataset.id);
   if (!service) return;
   const action = button.dataset.action;
+  if (action === "rate") {
+    event.preventDefault();
+    event.stopPropagation();
+    saveServiceRating(service.id, Number(button.dataset.rating));
+    return;
+  }
   if (action === "toggle-favorite-details") {
     const list = byId("favorites-list");
     const currentCard = button.closest(".vpn-card");
@@ -937,6 +994,7 @@ async function loadServices() {
     state.featuredIds = state.services.slice(0, 4).map(service => service.id);
     renderCatalog();
     updateCounts();
+    loadServiceRatings();
   } catch (_) {
     list.innerHTML = `<div class="empty-state"><h3>${t("Не удалось загрузить")}</h3><button class="primary-button" type="button" id="retry-load">${t("Повторить")}</button></div>`;
     byId("retry-load")?.addEventListener("click", loadServices);

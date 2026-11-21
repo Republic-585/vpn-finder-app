@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://cdn4.telesco.pe" crossorigin>
 <link rel="preconnect" href="https://cdn1.telesco.pe" crossorigin>
 <link rel="preconnect" href="https://gotbot.cc" crossorigin>
-<link rel="stylesheet" href="./assets/css/styles.css?v=20261122-crypto-minimum-v1">
+<link rel="stylesheet" href="./assets/css/styles.css?v=20261122-crypto-minimal-v2">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script defer src="./assets/js/app.js?v=20261122-crypto-minimum-v1"></script>
 </head>
@@ -85,14 +85,14 @@
   </section>
 
   <section class="screen" id="screen-support" data-screen="support">
-    <div class="page-heading"><h1>Поддержать проект</h1><p>Укажи любую сумму в Telegram Stars. После оплаты ты получишь значок «Друг VPN Finder».</p></div>
+    <div class="page-heading"><h1>Поддержать проект</h1></div>
     <form class="profile-form support-form" id="support-form" onsubmit="return false">
       <div class="support-presets" aria-label="Варианты поддержки">
         <button class="support-preset is-selected" type="button" data-support-amount="100"><strong>100 ⭐</strong><span>$1.30 · ≈107 ₽</span></button>
         <button class="support-preset" type="button" data-support-amount="500"><strong>500 ⭐</strong><span>$6.50 · ≈534 ₽</span></button>
         <button class="support-preset" type="button" data-support-amount="1000"><strong>1 000 ⭐</strong><span>$13.00 · ≈1 068 ₽</span></button>
       </div>
-      <p class="support-equivalent-note">Ориентир вознаграждения владельцу по ставке Telegram $0,013 за 1 Star; рублёвый пересчёт по курсу ЦБ на 21.11.2026. Это не цена покупки Stars.</p>
+
       <label for="support-amount">Или укажи другую сумму в Stars<input id="support-amount" type="number" min="1" max="100000" step="1" inputmode="numeric" value="100"></label>
       <button class="connect-button support-pay-button" id="support-pay-button" type="button">Оплатить Stars</button>
       <p class="profile-form-status" id="support-dialog-status" role="status" aria-live="polite"></p>
@@ -101,7 +101,7 @@
     <section class="crypto-support" aria-labelledby="crypto-support-title">
       <div class="crypto-support-heading">
         <h2 id="crypto-support-title">Угостить чашкой кофе</h2>
-        <p>Поддержи VPN Finder любой суммой в USDT. Минимум — 2,50 USDT (примерно от 200 ₽).</p>
+
       </div>
       <label for="crypto-support-amount">Сумма в USDT
         <input id="crypto-support-amount" type="number" min="2.50" max="1000000" step="0.01" inputmode="decimal" value="2.50">
@@ -113,7 +113,7 @@
         <button class="connect-button" id="crypto-copy-amount" type="button">Скопировать сумму</button>
         <button class="crypto-copy-address" id="crypto-copy-address" type="button">Скопировать адрес</button>
       </div>
-      <p class="crypto-support-note">Перед отправкой проверь сеть: нужен именно USDT в TON. Криптоперевод не подтверждается автоматически и не выдаёт значок Stars-поддержки.</p>
+
       <p class="profile-form-status" id="crypto-support-status" role="status" aria-live="polite"></p>
     </section>
   </section>

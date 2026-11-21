@@ -9,9 +9,9 @@
 <link rel="preconnect" href="https://cdn4.telesco.pe" crossorigin>
 <link rel="preconnect" href="https://cdn1.telesco.pe" crossorigin>
 <link rel="preconnect" href="https://gotbot.cc" crossorigin>
-<link rel="stylesheet" href="./assets/css/styles.css?v=20261122-owners-rollback-v1">
+<link rel="stylesheet" href="./assets/css/styles.css?v=20261122-owners-form-v2">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script defer src="./assets/js/app.js?v=20261122-owners-rollback-v1"></script>
+<script defer src="./assets/js/app.js?v=20261122-owners-form-v2"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -94,10 +94,10 @@
   <section class="screen" id="screen-owners" data-screen="owners">
     <div class="page-heading"><h1>Владельцам VPN</h1><p>Добавьте свой сервис в каталог VPN Finder.</p></div>
     <form class="profile-form" id="provider-form">
-      <label>Название сервиса<input name="serviceName" required maxlength="100" placeholder="Название VPN"></label>
-      <label>Официальный сайт<input name="website" type="url" required maxlength="300" placeholder="https://"></label>
-      <label>Описание<textarea name="description" rows="4" required maxlength="1500" placeholder="Расскажите о сервисе"></textarea></label>
-      <label>Контакт для связи<input name="contact" required maxlength="150" placeholder="@username или email"></label>
+      <label>Название сервиса<input name="serviceName" maxlength="100" placeholder="Название VPN"></label>
+      <label>Оф сайт или ссылка ТГ<input name="website" type="text" maxlength="300" placeholder="Сайт или ссылка на Telegram"></label>
+      <label>Описание<textarea name="description" rows="4" maxlength="1500" placeholder="Расскажите о сервисе"></textarea></label>
+      <label>Контакт для связи<input name="contact" type="text" maxlength="150" placeholder="@username, email или другой контакт"></label>
       <button class="connect-button" type="submit">Отправить заявку</button>
       <p class="profile-form-status" id="provider-status" role="status"></p>
     </form>

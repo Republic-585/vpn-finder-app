@@ -276,5 +276,7 @@ body{font-size:var(--type-body);line-height:1.45}
 #screen-favorites .favorites-card-toggle:active{transform:scale(.9)}
 #screen-favorites .service-detail-panel{padding:0 0 2px}
 #screen-favorites .service-detail-connect{width:100%;margin-top:14px}
-#screen-favorites .vpn-card > .favorites-card-toggle.is-expanded{width:34px;height:34px;position:absolute;top:9px;right:50px;margin:0;z-index:3;color:var(--bright)}
-#screen-favorites .vpn-card > .favorites-card-toggle.is-expanded svg{width:18px;height:18px;transform:rotate(180deg)}
+#screen-favorites .vpn-card > .favorites-card-toggle{width:34px;height:34px;position:absolute;top:9px;right:50px;margin:0;z-index:3;display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:transparent;color:var(--muted);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:color .2s,transform .25s}
+#screen-favorites .vpn-card > .favorites-card-toggle svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+#screen-favorites .vpn-card > .favorites-card-toggle.is-expanded{color:var(--bright)}
+#screen-favorites .vpn-card > .favorites-card-toggle.is-expanded svg{transform:rotate(90deg)}

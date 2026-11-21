@@ -659,6 +659,7 @@ function serviceDetails(service, hideFavoriteAction = false, showRatingHeader = 
   const features = allFeatures.filter(item => !paymentPattern.test(String(item)));
   const favorite = state.favorites.has(service.id);
   return `<div class="service-detail-panel">
+    ${showRatingHeader ? `<div class="service-detail-heading"><h3>${esc(displayServiceName(service))}</h3>${ratingMarkup(service.id)}</div>` : ""}
     ${hideFavoriteAction ? "" : `<div class="service-detail-actions"><button class="service-detail-favorite ${favorite ? "is-favorite" : ""}" type="button" data-action="favorite-detail" data-id="${esc(service.id)}" aria-label="${favorite ? t("Убрать") : t("Избранное")}" aria-pressed="${favorite}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.1-8.8 11-8.8 11s-8.8-5.9-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path></svg></button></div>`}
     ${service.description ? `<p class="service-detail-description">${esc(service.description)}</p>` : ""}
     ${facts.length ? `<div class="service-detail-facts">${facts.map(([label,value]) => `<div class="service-detail-fact"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join("")}</div>` : ""}
@@ -738,8 +739,7 @@ function serviceMiniCard(service, index = 0) {
       <span class="service-mini-copy"><span class="service-mini-name">${esc(displayServiceName(service))}</span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span></span>
       <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
     </button>
-    ${ratingMarkup(service.id)}
-    ${expanded ? serviceDetails(service) : ""}
+    ${expanded ? serviceDetails(service, false, true) : ""}
   </article>`;
 }
 function serviceFeaturedItem(service) {

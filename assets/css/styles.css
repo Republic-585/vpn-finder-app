@@ -55,7 +55,7 @@
 .avatar-image.is-loaded{opacity:1}
 .avatar-frame .avatar-fallback{position:absolute;inset:0;display:grid;place-items:center;border:0;border-radius:inherit;background:var(--raised);color:var(--bright);font-size:17px;font-weight:700}
 .popular-service span:last-child{width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;color:#F5F5F5;font-size:13px;line-height:1.2;font-weight:600;letter-spacing:-.02em}
-@keyframes featured-service-in{0%{opacity:0;transform:scale(.99)}100%{opacity:1;transform:scale(1)}}
+@keyframes featured-service-in{0%{opacity:0}100%{opacity:1}}
 @media(prefers-reduced-motion:reduce){.popular-service{animation:none!important}}
 .avatar-fallback{display:grid;place-items:center;color:var(--bright);font-size:17px;font-weight:700}
 .catalog-compact-list{display:grid;gap:0}

@@ -328,6 +328,13 @@ function displayServiceName(service) {
 function haptic() {
   try { tg?.HapticFeedback?.selectionChanged(); } catch (_) {}
 }
+function navHaptic() {
+  try {
+    const feedback = tg?.HapticFeedback;
+    if (typeof feedback?.impactOccurred === "function") feedback.impactOccurred("light");
+    else feedback?.selectionChanged?.();
+  } catch (_) {}
+}
 let moveIndicator = () => {};
 function showScreen(name) {
   if (name === "analytics" && Number(tg?.initDataUnsafe?.user?.id || 0) !== ANALYTICS_OWNER_TELEGRAM_ID) return;
@@ -346,7 +353,7 @@ function showScreen(name) {
     else button.removeAttribute("aria-current");
   });
   moveIndicator();
-  haptic();
+  if (!alreadyActive) navHaptic();
   if (name === "analytics") loadAnalyticsDashboard();
   window.scrollTo({ top: 0, behavior: "smooth" });
   if (name === "favorites") renderFavorites();

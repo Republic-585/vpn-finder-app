@@ -802,9 +802,52 @@ document.addEventListener("click", event => {
   if (!service) return;
   const action = button.dataset.action;
   if (action === "toggle-favorite-details") {
-    state.expandedServiceId = state.expandedServiceId === service.id ? null : service.id;
-    if (state.expandedServiceId) trackEvent("service_view", {}, service.id);
-    renderFavorites();
+    const list = byId("favorites-list");
+    const currentCard = button.closest(".vpn-card");
+    const wasExpanded = state.expandedServiceId === service.id;
+
+    // Update only the affected cards. Keeping the existing cards in the DOM
+    // prevents every service avatar from restarting its image load.
+    if (state.expandedServiceId) {
+      const previousCard = list.querySelector(`.vpn-card[data-service="${CSS.escape(state.expandedServiceId)}"]`);
+      if (previousCard && previousCard !== currentCard) {
+        previousCard.classList.remove("expanded");
+        previousCard.querySelector(".service-detail-panel")?.remove();
+        const previousToggle = previousCard.querySelector(".favorites-card-toggle");
+        previousToggle?.classList.remove("is-expanded");
+        previousToggle?.setAttribute("aria-expanded", "false");
+        previousToggle?.setAttribute("aria-label", t("Возможности"));
+        const previousActions = previousCard.querySelector(".favorites-card-actions");
+        if (previousActions) previousActions.hidden = false;
+      }
+    }
+
+    const toggle = currentCard?.querySelector(".favorites-card-toggle");
+    const actions = currentCard?.querySelector(".favorites-card-actions");
+    if (wasExpanded) {
+      currentCard?.classList.remove("expanded");
+      currentCard?.querySelector(".service-detail-panel")?.remove();
+      if (toggle) {
+        toggle.classList.remove("is-expanded");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", t("Возможности"));
+      }
+      if (actions) actions.hidden = false;
+      state.expandedServiceId = null;
+    } else {
+      if (actions) actions.hidden = true;
+      currentCard?.classList.add("expanded");
+      if (toggle) {
+        toggle.classList.add("is-expanded");
+        toggle.setAttribute("aria-expanded", "true");
+        toggle.setAttribute("aria-label", t("Свернуть"));
+      }
+      if (currentCard && toggle) {
+        toggle.insertAdjacentHTML("beforebegin", serviceDetails(service, true));
+      }
+      state.expandedServiceId = service.id;
+      trackEvent("service_view", {}, service.id);
+    }
     return;
   }
   if (action === "toggle-details") {

@@ -706,6 +706,7 @@ async function saveServiceRating(serviceId, value) {
     const result = await response.json().catch(() => null);
     if (!response.ok || !result?.ok || !result.rating) throw new Error("Rating save failed");
     state.ratings.set(serviceId, result.rating);
+    await loadServiceRatings();
     haptic();
   } catch (_) {
     try { tg?.showAlert?.("Не удалось сохранить оценку. Попробуйте ещё раз."); } catch (_) {}

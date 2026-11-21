@@ -250,3 +250,7 @@ body{font-size:var(--type-body);line-height:1.45}
 .home-screen-copy h2{font-size:var(--type-section);line-height:1.35;font-weight:var(--weight-regular)}
 .home-screen-copy h2 strong,.home-screen-copy p strong{font-weight:var(--weight-semibold)}
 .home-screen-copy p{font-size:var(--type-secondary);line-height:1.45;font-weight:var(--weight-regular)}
+
+
+/* Fully rounded connect buttons in the catalog only */
+#screen-catalog .connect-button{border-radius:999px}

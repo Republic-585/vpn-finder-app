@@ -567,7 +567,7 @@ body{font-size:var(--type-body);line-height:1.45}
 /* Support method tabs and their payment panels. */
 .support-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 16px;padding:4px;border:1px solid var(--line);border-radius:15px;background:var(--raised)}
 .support-tab{min-height:42px;padding:9px 10px;border:0;border-radius:11px;background:transparent;color:var(--secondary);font:inherit;font-size:14px;font-weight:650;cursor:pointer}
-.support-tab.is-active{background:var(--card-bg,#fff);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.support-tab.is-active{background:#D5D6D8;color:#202124;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .support-panel[hidden]{display:none}
 .support-panel.crypto-support{margin-top:0}
 
@@ -579,10 +579,9 @@ body{font-size:var(--type-body);line-height:1.45}
 .crypto-support input{width:100%;margin-top:7px;font-size:16px;line-height:1.4}
 .crypto-support-network{margin:12px 0 14px;font-size:13px;font-weight:650}
 .crypto-support-address-label{margin:0 0 7px;color:var(--secondary);font-size:12px}
-.crypto-support-address{display:block;overflow-wrap:anywhere;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card-bg,#fff);font-size:11px;line-height:1.5;user-select:all}
-.crypto-support-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-.crypto-support-actions .connect-button,.crypto-copy-address{min-height:44px;margin:0;padding:10px 12px;border:0;border-radius:999px;font:inherit;font-size:13px;font-weight:650;cursor:pointer}
-.crypto-copy-address{background:var(--card-bg,#fff);color:var(--text);border:1px solid var(--line)}
+.crypto-support-address{display:block;overflow-wrap:anywhere;padding:11px 12px;border:1px solid #DADCE0;border-radius:12px;background:#FFFFFF;color:#202124;font-size:11px;line-height:1.5;user-select:all}
+.crypto-support-actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+.crypto-support-actions .connect-button{min-height:44px;margin:0;padding:10px 12px;border-radius:999px;font:inherit;font-size:13px;font-weight:650;cursor:pointer}
 .crypto-support-note{margin-top:12px;font-size:11px}
 .crypto-support .profile-form-status{min-height:18px;margin-bottom:0}
-@media(max-width:360px){.crypto-support{padding:14px}.crypto-support-actions{grid-template-columns:1fr}}
+@media(max-width:360px){.crypto-support{padding:14px}}

@@ -686,7 +686,7 @@ function serviceCard(service, context = "catalog") {
     ${details.length ? `<div class="vpn-tags">${details.map(item => `<span class="vpn-tag">${esc(item)}</span>`).join("")}</div>` : ""}
     <div class="vpn-card-bottom">
       <button class="connect-button" type="button" data-action="connect" data-id="${id}">${t("Подключить")}</button>
-      ${context !== "catalog" ? `<button class="remove-button" type="button" data-action="remove-${context}" data-id="${id}">${t("Убрать")}</button>` : ""}
+      ${context === "compare" ? `<button class="remove-button" type="button" data-action="remove-${context}" data-id="${id}">${t("Убрать")}</button>` : ""}
     </div>
   </article>`;
 }

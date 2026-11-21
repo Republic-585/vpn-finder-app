@@ -17,30 +17,29 @@ const translations = {
     "Откройте приложение в Telegram, чтобы сменить язык.":"Open the app in Telegram to change the language.",
     "Поиск":"Search","Очистить поиск":"Clear search","Популярный выбор":"Popular services","Посмотреть все":"View all","Свернуть":"Show less",
     "Фильтры":"Filters","Все":"All","Бесплатно":"Free","Сравнение":"Compare","Избранное":"Favorites","Профиль":"Profile",
-    "Загрузка профиля…":"Loading profile…",t("Пользователь"):"User",t("Откройте приложение через Telegram"):"Open the app through Telegram",
+    "Загрузка профиля…":"Loading profile…","Пользователь":"User","Откройте приложение через Telegram":"Open the app through Telegram",
     "Добавление Finder VPN на экран Домой":"Add Finder VPN to your Home Screen","Открывайте":"Open","в одно касание.":"with one tap.",
     "Добавьте":"Add","на экран Домой для быстрого доступа.":"to your Home Screen for quick access.",
-    "Добавить на экран Домой":"Add to Home Screen","Скрыть":"Hide",t("Добавлено на экран Домой"):"Added to Home Screen",
-    t("Finder VPN теперь можно открывать с домашнего экрана."):"You can now open Finder VPN from your Home Screen.",
-    t("Добавление на экран Домой не поддерживается на этом устройстве или в этой версии Telegram."):"Adding to the Home Screen is not supported on this device or this Telegram version.",
-    t("Не удалось добавить Finder VPN. Попробуйте ещё раз."):"Could not add Finder VPN. Please try again.",
-    t("Откройте Finder VPN в актуальной версии Telegram, чтобы добавить его на экран Домой."):"Open Finder VPN in the latest version of Telegram to add it to your Home Screen.",
+    "Добавить на экран Домой":"Add to Home Screen","Скрыть":"Hide","Добавлено на экран Домой":"Added to Home Screen",
+    "Finder VPN теперь можно открывать с домашнего экрана.":"You can now open Finder VPN from your Home Screen.",
+    "Добавление на экран Домой не поддерживается на этом устройстве или в этой версии Telegram.":"Adding to the Home Screen is not supported on this device or this Telegram version.",
+    "Не удалось добавить Finder VPN. Попробуйте ещё раз.":"Could not add Finder VPN. Please try again.",
+    "Откройте Finder VPN в актуальной версии Telegram, чтобы добавить его на экран Домой.":"Open Finder VPN in the latest version of Telegram to add it to your Home Screen.",
     "Новости":"News","Связаться":"Contact us","Владельцам VPN":"For VPN providers","Новости и обновления VPN Finder.":"VPN Finder news and updates.",
-    "Пока новостей нет":"No news yet","Профиль":"Profile","Напишите нам. Сообщение придёт владельцу VPN Finder.":"Send us a message. It will be delivered to the VPN Finder team.",
+    "Пока новостей нет":"No news yet","Напишите нам. Сообщение придёт владельцу VPN Finder.":"Send us a message. It will be delivered to the VPN Finder team.",
     "Ваше сообщение":"Your message","Напишите сообщение…":"Write your message…","Отправить сообщение":"Send message",
     "Добавьте свой сервис в каталог VPN Finder.":"Add your service to the VPN Finder directory.","Название сервиса":"Service name",
     "Название VPN":"VPN name","Официальный сайт":"Official website","Описание":"Description","Расскажите о сервисе":"Tell us about your service",
     "Контакт для связи":"Contact details","@username или email":"@username or email","Отправить заявку":"Submit request",
     "Finder":"Finder","Сравнить":"Compare","Каталог":"Directory","Ничего не найдено":"No results found","Пусто":"Nothing here yet",
-    "Выберите сервисы":"Choose services","Цена":"Price","Устройства":"Devices","Страны":"Countries",t("Нет данных"):"No data",
-    "В боте":"In bot","Убрать":"Remove","Избранное":"Favorites","Подключить":"Connect",t("Тарифы в боте"):"Plans in bot",
-    "Стоимость":"Price","от ":"from ","Устройства":"Devices","Страны":"Countries","Пробный период":"Free trial"," дн.":" days",
-    "Трафик":"Data","Платформы":"Platforms","Оплата":"Payment","Возможности":"Features",t(" устр."):" devices",
-    "Тест ":"Trial ",t("Без теста"):"No trial",t("Тест —"):"Trial —",t("Устр. —"):"Devices —",t("Трафик —"):"Data —",
-    t(" стран"):"+ countries",t("Нет данных"):"Not available","Загрузка":"Loading","Не удалось загрузить":"Could not load",
-    "Повторить":"Try again",t("Откройте приложение через Telegram, чтобы отправить сообщение."):"Open the app through Telegram to send a message.",
-    t("Отправляем…"):"Sending…",t("Сообщение отправлено."):"Message sent.",t("Не удалось отправить. Попробуйте ещё раз."):"Could not send. Please try again.",
-    t("Тарифы в боте"):"Plans in bot","В боте":"In bot"
+    "Выберите сервисы":"Choose services","Цена":"Price","Цена —":"Price —","Устройства":"Devices","Страны":"Countries","Нет данных":"Not available",
+    "В боте":"In bot","Убрать":"Remove","Подключить":"Connect","Тарифы в боте":"Plans in bot",
+    "Стоимость":"Price","от ":"from ","Пробный период":"Free trial"," дн.":" days","Трафик":"Data",
+    "Платформы":"Platforms","Оплата":"Payment","Возможности":"Features"," устр.":" devices"," стран":" countries",
+    "Тест ":"Trial ","Без теста":"No trial","Тест —":"Trial —","Устр. —":"Devices —","Трафик —":"Data —",
+    "Загрузка":"Loading","Не удалось загрузить":"Could not load","Повторить":"Try again",
+    "Откройте приложение через Telegram, чтобы отправить сообщение.":"Open the app through Telegram to send a message.",
+    "Отправляем…":"Sending…","Сообщение отправлено.":"Message sent.","Не удалось отправить. Попробуйте ещё раз.":"Could not send. Please try again."
   }
 };
 let appLanguage = (() => {
@@ -662,7 +661,7 @@ document.addEventListener("click", event => {
 
 async function loadServices() {
   const list = byId("provider-list");
-  list.innerHTML = '<div class="loading-state"><svg class="loader-shield" viewBox="0 0 24 24" role="img" aria-label="${t("Загрузка")}"><path class="shield-outline" d="M12 2.8 20 6v5.2c0 5-3.2 8.2-8 10-4.8-1.8-8-5-8-10V6l8-3.2Z"></path><path class="shield-check" d="m8.5 11.8 2.3 2.3 4.8-4.8"></path></svg></div>';
+  list.innerHTML = `<div class="loading-state"><svg class="loader-shield" viewBox="0 0 24 24" role="img" aria-label="${t("Загрузка")}"><path class="shield-outline" d="M12 2.8 20 6v5.2c0 5-3.2 8.2-8 10-4.8-1.8-8-5-8-10V6l8-3.2Z"></path><path class="shield-check" d="m8.5 11.8 2.3 2.3 4.8-4.8"></path></svg></div>`;
   try {
     const url = SUPABASE_URL + "/rest/v1/vpn_services?select=id,slug,name,referral_url,logo_url,description,min_price_rub,devices_limit,countries_count,trial_days,traffic_limit,platforms,plans,features,status,sort_order&status=eq.active&order=sort_order.asc";
     const response = await fetch(url, { headers: { apikey: SUPABASE_KEY } });
@@ -672,7 +671,7 @@ async function loadServices() {
     renderCatalog();
     updateCounts();
   } catch (_) {
-    list.innerHTML = '<div class="empty-state"><h3>${t("Не удалось загрузить")}</h3><button class="primary-button" type="button" id="retry-load">${t("Повторить")}</button></div>';
+    list.innerHTML = `<div class="empty-state"><h3>${t("Не удалось загрузить")}</h3><button class="primary-button" type="button" id="retry-load">${t("Повторить")}</button></div>`;
     byId("retry-load")?.addEventListener("click", loadServices);
   }
 }

@@ -669,8 +669,8 @@ function serviceCard(service, context = "catalog") {
   if (service.countries_count) details.push(service.countries_count + t(" стран"));
   if (service.trial_days) details.push(t("Тест ") + service.trial_days + t(" дн."));
   const expanded = context === "favorites" && state.expandedServiceId === service.id;
-  return `<article class="vpn-card ${expanded ? "expanded" : ""}" data-service="${id}">
-    <div class="vpn-card-top" ${context === "favorites" ? `data-action="toggle-favorite-details" data-id="${id}" role="button" tabindex="0" aria-expanded="${expanded}"` : ""}>
+  return `<article class="vpn-card ${expanded ? "expanded" : ""}" data-service="${id}" ${context === "favorites" ? `data-action="toggle-favorite-details" data-id="${id}"` : ""}>
+    <div class="vpn-card-top">
       ${serviceAvatar(service, "service-avatar", true)}
       <div class="service-title"><h3>${esc(displayServiceName(service))}</h3><div class="service-price">${price}</div></div>
       ${context === "catalog" ? `<div class="card-tools">

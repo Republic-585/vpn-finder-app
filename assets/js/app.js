@@ -69,14 +69,33 @@ async function loadAnalyticsDashboard() {
     const clickRows = (result.clicks || []).slice(0, 25).map(item =>
       '<tr><td>' + esc(services.get(item.service_id) || item.service_id) + '</td><td>' + esc(String(item.telegram_id || "—")) + '</td><td>' + esc(new Date(item.clicked_at).toLocaleString()) + '</td></tr>'
     ).join("");
+    const userRows = (result.users || []).slice(0, 25).map(item => {
+      const profile = item.profile || {};
+      const display = [profile.first_name, profile.last_name].filter(Boolean).join(" ") || "—";
+      return '<tr><td>' + esc(display) + '</td><td>' + esc(profile.username ? "@" + profile.username : String(item.telegram_id || "—")) + '</td><td>' + esc(item.source || "—") + '</td><td>' + esc(new Date(item.last_seen_at).toLocaleString()) + '</td></tr>';
+    }).join("");
+    const conversionRows = (result.conversions || []).slice(0, 25).map(item =>
+      '<tr><td>' + esc(services.get(item.service_id) || item.service_id) + '</td><td>' + esc(item.conversion_type) + '</td><td>' + esc(item.status) + '</td><td>' + esc(item.amount == null ? "—" : String(item.amount) + " " + (item.currency || "")) + '</td><td>' + esc(item.commission == null ? "—" : String(item.commission) + " " + (item.currency || "")) + '</td></tr>'
+    ).join("");
+    const sourceCounts = new Map();
+    (result.users || []).forEach(item => {
+      const source = item.source || "unknown";
+      sourceCounts.set(source, (sourceCounts.get(source) || 0) + 1);
+    });
+    const sourceRows = [...sourceCounts.entries()].sort((a,b)=>b[1]-a[1]).map(([source,count]) =>
+      '<tr><td>' + esc(source) + '</td><td>' + count + '</td></tr>'
+    ).join("");
     root.innerHTML =
       '<div class="analytics-summary">' +
       '<article><strong>' + Number(summary.sessions || 0) + '</strong><span>' + t("Сессии") + '</span></article>' +
       '<article><strong>' + Number(summary.events || 0) + '</strong><span>' + t("События") + '</span></article>' +
       '<article><strong>' + Number(summary.clicks || 0) + '</strong><span>' + t("Переходы") + '</span></article>' +
       '<article><strong>' + Number(summary.conversions || 0) + '</strong><span>' + t("Конверсии") + '</span></article></div>' +
+      '<h2>' + t("Пользователи и сессии") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Пользователь") + '</th><th>Telegram</th><th>' + t("Источник") + '</th><th>' + t("Активность") + '</th></tr></thead><tbody>' + (userRows || '<tr><td colspan="4">—</td></tr>') + '</tbody></table></div>' +
+      '<h2>' + t("Источники трафика") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Источник") + '</th><th>' + t("Сессии") + '</th></tr></thead><tbody>' + (sourceRows || '<tr><td colspan="2">—</td></tr>') + '</tbody></table></div>' +
       '<h2>' + t("Последние события") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Событие") + '</th><th>' + t("Сервис") + '</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (eventRows || '<tr><td colspan="3">—</td></tr>') + '</tbody></table></div>' +
-      '<h2>' + t("Партнёрские переходы") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Сервис") + '</th><th>Telegram ID</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (clickRows || '<tr><td colspan="3">—</td></tr>') + '</tbody></table></div>';
+      '<h2>' + t("Партнёрские переходы") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Сервис") + '</th><th>Telegram ID</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (clickRows || '<tr><td colspan="3">—</td></tr>') + '</tbody></table></div>' +
+      '<h2>' + t("Покупки и комиссии") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Сервис") + '</th><th>' + t("Тип") + '</th><th>' + t("Статус") + '</th><th>' + t("Сумма") + '</th><th>' + t("Комиссия") + '</th></tr></thead><tbody>' + (conversionRows || '<tr><td colspan="5">—</td></tr>') + '</tbody></table></div>';
   } catch (_) {
     root.textContent = t("Не удалось загрузить аналитику.");
   } finally {
@@ -94,7 +113,7 @@ const translations = {
     "Не удалось загрузить аналитику.":"Could not load analytics.","Сессии":"Sessions","События":"Events",
     "Переходы":"Clicks","Конверсии":"Conversions","Последние события":"Recent events",
     "Партнёрские переходы":"Affiliate clicks","Событие":"Event","Сервис":"Service","Время":"Time",
-    "Аналитика":"Analytics","Не удалось открыть партнёрскую ссылку. Попробуйте ещё раз.":"Could not open the partner link. Please try again.",
+    "Аналитика":"Analytics","Пользователи и сессии":"Users and sessions","Пользователь":"User","Источник":"Source","Активность":"Activity","Источники трафика":"Traffic sources","Покупки и комиссии":"Purchases and commissions","Тип":"Type","Статус":"Status","Сумма":"Amount","Комиссия":"Commission","Не удалось открыть партнёрскую ссылку. Попробуйте ещё раз.":"Could not open the partner link. Please try again.",
     "Поиск":"Search","Очистить поиск":"Clear search","Популярный выбор":"Popular services","Посмотреть все":"View all","Свернуть":"Show less",
     "Фильтры":"Filters","Все":"All","Бесплатно":"Free","Сравнение":"Compare","Избранное":"Favorites","Профиль":"Profile",
     "Загрузка профиля…":"Loading profile…","Не удалось загрузить профиль":"Could not load profile","Пользователь":"User","Откройте приложение через Telegram":"Open the app through Telegram",

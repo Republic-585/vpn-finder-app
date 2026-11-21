@@ -668,25 +668,29 @@ function serviceDetails(service, hideFavoriteAction = false) {
     <button class="connect-button service-detail-connect" type="button" data-action="connect" data-id="${esc(service.id)}">${t("Подключить")}</button>
   </div>`;
 }
-function ratingMarkup(serviceId) {
+function ratingMarkup(serviceId, interactive = false) {
   const rating = state.ratings.get(serviceId) || {};
   const personal = Number(rating.my_rating) || 0;
   const average = Number(rating.average) || 0;
   const hasRatings = Number(rating.count) > 0;
-  const shown = hasRatings ? Math.max(1, Math.min(5, Math.round(average))) : "—";
+  const shown = hasRatings ? Math.max(1, Math.min(5, Math.round(average))) : "";
   const disabled = state.ratingPending.has(serviceId);
   const gradientId = "rating-gold-" + String(serviceId).replace(/[^a-zA-Z0-9_-]/g, "") + "-" + Math.random().toString(36).slice(2, 8);
-  return `<div class="service-rating" role="group" aria-label="Рейтинг сервиса">
-    <button class="service-rating-badge ${personal ? "has-vote" : ""} ${hasRatings ? "" : "is-empty"}" type="button" data-action="toggle-rating-menu" data-id="${esc(serviceId)}" aria-label="Оценить сервис" aria-expanded="false" ${disabled ? "disabled" : ""}>
+  const tag = interactive ? "button" : "span";
+  const actionAttrs = interactive
+    ? `type="button" data-action="toggle-rating-menu" data-id="${esc(serviceId)}" aria-label="Оценить сервис" aria-expanded="false" ${disabled ? "disabled" : ""}`
+    : 'aria-hidden="true"';
+  return `<div class="service-rating ${interactive ? "is-interactive" : "is-static"}" role="img" aria-label="${hasRatings ? "Рейтинг " + shown + " из 5" : "Рейтинг пока не сформирован"}">
+    <${tag} class="service-rating-badge ${personal ? "has-vote" : ""} ${hasRatings ? "" : "is-empty"} ${interactive ? "is-interactive" : "is-static"}" ${actionAttrs}>
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <defs><linearGradient id="${gradientId}" x1="5" y1="2" x2="18" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF3A6"/><stop offset=".28" stop-color="#FFD95A"/><stop offset=".62" stop-color="#FFB800"/><stop offset="1" stop-color="#D97706"/></linearGradient></defs>
         <path class="telegram-star-shadow" d="M12 2.1c.48 0 .91.28 1.13.7l2.1 4.25 4.7.68c1.1.16 1.53 1.52.73 2.3l-3.4 3.32.8 4.68c.19 1.1-.96 1.94-1.95 1.42L12 17.24l-4.2 2.21c-.99.52-2.14-.32-1.95-1.42l.8-4.68-3.4-3.32c-.8-.78-.36-2.14.73-2.3l4.7-.68 2.1-4.25c.22-.42.65-.7 1.13-.7Z"/>
         <path class="telegram-star-face" fill="url(#${gradientId})" d="M12 2.1c.48 0 .91.28 1.13.7l2.1 4.25 4.7.68c1.1.16 1.53 1.52.73 2.3l-3.4 3.32.8 4.68c.19 1.1-.96 1.94-1.95 1.42L12 17.24l-4.2 2.21c-.99.52-2.14-.32-1.95-1.42l.8-4.68-3.4-3.32c-.8-.78-.36-2.14.73-2.3l4.7-.68 2.1-4.25c.22-.42.65-.7 1.13-.7Z"/>
         <path class="telegram-star-glint" d="m9.18 4.7 1.45-1.15c.55-.44 1.32-.24 1.62.4l1.1 2.25-4.17 1.18-2.1.3 2.1-2.98Z"/>
       </svg>
-      <span>${shown || "—"}</span>
-    </button>
-    <div class="service-rating-choices" hidden>${[1,2,3,4,5].map(value => `<button class="service-rating-choice ${personal === value ? "is-selected" : ""}" type="button" data-action="rate" data-id="${esc(serviceId)}" data-rating="${value}" aria-label="Поставить оценку ${value}" ${disabled ? "disabled" : ""}>${value}</button>`).join("")}</div>
+      <span>${shown}</span>
+    </${tag}>
+    ${interactive ? `<div class="service-rating-choices" hidden>${[1,2,3,4,5].map(value => `<button class="service-rating-choice ${personal === value ? "is-selected" : ""}" type="button" data-action="rate" data-id="${esc(serviceId)}" data-rating="${value}" aria-label="Поставить оценку ${value}" ${disabled ? "disabled" : ""}>${value}</button>`).join("")}</div>` : ""}
   </div>`;
 }
 async function loadServiceRatings() {
@@ -742,7 +746,7 @@ function serviceMiniCard(service, index = 0) {
   return `<article class="service-list-card ${expanded ? "expanded" : ""}" data-service-id="${id}">
     <div class="service-mini-card" role="button" tabindex="0" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">
       ${serviceAvatar(service, "service-avatar", index < 4)}
-      <span class="service-mini-copy"><span class="service-mini-title-row"><span class="service-mini-name">${esc(displayServiceName(service))}</span>${expanded ? ratingMarkup(service.id) : ""}</span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span></span>
+      <span class="service-mini-copy"><span class="service-mini-title-row"><span class="service-mini-name">${esc(displayServiceName(service))}</span>${expanded ? ratingMarkup(service.id, true) : ""}</span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span></span>
       <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
     </div>
     ${expanded ? serviceDetails(service, false) : ""}

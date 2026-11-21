@@ -388,7 +388,12 @@ if (navBar) {
   };
   moveIndicator = () => {
     const active = nav.find(button => button.classList.contains("active"));
-    if (active) setIndicator(active.offsetLeft, active.offsetWidth);
+    if (active) {
+      indicator.hidden = false;
+      setIndicator(active.offsetLeft, active.offsetWidth);
+    } else {
+      indicator.hidden = true;
+    }
   };
   const slideIndicatorToFinger = clientX => {
     const navRect = navBar.getBoundingClientRect();
@@ -480,11 +485,19 @@ function renderTelegramProfile(profile) {
   const name = byId("profile-name");
   const photo = byId("profile-photo");
   const fallback = byId("profile-avatar-fallback");
+  const navPhoto = byId("profile-nav-photo");
+  const navFallback = byId("profile-nav-fallback");
   name.textContent = profile.display_name || t("Пользователь");
   const initial = (profile.first_name || "V").slice(0, 1).toLocaleUpperCase("ru-RU");
   fallback.textContent = initial;
+  if (navFallback) navFallback.textContent = initial;
 
   if (profile.photo_url) {
+    if (navPhoto) {
+      navPhoto.onerror = () => { navPhoto.hidden = true; if (navFallback) navFallback.hidden = false; };
+      navPhoto.onload = () => { navPhoto.hidden = false; if (navFallback) navFallback.hidden = true; };
+      navPhoto.src = profile.photo_url;
+    }
     photo.onerror = () => {
       photo.hidden = true;
       fallback.hidden = false;
@@ -498,6 +511,8 @@ function renderTelegramProfile(profile) {
     photo.removeAttribute("src");
     photo.hidden = true;
     fallback.hidden = false;
+    if (navPhoto) { navPhoto.removeAttribute("src"); navPhoto.hidden = true; }
+    if (navFallback) navFallback.hidden = false;
   }
 
 }

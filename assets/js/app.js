@@ -16,6 +16,7 @@ const state = {
   filter: "all",
   query: "",
   catalogExpanded: false,
+  expandedServiceId: null,
   featuredIds: [],
   favorites: new Set(readSet("vpn-finder-favorites")),
   compare: new Set(readSet("vpn-finder-compare"))
@@ -239,13 +240,35 @@ function serviceAvatar(service, className = "service-avatar") {
     ? `<img class="${className}" src="${url}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${className} avatar-fallback',textContent:'${initial}'}))">`
     : `<span class="${className} avatar-fallback">${initial}</span>`;
 }
+function serviceDetails(service) {
+  const facts = [];
+  if (service.min_price_rub != null) facts.push(["Стоимость", "от " + money(service.min_price_rub) + " ₽"]);
+  if (service.devices_limit) facts.push(["Устройства", service.devices_limit]);
+  if (service.countries_count) facts.push(["Страны", service.countries_count + "+"]);
+  if (service.trial_days) facts.push(["Пробный период", service.trial_days + " дн."]);
+  if (service.traffic_limit) facts.push(["Трафик", service.traffic_limit]);
+  if (service.whitelist_support) facts.push(["Белые списки", "Поддерживаются"]);
+  const platforms = Array.isArray(service.platforms) ? service.platforms : [];
+  const features = Array.isArray(service.features) ? service.features : [];
+  return `<div class="service-detail-panel">
+    ${service.description ? `<p class="service-detail-description">${esc(service.description)}</p>` : ""}
+    ${facts.length ? `<div class="service-detail-facts">${facts.map(([label,value]) => `<div class="service-detail-fact"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join("")}</div>` : ""}
+    ${platforms.length ? `<div class="service-detail-group"><span class="service-detail-label">Платформы</span><div class="service-detail-chips">${platforms.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
+    ${features.length ? `<div class="service-detail-group"><span class="service-detail-label">Возможности</span><div class="service-detail-chips">${features.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
+    <button class="connect-button service-detail-connect" type="button" data-action="connect" data-id="${esc(service.id)}">Подключить</button>
+  </div>`;
+}
 function serviceMiniCard(service) {
   const id = esc(service.id);
-  return `<button class="service-mini-card" type="button" data-action="connect" data-id="${id}">
-    ${serviceAvatar(service)}
-    <span class="service-mini-name">${esc(displayServiceName(service))}</span>
-    <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
-  </button>`;
+  const expanded = state.expandedServiceId === service.id;
+  return `<article class="service-list-card ${expanded ? "expanded" : ""}">
+    <button class="service-mini-card" type="button" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">
+      ${serviceAvatar(service)}
+      <span class="service-mini-copy"><span class="service-mini-name">${esc(displayServiceName(service))}</span><span class="service-mini-subtitle">${service.min_price_rub == null ? "Информация о тарифах" : "от " + money(service.min_price_rub) + " ₽"}<span class="service-mini-dot">·</span> Белые списки</span></span>
+      <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
+    </button>
+    ${expanded ? serviceDetails(service) : ""}
+  </article>`;
 }
 function serviceFeaturedItem(service) {
   const id = esc(service.id);

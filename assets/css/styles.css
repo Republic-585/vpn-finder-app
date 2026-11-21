@@ -351,6 +351,21 @@ body{font-size:var(--type-body);line-height:1.45}
 /* Saturated Telegram brand accent for selected navigation states. */
 :root{--telegram-accent:#007AFF}
 .bottom-nav-dock .nav-item.active svg{color:var(--telegram-accent)!important;stroke:currentColor!important}
+.bottom-nav-dock .nav-item{overflow:visible}
+.bottom-nav-dock .nav-indicator{top:3px;height:54px}
+.bottom-nav-dock .nav-item.active{min-height:54px;margin-block:-3px;transform:translateY(-2px);z-index:2}
+.bottom-nav-dock .nav-item.active svg{animation:nav-icon-pop .34s cubic-bezier(.2,.8,.2,1) both}
+.bottom-nav-dock .nav-item[data-go="catalog"]:active svg{animation:finder-scan .42s ease both}
+.bottom-nav-dock .nav-item[data-go="compare"]:active svg{animation:compare-spark .48s cubic-bezier(.2,.8,.2,1) both}
+.bottom-nav-dock .nav-item[data-go="favorites"]:active svg{animation:favorites-heart .42s cubic-bezier(.2,.8,.2,1) both}
+.bottom-nav-dock .nav-item[data-go="catalog"].active svg{animation:finder-scan .42s ease both}
+.bottom-nav-dock .nav-item[data-go="compare"].active svg{animation:compare-spark .48s cubic-bezier(.2,.8,.2,1) both}
+.bottom-nav-dock .nav-item[data-go="favorites"].active svg{animation:favorites-heart .42s cubic-bezier(.2,.8,.2,1) both}
+@keyframes finder-scan{0%{transform:scale(.88) rotate(-7deg)}45%{transform:scale(1.12) rotate(5deg)}75%{transform:scale(.97) rotate(-2deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes compare-spark{0%{transform:scale(.82) rotate(-12deg)}55%{transform:scale(1.16) rotate(12deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes favorites-heart{0%{transform:scale(.78)}38%{transform:scale(1.2)}65%{transform:scale(.94)}100%{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.bottom-nav-dock .nav-item.active,.bottom-nav-dock .nav-item.active svg,.bottom-nav-dock .nav-item:active svg{animation:none!important;transform:none!important}}
 .bottom-nav-dock .profile-nav-button:active,.bottom-nav-dock .profile-nav-button:focus-visible{border-color:var(--telegram-accent)!important}
 .bottom-nav-dock .profile-nav-button.is-pressed{border-color:var(--telegram-accent)!important;box-shadow:0 0 0 2px rgba(0,122,255,.3),0 8px 26px rgba(0,0,0,.34)!important}
-.bottom-nav-dock .profile-nav-button{border-width:2px!important}\n.bottom-nav-dock .profile-nav-button.is-current{border-width:3px!important;border-color:var(--telegram-accent)!important;box-shadow:0 0 0 2px rgba(0,122,255,.16),0 8px 26px rgba(0,0,0,.34)!important}
+.bottom-nav-dock .profile-nav-button{border-width:2px!important}
+.bottom-nav-dock .profile-nav-button.is-current{border-width:3px!important;border-color:var(--telegram-accent)!important;box-shadow:0 0 0 2px rgba(0,122,255,.16),0 8px 26px rgba(0,0,0,.34)!important}

@@ -148,7 +148,7 @@
 
 /* Owner-only analytics dashboard */
 .analytics-dashboard{display:grid;gap:16px;color:var(--text);font-size:12px}
-.analytics-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.analytics-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .analytics-summary article{display:grid;gap:5px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
 .analytics-summary strong{font-size:22px;line-height:1.1}
 .analytics-summary span{color:var(--muted)}

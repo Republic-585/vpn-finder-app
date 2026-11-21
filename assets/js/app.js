@@ -611,7 +611,7 @@ function serviceAvatar(service, className = "service-avatar", prioritize = false
 }
 
 
-function serviceDetails(service) {
+function serviceDetails(service, hideFavoriteAction = false) {
   const facts = [];
   if (service.min_price_rub != null) facts.push([t("Стоимость"), "от " + money(service.min_price_rub) + " ₽"]);
   if (service.devices_limit) facts.push([t("Устройства"), service.devices_limit]);
@@ -625,7 +625,7 @@ function serviceDetails(service) {
   const features = allFeatures.filter(item => !paymentPattern.test(String(item)));
   const favorite = state.favorites.has(service.id);
   return `<div class="service-detail-panel">
-    <div class="service-detail-actions"><button class="service-detail-favorite ${favorite ? "is-favorite" : ""}" type="button" data-action="favorite-detail" data-id="${esc(service.id)}" aria-label="${favorite ? t("Убрать") : t("Избранное")}" aria-pressed="${favorite}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.1-8.8 11-8.8 11s-8.8-5.9-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path></svg></button></div>
+    ${hideFavoriteAction ? "" : `<div class="service-detail-actions"><button class="service-detail-favorite ${favorite ? "is-favorite" : ""}" type="button" data-action="favorite-detail" data-id="${esc(service.id)}" aria-label="${favorite ? t("Убрать") : t("Избранное")}" aria-pressed="${favorite}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.1-8.8 11-8.8 11s-8.8-5.9-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path></svg></button></div>`}
     ${service.description ? `<p class="service-detail-description">${esc(service.description)}</p>` : ""}
     ${facts.length ? `<div class="service-detail-facts">${facts.map(([label,value]) => `<div class="service-detail-fact"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join("")}</div>` : ""}
     ${platforms.length ? `<div class="service-detail-group"><span class="service-detail-label">${t("Платформы")}</span><div class="service-detail-chips">${platforms.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
@@ -668,8 +668,9 @@ function serviceCard(service, context = "catalog") {
   if (service.devices_limit) details.push(service.devices_limit + t(" устр."));
   if (service.countries_count) details.push(service.countries_count + t(" стран"));
   if (service.trial_days) details.push(t("Тест ") + service.trial_days + t(" дн."));
-  return `<article class="vpn-card" data-service="${id}">
-    <div class="vpn-card-top">
+  const expanded = context === "favorites" && state.expandedServiceId === service.id;
+  return `<article class="vpn-card ${expanded ? "expanded" : ""}" data-service="${id}">
+    <div class="vpn-card-top" ${context === "favorites" ? `data-action="toggle-favorite-details" data-id="${id}" role="button" tabindex="0" aria-expanded="${expanded}"` : ""}>
       ${serviceAvatar(service, "service-avatar", true)}
       <div class="service-title"><h3>${esc(displayServiceName(service))}</h3><div class="service-price">${price}</div></div>
       ${context === "catalog" ? `<div class="card-tools">
@@ -688,6 +689,7 @@ function serviceCard(service, context = "catalog") {
       <button class="connect-button" type="button" data-action="connect" data-id="${id}">${t("Подключить")}</button>
       ${context === "compare" ? `<button class="remove-button" type="button" data-action="remove-${context}" data-id="${id}">${t("Убрать")}</button>` : ""}
     </div>
+    ${expanded ? serviceDetails(service, true) : ""}
   </article>`;
 }
 function renderCatalog() {
@@ -797,6 +799,12 @@ document.addEventListener("click", event => {
   const service = state.services.find(item => item.id === button.dataset.id);
   if (!service) return;
   const action = button.dataset.action;
+  if (action === "toggle-favorite-details") {
+    state.expandedServiceId = state.expandedServiceId === service.id ? null : service.id;
+    if (state.expandedServiceId) trackEvent("service_view", {}, service.id);
+    renderFavorites();
+    return;
+  }
   if (action === "toggle-details") {
     const list = byId("provider-list");
     const currentCard = button.closest(".service-list-card");

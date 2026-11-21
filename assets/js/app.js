@@ -87,34 +87,40 @@ async function loadAnalyticsDashboard() {
       contact_submit: "Сообщение отправлено",
       provider_submit: "Заявка отправлена"
     };
-    const eventRows = (result.events || []).filter(item => keyEventNames[item.event_name]).slice(0, 20).map(item =>
-      '<tr><td>' + t(keyEventNames[item.event_name]) + '</td><td>' + esc(String(item.telegram_id || "—")) + '</td><td>' + esc(services.get(item.service_id) || item.service_id || "—") + '</td><td>' + esc(new Date(item.occurred_at).toLocaleString()) + '</td></tr>'
-    ).join("");
-    const clickRows = (result.clicks || []).slice(0, 25).map(item =>
-      '<tr><td>' + esc(services.get(item.service_id) || item.service_id) + '</td><td>' + esc(String(item.telegram_id || "—")) + '</td><td>' + esc(new Date(item.clicked_at).toLocaleString()) + '</td></tr>'
-    ).join("");
-    const userRows = (result.users || []).slice(0, 25).map(item => {
-      const profile = item.profile || {};
-      const display = [profile.first_name, profile.last_name].filter(Boolean).join(" ") || "—";
-      return '<tr><td>' + esc(display) + '</td><td>' + esc(profile.username ? "@" + profile.username : String(item.telegram_id || "—")) + '</td><td>' + esc(item.source || "—") + '</td><td>' + esc(new Date(item.last_seen_at).toLocaleString()) + '</td></tr>';
-    }).join("");
+    const eventItems = (result.events || []).filter(item => keyEventNames[item.event_name]).slice(0, 20);
+    const clickItems = (result.clicks || []).slice(0, 25);
+    const userItems = (result.users || []).slice(0, 25);
     const sourceCounts = new Map();
-    (result.users || []).forEach(item => {
+    userItems.forEach(item => {
       const source = item.source || "unknown";
       sourceCounts.set(source, (sourceCounts.get(source) || 0) + 1);
     });
-    const sourceRows = [...sourceCounts.entries()].sort((a,b)=>b[1]-a[1]).map(([source,count]) =>
-      '<tr><td>' + esc(source) + '</td><td>' + count + '</td></tr>'
+    const sourceEntries = [...sourceCounts.entries()].sort((a,b)=>b[1]-a[1]);
+    const maxSourceCount = Math.max(1, ...sourceEntries.map(([,count]) => count));
+    const sourceRows = sourceEntries.map(([source,count]) =>
+      '<div class="analytics-source-row"><div class="analytics-source-meta"><span>' + esc(source) + '</span><strong>' + count + '</strong></div><div class="analytics-source-track"><span style="width:' + Math.round(count / maxSourceCount * 100) + '%"></span></div></div>'
+    ).join("");
+    const userRows = userItems.map(item => {
+      const profile = item.profile || {};
+      const display = [profile.first_name, profile.last_name].filter(Boolean).join(" ") || "—";
+      return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + esc(display) + '</strong><span>' + esc(profile.username ? "@" + profile.username : String(item.telegram_id || "—")) + '</span></div><div class="analytics-list-meta"><span>' + t("Источник") + ': ' + esc(item.source || "—") + '</span><time>' + esc(new Date(item.last_seen_at).toLocaleString()) + '</time></div></article>';
+    }).join("");
+    const clickRows = clickItems.map(item =>
+      '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + esc(services.get(item.service_id) || item.service_id || "—") + '</strong><span>Telegram · ' + esc(String(item.telegram_id || "—")) + '</span></div><time class="analytics-list-time">' + esc(new Date(item.clicked_at).toLocaleString()) + '</time></article>'
+    ).join("");
+    const eventRows = eventItems.map(item =>
+      '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + t(keyEventNames[item.event_name]) + '</strong><span>' + esc(String(item.telegram_id || "—")) + (item.service_id ? ' · ' + esc(services.get(item.service_id) || item.service_id) : '') + '</span></div><time class="analytics-list-time">' + esc(new Date(item.occurred_at).toLocaleString()) + '</time></article>'
     ).join("");
     root.innerHTML =
       '<div class="analytics-summary">' +
-      '<article><strong>' + (result.users || []).length + '</strong><span>' + t("Пользователи") + '</span></article>' +
+      '<article><strong>' + userItems.length + '</strong><span>' + t("Пользователи") + '</span></article>' +
       '<article><strong>' + Number(summary.sessions || 0) + '</strong><span>' + t("Сессии") + '</span></article>' +
       '<article><strong>' + Number(summary.clicks || 0) + '</strong><span>' + t("Партнёрские переходы") + '</span></article>' +
-      '<h2>' + t("Источники") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Источник") + '</th><th>' + t("Пользователи") + '</th></tr></thead><tbody>' + (sourceRows || '<tr><td colspan="2">—</td></tr>') + '</tbody></table></div>' +
-      '<h2>' + t("Пользователи") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Пользователь") + '</th><th>Telegram</th><th>' + t("Источник") + '</th><th>' + t("Активность") + '</th></tr></thead><tbody>' + (userRows || '<tr><td colspan="4">—</td></tr>') + '</tbody></table></div>' +
-      '<h2>' + t("Партнёрские переходы") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Сервис") + '</th><th>Telegram</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (clickRows || '<tr><td colspan="3">—</td></tr>') + '</tbody></table></div>' +
-      '<h2>' + t("Ключевые события") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Событие") + '</th><th>Telegram</th><th>' + t("Сервис") + '</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (eventRows || '<tr><td colspan="4">—</td></tr>') + '</tbody></table></div></div>';
+      '</div>' +
+      '<section class="analytics-section"><h2>' + t("Источники") + '</h2><div class="analytics-sources">' + (sourceRows || '<p class="analytics-empty">—</p>') + '</div></section>' +
+      '<details class="analytics-disclosure"><summary><span>' + t("Пользователи") + '</span><span class="analytics-disclosure-count">' + userItems.length + '</span></summary><div class="analytics-list">' + (userRows || '<p class="analytics-empty">—</p>') + '</div></details>' +
+      '<section class="analytics-section"><h2>' + t("Партнёрские переходы") + '</h2><div class="analytics-list analytics-clicks">' + (clickRows || '<p class="analytics-empty">—</p>') + '</div></section>' +
+      '<details class="analytics-disclosure"><summary><span>' + t("Ключевые события") + '</span><span class="analytics-disclosure-count">' + eventItems.length + '</span></summary><div class="analytics-list">' + (eventRows || '<p class="analytics-empty">—</p>') + '</div></details>';
   } catch (_) {
     root.textContent = t("Не удалось загрузить аналитику.");
   } finally {

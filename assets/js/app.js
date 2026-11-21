@@ -967,7 +967,7 @@ document.addEventListener("click", event => {
     return;
   }
   if (action === "toggle-details") {
-    const list = byId("services-list");
+    const list = byId("provider-list");
     const currentCard = button.closest(".service-list-card");
     const wasExpanded = state.expandedServiceId === service.id;
     if (state.expandedServiceId) {

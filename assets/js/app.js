@@ -266,10 +266,16 @@ function serviceDetails(service) {
 function serviceMiniCard(service) {
   const id = esc(service.id);
   const expanded = state.expandedServiceId === service.id;
+  const compactFacts = [
+    service.min_price_rub == null ? "Цена —" : "от " + money(service.min_price_rub) + " ₽",
+    service.devices_limit ? service.devices_limit + " устр." : "Устр. —",
+    service.traffic_limit ? service.traffic_limit : "Трафик —",
+    service.trial_days != null ? (Number(service.trial_days) > 0 ? "Тест " + service.trial_days + " дн." : "Без теста") : "Тест —"
+  ];
   return `<article class="service-list-card ${expanded ? "expanded" : ""}">
     <button class="service-mini-card" type="button" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">
       ${serviceAvatar(service)}
-      <span class="service-mini-copy"><span class="service-mini-name">${esc(displayServiceName(service))}</span><span class="service-mini-subtitle">${service.min_price_rub == null ? "Тарифы в боте" : "от " + money(service.min_price_rub) + " ₽"}${service.whitelist_support ? '<span class="service-mini-dot">·</span> Белые списки' : ""}</span></span>
+      <span class="service-mini-copy"><span class="service-mini-name">${esc(displayServiceName(service))}</span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}${service.whitelist_support ? '<span class="service-mini-dot">·</span><span class="service-mini-whitelist">Белые списки</span>' : ""}</span></span>
       <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
     </button>
     ${expanded ? serviceDetails(service) : ""}

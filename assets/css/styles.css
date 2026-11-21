@@ -346,3 +346,11 @@ body{font-size:var(--type-body);line-height:1.45}
 .bottom-nav-dock .profile-nav-button.is-current{
   border-color:var(--blue)!important;
 }
+
+
+/* Saturated Telegram brand accent for selected navigation states. */
+:root{--telegram-accent:#26A5E4}
+.bottom-nav-dock .nav-item.active svg{color:var(--telegram-accent)!important;stroke:currentColor!important}
+.bottom-nav-dock .profile-nav-button:active,.bottom-nav-dock .profile-nav-button:focus-visible{border-color:var(--telegram-accent)!important}
+.bottom-nav-dock .profile-nav-button.is-pressed{border-color:var(--telegram-accent)!important;box-shadow:0 0 0 2px rgba(38,165,228,.3),0 8px 26px rgba(0,0,0,.34)!important}
+.bottom-nav-dock .profile-nav-button.is-current{border-color:var(--telegram-accent)!important}

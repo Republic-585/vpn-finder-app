@@ -603,6 +603,21 @@ async function syncTelegramProfile(force = false) {
   }
 }
 
+// Switch between the two support payment methods.
+document.querySelectorAll("[data-support-tab]").forEach(tab => {
+  tab.addEventListener("click", () => {
+    const selected = tab.dataset.supportTab;
+    document.querySelectorAll("[data-support-tab]").forEach(item => {
+      const active = item === tab;
+      item.classList.toggle("is-active", active);
+      item.setAttribute("aria-selected", String(active));
+    });
+    document.querySelectorAll(".support-panel").forEach(panel => {
+      panel.hidden = panel.id !== (selected === "crypto" ? "support-panel-crypto" : "support-panel-stars");
+    });
+  });
+});
+
 // Stars support screen. Invoice creation and payment verification stay server-side.
 const supportAmount = byId("support-amount");
 const supportPayButton = byId("support-pay-button");

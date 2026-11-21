@@ -11,6 +11,7 @@ const SUPABASE_KEY = "sb_publishable_BaYxtXvRZCmfEzMHJbSCog_ebs4k6oK";
 const ANALYTICS_SESSION_KEY = "vpn-finder-analytics-session";
 const ANALYTICS_SESSION_ACTIVITY_KEY = "vpn-finder-analytics-session-activity";
 const ANALYTICS_SESSION_IDLE_MS = 30 * 60 * 1000;
+const ANALYTICS_OWNER_TELEGRAM_ID = 7838131644;
 function analyticsSessionToken() {
   const now = Date.now();
   try {
@@ -53,6 +54,13 @@ async function trackEvent(eventName, eventData = {}, serviceId = null) {
 }
 async function loadAnalyticsDashboard() {
   const root = byId("analytics-dashboard");
+  const menuRow = byId("analytics-menu-row");
+  const currentTelegramId = Number(tg?.initDataUnsafe?.user?.id || 0);
+  if (menuRow) menuRow.hidden = currentTelegramId !== ANALYTICS_OWNER_TELEGRAM_ID;
+  if (currentTelegramId !== ANALYTICS_OWNER_TELEGRAM_ID) {
+    if (root) root.textContent = t("Нет доступа к аналитике.");
+    return;
+  }
   if (!root || analyticsDashboardLoading || !tg?.initData) return;
   analyticsDashboardLoading = true;
   root.textContent = t("Загрузка аналитики…");
@@ -299,6 +307,7 @@ function haptic() {
 }
 let moveIndicator = () => {};
 function showScreen(name) {
+  if (name === "analytics" && Number(tg?.initDataUnsafe?.user?.id || 0) !== ANALYTICS_OWNER_TELEGRAM_ID) return;
   const navBar = document.querySelector(".bottom-nav");
   const alreadyActive = nav.some(button => button.dataset.go === name && button.classList.contains("active"));
   if (!alreadyActive && navBar) {

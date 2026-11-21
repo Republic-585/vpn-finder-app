@@ -9,9 +9,9 @@
 <link rel="preconnect" href="https://cdn4.telesco.pe" crossorigin>
 <link rel="preconnect" href="https://cdn1.telesco.pe" crossorigin>
 <link rel="preconnect" href="https://gotbot.cc" crossorigin>
-<link rel="stylesheet" href="./assets/css/styles.css?v=20261122-support-presets-v3">
+<link rel="stylesheet" href="./assets/css/styles.css?v=20261122-crypto-minimum-v1">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script defer src="./assets/js/app.js?v=20261122-support-presets-v3"></script>
+<script defer src="./assets/js/app.js?v=20261122-crypto-minimum-v1"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -97,6 +97,25 @@
       <button class="connect-button support-pay-button" id="support-pay-button" type="button">Оплатить Stars</button>
       <p class="profile-form-status" id="support-dialog-status" role="status" aria-live="polite"></p>
     </form>
+
+    <section class="crypto-support" aria-labelledby="crypto-support-title">
+      <div class="crypto-support-heading">
+        <h2 id="crypto-support-title">Угостить чашкой кофе</h2>
+        <p>Поддержи VPN Finder любой суммой в USDT. Минимум — 2,50 USDT (примерно от 200 ₽).</p>
+      </div>
+      <label for="crypto-support-amount">Сумма в USDT
+        <input id="crypto-support-amount" type="number" min="2.50" max="1000000" step="0.01" inputmode="decimal" value="2.50">
+      </label>
+      <p class="crypto-support-network">USDT · сеть TON</p>
+      <p class="crypto-support-address-label">Адрес для перевода</p>
+      <code class="crypto-support-address">UQBt5EVLJ5Q4lljC41RKTGMiXZBevXwRVXIES9Cgy_B9lLgo</code>
+      <div class="crypto-support-actions">
+        <button class="connect-button" id="crypto-copy-amount" type="button">Скопировать сумму</button>
+        <button class="crypto-copy-address" id="crypto-copy-address" type="button">Скопировать адрес</button>
+      </div>
+      <p class="crypto-support-note">Перед отправкой проверь сеть: нужен именно USDT в TON. Криптоперевод не подтверждается автоматически и не выдаёт значок Stars-поддержки.</p>
+      <p class="profile-form-status" id="crypto-support-status" role="status" aria-live="polite"></p>
+    </section>
   </section>
 
   <section class="screen" id="screen-contact" data-screen="contact">

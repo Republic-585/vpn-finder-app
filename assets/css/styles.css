@@ -265,3 +265,15 @@ body{font-size:var(--type-body);line-height:1.45}
 #screen-favorites .vpn-card-top{padding-right:38px}
 #screen-favorites .favorites-favorite-action{position:absolute;top:9px;right:9px;color:#e53935!important;background:transparent!important;box-shadow:none!important;border:0!important}
 #screen-favorites .favorites-favorite-action svg{stroke:#e53935;fill:#e53935}
+
+
+/* Favorite cards: left-aligned connect action and explicit expand/collapse control */
+#screen-favorites .vpn-card-bottom.favorites-card-actions{justify-content:flex-start;align-items:center}
+#screen-favorites .favorites-card-actions .connect-button{flex:0 1 220px;width:100%;border-radius:999px}
+#screen-favorites .favorites-card-toggle{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:transparent;color:var(--muted);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:color .2s,transform .25s}
+#screen-favorites .favorites-card-toggle svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+#screen-favorites .favorites-card-toggle:active{transform:scale(.9)}
+#screen-favorites .service-detail-panel{padding:0 0 2px}
+#screen-favorites .service-detail-connect{width:100%;margin-top:14px}
+#screen-favorites .service-detail-panel .favorites-card-toggle{margin:7px 0 0 auto}
+#screen-favorites .service-detail-panel .favorites-card-toggle svg{transform:rotate(180deg)}

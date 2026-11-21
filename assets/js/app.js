@@ -33,7 +33,11 @@ async function trackEvent(eventName, eventData = {}, serviceId = null) {
         session_token: analyticsToken,
         event_name: eventName,
         event_data: eventData,
-        service_id: serviceId
+        service_id: serviceId,
+        source: new URLSearchParams(window.location.search).get("utm_source") || "telegram",
+        medium: new URLSearchParams(window.location.search).get("utm_medium") || "miniapp",
+        campaign: new URLSearchParams(window.location.search).get("utm_campaign") || "",
+        referrer_host: (() => { try { return document.referrer ? new URL(document.referrer).hostname : ""; } catch (_) { return ""; } })()
       })
     });
   } catch (_) { /* Analytics must never interrupt the Mini App. */ }
@@ -67,7 +71,7 @@ async function loadAnalyticsDashboard() {
     ).join("");
     root.innerHTML =
       '<div class="analytics-summary">' +
-      '<article><strong>' + Number(summary.known_sessions || 0) + '</strong><span>' + t("Сессии") + '</span></article>' +
+      '<article><strong>' + Number(summary.sessions || 0) + '</strong><span>' + t("Сессии") + '</span></article>' +
       '<article><strong>' + Number(summary.events || 0) + '</strong><span>' + t("События") + '</span></article>' +
       '<article><strong>' + Number(summary.clicks || 0) + '</strong><span>' + t("Переходы") + '</span></article>' +
       '<article><strong>' + Number(summary.conversions || 0) + '</strong><span>' + t("Конверсии") + '</span></article></div>' +
@@ -163,6 +167,7 @@ function chooseLanguage() {
     if (buttonId !== "ru" && buttonId !== "en") return;
     if (appLanguage === buttonId) return;
     appLanguage = buttonId;
+    trackEvent("language_change", { language: appLanguage });
     try { localStorage.setItem(LANGUAGE_KEY, appLanguage); } catch (_) {}
     translateStaticContent();
     renderCatalog();
@@ -753,10 +758,12 @@ document.addEventListener("click", event => {
   }
   if (action === "remove-favorites") {
     toggleSet(state.favorites, "vpn-finder-favorites", service.id);
+    trackEvent("favorite_remove", {}, service.id);
     renderFavorites(); renderCatalog();
   }
   if (action === "remove-compare") {
     toggleSet(state.compare, "vpn-finder-compare", service.id);
+    trackEvent("compare_remove", {}, service.id);
     renderCompare(); renderCatalog();
   }
 });

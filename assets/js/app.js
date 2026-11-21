@@ -8,6 +8,104 @@ if (tg) {
 
 const SUPABASE_URL = "https://januqesxribuqzmmmdun.supabase.co";
 const SUPABASE_KEY = "sb_publishable_BaYxtXvRZCmfEzMHJbSCog_ebs4k6oK";
+const ANALYTICS_SESSION_KEY = "vpn-finder-analytics-session";
+const ANALYTICS_SESSION_ACTIVITY_KEY = "vpn-finder-analytics-session-activity";
+const ANALYTICS_SESSION_IDLE_MS = 30 * 60 * 1000;
+function analyticsSessionToken() {
+  const now = Date.now();
+  try {
+    const lastActivity = Number(localStorage.getItem(ANALYTICS_SESSION_ACTIVITY_KEY) || 0);
+    let token = localStorage.getItem(ANALYTICS_SESSION_KEY);
+    if (!token || !Number.isFinite(lastActivity) || now - lastActivity >= ANALYTICS_SESSION_IDLE_MS) {
+      token = crypto.randomUUID();
+      localStorage.setItem(ANALYTICS_SESSION_KEY, token);
+    }
+    localStorage.setItem(ANALYTICS_SESSION_ACTIVITY_KEY, String(now));
+    return token;
+  } catch (_) { return crypto.randomUUID(); }
+}
+let analyticsToken = analyticsSessionToken();
+let analyticsAccessChecked = false;
+let analyticsDashboardLoading = false;
+async function trackEvent(eventName, eventData = {}, serviceId = null) {
+  if (!tg?.initData) return;
+  try {
+    // Ensure the Telegram profile exists before writing rows that reference it.
+    await syncTelegramProfile();
+    if (!profileReady) return;
+    analyticsToken = analyticsSessionToken();
+    await fetch(SUPABASE_URL + "/functions/v1/analytics-ingest", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        initData: tg.initData,
+        session_token: analyticsToken,
+        event_name: eventName,
+        event_data: eventData,
+        service_id: serviceId,
+        source: new URLSearchParams(window.location.search).get("utm_source") || "telegram",
+        medium: new URLSearchParams(window.location.search).get("utm_medium") || "miniapp",
+        campaign: new URLSearchParams(window.location.search).get("utm_campaign") || "",
+        referrer_host: (() => { try { return document.referrer ? new URL(document.referrer).hostname : ""; } catch (_) { return ""; } })()
+      })
+    });
+  } catch (_) { /* Analytics must never interrupt the Mini App. */ }
+}
+async function loadAnalyticsDashboard() {
+  const root = byId("analytics-dashboard");
+  if (!root || analyticsDashboardLoading || !tg?.initData) return;
+  analyticsDashboardLoading = true;
+  root.textContent = t("Загрузка аналитики…");
+  try {
+    const response = await fetch(SUPABASE_URL + "/functions/v1/analytics-admin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ initData: tg.initData })
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.ok) {
+      byId("analytics-menu-row").hidden = true;
+      root.textContent = t("Нет доступа к аналитике.");
+      return;
+    }
+    analyticsAccessChecked = true;
+    byId("analytics-menu-row").hidden = false;
+    const summary = result.summary || {};
+    const services = new Map((result.services || []).map(item => [item.id, item.name]));
+    const eventRows = (result.events || []).slice(0, 25).map(item =>
+      '<tr><td>' + esc(item.event_name) + '</td><td>' + esc(String(item.telegram_id || "—")) + '</td><td>' + esc(services.get(item.service_id) || item.service_id || "—") + '</td><td>' + esc(new Date(item.occurred_at).toLocaleString()) + '</td></tr>'
+    ).join("");
+    const clickRows = (result.clicks || []).slice(0, 25).map(item =>
+      '<tr><td>' + esc(services.get(item.service_id) || item.service_id) + '</td><td>' + esc(String(item.telegram_id || "—")) + '</td><td>' + esc(new Date(item.clicked_at).toLocaleString()) + '</td></tr>'
+    ).join("");
+    const userRows = (result.users || []).slice(0, 25).map(item => {
+      const profile = item.profile || {};
+      const display = [profile.first_name, profile.last_name].filter(Boolean).join(" ") || "—";
+      return '<tr><td>' + esc(display) + '</td><td>' + esc(profile.username ? "@" + profile.username : String(item.telegram_id || "—")) + '</td><td>' + esc(item.source || "—") + '</td><td>' + esc(new Date(item.last_seen_at).toLocaleString()) + '</td></tr>';
+    }).join("");
+    const sourceCounts = new Map();
+    (result.users || []).forEach(item => {
+      const source = item.source || "unknown";
+      sourceCounts.set(source, (sourceCounts.get(source) || 0) + 1);
+    });
+    const sourceRows = [...sourceCounts.entries()].sort((a,b)=>b[1]-a[1]).map(([source,count]) =>
+      '<tr><td>' + esc(source) + '</td><td>' + count + '</td></tr>'
+    ).join("");
+    root.innerHTML =
+      '<div class="analytics-summary">' +
+      '<article><strong>' + Number(summary.sessions || 0) + '</strong><span>' + t("Сессии") + '</span></article>' +
+      '<article><strong>' + Number(summary.events || 0) + '</strong><span>' + t("События") + '</span></article>' +
+      '<article><strong>' + Number(summary.clicks || 0) + '</strong><span>' + t("Переходы") + '</span></article>' +
+      '<h2>' + t("Пользователи и сессии") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Пользователь") + '</th><th>Telegram</th><th>' + t("Источник") + '</th><th>' + t("Активность") + '</th></tr></thead><tbody>' + (userRows || '<tr><td colspan="4">—</td></tr>') + '</tbody></table></div>' +
+      '<h2>' + t("Источники (последние сессии)") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Источник") + '</th><th>' + t("Сессии") + '</th></tr></thead><tbody>' + (sourceRows || '<tr><td colspan="2">—</td></tr>') + '</tbody></table></div>' +
+      '<h2>' + t("Последние события") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Событие") + '</th><th>Telegram ID</th><th>' + t("Сервис") + '</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (eventRows || '<tr><td colspan="4">—</td></tr>') + '</tbody></table></div>' +
+      '<h2>' + t("Партнёрские переходы") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Сервис") + '</th><th>Telegram ID</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (clickRows || '<tr><td colspan="3">—</td></tr>') + '</tbody></table></div></div>';
+  } catch (_) {
+    root.textContent = t("Не удалось загрузить аналитику.");
+  } finally {
+    analyticsDashboardLoading = false;
+  }
+}
 const byId = id => document.getElementById(id);
 const LANGUAGE_KEY = "vpn-finder-language";
 const translations = {
@@ -15,6 +113,11 @@ const translations = {
   en: {
     "Язык":"Language","Русский":"Russian","English":"English","Выберите язык приложения":"Choose the app language",
     "Откройте приложение в Telegram, чтобы сменить язык.":"Open the app in Telegram to change the language.",
+    "Загрузка аналитики…":"Loading analytics…","Нет доступа к аналитике.":"No access to analytics.",
+    "Не удалось загрузить аналитику.":"Could not load analytics.","Сессии":"Sessions","События":"Events",
+    "Переходы":"Clicks","Последние события":"Recent events",
+    "Партнёрские переходы":"Affiliate clicks","Событие":"Event","Сервис":"Service","Время":"Time",
+    "Аналитика":"Analytics","Пользователи и сессии":"Users and sessions","Пользователь":"User","Источник":"Source","Активность":"Activity","Источники трафика":"Traffic sources","Тип":"Type","Статус":"Status","Сумма":"Amount","Комиссия":"Commission","Не удалось открыть партнёрскую ссылку. Попробуйте ещё раз.":"Could not open the partner link. Please try again.",
     "Поиск":"Search","Очистить поиск":"Clear search","Популярный выбор":"Popular services","Посмотреть все":"View all","Свернуть":"Show less",
     "Фильтры":"Filters","Все":"All","Бесплатно":"Free","Сравнение":"Compare","Избранное":"Favorites","Профиль":"Profile",
     "Загрузка профиля…":"Loading profile…","Не удалось загрузить профиль":"Could not load profile","Пользователь":"User","Откройте приложение через Telegram":"Open the app through Telegram",
@@ -87,6 +190,7 @@ function chooseLanguage() {
     if (buttonId !== "ru" && buttonId !== "en") return;
     if (appLanguage === buttonId) return;
     appLanguage = buttonId;
+    trackEvent("language_change", { language: appLanguage });
     try { localStorage.setItem(LANGUAGE_KEY, appLanguage); } catch (_) {}
     translateStaticContent();
     renderCatalog();
@@ -211,10 +315,12 @@ function showScreen(name) {
   });
   moveIndicator();
   haptic();
+  trackEvent("screen_view", { screen: name });
+  if (name === "analytics") loadAnalyticsDashboard();
   window.scrollTo({ top: 0, behavior: "smooth" });
   if (name === "favorites") renderFavorites();
   if (name === "compare") renderCompare();
-  if (name === "profile") syncTelegramProfile();
+  if (name === "profile") { syncTelegramProfile(); if (!analyticsAccessChecked) loadAnalyticsDashboard(); }
   const isProfileSubscreen = ["news", "contact", "owners"].includes(name);
   try {
     if (isProfileSubscreen) tg?.BackButton?.show();
@@ -394,8 +500,10 @@ async function syncTelegramProfile() {
 
 // First launch creates or updates the user's account automatically.
 syncTelegramProfile();
+trackEvent("app_open", { language: appLanguage });
 
 const search = byId("search");
+let searchAnalyticsTimer = null;
 const clearSearch = byId("clear-search");
 const toggleCatalog = byId("toggle-catalog");
 toggleCatalog?.addEventListener("click", () => {
@@ -406,6 +514,10 @@ toggleCatalog?.addEventListener("click", () => {
 search?.addEventListener("input", () => {
   state.query = search.value.trim().toLowerCase();
   clearSearch.hidden = !search.value;
+  clearTimeout(searchAnalyticsTimer);
+  searchAnalyticsTimer = setTimeout(() => {
+    if (state.query) trackEvent("search", { query_length: state.query.length });
+  }, 1200);
   renderCatalog();
 });
 clearSearch?.addEventListener("click", () => {
@@ -419,6 +531,7 @@ clearSearch?.addEventListener("click", () => {
 document.querySelectorAll(".filter-chip").forEach(chip => {
   chip.addEventListener("click", () => {
     state.filter = chip.dataset.filter;
+    trackEvent("filter_change", { filter: state.filter });
     document.querySelectorAll(".filter-chip").forEach(item => item.classList.toggle("active", item === chip));
     haptic();
     renderCatalog();
@@ -598,16 +711,31 @@ function toggleSet(set, key, id) {
   saveSet(key, set);
   updateCounts();
 }
-function openReferral(service) {
-  if (!service?.referral_url) return;
-  let url;
-  try { url = new URL(service.referral_url); } catch (_) { return; }
-  if (url.protocol !== "https:") return;
-  if (tg) {
-    if (["t.me", "telegram.me"].includes(url.hostname)) tg.openTelegramLink(url.href);
-    else tg.openLink(url.href);
-  } else {
-    window.location.href = url.href;
+async function openReferral(service) {
+  if (!service?.id || !tg?.initData) return;
+  try {
+    await syncTelegramProfile();
+    if (!profileReady) throw new Error("Telegram profile is not ready");
+    analyticsToken = analyticsSessionToken();
+    const response = await fetch(SUPABASE_URL + "/functions/v1/affiliate-redirect", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        initData: tg.initData, session_token: analyticsToken, service_id: service.id,
+        source: new URLSearchParams(window.location.search).get("utm_source") || "telegram",
+        medium: new URLSearchParams(window.location.search).get("utm_medium") || "miniapp",
+        campaign: new URLSearchParams(window.location.search).get("utm_campaign") || "",
+        referrer_host: (() => { try { return document.referrer ? new URL(document.referrer).hostname : ""; } catch (_) { return ""; } })()
+      })
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.ok || !result.url) throw new Error("Referral redirect failed");
+    if (typeof result.url !== "string" || !result.url.startsWith("https://")) throw new Error("Unsafe referral destination");
+    trackEvent("connect_click", { click_id: result.click_id }, service.id);
+    if (/^https:\/\/(t\.me|telegram\.me)(\/|\?|#|$)/i.test(result.url)) tg.openTelegramLink(result.url);
+    else tg.openLink(result.url);
+  } catch (_) {
+    try { tg?.showAlert?.(t("Не удалось открыть партнёрскую ссылку. Попробуйте ещё раз.")); } catch (_) {}
   }
 }
 
@@ -644,6 +772,7 @@ document.addEventListener("click", event => {
     } else {
       currentCard?.classList.add("expanded");
       button.setAttribute("aria-expanded", "true");
+      trackEvent("service_view", {}, service.id);
       button.insertAdjacentHTML("afterend", serviceDetails(service));
       state.expandedServiceId = service.id;
     }
@@ -651,19 +780,25 @@ document.addEventListener("click", event => {
   }
   if (action === "connect") openReferral(service);
   if (action === "favorite") {
+    const removing = state.favorites.has(service.id);
     toggleSet(state.favorites, "vpn-finder-favorites", service.id);
+    trackEvent(removing ? "favorite_remove" : "favorite_add", {}, service.id);
     renderCatalog(); renderFavorites();
   }
   if (action === "compare") {
+    const removing = state.compare.has(service.id);
     toggleSet(state.compare, "vpn-finder-compare", service.id);
+    trackEvent(removing ? "compare_remove" : "compare_add", {}, service.id);
     renderCatalog(); renderCompare();
   }
   if (action === "remove-favorites") {
     toggleSet(state.favorites, "vpn-finder-favorites", service.id);
+    trackEvent("favorite_remove", {}, service.id);
     renderFavorites(); renderCatalog();
   }
   if (action === "remove-compare") {
     toggleSet(state.compare, "vpn-finder-compare", service.id);
+    trackEvent("compare_remove", {}, service.id);
     renderCompare(); renderCatalog();
   }
 });
@@ -704,6 +839,7 @@ async function sendProfileInbox(kind, form, statusId) {
     const result = await response.json().catch(() => null);
     if (!response.ok || !result?.ok) throw new Error("Delivery failed");
     status.textContent = t("Сообщение отправлено.");
+    trackEvent(kind === "contact" ? "contact_submit" : "provider_submit", {});
     form.reset();
   } catch (_) {
     status.textContent = t("Не удалось отправить. Попробуйте ещё раз.");

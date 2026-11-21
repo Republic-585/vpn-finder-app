@@ -334,3 +334,9 @@ body{font-size:var(--type-body);line-height:1.45}
 @media(prefers-reduced-motion:reduce){
   .bottom-nav-dock,.bottom-nav-dock .profile-nav-button{transition:none!important}
 }
+
+
+/* Explicit iOS touch feedback for the detached profile avatar. */
+.bottom-nav-dock.profile-press-active{transform:translateX(-50%) scale(1.025)!important;}
+.bottom-nav-dock .profile-nav-button.is-pressed{border-color:#5288C1!important;box-shadow:0 0 0 2px rgba(82,136,193,.28),0 8px 26px rgba(0,0,0,.34)!important;transform:scale(.94)!important;filter:brightness(1.18)!important;}
+.bottom-nav-dock .profile-nav-button.is-pressed img,.bottom-nav-dock .profile-nav-button.is-pressed span{transform:scale(.98);}

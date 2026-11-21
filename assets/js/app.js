@@ -680,7 +680,7 @@ function ratingMarkup(serviceId, interactive = false) {
   const actionAttrs = interactive
     ? `type="button" data-action="toggle-rating-menu" data-id="${esc(serviceId)}" aria-label="Оценить сервис" aria-expanded="false" ${disabled ? "disabled" : ""}`
     : 'aria-hidden="true"';
-  return `<div class="service-rating ${interactive ? "is-interactive" : "is-static"}" role="img" aria-label="${hasRatings ? "Рейтинг " + shown + " из 5" : "Рейтинг пока не сформирован"}">
+  return `<div class="service-rating ${interactive ? "is-interactive" : "is-static"}" role="${interactive ? "group" : "img"}" aria-label="${hasRatings ? "Рейтинг " + shown + " из 5" : "Рейтинг пока не сформирован"}">
     <${tag} class="service-rating-badge ${personal ? "has-vote" : ""} ${hasRatings ? "" : "is-empty"} ${interactive ? "is-interactive" : "is-static"}" ${actionAttrs}>
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <defs><linearGradient id="${gradientId}" x1="5" y1="2" x2="18" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF3A6"/><stop offset=".28" stop-color="#FFD95A"/><stop offset=".62" stop-color="#FFB800"/><stop offset="1" stop-color="#D97706"/></linearGradient></defs>

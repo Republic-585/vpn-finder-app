@@ -352,6 +352,8 @@ function showScreen(name) {
     if (active) button.setAttribute("aria-current", "page");
     else button.removeAttribute("aria-current");
   });
+  // Keep the detached profile ring blue only while the Profile tab is selected.
+  byId("profile-nav-button")?.classList.toggle("is-current", name === "profile");
   moveIndicator();
   if (!alreadyActive) navHaptic();
   if (name === "analytics") loadAnalyticsDashboard();

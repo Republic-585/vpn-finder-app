@@ -1,0 +1,21 @@
+name: Frontend validation
+
+on:
+  push:
+    branches: [main, analytics/implementation-2026-11]
+  pull_request:
+    branches: [main]
+
+jobs:
+  javascript:
+    name: Check Mini App JavaScript
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Check application JavaScript syntax
+        run: node --check assets/js/app.js

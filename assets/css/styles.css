@@ -276,5 +276,5 @@ body{font-size:var(--type-body);line-height:1.45}
 #screen-favorites .favorites-card-toggle:active{transform:scale(.9)}
 #screen-favorites .service-detail-panel{padding:0 0 2px}
 #screen-favorites .service-detail-connect{width:100%;margin-top:14px}
-#screen-favorites .vpn-card > .favorites-card-toggle.is-expanded{position:absolute;top:9px;right:50px;margin:0;z-index:3}
-#screen-favorites .vpn-card > .favorites-card-toggle.is-expanded svg{transform:rotate(180deg)}
+#screen-favorites .vpn-card > .favorites-card-toggle.is-expanded{width:34px;height:34px;position:absolute;top:9px;right:50px;margin:0;z-index:3;color:var(--bright)}
+#screen-favorites .vpn-card > .favorites-card-toggle.is-expanded svg{width:18px;height:18px;transform:rotate(180deg)}

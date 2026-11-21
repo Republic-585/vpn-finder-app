@@ -9,22 +9,31 @@ if (tg) {
 const SUPABASE_URL = "https://januqesxribuqzmmmdun.supabase.co";
 const SUPABASE_KEY = "sb_publishable_BaYxtXvRZCmfEzMHJbSCog_ebs4k6oK";
 const ANALYTICS_SESSION_KEY = "vpn-finder-analytics-session";
+const ANALYTICS_SESSION_ACTIVITY_KEY = "vpn-finder-analytics-session-activity";
+const ANALYTICS_SESSION_IDLE_MS = 30 * 60 * 1000;
 function analyticsSessionToken() {
+  const now = Date.now();
   try {
+    const lastActivity = Number(localStorage.getItem(ANALYTICS_SESSION_ACTIVITY_KEY) || 0);
     let token = localStorage.getItem(ANALYTICS_SESSION_KEY);
-    if (!token) {
+    if (!token || !Number.isFinite(lastActivity) || now - lastActivity >= ANALYTICS_SESSION_IDLE_MS) {
       token = crypto.randomUUID();
       localStorage.setItem(ANALYTICS_SESSION_KEY, token);
     }
+    localStorage.setItem(ANALYTICS_SESSION_ACTIVITY_KEY, String(now));
     return token;
   } catch (_) { return crypto.randomUUID(); }
 }
-const analyticsToken = analyticsSessionToken();
+let analyticsToken = analyticsSessionToken();
 let analyticsAccessChecked = false;
 let analyticsDashboardLoading = false;
 async function trackEvent(eventName, eventData = {}, serviceId = null) {
   if (!tg?.initData) return;
   try {
+    // Ensure the Telegram profile exists before writing rows that reference it.
+    await syncTelegramProfile();
+    if (!profileReady) return;
+    analyticsToken = analyticsSessionToken();
     await fetch(SUPABASE_URL + "/functions/v1/analytics-ingest", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -92,7 +101,7 @@ async function loadAnalyticsDashboard() {
       '<article><strong>' + Number(summary.clicks || 0) + '</strong><span>' + t("Переходы") + '</span></article>' +
       '<article><strong>' + Number(summary.conversions || 0) + '</strong><span>' + t("Конверсии") + '</span></article></div>' +
       '<h2>' + t("Пользователи и сессии") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Пользователь") + '</th><th>Telegram</th><th>' + t("Источник") + '</th><th>' + t("Активность") + '</th></tr></thead><tbody>' + (userRows || '<tr><td colspan="4">—</td></tr>') + '</tbody></table></div>' +
-      '<h2>' + t("Источники трафика") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Источник") + '</th><th>' + t("Сессии") + '</th></tr></thead><tbody>' + (sourceRows || '<tr><td colspan="2">—</td></tr>') + '</tbody></table></div>' +
+      '<h2>' + t("Источники (последние сессии)") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Источник") + '</th><th>' + t("Сессии") + '</th></tr></thead><tbody>' + (sourceRows || '<tr><td colspan="2">—</td></tr>') + '</tbody></table></div>' +
       '<h2>' + t("Последние события") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Событие") + '</th><th>Telegram ID</th><th>' + t("Сервис") + '</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (eventRows || '<tr><td colspan="4">—</td></tr>') + '</tbody></table></div>' +
       '<h2>' + t("Партнёрские переходы") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Сервис") + '</th><th>Telegram ID</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (clickRows || '<tr><td colspan="3">—</td></tr>') + '</tbody></table></div>' +
       '<h2>' + t("Покупки и комиссии") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Сервис") + '</th><th>' + t("Тип") + '</th><th>' + t("Статус") + '</th><th>' + t("Сумма") + '</th><th>' + t("Комиссия") + '</th></tr></thead><tbody>' + (conversionRows || '<tr><td colspan="5">—</td></tr>') + '</tbody></table></div>';
@@ -710,6 +719,9 @@ function toggleSet(set, key, id) {
 async function openReferral(service) {
   if (!service?.id || !tg?.initData) return;
   try {
+    await syncTelegramProfile();
+    if (!profileReady) throw new Error("Telegram profile is not ready");
+    analyticsToken = analyticsSessionToken();
     const response = await fetch(SUPABASE_URL + "/functions/v1/affiliate-redirect", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

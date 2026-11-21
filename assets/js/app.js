@@ -663,7 +663,7 @@ function serviceCard(service, context = "catalog") {
   if (service.trial_days) details.push(t("Тест ") + service.trial_days + t(" дн."));
   return `<article class="vpn-card" data-service="${id}">
     <div class="vpn-card-top">
-      <div class="service-mark">${esc((displayServiceName(service) || "V").slice(0, 1))}</div>
+      ${serviceAvatar(service, "service-avatar", true)}
       <div class="service-title"><h3>${esc(displayServiceName(service))}</h3><div class="service-price">${price}</div></div>
       <div class="card-tools">
         <button class="round-action ${favorite ? "selected" : ""}" type="button" data-action="favorite" data-id="${id}" aria-label="${t("Избранное")}" aria-pressed="${favorite}">

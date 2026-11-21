@@ -448,8 +448,10 @@ function renderCompare() {
 }
 
 function updateCounts() {
-  byId("favorites-count").textContent = state.favorites.size;
-  byId("compare-count").textContent = state.compare.size;
+  const favoritesCount = byId("favorites-count");
+  const compareCount = byId("compare-count");
+  if (favoritesCount) favoritesCount.textContent = state.favorites.size;
+  if (compareCount) compareCount.textContent = state.compare.size;
 }
 function toggleSet(set, key, id) {
   if (set.has(id)) set.delete(id); else set.add(id);

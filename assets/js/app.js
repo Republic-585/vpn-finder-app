@@ -9,6 +9,23 @@ if (tg) {
 const SUPABASE_URL = "https://januqesxribuqzmmmdun.supabase.co";
 const SUPABASE_KEY = "sb_publishable_BaYxtXvRZCmfEzMHJbSCog_ebs4k6oK";
 const byId = id => document.getElementById(id);
+
+const HOME_SCREEN_PROMPT_KEY = "vpn-finder-home-screen-prompt-hidden";
+function initHomeScreenPrompt() {
+  const prompt = byId("home-screen-prompt");
+  const hideButton = byId("hide-home-screen-prompt");
+  if (!prompt || !hideButton) return;
+  try {
+    prompt.hidden = localStorage.getItem(HOME_SCREEN_PROMPT_KEY) === "1";
+  } catch (_) {
+    prompt.hidden = false;
+  }
+  hideButton.addEventListener("click", () => {
+    prompt.hidden = true;
+    try { localStorage.setItem(HOME_SCREEN_PROMPT_KEY, "1"); } catch (_) {}
+  });
+}
+initHomeScreenPrompt();
 const screens = [...document.querySelectorAll("[data-screen]")];
 const nav = [...document.querySelectorAll(".nav-item")];
 const state = {

@@ -80,8 +80,15 @@ async function loadAnalyticsDashboard() {
     byId("analytics-menu-row").hidden = false;
     const summary = result.summary || {};
     const services = new Map((result.services || []).map(item => [item.id, item.name]));
-    const eventRows = (result.events || []).slice(0, 25).map(item =>
-      '<tr><td>' + esc(item.event_name) + '</td><td>' + esc(String(item.telegram_id || "—")) + '</td><td>' + esc(services.get(item.service_id) || item.service_id || "—") + '</td><td>' + esc(new Date(item.occurred_at).toLocaleString()) + '</td></tr>'
+    const keyEventNames = {
+      app_open: "Открытие приложения",
+      service_view: "Просмотр сервиса",
+      connect_click: "Переход по ссылке",
+      contact_submit: "Сообщение отправлено",
+      provider_submit: "Заявка отправлена"
+    };
+    const eventRows = (result.events || []).filter(item => keyEventNames[item.event_name]).slice(0, 20).map(item =>
+      '<tr><td>' + t(keyEventNames[item.event_name]) + '</td><td>' + esc(String(item.telegram_id || "—")) + '</td><td>' + esc(services.get(item.service_id) || item.service_id || "—") + '</td><td>' + esc(new Date(item.occurred_at).toLocaleString()) + '</td></tr>'
     ).join("");
     const clickRows = (result.clicks || []).slice(0, 25).map(item =>
       '<tr><td>' + esc(services.get(item.service_id) || item.service_id) + '</td><td>' + esc(String(item.telegram_id || "—")) + '</td><td>' + esc(new Date(item.clicked_at).toLocaleString()) + '</td></tr>'
@@ -101,13 +108,13 @@ async function loadAnalyticsDashboard() {
     ).join("");
     root.innerHTML =
       '<div class="analytics-summary">' +
+      '<article><strong>' + (result.users || []).length + '</strong><span>' + t("Пользователи") + '</span></article>' +
       '<article><strong>' + Number(summary.sessions || 0) + '</strong><span>' + t("Сессии") + '</span></article>' +
-      '<article><strong>' + Number(summary.events || 0) + '</strong><span>' + t("События") + '</span></article>' +
-      '<article><strong>' + Number(summary.clicks || 0) + '</strong><span>' + t("Переходы") + '</span></article>' +
-      '<h2>' + t("Пользователи и сессии") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Пользователь") + '</th><th>Telegram</th><th>' + t("Источник") + '</th><th>' + t("Активность") + '</th></tr></thead><tbody>' + (userRows || '<tr><td colspan="4">—</td></tr>') + '</tbody></table></div>' +
-      '<h2>' + t("Источники (последние сессии)") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Источник") + '</th><th>' + t("Сессии") + '</th></tr></thead><tbody>' + (sourceRows || '<tr><td colspan="2">—</td></tr>') + '</tbody></table></div>' +
-      '<h2>' + t("Последние события") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Событие") + '</th><th>Telegram ID</th><th>' + t("Сервис") + '</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (eventRows || '<tr><td colspan="4">—</td></tr>') + '</tbody></table></div>' +
-      '<h2>' + t("Партнёрские переходы") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Сервис") + '</th><th>Telegram ID</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (clickRows || '<tr><td colspan="3">—</td></tr>') + '</tbody></table></div></div>';
+      '<article><strong>' + Number(summary.clicks || 0) + '</strong><span>' + t("Партнёрские переходы") + '</span></article>' +
+      '<h2>' + t("Источники") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Источник") + '</th><th>' + t("Пользователи") + '</th></tr></thead><tbody>' + (sourceRows || '<tr><td colspan="2">—</td></tr>') + '</tbody></table></div>' +
+      '<h2>' + t("Пользователи") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Пользователь") + '</th><th>Telegram</th><th>' + t("Источник") + '</th><th>' + t("Активность") + '</th></tr></thead><tbody>' + (userRows || '<tr><td colspan="4">—</td></tr>') + '</tbody></table></div>' +
+      '<h2>' + t("Партнёрские переходы") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Сервис") + '</th><th>Telegram</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (clickRows || '<tr><td colspan="3">—</td></tr>') + '</tbody></table></div>' +
+      '<h2>' + t("Ключевые события") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Событие") + '</th><th>Telegram</th><th>' + t("Сервис") + '</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (eventRows || '<tr><td colspan="4">—</td></tr>') + '</tbody></table></div></div>';
   } catch (_) {
     root.textContent = t("Не удалось загрузить аналитику.");
   } finally {
@@ -123,7 +130,7 @@ const translations = {
     "Откройте приложение в Telegram, чтобы сменить язык.":"Open the app in Telegram to change the language.",
     "Загрузка аналитики…":"Loading analytics…","Нет доступа к аналитике.":"No access to analytics.",
     "Не удалось загрузить аналитику.":"Could not load analytics.","Сессии":"Sessions","События":"Events",
-    "Переходы":"Clicks","Последние события":"Recent events",
+    "Переходы":"Clicks","Последние события":"Recent events","Пользователи":"Users","Источники":"Sources","Ключевые события":"Key events","Открытие приложения":"App opened","Просмотр сервиса":"Service viewed","Переход по ссылке":"Affiliate link opened","Сообщение отправлено":"Message sent","Заявка отправлена":"Provider request sent",
     "Партнёрские переходы":"Affiliate clicks","Событие":"Event","Сервис":"Service","Время":"Time",
     "Аналитика":"Analytics","Пользователи и сессии":"Users and sessions","Пользователь":"User","Источник":"Source","Активность":"Activity","Источники трафика":"Traffic sources","Тип":"Type","Статус":"Status","Сумма":"Amount","Комиссия":"Commission","Не удалось открыть партнёрскую ссылку. Попробуйте ещё раз.":"Could not open the partner link. Please try again.",
     "Поиск":"Search","Очистить поиск":"Clear search","Популярный выбор":"Popular services","Посмотреть все":"View all","Свернуть":"Show less",
@@ -198,7 +205,6 @@ function chooseLanguage() {
     if (buttonId !== "ru" && buttonId !== "en") return;
     if (appLanguage === buttonId) return;
     appLanguage = buttonId;
-    trackEvent("language_change", { language: appLanguage });
     try { localStorage.setItem(LANGUAGE_KEY, appLanguage); } catch (_) {}
     translateStaticContent();
     renderCatalog();
@@ -324,7 +330,6 @@ function showScreen(name) {
   });
   moveIndicator();
   haptic();
-  trackEvent("screen_view", { screen: name });
   if (name === "analytics") loadAnalyticsDashboard();
   window.scrollTo({ top: 0, behavior: "smooth" });
   if (name === "favorites") renderFavorites();
@@ -512,7 +517,6 @@ syncTelegramProfile();
 trackEvent("app_open", { language: appLanguage });
 
 const search = byId("search");
-let searchAnalyticsTimer = null;
 const clearSearch = byId("clear-search");
 const toggleCatalog = byId("toggle-catalog");
 toggleCatalog?.addEventListener("click", () => {
@@ -523,10 +527,6 @@ toggleCatalog?.addEventListener("click", () => {
 search?.addEventListener("input", () => {
   state.query = search.value.trim().toLowerCase();
   clearSearch.hidden = !search.value;
-  clearTimeout(searchAnalyticsTimer);
-  searchAnalyticsTimer = setTimeout(() => {
-    if (state.query) trackEvent("search", { query_length: state.query.length });
-  }, 1200);
   renderCatalog();
 });
 clearSearch?.addEventListener("click", () => {
@@ -540,7 +540,6 @@ clearSearch?.addEventListener("click", () => {
 document.querySelectorAll(".filter-chip").forEach(chip => {
   chip.addEventListener("click", () => {
     state.filter = chip.dataset.filter;
-    trackEvent("filter_change", { filter: state.filter });
     document.querySelectorAll(".filter-chip").forEach(item => item.classList.toggle("active", item === chip));
     haptic();
     renderCatalog();
@@ -791,23 +790,19 @@ document.addEventListener("click", event => {
   if (action === "favorite") {
     const removing = state.favorites.has(service.id);
     toggleSet(state.favorites, "vpn-finder-favorites", service.id);
-    trackEvent(removing ? "favorite_remove" : "favorite_add", {}, service.id);
     renderCatalog(); renderFavorites();
   }
   if (action === "compare") {
     const removing = state.compare.has(service.id);
     toggleSet(state.compare, "vpn-finder-compare", service.id);
-    trackEvent(removing ? "compare_remove" : "compare_add", {}, service.id);
     renderCatalog(); renderCompare();
   }
   if (action === "remove-favorites") {
     toggleSet(state.favorites, "vpn-finder-favorites", service.id);
-    trackEvent("favorite_remove", {}, service.id);
     renderFavorites(); renderCatalog();
   }
   if (action === "remove-compare") {
     toggleSet(state.compare, "vpn-finder-compare", service.id);
-    trackEvent("compare_remove", {}, service.id);
     renderCompare(); renderCatalog();
   }
 });

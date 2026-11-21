@@ -597,10 +597,45 @@ function serviceAvatar(service, className = "service-avatar", prioritize = false
   return `<span class="${className} avatar-frame" aria-hidden="true">
     <span class="avatar-fallback">${initial}</span>
     <img class="avatar-image" src="${esc(url)}" data-fallback="${esc(fallback)}" alt="" width="64" height="64"
-      loading="${prioritize ? "eager" : "lazy"}" fetchpriority="${prioritize ? "high" : "auto"}" decoding="async"
+      loading="eager" fetchpriority="${prioritize ? "high" : "low"}" decoding="async"
       onload="this.classList.add('is-loaded')"
       onerror="if(this.dataset.fallback&&!this.dataset.fallbackUsed){this.dataset.fallbackUsed='1';this.src=this.dataset.fallback}else{this.remove()}">
   </span>`;
+}
+
+// Start downloading every catalog logo as soon as the service list arrives.
+// The first four remain highest priority; the rest warm the browser cache in parallel batches.
+function preloadServiceAvatars(services) {
+  const queue = services.map((service, index) => {
+    const primary = typeof service.logo_url === "string" && /^https:\/\//i.test(service.logo_url.trim())
+      ? service.logo_url.trim()
+      : "";
+    const fallback = serviceAvatars[service.id] || "";
+    return { url: primary || fallback, fallback: primary && fallback && primary !== fallback ? fallback : "", index };
+  }).filter(item => item.url);
+  let cursor = 0;
+  const workers = Array.from({ length: Math.min(8, queue.length) }, async () => {
+    while (cursor < queue.length) {
+      const item = queue[cursor++];
+      await new Promise(resolve => {
+        const image = new Image();
+        image.decoding = "async";
+        image.fetchPriority = item.index < 4 ? "high" : "low";
+        image.onload = resolve;
+        image.onerror = () => {
+          if (item.fallback) {
+            const backup = new Image();
+            backup.decoding = "async";
+            backup.onload = resolve;
+            backup.onerror = resolve;
+            backup.src = item.fallback;
+          } else resolve();
+        };
+        image.src = item.url;
+      });
+    }
+  });
+  Promise.all(workers).catch(() => {});
 }
 function serviceDetails(service) {
   const facts = [];
@@ -844,6 +879,7 @@ async function loadServices() {
     state.services = await response.json();
     state.featuredIds = state.services.slice(0, 4).map(service => service.id);
     renderCatalog();
+    preloadServiceAvatars(state.services);
     updateCounts();
   } catch (_) {
     list.innerHTML = `<div class="empty-state"><h3>${t("Не удалось загрузить")}</h3><button class="primary-button" type="button" id="retry-load">${t("Повторить")}</button></div>`;

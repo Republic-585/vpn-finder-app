@@ -369,3 +369,22 @@ body{font-size:var(--type-body);line-height:1.45}
 .bottom-nav-dock .profile-nav-button.is-pressed{border-color:var(--telegram-accent)!important;box-shadow:0 0 0 2px rgba(0,122,255,.3),0 8px 26px rgba(0,0,0,.34)!important}
 .bottom-nav-dock .profile-nav-button{border-width:2px!important}
 .bottom-nav-dock .profile-nav-button.is-current{border-width:3px!important;border-color:var(--telegram-accent)!important;box-shadow:0 8px 26px rgba(0,0,0,.34)!important}
+
+
+/* Minimal Telegram-style star ratings */
+.popular-service{gap:4px}
+.popular-service-open{width:100%;min-width:0;padding:3px 1px 0;display:flex;flex-direction:column;align-items:center;gap:10px;border:0;background:transparent;color:var(--text);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.popular-service-open:active{transform:scale(.985)}
+.popular-service-open span:last-child{width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;color:#F5F5F5;font-size:13px;line-height:1.2;font-weight:600;letter-spacing:-.02em}
+.service-rating{min-height:20px;display:flex;align-items:center;justify-content:flex-start;gap:1px;margin-top:2px}
+.service-rating-star{width:18px;height:20px;flex:0 0 18px;display:grid;place-items:center;padding:0;border:0;border-radius:4px;background:transparent;color:#737780;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .16s ease,color .16s ease}
+.service-rating-star svg{width:16px;height:16px;display:block;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round}
+.service-rating-star.is-filled{color:var(--telegram-accent,#007AFF)}
+.service-rating-star.is-filled svg{fill:currentColor;stroke:currentColor}
+.service-rating-star.is-mine{filter:drop-shadow(0 0 2px rgba(0,122,255,.28))}
+.service-rating-star:active{transform:scale(.86)}
+.service-rating-star:disabled{opacity:.55;cursor:default;transform:none}
+.service-mini-copy .service-rating{margin-top:3px}
+.popular-service .service-rating{justify-content:center;margin-top:1px}
+.vpn-card>.service-rating{margin:1px 0 9px 76px}
+@media(prefers-reduced-motion:reduce){.service-rating-star,.popular-service-open{transition:none!important}}

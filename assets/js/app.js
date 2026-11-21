@@ -587,6 +587,42 @@ async function loadServices() {
     byId("retry-load")?.addEventListener("click", loadServices);
   }
 }
+
+async function sendProfileInbox(kind, form, statusId) {
+  const status = byId(statusId);
+  const button = form.querySelector('button[type="submit"]');
+  if (!tg?.initData) {
+    status.textContent = "Откройте приложение через Telegram, чтобы отправить сообщение.";
+    return;
+  }
+  button.disabled = true;
+  status.textContent = "Отправляем…";
+  try {
+    const fields = Object.fromEntries(new FormData(form).entries());
+    const response = await fetch(SUPABASE_URL + "/functions/v1/miniapp-inbox", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ initData: tg.initData, kind, fields, language: "ru" })
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.ok) throw new Error("Delivery failed");
+    status.textContent = "Сообщение отправлено.";
+    form.reset();
+  } catch (_) {
+    status.textContent = "Не удалось отправить. Попробуйте ещё раз.";
+  } finally {
+    button.disabled = false;
+  }
+}
+byId("contact-form")?.addEventListener("submit", event => {
+  event.preventDefault();
+  sendProfileInbox("contact", event.currentTarget, "contact-status");
+});
+byId("provider-form")?.addEventListener("submit", event => {
+  event.preventDefault();
+  sendProfileInbox("provider", event.currentTarget, "provider-status");
+});
+
 loadServices();
 
 function rotateFeaturedServices() {

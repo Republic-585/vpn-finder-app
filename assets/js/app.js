@@ -471,7 +471,7 @@ function serviceMiniCard(service) {
   const id = esc(service.id);
   const expanded = state.expandedServiceId === service.id;
   const compactFacts = [
-    service.min_price_rub == null ? "Цена —" : "от " + money(service.min_price_rub) + " ₽",
+    service.min_price_rub == null ? t("Цена —") : t("от ") + money(service.min_price_rub) + " ₽",
     service.devices_limit ? service.devices_limit + t(" устр.") : t("Устр. —"),
     service.traffic_limit ? service.traffic_limit : t("Трафик —"),
     service.trial_days != null ? (Number(service.trial_days) > 0 ? t("Тест ") + service.trial_days + t(" дн.") : t("Без теста")) : t("Тест —")
@@ -499,14 +499,14 @@ function serviceCard(service, context = "catalog") {
   const price = service.min_price_rub == null ? t("Тарифы в боте") : "от " + money(service.min_price_rub) + " ₽";
   const details = [];
   if (service.devices_limit) details.push(service.devices_limit + t(" устр."));
-  if (service.countries_count) details.push(service.countries_count + "+ стран");
+  if (service.countries_count) details.push(service.countries_count + t(" стран"));
   if (service.trial_days) details.push(t("Тест ") + service.trial_days + t(" дн."));
   return `<article class="vpn-card" data-service="${id}">
     <div class="vpn-card-top">
       <div class="service-mark">${esc((displayServiceName(service) || "V").slice(0, 1))}</div>
       <div class="service-title"><h3>${esc(displayServiceName(service))}</h3><div class="service-price">${price}</div></div>
       <div class="card-tools">
-        <button class="round-action ${favorite ? "selected" : ""}" type="button" data-action="favorite" data-id="${id}" aria-label=${t("Избранное")}" aria-pressed="${favorite}">
+        <button class="round-action ${favorite ? "selected" : ""}" type="button" data-action="favorite" data-id="${id}" aria-label="${t("Избранное")}" aria-pressed="${favorite}">
           <svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.1-8.8 10.2-8.8 10.2S3.2 13.9 3.2 8.8A4.5 4.5 0 0 1 12 6.5a4.5 4.5 0 0 1 8.8 2.3Z"></path></svg>
         </button>
         <button class="round-action ${compared ? "selected" : ""}" type="button" data-action="compare" data-id="${id}" aria-label="${t("Сравнить")}" aria-pressed="${compared}">
@@ -535,7 +535,7 @@ function renderCatalog() {
   }
   const list = byId("provider-list");
   if (!items.length) {
-    list.innerHTML = '<div class="empty-state"><h3>${t("Ничего не найдено")}</h3></div>';
+    list.innerHTML = `<div class="empty-state"><h3>${t("Ничего не найдено")}</h3></div>`;
     return;
   }
   if (showCompactResults) {
@@ -556,18 +556,18 @@ function renderFavorites() {
   const items = state.services.filter(service => state.favorites.has(service.id));
   byId("favorites-list").innerHTML = items.length
     ? '<div class="provider-list">' + items.map(service => serviceCard(service, "favorites")).join("") + "</div>"
-    : '<div class="empty-state"><h3>${t("Пусто")}</h3><button class="primary-button" type="button" data-go="catalog">${t("Каталог")}</button></div>';
+    : `<div class="empty-state"><h3>${t("Пусто")}</h3><button class="primary-button" type="button" data-go="catalog">${t("Каталог")}</button></div>`;
   updateCounts();
 }
 function renderCompare() {
   const items = state.services.filter(service => state.compare.has(service.id));
   if (!items.length) {
-    byId("compare-list").innerHTML = '<div class="empty-state"><h3>${t("Выберите сервисы")}</h3><button class="primary-button" type="button" data-go="catalog">${t("Каталог")}</button></div>';
+    byId("compare-list").innerHTML = `<div class="empty-state"><h3>${t("Выберите сервисы")}</h3><button class="primary-button" type="button" data-go="catalog">${t("Каталог")}</button></div>`;
     updateCounts();
     return;
   }
   const rows = [
-    [t("Цена"), service => service.min_price_rub == null ? "В боте" : "от " + money(service.min_price_rub) + " ₽"],
+    [t("Цена"), service => service.min_price_rub == null ? t("В боте") : t("от ") + money(service.min_price_rub) + " ₽"],
     [t("Устройства"), service => service.devices_limit ? service.devices_limit : t("Нет данных")],
     [t("Страны"), service => service.countries_count ? service.countries_count + "+" : t("Нет данных")],
   ];

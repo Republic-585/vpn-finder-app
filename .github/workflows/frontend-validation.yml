@@ -1,8 +1,6 @@
 name: Frontend validation
 
 on:
-  push:
-    branches: [main, analytics/implementation-2026-11]
   pull_request:
     branches: [main]
 

@@ -734,6 +734,9 @@ async function saveServiceRating(serviceId, value) {
     if (byId("screen-favorites")?.classList.contains("active")) renderFavorites();
   }
 }
+function serviceAvatarWithRating(service, index = 0) {
+  return `<span class="service-avatar-rating">${serviceAvatar(service, "service-avatar", index < 4)}${ratingMarkup(service.id, true)}</span>`;
+}
 function serviceMiniCard(service, index = 0) {
   const id = esc(service.id);
   const expanded = state.expandedServiceId === service.id;
@@ -745,11 +748,11 @@ function serviceMiniCard(service, index = 0) {
   ];
   return `<article class="service-list-card ${expanded ? "expanded" : ""}" data-service-id="${id}">
     <div class="service-mini-card" role="button" tabindex="0" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">
-      ${serviceAvatar(service, "service-avatar", index < 4)}
+      ${expanded ? serviceAvatarWithRating(service, index) : serviceAvatar(service, "service-avatar", index < 4)}
       <span class="service-mini-copy"><span class="service-mini-title-row"><span class="service-mini-name">${esc(displayServiceName(service))}</span></span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span></span>
       <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
     </div>
-    ${expanded ? ratingMarkup(service.id, true) + serviceDetails(service, false) : ""}
+    ${expanded ? serviceDetails(service, false) : ""}
   </article>`;
 }
 function serviceFeaturedItem(service) {
@@ -976,20 +979,23 @@ document.addEventListener("click", event => {
         previousCard.classList.remove("expanded");
         previousCard.querySelector(".service-mini-card")?.setAttribute("aria-expanded", "false");
         previousCard.querySelector(".service-detail-panel")?.remove();
-        previousCard.querySelector(".service-mini-card + .service-rating")?.remove();
+        previousCard.querySelector(".service-avatar-rating")?.replaceWith(serviceAvatar(state.services.find(item => item.id === state.expandedServiceId), "service-avatar", false));
       }
     }
     if (wasExpanded) {
       currentCard?.classList.remove("expanded");
       currentCard?.querySelector(".service-detail-panel")?.remove();
       button.setAttribute("aria-expanded", "false");
-      currentCard?.querySelector(".service-mini-card + .service-rating")?.remove();
+      const avatarWrap = currentCard?.querySelector(".service-avatar-rating");
+      if (avatarWrap) avatarWrap.replaceWith(serviceAvatar(service, "service-avatar", false));
       state.expandedServiceId = null;
     } else {
       currentCard?.classList.add("expanded");
       button.setAttribute("aria-expanded", "true");
       trackEvent("service_view", {}, service.id);
-      button.insertAdjacentHTML("afterend", ratingMarkup(service.id, true) + serviceDetails(service, false));
+      const avatar = button.querySelector(".service-avatar");
+      if (avatar) avatar.outerHTML = serviceAvatarWithRating(service, state.services.indexOf(service));
+      button.insertAdjacentHTML("afterend", serviceDetails(service, false));
       state.expandedServiceId = service.id;
     }
     return;

@@ -103,3 +103,19 @@
 .home-screen-status{margin:0 -14px;padding:11px 14px;border-top:1px solid rgba(255,255,255,.09);color:var(--secondary);font-size:12px;line-height:1.4;text-align:left}
 .home-screen-status[hidden]{display:none}
 .home-screen-action:disabled{opacity:.65;cursor:default}
+
+/* Additional destinations inside the Telegram profile */
+.profile-menu{width:100%;margin-top:18px;overflow:hidden;border:1px solid var(--line);border-radius:16px;background:var(--panel);text-align:left}
+.profile-menu-row{width:100%;min-height:52px;padding:0 15px;display:flex;align-items:center;justify-content:space-between;gap:14px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--text);font:inherit;font-size:13px;font-weight:560;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.profile-menu-row:last-child{border-bottom:0}
+.profile-menu-row span:last-child{color:var(--muted);font-size:22px;font-weight:400}
+.profile-menu-row:active{background:rgba(255,255,255,.045)}
+.profile-form{display:grid;gap:15px;padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+.profile-form label{display:grid;gap:7px;color:var(--secondary);font-size:12px;font-weight:550;text-align:left}
+.profile-form input,.profile-form textarea{width:100%;min-height:44px;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:var(--raised);color:var(--text);font:inherit;font-size:14px;outline:none}
+.profile-form textarea{resize:vertical;line-height:1.5}
+.profile-form input:focus,.profile-form textarea:focus{border-color:var(--bright)}
+.profile-form .connect-button{width:100%;min-height:44px}
+.profile-form-status{min-height:16px;margin:0;color:var(--bright);font-size:11px;line-height:1.45}
+.profile-back{margin-top:16px;padding:10px 0;border:0;background:transparent;color:var(--bright);font:inherit;font-size:13px;cursor:pointer}
+#screen-news .empty-state{margin-top:8px}

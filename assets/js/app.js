@@ -320,6 +320,19 @@ function esc(value) {
 function money(value) {
   return new Intl.NumberFormat(appLanguage === "en" ? "en-US" : "ru-RU").format(value);
 }
+function servicePriceText(service) {
+  const amount = service.min_price ?? service.min_price_rub;
+  if (amount == null || !Number.isFinite(Number(amount))) return null;
+  const currency = String(service.price_currency || "RUB").toUpperCase();
+  try {
+    return new Intl.NumberFormat(appLanguage === "en" ? "en-US" : "ru-RU", {
+      style: "currency", currency, currencyDisplay: "symbol",
+      minimumFractionDigits: 0, maximumFractionDigits: 2
+    }).format(Number(amount));
+  } catch (_) {
+    return money(amount) + " " + currency;
+  }
+}
 function displayServiceName(service) {
   const clean = String(service?.name || "")
     .replace(/vpn/gi, "")
@@ -651,7 +664,8 @@ function serviceAvatar(service, className = "service-avatar", prioritize = false
 
 function serviceDetails(service, hideFavoriteAction = false) {
   const facts = [];
-  if (service.min_price_rub != null) facts.push([t("Стоимость"), "от " + money(service.min_price_rub) + " ₽"]);
+  const priceText = servicePriceText(service);
+  if (priceText) facts.push([t("Стоимость"), "от " + priceText]);
   if (service.devices_limit) facts.push([t("Устройства"), service.devices_limit]);
   if (service.countries_count) facts.push([t("Страны"), service.countries_count + "+"]);
   if (service.trial_days) facts.push([t("Пробный период"), service.trial_days + " дн."]);
@@ -745,7 +759,7 @@ function serviceMiniCard(service, index = 0) {
   const id = esc(service.id);
   const expanded = state.expandedServiceId === service.id;
   const compactFacts = [
-    service.min_price_rub == null ? t("Цена —") : t("от ") + money(service.min_price_rub) + " ₽",
+    servicePriceText(service) == null ? t("Цена —") : t("от ") + servicePriceText(service),
     service.devices_limit ? service.devices_limit + t(" устр.") : t("Устр. —"),
     service.traffic_limit ? service.traffic_limit : t("Трафик —"),
     service.trial_days != null ? (Number(service.trial_days) > 0 ? t("Тест ") + service.trial_days + t(" дн.") : t("Без теста")) : t("Тест —")
@@ -770,7 +784,8 @@ function serviceCard(service, context = "catalog") {
   const id = esc(service.id);
   const favorite = state.favorites.has(service.id);
   const compared = state.compare.has(service.id);
-  const price = service.min_price_rub == null ? t("Тарифы в боте") : "от " + money(service.min_price_rub) + " ₽";
+  const formattedPrice = servicePriceText(service);
+  const price = formattedPrice == null ? t("Тарифы в боте") : "от " + formattedPrice;
   const details = [];
   if (service.devices_limit) details.push(service.devices_limit + t(" устр."));
   if (service.countries_count) details.push(service.countries_count + t(" стран"));
@@ -1039,7 +1054,7 @@ async function loadServices() {
   const list = byId("provider-list");
   list.innerHTML = `<div class="loading-state"><svg class="loader-shield" viewBox="0 0 24 24" role="img" aria-label="${t("Загрузка")}"><path class="shield-outline" d="M12 2.8 20 6v5.2c0 5-3.2 8.2-8 10-4.8-1.8-8-5-8-10V6l8-3.2Z"></path><path class="shield-check" d="m8.5 11.8 2.3 2.3 4.8-4.8"></path></svg></div>`;
   try {
-    const url = SUPABASE_URL + "/rest/v1/vpn_services?select=id,slug,name,referral_url,logo_url,description,min_price_rub,devices_limit,countries_count,trial_days,traffic_limit,platforms,plans,features,status,sort_order&status=eq.active&order=sort_order.asc";
+    const url = SUPABASE_URL + "/rest/v1/vpn_services?select=id,slug,name,referral_url,logo_url,description,min_price_rub,min_price,price_currency,devices_limit,countries_count,trial_days,traffic_limit,platforms,plans,features,status,sort_order&status=eq.active&order=sort_order.asc";
     const response = await fetch(url, { headers: { apikey: SUPABASE_KEY } });
     if (!response.ok) throw new Error("Catalog request failed");
     state.services = await response.json();

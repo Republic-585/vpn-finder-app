@@ -746,10 +746,10 @@ function serviceMiniCard(service, index = 0) {
   return `<article class="service-list-card ${expanded ? "expanded" : ""}" data-service-id="${id}">
     <div class="service-mini-card" role="button" tabindex="0" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">
       ${serviceAvatar(service, "service-avatar", index < 4)}
-      <span class="service-mini-copy"><span class="service-mini-title-row"><span class="service-mini-name">${esc(displayServiceName(service))}</span>${ratingMarkup(service.id, expanded)}</span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span></span>
+      <span class="service-mini-copy"><span class="service-mini-title-row"><span class="service-mini-name">${esc(displayServiceName(service))}</span></span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span></span>
       <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
     </div>
-    ${expanded ? serviceDetails(service, false) : ""}
+    ${expanded ? ratingMarkup(service.id, true) + serviceDetails(service, false) : ""}
   </article>`;
 }
 function serviceFeaturedItem(service) {
@@ -976,24 +976,20 @@ document.addEventListener("click", event => {
         previousCard.classList.remove("expanded");
         previousCard.querySelector(".service-mini-card")?.setAttribute("aria-expanded", "false");
         previousCard.querySelector(".service-detail-panel")?.remove();
-        const previousRating = previousCard.querySelector(".service-mini-title-row .service-rating");
-        if (previousRating) previousRating.outerHTML = ratingMarkup(state.expandedServiceId, false);
+        previousCard.querySelector(".service-mini-card + .service-rating")?.remove();
       }
     }
     if (wasExpanded) {
       currentCard?.classList.remove("expanded");
       currentCard?.querySelector(".service-detail-panel")?.remove();
       button.setAttribute("aria-expanded", "false");
-      const rating = currentCard?.querySelector(".service-mini-title-row .service-rating");
-      if (rating) rating.outerHTML = ratingMarkup(service.id, false);
+      currentCard?.querySelector(".service-mini-card + .service-rating")?.remove();
       state.expandedServiceId = null;
     } else {
       currentCard?.classList.add("expanded");
       button.setAttribute("aria-expanded", "true");
-      const rating = currentCard?.querySelector(".service-mini-title-row .service-rating");
-      if (rating) rating.outerHTML = ratingMarkup(service.id, true);
       trackEvent("service_view", {}, service.id);
-      button.insertAdjacentHTML("afterend", serviceDetails(service, false));
+      button.insertAdjacentHTML("afterend", ratingMarkup(service.id, true) + serviceDetails(service, false));
       state.expandedServiceId = service.id;
     }
     return;

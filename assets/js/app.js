@@ -14,7 +14,20 @@ const HOME_SCREEN_PROMPT_KEY = "vpn-finder-home-screen-prompt-hidden";
 function initHomeScreenPrompt() {
   const prompt = byId("home-screen-prompt");
   const hideButton = byId("hide-home-screen-prompt");
-  if (!prompt || !hideButton) return;
+  const addButton = byId("add-home-screen");
+  const status = byId("home-screen-status");
+  if (!prompt || !hideButton || !addButton || !status) return;
+
+  const showStatus = message => {
+    status.textContent = message;
+    status.hidden = !message;
+  };
+  const markAdded = () => {
+    addButton.textContent = "Добавлено на экран Домой";
+    addButton.disabled = true;
+    showStatus("Finder VPN теперь можно открывать с домашнего экрана.");
+  };
+
   try {
     prompt.hidden = localStorage.getItem(HOME_SCREEN_PROMPT_KEY) === "1";
   } catch (_) {
@@ -24,6 +37,34 @@ function initHomeScreenPrompt() {
     prompt.hidden = true;
     try { localStorage.setItem(HOME_SCREEN_PROMPT_KEY, "1"); } catch (_) {}
   });
+
+  if (tg?.onEvent) {
+    tg.onEvent("homeScreenAdded", markAdded);
+    tg.onEvent("homeScreenFailed", event => {
+      showStatus(event?.error === "UNSUPPORTED"
+        ? "Добавление на экран Домой не поддерживается на этом устройстве или в этой версии Telegram."
+        : "Не удалось добавить Finder VPN. Попробуйте ещё раз.");
+    });
+  }
+
+  addButton.addEventListener("click", () => {
+    if (typeof tg?.addToHomeScreen !== "function") {
+      showStatus("Откройте Finder VPN в актуальной версии Telegram, чтобы добавить его на экран Домой.");
+      return;
+    }
+    showStatus("");
+    tg.addToHomeScreen();
+  });
+
+  if (typeof tg?.checkHomeScreenStatus === "function") {
+    tg.checkHomeScreenStatus(result => {
+      if (result === "added") markAdded();
+      else if (result === "unsupported") {
+        showStatus("Добавление на экран Домой не поддерживается на этом устройстве или в этой версии Telegram.");
+        addButton.disabled = true;
+      }
+    });
+  }
 }
 initHomeScreenPrompt();
 const screens = [...document.querySelectorAll("[data-screen]")];
@@ -198,9 +239,6 @@ function renderTelegramProfile(profile) {
   const name = byId("profile-name");
   const photo = byId("profile-photo");
   const fallback = byId("profile-avatar-fallback");
-  const link = byId("profile-link");
-  const noLink = byId("profile-no-link");
-
   name.textContent = profile.display_name || "Пользователь";
   const initial = (profile.first_name || "V").slice(0, 1).toLocaleUpperCase("ru-RU");
   fallback.textContent = initial;
@@ -221,16 +259,6 @@ function renderTelegramProfile(profile) {
     fallback.hidden = false;
   }
 
-  if (profile.profile_url && profile.username) {
-    link.href = profile.profile_url;
-    link.textContent = "t.me/" + profile.username;
-    link.hidden = false;
-    noLink.hidden = true;
-  } else {
-    link.removeAttribute("href");
-    link.hidden = true;
-    noLink.hidden = false;
-  }
 }
 
 async function syncTelegramProfile() {
@@ -238,7 +266,6 @@ async function syncTelegramProfile() {
   if (profileSyncPromise) return profileSyncPromise;
   if (!tg?.initData) {
     byId("profile-name").textContent = "Откройте приложение через Telegram";
-    byId("profile-no-link").hidden = false;
     return;
   }
 
@@ -263,7 +290,6 @@ async function syncTelegramProfile() {
     await profileSyncPromise;
   } catch (_) {
     byId("profile-name").textContent = "Не удалось загрузить профиль";
-    byId("profile-no-link").hidden = false;
   } finally {
     profileSyncPromise = null;
   }

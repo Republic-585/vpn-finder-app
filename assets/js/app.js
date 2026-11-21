@@ -775,7 +775,7 @@ function serviceMiniCard(service, index = 0) {
   return `<article class="service-list-card ${expanded ? "expanded" : ""}" data-service-id="${id}">
     <div class="service-mini-card" role="button" tabindex="0" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">
       ${expanded ? serviceAvatarWithRating(service, index) : serviceAvatar(service, "service-avatar", index < 4)}
-      <span class="service-mini-copy"><span class="service-mini-title-row"><span class="service-mini-name">${esc(displayServiceName(service))}</span></span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span></span>
+      <span class="service-mini-copy"><span class="service-mini-title-row"><span class="service-mini-name">${esc(displayServiceName(service))}</span></span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(cleanCardText(item))}</span>`).join('<span class="service-mini-dot">·</span>')}</span></span>
       <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
     </div>
     ${expanded ? serviceDetails(service, false) : ""}

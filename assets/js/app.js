@@ -645,7 +645,7 @@ function serviceAvatar(service, className = "service-avatar", prioritize = false
 }
 
 
-function serviceDetails(service, hideFavoriteAction = false, showRatingHeader = false) {
+function serviceDetails(service, hideFavoriteAction = false) {
   const facts = [];
   if (service.min_price_rub != null) facts.push([t("Стоимость"), "от " + money(service.min_price_rub) + " ₽"]);
   if (service.devices_limit) facts.push([t("Устройства"), service.devices_limit]);
@@ -659,7 +659,6 @@ function serviceDetails(service, hideFavoriteAction = false, showRatingHeader = 
   const features = allFeatures.filter(item => !paymentPattern.test(String(item)));
   const favorite = state.favorites.has(service.id);
   return `<div class="service-detail-panel">
-    ${showRatingHeader ? `<div class="service-detail-heading"><h3>${esc(displayServiceName(service))}</h3>${ratingMarkup(service.id)}</div>` : ""}
     ${hideFavoriteAction ? "" : `<div class="service-detail-actions"><button class="service-detail-favorite ${favorite ? "is-favorite" : ""}" type="button" data-action="favorite-detail" data-id="${esc(service.id)}" aria-label="${favorite ? t("Убрать") : t("Избранное")}" aria-pressed="${favorite}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.1-8.8 11-8.8 11s-8.8-5.9-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path></svg></button></div>`}
     ${service.description ? `<p class="service-detail-description">${esc(service.description)}</p>` : ""}
     ${facts.length ? `<div class="service-detail-facts">${facts.map(([label,value]) => `<div class="service-detail-fact"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join("")}</div>` : ""}
@@ -673,11 +672,12 @@ function ratingMarkup(serviceId) {
   const rating = state.ratings.get(serviceId) || {};
   const personal = Number(rating.my_rating) || 0;
   const average = Number(rating.average) || 0;
-  const shown = Math.max(0, Math.min(5, Math.round(average)));
+  const hasRatings = Number(rating.count) > 0;
+  const shown = hasRatings ? Math.max(1, Math.min(5, Math.round(average))) : "—";
   const disabled = state.ratingPending.has(serviceId);
-  const gradientId = "rating-gold-" + String(serviceId).replace(/[^a-zA-Z0-9_-]/g, "");
+  const gradientId = "rating-gold-" + String(serviceId).replace(/[^a-zA-Z0-9_-]/g, "") + "-" + Math.random().toString(36).slice(2, 8);
   return `<div class="service-rating" role="group" aria-label="Рейтинг сервиса">
-    <button class="service-rating-badge ${personal ? "has-vote" : ""}" type="button" data-action="toggle-rating-menu" data-id="${esc(serviceId)}" aria-label="Оценить сервис" aria-expanded="false" ${disabled ? "disabled" : ""}>
+    <button class="service-rating-badge ${personal ? "has-vote" : ""} ${hasRatings ? "" : "is-empty"}" type="button" data-action="toggle-rating-menu" data-id="${esc(serviceId)}" aria-label="Оценить сервис" aria-expanded="false" ${disabled ? "disabled" : ""}>
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <defs><linearGradient id="${gradientId}" x1="5" y1="2" x2="18" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF3A6"/><stop offset=".28" stop-color="#FFD95A"/><stop offset=".62" stop-color="#FFB800"/><stop offset="1" stop-color="#D97706"/></linearGradient></defs>
         <path class="telegram-star-shadow" d="M12 2.1c.48 0 .91.28 1.13.7l2.1 4.25 4.7.68c1.1.16 1.53 1.52.73 2.3l-3.4 3.32.8 4.68c.19 1.1-.96 1.94-1.95 1.42L12 17.24l-4.2 2.21c-.99.52-2.14-.32-1.95-1.42l.8-4.68-3.4-3.32c-.8-.78-.36-2.14.73-2.3l4.7-.68 2.1-4.25c.22-.42.65-.7 1.13-.7Z"/>

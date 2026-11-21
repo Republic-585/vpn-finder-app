@@ -664,11 +664,11 @@ function serviceAvatar(service, className = "service-avatar", prioritize = false
 
 function cleanCardText(value) {
   return String(value ?? "")
-    .replace(/https?:\\/\\/[^\\s<>"]+/gi, "")
+    .replace(/https?:\/\/\S+/gi, "")
     .replace(/@[A-Za-z0-9_]{3,}/g, "")
-    .replace(/\\s*\\([^)]*\\)/g, "")
-    .replace(/[\\u2013\\u2014]/g, "-")
-    .replace(/\\s+/g, " ")
+    .replace(/\s*\([^)]*\)/g, "")
+    .replace(/[—–]/g, "-")
+    .replace(/\s+/g, " ")
     .trim();
 }
 function serviceDetails(service, hideFavoriteAction = false) {
@@ -687,7 +687,7 @@ function serviceDetails(service, hideFavoriteAction = false) {
   const favorite = state.favorites.has(service.id);
   return `<div class="service-detail-panel">
     ${hideFavoriteAction ? "" : `<div class="service-detail-actions"><button class="service-detail-favorite ${favorite ? "is-favorite" : ""}" type="button" data-action="favorite-detail" data-id="${esc(service.id)}" aria-label="${favorite ? t("Убрать") : t("Избранное")}" aria-pressed="${favorite}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.1-8.8 11-8.8 11s-8.8-5.9-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path></svg></button></div>`}
-    ${facts.length ? `<div class="service-detail-facts">${facts.map(([label,value]) => `<div class="service-detail-fact"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join("")}</div>` : ""}
+    ${facts.length ? `<div class="service-detail-facts">${facts.map(([label,value]) => `<div class="service-detail-fact"><span>${esc(cleanCardText(label))}</span><strong>${esc(cleanCardText(value))}</strong></div>`).join("")}</div>` : ""}
     ${platforms.length ? `<div class="service-detail-group"><span class="service-detail-label">${t("Платформы")}</span><div class="service-detail-chips">${platforms.map(item => `<span>${esc(cleanCardText(item))}</span>`).join("")}</div></div>` : ""}
     ${payments.length ? `<div class="service-detail-group"><span class="service-detail-label">${t("Оплата")}</span><div class="service-detail-chips">${payments.map(item => `<span>${esc(cleanCardText(item))}</span>`).join("")}</div></div>` : ""}
     ${features.length ? `<div class="service-detail-group"><span class="service-detail-label">${t("Возможности")}</span><div class="service-detail-chips">${features.map(item => `<span>${esc(cleanCardText(item))}</span>`).join("")}</div></div>` : ""}

@@ -623,6 +623,8 @@ supportPayButton?.addEventListener("click", async () => {
   supportPayButton.disabled = true;
   if (supportStatus) supportStatus.textContent = t("Создаём счёт…");
   try {
+    await syncTelegramProfile();
+    if (!profileReady) throw new Error("Telegram profile is not ready");
     const response = await fetch(SUPABASE_URL + "/functions/v1/telegram-bot", {
       method: "POST",
       headers: { apikey: SUPABASE_KEY, "Content-Type": "application/json" },

@@ -91,3 +91,14 @@
 .profile-page-link,.profile-page-empty{max-width:100%;margin-top:7px;overflow-wrap:anywhere;color:var(--muted);font-size:13px;line-height:1.35;font-weight:500;text-decoration:none}
 .profile-page-link:active{color:var(--bright)}
 .profile-page-link[hidden],.profile-page-empty[hidden],.profile-photo[hidden],.profile-avatar-fallback[hidden]{display:none}
+
+
+/* Add Finder VPN to the Telegram home screen */
+.home-screen-prompt{width:100%;max-width:360px;margin-top:18px;overflow:hidden;border-radius:26px;background:var(--raised);text-align:left}
+.home-screen-prompt[hidden]{display:none}
+.home-screen-copy{padding:17px 18px 15px}
+.home-screen-copy h2{margin:0;color:var(--text);font-size:15px;line-height:1.35;font-weight:750;letter-spacing:-.02em}
+.home-screen-copy p{margin:6px 0 0;color:var(--secondary);font-size:12px;line-height:1.45;font-weight:400}
+.home-screen-action{width:100%;min-height:48px;padding:0 18px;display:flex;align-items:center;justify-content:flex-start;border:0;border-top:1px solid rgba(255,255,255,.09);background:transparent;color:var(--bright);font:inherit;font-size:13px;font-weight:600;text-align:left;text-decoration:none;cursor:pointer}
+.home-screen-action:active{background:rgba(255,255,255,.045)}
+.home-screen-dismiss{font-family:inherit}

@@ -68,6 +68,7 @@ function showScreen(name) {
   window.scrollTo({ top: 0, behavior: "smooth" });
   if (name === "favorites") renderFavorites();
   if (name === "compare") renderCompare();
+  if (name === "profile") syncTelegramProfile();
 }
 const navBar = document.querySelector(".bottom-nav");
 if (navBar) {
@@ -173,16 +174,86 @@ document.querySelectorAll("[data-go]").forEach(button => {
 });
 byId("profile-shortcut")?.addEventListener("click", () => showScreen("profile"));
 
-const user = tg?.initDataUnsafe?.user;
-if (user) {
-  const name = [user.first_name, user.last_name].filter(Boolean).join(" ") || "Пользователь";
-  const initial = (user.first_name || "V").slice(0, 1).toUpperCase();
-  byId("profile-name").textContent = name;
-  if (byId("avatar-initial")) byId("avatar-initial").textContent = initial;
-  byId("profile-avatar").textContent = initial;
-  byId("profile-status").textContent = "Telegram";
+let profileReady = false;
+let profileSyncPromise = null;
+
+function renderTelegramProfile(profile) {
+  const name = byId("profile-name");
+  const photo = byId("profile-photo");
+  const fallback = byId("profile-avatar-fallback");
+  const link = byId("profile-link");
+  const noLink = byId("profile-no-link");
+
+  name.textContent = profile.display_name || "Пользователь";
+  const initial = (profile.first_name || "V").slice(0, 1).toLocaleUpperCase("ru-RU");
+  fallback.textContent = initial;
+
+  if (profile.photo_url) {
+    photo.onerror = () => {
+      photo.hidden = true;
+      fallback.hidden = false;
+    };
+    photo.onload = () => {
+      photo.hidden = false;
+      fallback.hidden = true;
+    };
+    photo.src = profile.photo_url;
+  } else {
+    photo.removeAttribute("src");
+    photo.hidden = true;
+    fallback.hidden = false;
+  }
+
+  if (profile.profile_url && profile.username) {
+    link.href = profile.profile_url;
+    link.textContent = "t.me/" + profile.username;
+    link.hidden = false;
+    noLink.hidden = true;
+  } else {
+    link.removeAttribute("href");
+    link.hidden = true;
+    noLink.hidden = false;
+  }
 }
-byId("platform-value").textContent = tg?.platform && tg.platform !== "unknown" ? tg.platform : "Telegram";
+
+async function syncTelegramProfile() {
+  if (profileReady) return;
+  if (profileSyncPromise) return profileSyncPromise;
+  if (!tg?.initData) {
+    byId("profile-name").textContent = "Откройте приложение через Telegram";
+    byId("profile-no-link").hidden = false;
+    return;
+  }
+
+  profileSyncPromise = (async () => {
+    const response = await fetch(SUPABASE_URL + "/functions/v1/telegram-profile", {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ initData: tg.initData })
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.ok || !result.profile) {
+      throw new Error("Profile registration failed");
+    }
+    renderTelegramProfile(result.profile);
+    profileReady = true;
+  })();
+
+  try {
+    await profileSyncPromise;
+  } catch (_) {
+    byId("profile-name").textContent = "Не удалось загрузить профиль";
+    byId("profile-no-link").hidden = false;
+  } finally {
+    profileSyncPromise = null;
+  }
+}
+
+// First launch creates or updates the user's account automatically.
+syncTelegramProfile();
 
 const search = byId("search");
 const clearSearch = byId("clear-search");

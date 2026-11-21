@@ -645,7 +645,7 @@ function serviceAvatar(service, className = "service-avatar", prioritize = false
 }
 
 
-function serviceDetails(service, hideFavoriteAction = false) {
+function serviceDetails(service, hideFavoriteAction = false, showRatingHeader = false) {
   const facts = [];
   if (service.min_price_rub != null) facts.push([t("Стоимость"), "от " + money(service.min_price_rub) + " ₽"]);
   if (service.devices_limit) facts.push([t("Устройства"), service.devices_limit]);
@@ -671,9 +671,16 @@ function serviceDetails(service, hideFavoriteAction = false) {
 function ratingMarkup(serviceId) {
   const rating = state.ratings.get(serviceId) || {};
   const personal = Number(rating.my_rating) || 0;
-  const shown = personal || Math.round(Number(rating.average) || 0);
+  const average = Number(rating.average) || 0;
+  const shown = Math.max(0, Math.min(5, Math.round(average)));
   const disabled = state.ratingPending.has(serviceId);
-  return `<div class="service-rating" role="group" aria-label="Оценка сервиса">${[1,2,3,4,5].map(value => `<button class="service-rating-star ${value <= shown ? "is-filled" : ""} ${personal === value ? "is-mine" : ""}" type="button" data-action="rate" data-id="${esc(serviceId)}" data-rating="${value}" aria-label="Оценка ${value} из 5" aria-pressed="${personal === value}" ${disabled ? "disabled" : ""}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.7 14.9 8.6l6.5.9-4.7 4.6 1.1 6.5L12 17.5l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9L12 2.7Z"></path></svg></button>`).join("")}</div>`;
+  return `<div class="service-rating" role="group" aria-label="Рейтинг сервиса">
+    <button class="service-rating-badge ${personal ? "has-vote" : ""}" type="button" data-action="toggle-rating-menu" data-id="${esc(serviceId)}" aria-label="Оценить сервис" aria-expanded="false" ${disabled ? "disabled" : ""}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.7 14.9 8.6l6.5.9-4.7 4.6 1.1 6.5L12 17.5l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9L12 2.7Z"></path></svg>
+      <span>${shown || "—"}</span>
+    </button>
+    <div class="service-rating-choices" hidden>${[1,2,3,4,5].map(value => `<button class="service-rating-choice ${personal === value ? "is-selected" : ""}" type="button" data-action="rate" data-id="${esc(serviceId)}" data-rating="${value}" aria-label="Поставить оценку ${value}" ${disabled ? "disabled" : ""}>${value}</button>`).join("")}</div>
+  </div>`;
 }
 async function loadServiceRatings() {
   if (!tg?.initData || !state.services.length) return;
@@ -871,6 +878,22 @@ document.addEventListener("click", event => {
   const service = state.services.find(item => item.id === button.dataset.id);
   if (!service) return;
   const action = button.dataset.action;
+  if (action === "toggle-rating-menu") {
+    event.preventDefault();
+    event.stopPropagation();
+    const wrap = button.closest(".service-rating");
+    const choices = wrap?.querySelector(".service-rating-choices");
+    const opening = !!choices?.hidden;
+    document.querySelectorAll(".service-rating-choices:not([hidden])").forEach(menu => {
+      menu.hidden = true;
+      menu.closest(".service-rating")?.querySelector('[data-action="toggle-rating-menu"]')?.setAttribute("aria-expanded", "false");
+    });
+    if (choices && opening) {
+      choices.hidden = false;
+      button.setAttribute("aria-expanded", "true");
+    }
+    return;
+  }
   if (action === "rate") {
     event.preventDefault();
     event.stopPropagation();
@@ -950,7 +973,7 @@ document.addEventListener("click", event => {
       currentCard?.classList.add("expanded");
       button.setAttribute("aria-expanded", "true");
       trackEvent("service_view", {}, service.id);
-      button.insertAdjacentHTML("afterend", serviceDetails(service));
+      button.insertAdjacentHTML("afterend", serviceDetails(service, false, true));
       state.expandedServiceId = service.id;
     }
     return;

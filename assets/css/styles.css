@@ -564,6 +564,13 @@ body{font-size:var(--type-body);line-height:1.45}
 @media(max-width:360px){.support-presets{gap:5px}.support-preset{padding-inline:2px}.support-preset strong{font-size:12px}.support-preset span{font-size:10px}}
 
 
+/* Support method tabs and their payment panels. */
+.support-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 16px;padding:4px;border:1px solid var(--line);border-radius:15px;background:var(--raised)}
+.support-tab{min-height:42px;padding:9px 10px;border:0;border-radius:11px;background:transparent;color:var(--secondary);font:inherit;font-size:14px;font-weight:650;cursor:pointer}
+.support-tab.is-active{background:var(--card-bg,#fff);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.support-panel[hidden]{display:none}
+.support-panel.crypto-support{margin-top:0}
+
 /* Manual USDT support block; visually separated from Telegram Stars. */
 .crypto-support{margin-top:22px;padding:18px;border:1px solid var(--line);border-radius:20px;background:var(--raised)}
 .crypto-support-heading h2{margin:0 0 6px;font-size:17px;font-weight:650;letter-spacing:-.02em}

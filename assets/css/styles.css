@@ -541,3 +541,9 @@ body{font-size:var(--type-body);line-height:1.45}
   line-height:1!important;
   text-align:center!important;
 }
+
+/* VPN owner form: match profile menu typography and prevent iOS input zoom. */
+#screen-owners .profile-form label{font-size:var(--type-control);font-weight:var(--weight-medium)}
+#screen-owners .profile-form input,
+#screen-owners .profile-form textarea{font-size:16px;line-height:1.45}
+#screen-owners .profile-form .connect-button{border-radius:999px;font-size:var(--type-control);font-weight:var(--weight-semibold)}

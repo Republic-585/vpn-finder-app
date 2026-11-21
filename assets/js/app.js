@@ -264,7 +264,7 @@ function serviceMiniCard(service) {
   return `<article class="service-list-card ${expanded ? "expanded" : ""}">
     <button class="service-mini-card" type="button" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">
       ${serviceAvatar(service)}
-      <span class="service-mini-copy"><span class="service-mini-name">${esc(displayServiceName(service))}</span><span class="service-mini-subtitle">${service.min_price_rub == null ? "Информация о тарифах" : "от " + money(service.min_price_rub) + " ₽"}<span class="service-mini-dot">·</span> Белые списки</span></span>
+      <span class="service-mini-copy"><span class="service-mini-name">${esc(displayServiceName(service))}</span><span class="service-mini-subtitle">${service.min_price_rub == null ? "Тарифы в боте" : "от " + money(service.min_price_rub) + " ₽"}${service.whitelist_support ? '<span class="service-mini-dot">·</span> Белые списки' : ""}</span></span>
       <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
     </button>
     ${expanded ? serviceDetails(service) : ""}
@@ -398,6 +398,11 @@ document.addEventListener("click", event => {
   const service = state.services.find(item => item.id === button.dataset.id);
   if (!service) return;
   const action = button.dataset.action;
+  if (action === "toggle-details") {
+    state.expandedServiceId = state.expandedServiceId === service.id ? null : service.id;
+    renderCatalog();
+    return;
+  }
   if (action === "connect") openReferral(service);
   if (action === "favorite") {
     toggleSet(state.favorites, "vpn-finder-favorites", service.id);

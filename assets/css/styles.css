@@ -254,3 +254,6 @@ body{font-size:var(--type-body);line-height:1.45}
 
 /* Fully rounded connect buttons in the catalog only */
 #screen-catalog .connect-button{border-radius:999px}
+
+/* Fully rounded connect buttons in favourites only */
+#screen-favorites .connect-button{border-radius:999px}

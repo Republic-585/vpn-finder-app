@@ -585,12 +585,22 @@ const serviceAvatars = {
   "VPN-009": "https://gotbot.cc/branding/apple-touch-icon.png?v=1",
   "VPN-010": "https://cdn1.telesco.pe/file/WBw7jIbPbzVEzT489R3Avp8SK9qg6D3XllcC4_FK93ep1X1ehIc12VYpBU62jxzzlv6yco9fChzxSWscxh5wUeAHfHojLR_cBf64kMyCenPDk_3dS_dmPkUHiQ2-3D2RPQOXYVBZAecf6yLrP_V8zvzjOuBmjMo1QJ1xmyRTU-0pN21_m0lO-5orwgFOtsg1IIrLfNyPhimgXXcGF5HTqMwBzumSwNvYWinH9RKWOhKi4-JLX1roNXRB7ptd1djFNHJka8eTG2pEYgCjUbiJjvmboaelqbIK6vmsHSRzxs-T05Gki5-JVjaYKdQQfc6U5P245Qvk_c77Nx3KKxOkiw.jpg"
 };
-function serviceAvatar(service, className = "service-avatar") {
-  const url = serviceAvatars[service.id];
+function serviceAvatar(service, className = "service-avatar", prioritize = false) {
+  const fallbackUrl = serviceAvatars[service.id] || "";
+  const databaseUrl = typeof service.logo_url === "string" && /^https:\/\//i.test(service.logo_url.trim())
+    ? service.logo_url.trim()
+    : "";
+  const url = databaseUrl || fallbackUrl;
   const initial = esc((displayServiceName(service) || "V").slice(0, 1).toUpperCase());
-  return url
-    ? `<img class="${className}" src="${url}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${className} avatar-fallback',textContent:'${initial}'}))">`
-    : `<span class="${className} avatar-fallback">${initial}</span>`;
+  if (!url) return `<span class="${className} avatar-frame"><span class="avatar-fallback">${initial}</span></span>`;
+  const fallback = fallbackUrl && fallbackUrl !== url ? fallbackUrl : "";
+  return `<span class="${className} avatar-frame" aria-hidden="true">
+    <span class="avatar-fallback">${initial}</span>
+    <img class="avatar-image" src="${esc(url)}" data-fallback="${esc(fallback)}" alt="" width="64" height="64"
+      loading="${prioritize ? "eager" : "lazy"}" fetchpriority="${prioritize ? "high" : "auto"}" decoding="async"
+      onload="this.classList.add('is-loaded')"
+      onerror="if(this.dataset.fallback&&!this.dataset.fallbackUsed){this.dataset.fallbackUsed='1';this.src=this.dataset.fallback}else{this.remove()}">
+  </span>`;
 }
 function serviceDetails(service) {
   const facts = [];
@@ -613,7 +623,7 @@ function serviceDetails(service) {
     <button class="connect-button service-detail-connect" type="button" data-action="connect" data-id="${esc(service.id)}">${t("Подключить")}</button>
   </div>`;
 }
-function serviceMiniCard(service) {
+function serviceMiniCard(service, index = 0) {
   const id = esc(service.id);
   const expanded = state.expandedServiceId === service.id;
   const compactFacts = [
@@ -634,7 +644,7 @@ function serviceMiniCard(service) {
 function serviceFeaturedItem(service) {
   const id = esc(service.id);
   return `<button class="popular-service" type="button" data-action="connect" data-id="${id}">
-    ${serviceAvatar(service, "popular-avatar")}
+    ${serviceAvatar(service, "popular-avatar", true)}
     <span>${esc(displayServiceName(service))}</span>
   </button>`;
 }
@@ -685,7 +695,7 @@ function renderCatalog() {
     return;
   }
   if (showCompactResults) {
-    list.innerHTML = `<div class="catalog-compact-list">${items.map(serviceMiniCard).join("")}</div>`;
+    list.innerHTML = `<div class="catalog-compact-list">${items.map((service, index) => serviceMiniCard(service, index)).join("")}</div>`;
     return;
   }
   if (!state.featuredIds.length) state.featuredIds = state.services.slice(0, 4).map(service => service.id);

@@ -594,22 +594,10 @@ async function syncTelegramProfile(force = false) {
   }
 }
 
-// Stars support flow. The amount is selected by the user; invoice creation and payment verification stay server-side.
-const supportDialog = byId("support-dialog");
+// Stars support screen. Invoice creation and payment verification stay server-side.
 const supportAmount = byId("support-amount");
 const supportPayButton = byId("support-pay-button");
 const supportStatus = byId("support-dialog-status");
-function closeSupportDialog() {
-  if (supportDialog) supportDialog.hidden = true;
-  if (supportStatus) supportStatus.textContent = "";
-}
-byId("support-project-button")?.addEventListener("click", () => {
-  if (!supportDialog) return;
-  supportDialog.hidden = false;
-  supportAmount?.focus();
-});
-byId("support-dialog-close")?.addEventListener("click", closeSupportDialog);
-supportDialog?.querySelector("[data-support-close]")?.addEventListener("click", closeSupportDialog);
 supportPayButton?.addEventListener("click", async () => {
   const amount = Number(supportAmount?.value);
   if (!Number.isSafeInteger(amount) || amount < 1 || amount > 100000) {

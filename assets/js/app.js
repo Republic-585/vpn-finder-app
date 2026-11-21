@@ -727,9 +727,10 @@ function serviceMiniCard(service, index = 0) {
   return `<article class="service-list-card ${expanded ? "expanded" : ""}" data-service-id="${id}">
     <button class="service-mini-card" type="button" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">
       ${serviceAvatar(service, "service-avatar", index < 4)}
-      <span class="service-mini-copy"><span class="service-mini-name">${esc(displayServiceName(service))}</span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span>${ratingMarkup(service.id)}</span>
+      <span class="service-mini-copy"><span class="service-mini-name">${esc(displayServiceName(service))}</span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span></span>
       <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
     </button>
+    ${ratingMarkup(service.id)}
     ${expanded ? serviceDetails(service) : ""}
   </article>`;
 }

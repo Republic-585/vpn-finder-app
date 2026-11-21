@@ -675,9 +675,15 @@ function ratingMarkup(serviceId) {
   const average = Number(rating.average) || 0;
   const shown = Math.max(0, Math.min(5, Math.round(average)));
   const disabled = state.ratingPending.has(serviceId);
+  const gradientId = "rating-gold-" + String(serviceId).replace(/[^a-zA-Z0-9_-]/g, "");
   return `<div class="service-rating" role="group" aria-label="Рейтинг сервиса">
     <button class="service-rating-badge ${personal ? "has-vote" : ""}" type="button" data-action="toggle-rating-menu" data-id="${esc(serviceId)}" aria-label="Оценить сервис" aria-expanded="false" ${disabled ? "disabled" : ""}>
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.7 14.9 8.6l6.5.9-4.7 4.6 1.1 6.5L12 17.5l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9L12 2.7Z"></path></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <defs><linearGradient id="${gradientId}" x1="5" y1="2" x2="18" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF3A6"/><stop offset=".28" stop-color="#FFD95A"/><stop offset=".62" stop-color="#FFB800"/><stop offset="1" stop-color="#D97706"/></linearGradient></defs>
+        <path class="telegram-star-shadow" d="M12 2.1c.48 0 .91.28 1.13.7l2.1 4.25 4.7.68c1.1.16 1.53 1.52.73 2.3l-3.4 3.32.8 4.68c.19 1.1-.96 1.94-1.95 1.42L12 17.24l-4.2 2.21c-.99.52-2.14-.32-1.95-1.42l.8-4.68-3.4-3.32c-.8-.78-.36-2.14.73-2.3l4.7-.68 2.1-4.25c.22-.42.65-.7 1.13-.7Z"/>
+        <path class="telegram-star-face" fill="url(#${gradientId})" d="M12 2.1c.48 0 .91.28 1.13.7l2.1 4.25 4.7.68c1.1.16 1.53 1.52.73 2.3l-3.4 3.32.8 4.68c.19 1.1-.96 1.94-1.95 1.42L12 17.24l-4.2 2.21c-.99.52-2.14-.32-1.95-1.42l.8-4.68-3.4-3.32c-.8-.78-.36-2.14.73-2.3l4.7-.68 2.1-4.25c.22-.42.65-.7 1.13-.7Z"/>
+        <path class="telegram-star-glint" d="m9.18 4.7 1.45-1.15c.55-.44 1.32-.24 1.62.4l1.1 2.25-4.17 1.18-2.1.3 2.1-2.98Z"/>
+      </svg>
       <span>${shown || "—"}</span>
     </button>
     <div class="service-rating-choices" hidden>${[1,2,3,4,5].map(value => `<button class="service-rating-choice ${personal === value ? "is-selected" : ""}" type="button" data-action="rate" data-id="${esc(serviceId)}" data-rating="${value}" aria-label="Поставить оценку ${value}" ${disabled ? "disabled" : ""}>${value}</button>`).join("")}</div>
@@ -734,12 +740,12 @@ function serviceMiniCard(service, index = 0) {
     service.trial_days != null ? (Number(service.trial_days) > 0 ? t("Тест ") + service.trial_days + t(" дн.") : t("Без теста")) : t("Тест —")
   ];
   return `<article class="service-list-card ${expanded ? "expanded" : ""}" data-service-id="${id}">
-    <button class="service-mini-card" type="button" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">
+    <div class="service-mini-card" role="button" tabindex="0" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">
       ${serviceAvatar(service, "service-avatar", index < 4)}
-      <span class="service-mini-copy"><span class="service-mini-name">${esc(displayServiceName(service))}</span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span></span>
+      <span class="service-mini-copy"><span class="service-mini-title-row"><span class="service-mini-name">${esc(displayServiceName(service))}</span>${expanded ? ratingMarkup(service.id) : ""}</span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span></span>
       <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
-    </button>
-    ${expanded ? serviceDetails(service, false, true) : ""}
+    </div>
+    ${expanded ? serviceDetails(service, false) : ""}
   </article>`;
 }
 function serviceFeaturedItem(service) {
@@ -868,6 +874,13 @@ async function openReferral(service) {
   }
 }
 
+document.addEventListener("keydown", event => {
+  const row = event.target.closest(".service-mini-card[role='button']");
+  if (!row || event.target.closest("button") || (event.key !== "Enter" && event.key !== " ")) return;
+  event.preventDefault();
+  row.click();
+});
+
 document.addEventListener("click", event => {
   const button = event.target.closest("[data-action], [data-go]");
   if (!button) return;
@@ -973,7 +986,7 @@ document.addEventListener("click", event => {
       currentCard?.classList.add("expanded");
       button.setAttribute("aria-expanded", "true");
       trackEvent("service_view", {}, service.id);
-      button.insertAdjacentHTML("afterend", serviceDetails(service, false, true));
+      button.insertAdjacentHTML("afterend", serviceDetails(service, false));
       state.expandedServiceId = service.id;
     }
     return;

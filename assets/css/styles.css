@@ -541,18 +541,3 @@ body{font-size:var(--type-body);line-height:1.45}
   line-height:1!important;
   text-align:center!important;
 }
-
-
-/* VPN provider application: scoped presentation */
-#screen-owners .owners-intro{margin:8px 0 12px;padding:17px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
-#screen-owners .owners-intro h2,#screen-owners .owners-form-heading h2{margin:0;color:var(--text);font-size:15px;line-height:1.3;font-weight:650;letter-spacing:-.02em}
-#screen-owners .owners-intro>p,#screen-owners .owners-form-heading p{margin:7px 0 0;color:var(--secondary);font-size:13px;line-height:1.5}
-#screen-owners .owners-benefits{display:grid;gap:11px;margin-top:16px}
-#screen-owners .owners-benefits>div{display:flex;align-items:center;gap:10px;color:var(--text);font-size:13px;line-height:1.4}
-#screen-owners .owners-benefit-icon{display:grid;place-items:center;width:25px;height:25px;flex:0 0 25px;border-radius:8px;background:var(--raised);color:var(--bright);font-size:15px;font-weight:600}
-#screen-owners .owners-process{margin:0 0 12px;padding:0 2px}
-#screen-owners .owners-process>span{color:var(--secondary);font-size:11px;font-weight:500}
-#screen-owners .owners-process p{display:flex;align-items:center;gap:9px;margin:7px 0 0;color:var(--text);font-size:12px}
-#screen-owners .owners-process i{color:var(--muted);font-style:normal}
-#screen-owners .owners-form-heading{margin-bottom:2px}
-#screen-owners .owners-review-note{margin:0;color:var(--secondary);font-size:11px;line-height:1.45}

@@ -337,9 +337,9 @@ body{font-size:var(--type-body);line-height:1.45}
 
 
 /* Explicit iOS touch feedback for the detached profile avatar. */
-.bottom-nav-dock.profile-press-active{transform:translateX(-50%) scale(1.025)!important;}
-.bottom-nav-dock .profile-nav-button.is-pressed{border-color:#5288C1!important;box-shadow:0 0 0 2px rgba(82,136,193,.28),0 8px 26px rgba(0,0,0,.34)!important;transform:scale(.94)!important;filter:brightness(1.18)!important;}
-.bottom-nav-dock .profile-nav-button.is-pressed img,.bottom-nav-dock .profile-nav-button.is-pressed span{transform:scale(.98);}
+.bottom-nav-dock.profile-press-active{transform:translateX(-50%) scale(1.006)!important;}
+.bottom-nav-dock .profile-nav-button.is-pressed{border-color:#5288C1!important;box-shadow:0 0 0 2px rgba(82,136,193,.28),0 8px 26px rgba(0,0,0,.34)!important;transform:scale(.985)!important;filter:brightness(1.03)!important;}
+.bottom-nav-dock .profile-nav-button.is-pressed img,.bottom-nav-dock .profile-nav-button.is-pressed span{transform:scale(.995);}
 
 
 /* Persistent selected state: the profile ring follows the active tab. */
@@ -353,4 +353,4 @@ body{font-size:var(--type-body);line-height:1.45}
 .bottom-nav-dock .nav-item.active svg{color:var(--telegram-accent)!important;stroke:currentColor!important}
 .bottom-nav-dock .profile-nav-button:active,.bottom-nav-dock .profile-nav-button:focus-visible{border-color:var(--telegram-accent)!important}
 .bottom-nav-dock .profile-nav-button.is-pressed{border-color:var(--telegram-accent)!important;box-shadow:0 0 0 2px rgba(0,122,255,.3),0 8px 26px rgba(0,0,0,.34)!important}
-.bottom-nav-dock .profile-nav-button.is-current{border-color:var(--telegram-accent)!important}
+.bottom-nav-dock .profile-nav-button{border-width:2px!important}\n.bottom-nav-dock .profile-nav-button.is-current{border-width:3px!important;border-color:var(--telegram-accent)!important;box-shadow:0 0 0 2px rgba(0,122,255,.16),0 8px 26px rgba(0,0,0,.34)!important}

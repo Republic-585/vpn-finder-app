@@ -810,13 +810,22 @@ function ratingMarkup(serviceId, interactive = false) {
   const actionAttrs = interactive
     ? `type="button" data-action="toggle-rating-menu" data-id="${esc(serviceId)}" aria-label="Оценить сервис" aria-expanded="false" ${disabled ? "disabled" : ""}`
     : 'aria-hidden="true"';
+  const starPath = "M12 1.65c.55 0 1.04.31 1.29.81l2.55 5.17 5.7.83c1.18.17 1.65 1.62.8 2.45l-4.12 4.02.97 5.68c.2 1.18-1.03 2.08-2.08 1.52L12 19.45l-5.1 2.68c-1.06.56-2.29-.34-2.09-1.52l.98-5.68-4.13-4.02c-.85-.83-.38-2.28.8-2.45l5.7-.83 2.55-5.17c.25-.5.74-.81 1.29-.81Z";
   return `<div class="service-rating ${interactive ? "is-interactive" : "is-static"}" role="${interactive ? "group" : "img"}" aria-label="${hasRatings ? "Рейтинг " + shown + " из 5" : "Рейтинг пока не сформирован"}">
     <${tag} class="service-rating-badge ${personal ? "has-vote" : ""} ${interactive ? "is-interactive" : "is-static"}" ${actionAttrs}>
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <defs><linearGradient id="${gradientId}" x1="5" y1="2" x2="18" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF3A6"/><stop offset=".28" stop-color="#FFD95A"/><stop offset=".62" stop-color="#FFB800"/><stop offset="1" stop-color="#D97706"/></linearGradient><clipPath id="${gradientId}-clip" clipPathUnits="userSpaceOnUse"><path d="M12 2.1c.48 0 .91.28 1.13.7l2.1 4.25 4.7.68c1.1.16 1.53 1.52.73 2.3l-3.4 3.32.8 4.68c.19 1.1-.96 1.94-1.95 1.42L12 17.24l-4.2 2.21c-.99.52-2.14-.32-1.95-1.42l.8-4.68-3.4-3.32c-.8-.78-.36-2.14.73-2.3l4.7-.68 2.1-4.25c.22-.42.65-.7 1.13-.7Z"/></clipPath></defs>
-        <path class="telegram-star-shadow" d="M12 2.1c.48 0 .91.28 1.13.7l2.1 4.25 4.7.68c1.1.16 1.53 1.52.73 2.3l-3.4 3.32.8 4.68c.19 1.1-.96 1.94-1.95 1.42L12 17.24l-4.2 2.21c-.99.52-2.14-.32-1.95-1.42l.8-4.68-3.4-3.32c-.8-.78-.36-2.14.73-2.3l4.7-.68 2.1-4.25c.22-.42.65-.7 1.13-.7Z"/>
-        <path class="telegram-star-face" fill="url(#${gradientId})" d="M12 2.1c.48 0 .91.28 1.13.7l2.1 4.25 4.7.68c1.1.16 1.53 1.52.73 2.3l-3.4 3.32.8 4.68c.19 1.1-.96 1.94-1.95 1.42L12 17.24l-4.2 2.21c-.99.52-2.14-.32-1.95-1.42l.8-4.68-3.4-3.32c-.8-.78-.36-2.14.73-2.3l4.7-.68 2.1-4.25c.22-.42.65-.7 1.13-.7Z"/>
-        <path class="telegram-star-glint" clip-path="url(#${gradientId}-clip)" d="m9.35 4.65 1.35-1.05c.5-.39 1.18-.2 1.45.36l.95 1.95-3.75 1.05-1.75.25 1.75-2.56Z"/>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="${gradientId}" x1="5" y1="2" x2="19" y2="22" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#FFF2A6"/><stop offset=".32" stop-color="#FFD84D"/><stop offset=".68" stop-color="#FFB800"/><stop offset="1" stop-color="#E98500"/>
+          </linearGradient>
+          <linearGradient id="${gradientId}-shine" x1="8" y1="4" x2="16" y2="15" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#FFFFFF" stop-opacity=".9"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+          </linearGradient>
+          <clipPath id="${gradientId}-clip"><path d="${starPath}"/></clipPath>
+        </defs>
+        <path class="telegram-star-face" d="${starPath}" fill="url(#${gradientId})" stroke="#D98A00" stroke-width=".55"/>
+        <path class="telegram-star-glint" clip-path="url(#${gradientId}-clip)" d="m8 4.1 3.2-1.9 2.7 5.6-5.2 1.3-2.1-.8L8 4.1Z" fill="url(#${gradientId}-shine)"/>
+        <path d="m12 2.5 2.05 4.15" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-opacity=".8" stroke-width="1.1"/>
       </svg>
       <span>${shown}</span>
     </${tag}>

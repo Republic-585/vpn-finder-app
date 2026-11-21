@@ -221,7 +221,6 @@ function visibleServices() {
     if (!queryMatch) return false;
     if (state.filter === "trial") return Number(service.trial_days) > 0 || (service.plans || []).some(plan => Number(plan.price_rub) === 0);
     if (state.filter === "multi") return Number(service.devices_limit) > 1;
-    if (state.filter === "whitelist") return service.whitelist_support === true;
     return true;
   });
 }
@@ -252,7 +251,6 @@ function serviceDetails(service) {
   if (service.countries_count) facts.push(["Страны", service.countries_count + "+"]);
   if (service.trial_days) facts.push(["Пробный период", service.trial_days + " дн."]);
   if (service.traffic_limit) facts.push(["Трафик", service.traffic_limit]);
-  if (service.whitelist_support) facts.push(["Белые списки", "Поддерживаются"]);
   const platforms = Array.isArray(service.platforms) ? service.platforms : [];
   const features = Array.isArray(service.features) ? service.features : [];
   return `<div class="service-detail-panel">
@@ -275,7 +273,7 @@ function serviceMiniCard(service) {
   return `<article class="service-list-card ${expanded ? "expanded" : ""}">
     <button class="service-mini-card" type="button" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">
       ${serviceAvatar(service)}
-      <span class="service-mini-copy"><span class="service-mini-name">${esc(displayServiceName(service))}</span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}${service.whitelist_support ? '<span class="service-mini-dot">·</span><span class="service-mini-whitelist">Белые списки</span>' : ""}</span></span>
+      <span class="service-mini-copy"><span class="service-mini-name">${esc(displayServiceName(service))}</span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span></span>
       <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
     </button>
     ${expanded ? serviceDetails(service) : ""}
@@ -297,7 +295,6 @@ function serviceCard(service, context = "catalog") {
   if (service.devices_limit) details.push(service.devices_limit + " устр.");
   if (service.countries_count) details.push(service.countries_count + "+ стран");
   if (service.trial_days) details.push("Тест " + service.trial_days + " дн.");
-  if (service.whitelist_support) details.push("Белые списки");
   return `<article class="vpn-card" data-service="${id}">
     <div class="vpn-card-top">
       <div class="service-mark">${esc((displayServiceName(service) || "V").slice(0, 1))}</div>
@@ -367,7 +364,6 @@ function renderCompare() {
     ["Цена", service => service.min_price_rub == null ? "В боте" : "от " + money(service.min_price_rub) + " ₽"],
     ["Устройства", service => service.devices_limit ? service.devices_limit : "Нет данных"],
     ["Страны", service => service.countries_count ? service.countries_count + "+" : "Нет данных"],
-    ["Белые списки", service => service.whitelist_support ? "Да" : "Нет"]
   ];
   byId("compare-list").innerHTML = `
     <div class="compare-table-wrap"><table class="compare-table">
@@ -437,7 +433,7 @@ async function loadServices() {
   const list = byId("provider-list");
   list.innerHTML = '<div class="loading-state"><svg class="loader-shield" viewBox="0 0 24 24" role="img" aria-label="Загрузка"><path class="shield-outline" d="M12 2.8 20 6v5.2c0 5-3.2 8.2-8 10-4.8-1.8-8-5-8-10V6l8-3.2Z"></path><path class="shield-check" d="m8.5 11.8 2.3 2.3 4.8-4.8"></path></svg></div>';
   try {
-    const url = SUPABASE_URL + "/rest/v1/vpn_services?select=id,slug,name,logo_url,description,min_price_rub,devices_limit,countries_count,trial_days,traffic_limit,platforms,plans,features,whitelist_support,status,sort_order&status=eq.active&order=sort_order.asc";
+    const url = SUPABASE_URL + "/rest/v1/vpn_services?select=id,slug,name,referral_url,logo_url,description,min_price_rub,devices_limit,countries_count,trial_days,traffic_limit,platforms,plans,features,status,sort_order&status=eq.active&order=sort_order.asc";
     const response = await fetch(url, { headers: { apikey: SUPABASE_KEY } });
     if (!response.ok) throw new Error("Catalog request failed");
     state.services = await response.json();

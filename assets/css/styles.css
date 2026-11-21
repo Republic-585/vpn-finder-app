@@ -562,3 +562,20 @@ body{font-size:var(--type-body);line-height:1.45}
 .support-preset.is-selected{border-color:var(--bright);background:color-mix(in srgb,var(--bright) 10%,var(--raised))}
 .support-equivalent-note{margin:0 0 16px;color:var(--secondary);font-size:11px;line-height:1.45}
 @media(max-width:360px){.support-presets{gap:5px}.support-preset{padding-inline:2px}.support-preset strong{font-size:12px}.support-preset span{font-size:10px}}
+
+
+/* Manual USDT support block; visually separated from Telegram Stars. */
+.crypto-support{margin-top:22px;padding:18px;border:1px solid var(--line);border-radius:20px;background:var(--raised)}
+.crypto-support-heading h2{margin:0 0 6px;font-size:17px;font-weight:650;letter-spacing:-.02em}
+.crypto-support-heading p,.crypto-support-note{margin:0;color:var(--secondary);font-size:12px;line-height:1.5}
+.crypto-support label{display:block;margin-top:16px;font-size:var(--type-control);font-weight:var(--weight-medium)}
+.crypto-support input{width:100%;margin-top:7px;font-size:16px;line-height:1.4}
+.crypto-support-network{margin:12px 0 14px;font-size:13px;font-weight:650}
+.crypto-support-address-label{margin:0 0 7px;color:var(--secondary);font-size:12px}
+.crypto-support-address{display:block;overflow-wrap:anywhere;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card-bg,#fff);font-size:11px;line-height:1.5;user-select:all}
+.crypto-support-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.crypto-support-actions .connect-button,.crypto-copy-address{min-height:44px;margin:0;padding:10px 12px;border:0;border-radius:999px;font:inherit;font-size:13px;font-weight:650;cursor:pointer}
+.crypto-copy-address{background:var(--card-bg,#fff);color:var(--text);border:1px solid var(--line)}
+.crypto-support-note{margin-top:12px;font-size:11px}
+.crypto-support .profile-form-status{min-height:18px;margin-bottom:0}
+@media(max-width:360px){.crypto-support{padding:14px}.crypto-support-actions{grid-template-columns:1fr}}

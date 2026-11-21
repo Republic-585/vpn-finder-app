@@ -10,38 +10,94 @@ const SUPABASE_URL = "https://januqesxribuqzmmmdun.supabase.co";
 const SUPABASE_KEY = "sb_publishable_BaYxtXvRZCmfEzMHJbSCog_ebs4k6oK";
 const byId = id => document.getElementById(id);
 const LANGUAGE_KEY = "vpn-finder-language";
+const translations = {
+  ru: {},
+  en: {
+    "Язык":"Language","Русский":"Russian","English":"English","Выберите язык приложения":"Choose the app language",
+    "Откройте приложение в Telegram, чтобы сменить язык.":"Open the app in Telegram to change the language.",
+    "Поиск":"Search","Очистить поиск":"Clear search","Популярный выбор":"Popular services","Посмотреть все":"View all","Свернуть":"Show less",
+    "Фильтры":"Filters","Все":"All","Бесплатно":"Free","Сравнение":"Compare","Избранное":"Favorites","Профиль":"Profile",
+    "Загрузка профиля…":"Loading profile…",t("Пользователь"):"User",t("Откройте приложение через Telegram"):"Open the app through Telegram",
+    "Добавление Finder VPN на экран Домой":"Add Finder VPN to your Home Screen","Открывайте":"Open","в одно касание.":"with one tap.",
+    "Добавьте":"Add","на экран Домой для быстрого доступа.":"to your Home Screen for quick access.",
+    "Добавить на экран Домой":"Add to Home Screen","Скрыть":"Hide",t("Добавлено на экран Домой"):"Added to Home Screen",
+    t("Finder VPN теперь можно открывать с домашнего экрана."):"You can now open Finder VPN from your Home Screen.",
+    t("Добавление на экран Домой не поддерживается на этом устройстве или в этой версии Telegram."):"Adding to the Home Screen is not supported on this device or this Telegram version.",
+    t("Не удалось добавить Finder VPN. Попробуйте ещё раз."):"Could not add Finder VPN. Please try again.",
+    t("Откройте Finder VPN в актуальной версии Telegram, чтобы добавить его на экран Домой."):"Open Finder VPN in the latest version of Telegram to add it to your Home Screen.",
+    "Новости":"News","Связаться":"Contact us","Владельцам VPN":"For VPN providers","Новости и обновления VPN Finder.":"VPN Finder news and updates.",
+    "Пока новостей нет":"No news yet","Профиль":"Profile","Напишите нам. Сообщение придёт владельцу VPN Finder.":"Send us a message. It will be delivered to the VPN Finder team.",
+    "Ваше сообщение":"Your message","Напишите сообщение…":"Write your message…","Отправить сообщение":"Send message",
+    "Добавьте свой сервис в каталог VPN Finder.":"Add your service to the VPN Finder directory.","Название сервиса":"Service name",
+    "Название VPN":"VPN name","Официальный сайт":"Official website","Описание":"Description","Расскажите о сервисе":"Tell us about your service",
+    "Контакт для связи":"Contact details","@username или email":"@username or email","Отправить заявку":"Submit request",
+    "Finder":"Finder","Сравнить":"Compare","Каталог":"Directory","Ничего не найдено":"No results found","Пусто":"Nothing here yet",
+    "Выберите сервисы":"Choose services","Цена":"Price","Устройства":"Devices","Страны":"Countries",t("Нет данных"):"No data",
+    "В боте":"In bot","Убрать":"Remove","Избранное":"Favorites","Подключить":"Connect",t("Тарифы в боте"):"Plans in bot",
+    "Стоимость":"Price","от ":"from ","Устройства":"Devices","Страны":"Countries","Пробный период":"Free trial"," дн.":" days",
+    "Трафик":"Data","Платформы":"Platforms","Оплата":"Payment","Возможности":"Features",t(" устр."):" devices",
+    "Тест ":"Trial ",t("Без теста"):"No trial",t("Тест —"):"Trial —",t("Устр. —"):"Devices —",t("Трафик —"):"Data —",
+    t(" стран"):"+ countries",t("Нет данных"):"Not available","Загрузка":"Loading","Не удалось загрузить":"Could not load",
+    "Повторить":"Try again",t("Откройте приложение через Telegram, чтобы отправить сообщение."):"Open the app through Telegram to send a message.",
+    t("Отправляем…"):"Sending…",t("Сообщение отправлено."):"Message sent.",t("Не удалось отправить. Попробуйте ещё раз."):"Could not send. Please try again.",
+    t("Тарифы в боте"):"Plans in bot","В боте":"In bot"
+  }
+};
 let appLanguage = (() => {
-  try { return localStorage.getItem(LANGUAGE_KEY) === "en" ? "en" : "ru"; }
-  catch (_) { return "ru"; }
+  try {
+    const saved = localStorage.getItem(LANGUAGE_KEY);
+    return saved === "en" || saved === "ru" ? saved : (tg?.initDataUnsafe?.user?.language_code?.toLowerCase().startsWith("en") ? "en" : "ru");
+  } catch (_) { return "ru"; }
 })();
+const t = value => translations[appLanguage]?.[value] || value;
+function translateStaticContent() {
+  document.documentElement.lang = appLanguage;
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  let node;
+  while ((node = walker.nextNode())) {
+    const raw = node.nodeValue;
+    const trimmed = raw.trim();
+    if (translations.en[trimmed]) node.nodeValue = raw.replace(trimmed, t(trimmed));
+  }
+  document.querySelectorAll("[placeholder],[aria-label],[title]").forEach(el => {
+    ["placeholder","aria-label","title"].forEach(attr => {
+      const value = el.getAttribute(attr);
+      if (value && translations.en[value]) el.setAttribute(attr, t(value));
+    });
+  });
+  updateLanguageLabel();
+}
 function updateLanguageLabel() {
   const value = byId("profile-language-value");
   if (value) value.textContent = appLanguage === "en" ? "English" : "Русский";
 }
 function chooseLanguage() {
   if (typeof tg?.showPopup !== "function") {
-    try { tg?.showAlert?.("Откройте приложение в Telegram, чтобы сменить язык."); } catch (_) {}
+    try { tg?.showAlert?.(t("Откройте приложение в Telegram, чтобы сменить язык.")); } catch (_) {}
     return;
   }
   tg.showPopup({
-    title: "Язык",
-    message: "Выберите язык приложения",
+    title: t("Язык"),
+    message: t("Выберите язык приложения"),
     buttons: [
-      { id: "ru", type: "default", text: "Русский" },
-      { id: "en", type: "default", text: "English" },
+      { id: "ru", type: appLanguage === "ru" ? "default" : "default", text: "Русский" },
+      { id: "en", type: appLanguage === "en" ? "default" : "default", text: "English" },
       { type: "cancel" }
     ]
   }, buttonId => {
     if (buttonId !== "ru" && buttonId !== "en") return;
+    if (appLanguage === buttonId) return;
     appLanguage = buttonId;
     try { localStorage.setItem(LANGUAGE_KEY, appLanguage); } catch (_) {}
-    updateLanguageLabel();
+    translateStaticContent();
+    renderCatalog();
+    renderFavorites();
+    renderCompare();
     try { tg?.HapticFeedback?.selectionChanged(); } catch (_) {}
   });
 }
-updateLanguageLabel();
+translateStaticContent();
 byId("language-selector")?.addEventListener("click", chooseLanguage);
-
 
 const HOME_SCREEN_PROMPT_KEY = "vpn-finder-home-screen-prompt-hidden";
 function initHomeScreenPrompt() {
@@ -56,9 +112,9 @@ function initHomeScreenPrompt() {
     status.hidden = !message;
   };
   const markAdded = () => {
-    addButton.textContent = "Добавлено на экран Домой";
+    addButton.textContent = t("Добавлено на экран Домой");
     addButton.disabled = true;
-    showStatus("Finder VPN теперь можно открывать с домашнего экрана.");
+    showStatus(t("Finder VPN теперь можно открывать с домашнего экрана."));
   };
 
   try {
@@ -75,14 +131,14 @@ function initHomeScreenPrompt() {
     tg.onEvent("homeScreenAdded", markAdded);
     tg.onEvent("homeScreenFailed", event => {
       showStatus(event?.error === "UNSUPPORTED"
-        ? "Добавление на экран Домой не поддерживается на этом устройстве или в этой версии Telegram."
-        : "Не удалось добавить Finder VPN. Попробуйте ещё раз.");
+        ? t("Добавление на экран Домой не поддерживается на этом устройстве или в этой версии Telegram.")
+        : t("Не удалось добавить Finder VPN. Попробуйте ещё раз."));
     });
   }
 
   addButton.addEventListener("click", () => {
     if (typeof tg?.addToHomeScreen !== "function") {
-      showStatus("Откройте Finder VPN в актуальной версии Telegram, чтобы добавить его на экран Домой.");
+      showStatus(t("Откройте Finder VPN в актуальной версии Telegram, чтобы добавить его на экран Домой."));
       return;
     }
     showStatus("");
@@ -93,7 +149,7 @@ function initHomeScreenPrompt() {
     tg.checkHomeScreenStatus(result => {
       if (result === "added") markAdded();
       else if (result === "unsupported") {
-        showStatus("Добавление на экран Домой не поддерживается на этом устройстве или в этой версии Telegram.");
+        showStatus(t("Добавление на экран Домой не поддерживается на этом устройстве или в этой версии Telegram."));
         addButton.disabled = true;
       }
     });
@@ -272,7 +328,7 @@ function renderTelegramProfile(profile) {
   const name = byId("profile-name");
   const photo = byId("profile-photo");
   const fallback = byId("profile-avatar-fallback");
-  name.textContent = profile.display_name || "Пользователь";
+  name.textContent = profile.display_name || t("Пользователь");
   const initial = (profile.first_name || "V").slice(0, 1).toLocaleUpperCase("ru-RU");
   fallback.textContent = initial;
 
@@ -298,7 +354,7 @@ async function syncTelegramProfile() {
   if (profileReady) return;
   if (profileSyncPromise) return profileSyncPromise;
   if (!tg?.initData) {
-    byId("profile-name").textContent = "Откройте приложение через Telegram";
+    byId("profile-name").textContent = t("Откройте приложение через Telegram");
     return;
   }
 
@@ -322,7 +378,7 @@ async function syncTelegramProfile() {
   try {
     await profileSyncPromise;
   } catch (_) {
-    byId("profile-name").textContent = "Не удалось загрузить профиль";
+    byId("profile-name").textContent = t("Не удалось загрузить профиль");
   } finally {
     profileSyncPromise = null;
   }
@@ -392,11 +448,11 @@ function serviceAvatar(service, className = "service-avatar") {
 }
 function serviceDetails(service) {
   const facts = [];
-  if (service.min_price_rub != null) facts.push(["Стоимость", "от " + money(service.min_price_rub) + " ₽"]);
-  if (service.devices_limit) facts.push(["Устройства", service.devices_limit]);
-  if (service.countries_count) facts.push(["Страны", service.countries_count + "+"]);
-  if (service.trial_days) facts.push(["Пробный период", service.trial_days + " дн."]);
-  if (service.traffic_limit) facts.push(["Трафик", service.traffic_limit]);
+  if (service.min_price_rub != null) facts.push([t("Стоимость"), "от " + money(service.min_price_rub) + " ₽"]);
+  if (service.devices_limit) facts.push([t("Устройства"), service.devices_limit]);
+  if (service.countries_count) facts.push([t("Страны"), service.countries_count + "+"]);
+  if (service.trial_days) facts.push([t("Пробный период"), service.trial_days + " дн."]);
+  if (service.traffic_limit) facts.push([t("Трафик"), service.traffic_limit]);
   const platforms = Array.isArray(service.platforms) ? service.platforms : [];
   const allFeatures = Array.isArray(service.features) ? service.features : [];
   const paymentPattern = /сбп|оплат|карт|visa|mastercard|мир|юmoney|юмани|крипт|usdt|ton|telegram stars|звезд|apple pay|google pay|paypal|перевод/i;
@@ -405,10 +461,10 @@ function serviceDetails(service) {
   return `<div class="service-detail-panel">
     ${service.description ? `<p class="service-detail-description">${esc(service.description)}</p>` : ""}
     ${facts.length ? `<div class="service-detail-facts">${facts.map(([label,value]) => `<div class="service-detail-fact"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join("")}</div>` : ""}
-    ${platforms.length ? `<div class="service-detail-group"><span class="service-detail-label">Платформы</span><div class="service-detail-chips">${platforms.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
-    ${payments.length ? `<div class="service-detail-group"><span class="service-detail-label">Оплата</span><div class="service-detail-chips">${payments.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
-    ${features.length ? `<div class="service-detail-group"><span class="service-detail-label">Возможности</span><div class="service-detail-chips">${features.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
-    <button class="connect-button service-detail-connect" type="button" data-action="connect" data-id="${esc(service.id)}">Подключить</button>
+    ${platforms.length ? `<div class="service-detail-group"><span class="service-detail-label">${t("Платформы")}</span><div class="service-detail-chips">${platforms.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
+    ${payments.length ? `<div class="service-detail-group"><span class="service-detail-label">${t("Оплата")}</span><div class="service-detail-chips">${payments.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
+    ${features.length ? `<div class="service-detail-group"><span class="service-detail-label">${t("Возможности")}</span><div class="service-detail-chips">${features.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
+    <button class="connect-button service-detail-connect" type="button" data-action="connect" data-id="${esc(service.id)}">${t("Подключить")}</button>
   </div>`;
 }
 function serviceMiniCard(service) {
@@ -416,9 +472,9 @@ function serviceMiniCard(service) {
   const expanded = state.expandedServiceId === service.id;
   const compactFacts = [
     service.min_price_rub == null ? "Цена —" : "от " + money(service.min_price_rub) + " ₽",
-    service.devices_limit ? service.devices_limit + " устр." : "Устр. —",
-    service.traffic_limit ? service.traffic_limit : "Трафик —",
-    service.trial_days != null ? (Number(service.trial_days) > 0 ? "Тест " + service.trial_days + " дн." : "Без теста") : "Тест —"
+    service.devices_limit ? service.devices_limit + t(" устр.") : t("Устр. —"),
+    service.traffic_limit ? service.traffic_limit : t("Трафик —"),
+    service.trial_days != null ? (Number(service.trial_days) > 0 ? t("Тест ") + service.trial_days + t(" дн.") : t("Без теста")) : t("Тест —")
   ];
   return `<article class="service-list-card ${expanded ? "expanded" : ""}" data-service-id="${id}">
     <button class="service-mini-card" type="button" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">
@@ -440,28 +496,28 @@ function serviceCard(service, context = "catalog") {
   const id = esc(service.id);
   const favorite = state.favorites.has(service.id);
   const compared = state.compare.has(service.id);
-  const price = service.min_price_rub == null ? "Тарифы в боте" : "от " + money(service.min_price_rub) + " ₽";
+  const price = service.min_price_rub == null ? t("Тарифы в боте") : "от " + money(service.min_price_rub) + " ₽";
   const details = [];
-  if (service.devices_limit) details.push(service.devices_limit + " устр.");
+  if (service.devices_limit) details.push(service.devices_limit + t(" устр."));
   if (service.countries_count) details.push(service.countries_count + "+ стран");
-  if (service.trial_days) details.push("Тест " + service.trial_days + " дн.");
+  if (service.trial_days) details.push(t("Тест ") + service.trial_days + t(" дн."));
   return `<article class="vpn-card" data-service="${id}">
     <div class="vpn-card-top">
       <div class="service-mark">${esc((displayServiceName(service) || "V").slice(0, 1))}</div>
       <div class="service-title"><h3>${esc(displayServiceName(service))}</h3><div class="service-price">${price}</div></div>
       <div class="card-tools">
-        <button class="round-action ${favorite ? "selected" : ""}" type="button" data-action="favorite" data-id="${id}" aria-label="Избранное" aria-pressed="${favorite}">
+        <button class="round-action ${favorite ? "selected" : ""}" type="button" data-action="favorite" data-id="${id}" aria-label=${t("Избранное")}" aria-pressed="${favorite}">
           <svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.1-8.8 10.2-8.8 10.2S3.2 13.9 3.2 8.8A4.5 4.5 0 0 1 12 6.5a4.5 4.5 0 0 1 8.8 2.3Z"></path></svg>
         </button>
-        <button class="round-action ${compared ? "selected" : ""}" type="button" data-action="compare" data-id="${id}" aria-label="Сравнить" aria-pressed="${compared}">
+        <button class="round-action ${compared ? "selected" : ""}" type="button" data-action="compare" data-id="${id}" aria-label="${t("Сравнить")}" aria-pressed="${compared}">
           <svg viewBox="0 0 24 24"><path d="M5 7h14M5 17h14M9 3 5 7l4 4M15 13l4 4-4 4"></path></svg>
         </button>
       </div>
     </div>
     ${details.length ? `<div class="vpn-tags">${details.map(item => `<span class="vpn-tag">${esc(item)}</span>`).join("")}</div>` : ""}
     <div class="vpn-card-bottom">
-      <button class="connect-button" type="button" data-action="connect" data-id="${id}">Подключить</button>
-      ${context !== "catalog" ? `<button class="remove-button" type="button" data-action="remove-${context}" data-id="${id}">Убрать</button>` : ""}
+      <button class="connect-button" type="button" data-action="connect" data-id="${id}">${t("Подключить")}</button>
+      ${context !== "catalog" ? `<button class="remove-button" type="button" data-action="remove-${context}" data-id="${id}">${t("Убрать")}</button>` : ""}
     </div>
   </article>`;
 }
@@ -474,12 +530,12 @@ function renderCatalog() {
   if (filterStrip) filterStrip.hidden = !state.catalogExpanded || hasQuery;
   if (toggleCatalog) {
     toggleCatalog.hidden = hasQuery;
-    toggleCatalog.textContent = state.catalogExpanded ? "Свернуть" : "Посмотреть все";
+    toggleCatalog.textContent = state.catalogExpanded ? t("Свернуть") : t("Посмотреть все");
     toggleCatalog.setAttribute("aria-expanded", String(state.catalogExpanded));
   }
   const list = byId("provider-list");
   if (!items.length) {
-    list.innerHTML = '<div class="empty-state"><h3>Ничего не найдено</h3></div>';
+    list.innerHTML = '<div class="empty-state"><h3>${t("Ничего не найдено")}</h3></div>';
     return;
   }
   if (showCompactResults) {
@@ -500,24 +556,24 @@ function renderFavorites() {
   const items = state.services.filter(service => state.favorites.has(service.id));
   byId("favorites-list").innerHTML = items.length
     ? '<div class="provider-list">' + items.map(service => serviceCard(service, "favorites")).join("") + "</div>"
-    : '<div class="empty-state"><h3>Пусто</h3><button class="primary-button" type="button" data-go="catalog">Каталог</button></div>';
+    : '<div class="empty-state"><h3>${t("Пусто")}</h3><button class="primary-button" type="button" data-go="catalog">${t("Каталог")}</button></div>';
   updateCounts();
 }
 function renderCompare() {
   const items = state.services.filter(service => state.compare.has(service.id));
   if (!items.length) {
-    byId("compare-list").innerHTML = '<div class="empty-state"><h3>Выберите сервисы</h3><button class="primary-button" type="button" data-go="catalog">Каталог</button></div>';
+    byId("compare-list").innerHTML = '<div class="empty-state"><h3>${t("Выберите сервисы")}</h3><button class="primary-button" type="button" data-go="catalog">${t("Каталог")}</button></div>';
     updateCounts();
     return;
   }
   const rows = [
-    ["Цена", service => service.min_price_rub == null ? "В боте" : "от " + money(service.min_price_rub) + " ₽"],
-    ["Устройства", service => service.devices_limit ? service.devices_limit : "Нет данных"],
-    ["Страны", service => service.countries_count ? service.countries_count + "+" : "Нет данных"],
+    [t("Цена"), service => service.min_price_rub == null ? "В боте" : "от " + money(service.min_price_rub) + " ₽"],
+    [t("Устройства"), service => service.devices_limit ? service.devices_limit : t("Нет данных")],
+    [t("Страны"), service => service.countries_count ? service.countries_count + "+" : t("Нет данных")],
   ];
   byId("compare-list").innerHTML = `
     <div class="compare-table-wrap"><table class="compare-table">
-      <thead><tr><th></th>${items.map(service => `<th><span>${esc(displayServiceName(service))}</span><button type="button" data-action="remove-compare" data-id="${esc(service.id)}" aria-label="Убрать">×</button></th>`).join("")}</tr></thead>
+      <thead><tr><th></th>${items.map(service => `<th><span>${esc(displayServiceName(service))}</span><button type="button" data-action="remove-compare" data-id="${esc(service.id)}" aria-label="${t("Убрать")}">×</button></th>`).join("")}</tr></thead>
       <tbody>${rows.map(([label, getter]) => `<tr><th>${label}</th>${items.map(service => `<td>${esc(getter(service))}</td>`).join("")}</tr>`).join("")}</tbody>
     </table></div>`;
   updateCounts();
@@ -606,7 +662,7 @@ document.addEventListener("click", event => {
 
 async function loadServices() {
   const list = byId("provider-list");
-  list.innerHTML = '<div class="loading-state"><svg class="loader-shield" viewBox="0 0 24 24" role="img" aria-label="Загрузка"><path class="shield-outline" d="M12 2.8 20 6v5.2c0 5-3.2 8.2-8 10-4.8-1.8-8-5-8-10V6l8-3.2Z"></path><path class="shield-check" d="m8.5 11.8 2.3 2.3 4.8-4.8"></path></svg></div>';
+  list.innerHTML = '<div class="loading-state"><svg class="loader-shield" viewBox="0 0 24 24" role="img" aria-label="${t("Загрузка")}"><path class="shield-outline" d="M12 2.8 20 6v5.2c0 5-3.2 8.2-8 10-4.8-1.8-8-5-8-10V6l8-3.2Z"></path><path class="shield-check" d="m8.5 11.8 2.3 2.3 4.8-4.8"></path></svg></div>';
   try {
     const url = SUPABASE_URL + "/rest/v1/vpn_services?select=id,slug,name,referral_url,logo_url,description,min_price_rub,devices_limit,countries_count,trial_days,traffic_limit,platforms,plans,features,status,sort_order&status=eq.active&order=sort_order.asc";
     const response = await fetch(url, { headers: { apikey: SUPABASE_KEY } });
@@ -616,7 +672,7 @@ async function loadServices() {
     renderCatalog();
     updateCounts();
   } catch (_) {
-    list.innerHTML = '<div class="empty-state"><h3>Не удалось загрузить</h3><button class="primary-button" type="button" id="retry-load">Повторить</button></div>';
+    list.innerHTML = '<div class="empty-state"><h3>${t("Не удалось загрузить")}</h3><button class="primary-button" type="button" id="retry-load">${t("Повторить")}</button></div>';
     byId("retry-load")?.addEventListener("click", loadServices);
   }
 }
@@ -625,11 +681,11 @@ async function sendProfileInbox(kind, form, statusId) {
   const status = byId(statusId);
   const button = form.querySelector('button[type="submit"]');
   if (!tg?.initData) {
-    status.textContent = "Откройте приложение через Telegram, чтобы отправить сообщение.";
+    status.textContent = t("Откройте приложение через Telegram, чтобы отправить сообщение.");
     return;
   }
   button.disabled = true;
-  status.textContent = "Отправляем…";
+  status.textContent = t("Отправляем…");
   try {
     const fields = Object.fromEntries(new FormData(form).entries());
     const response = await fetch(SUPABASE_URL + "/functions/v1/miniapp-inbox", {
@@ -639,10 +695,10 @@ async function sendProfileInbox(kind, form, statusId) {
     });
     const result = await response.json().catch(() => null);
     if (!response.ok || !result?.ok) throw new Error("Delivery failed");
-    status.textContent = "Сообщение отправлено.";
+    status.textContent = t("Сообщение отправлено.");
     form.reset();
   } catch (_) {
-    status.textContent = "Не удалось отправить. Попробуйте ещё раз.";
+    status.textContent = t("Не удалось отправить. Попробуйте ещё раз.");
   } finally {
     button.disabled = false;
   }

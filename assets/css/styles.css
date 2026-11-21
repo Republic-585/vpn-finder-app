@@ -66,6 +66,7 @@
 .service-mini-card{width:100%;min-height:76px;padding:11px 12px;display:flex;align-items:center;gap:12px;border:0;border-radius:0;background:transparent;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .22s ease}
 .service-mini-card:active{background:rgba(255,255,255,.035)}
 .service-avatar{width:44px;height:44px;flex:0 0 44px}
+.vpn-card .service-avatar{width:64px;height:64px;flex:0 0 64px}
 .service-list-card .service-avatar{width:64px;height:64px;flex:0 0 64px}
 .service-mini-copy{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
 .service-mini-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-size:15.5px;font-weight:640;letter-spacing:-.025em}

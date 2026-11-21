@@ -184,7 +184,15 @@ const translations = {
     "Создаём счёт…":"Creating invoice…","Ожидаем подтверждение оплаты…":"Waiting for payment confirmation…",
     "Оплата прошла! Значок появится в профиле.":"Payment complete! Your badge will appear in your profile.",
     "Оплата отменена.":"Payment cancelled.","Не удалось открыть оплату. Попробуйте ещё раз.":"Could not open payment. Please try again.",
-    "Откройте VPN Finder через Telegram, чтобы оплатить Stars.":"Open VPN Finder through Telegram to pay with Stars."
+    "Откройте VPN Finder через Telegram, чтобы оплатить Stars.":"Open VPN Finder through Telegram to pay with Stars.",
+    "Угостить чашкой кофе":"Buy the project a coffee",
+    "Поддержи VPN Finder любой суммой в USDT. Минимум — 2,50 USDT (примерно от 200 ₽).":"Support VPN Finder with any amount of USDT. Minimum: 2.50 USDT (approximately 200 RUB or more).",
+    "Сумма в USDT":"Amount in USDT","USDT · сеть TON":"USDT · TON network","Адрес для перевода":"Receiving address",
+    "Скопировать сумму":"Copy amount","Скопировать адрес":"Copy address",
+    "Перед отправкой проверь сеть: нужен именно USDT в TON. Криптоперевод не подтверждается автоматически и не выдаёт значок Stars-поддержки.":"Before sending, check the network: only USDT on TON is accepted. Crypto transfers are not verified automatically and do not grant the Stars supporter badge.",
+    "Не удалось скопировать. Выдели значение и скопируй вручную.":"Could not copy. Select the value and copy it manually.",
+    "Минимальная сумма — 2,50 USDT.":"Minimum amount is 2.50 USDT.",
+    "Сумма скопирована.":"Amount copied.","Адрес скопирован.":"Address copied."
   }
 };
 let appLanguage = (() => {
@@ -648,6 +656,31 @@ supportPayButton?.addEventListener("click", async () => {
     supportPayButton.disabled = false;
   }
 });
+
+
+// Manual USDT support. This does not create invoices or verify blockchain payments.
+const cryptoAmountInput = byId("crypto-support-amount");
+const cryptoStatus = byId("crypto-support-status");
+const cryptoAddress = "UQBt5EVLJ5Q4lljC41RKTGMiXZBevXwRVXIES9Cgy_B9lLgo";
+const cryptoMinimum = 2.50;
+async function copySupportValue(value, successMessage) {
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
+    await navigator.clipboard.writeText(value);
+    if (cryptoStatus) cryptoStatus.textContent = t(successMessage);
+  } catch (_) {
+    if (cryptoStatus) cryptoStatus.textContent = t("Не удалось скопировать. Выдели значение и скопируй вручную.");
+  }
+}
+byId("crypto-copy-amount")?.addEventListener("click", () => {
+  const amount = Number(cryptoAmountInput?.value);
+  if (!Number.isFinite(amount) || amount < cryptoMinimum || amount > 1000000) {
+    if (cryptoStatus) cryptoStatus.textContent = t("Минимальная сумма — 2,50 USDT.");
+    return;
+  }
+  copySupportValue(amount.toFixed(2), "Сумма скопирована.");
+});
+byId("crypto-copy-address")?.addEventListener("click", () => copySupportValue(cryptoAddress, "Адрес скопирован."));
 
 // First launch creates or updates the user's account automatically.
 syncTelegramProfile();

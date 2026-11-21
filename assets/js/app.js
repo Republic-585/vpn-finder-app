@@ -273,7 +273,7 @@ function serviceMiniCard(service) {
     service.traffic_limit ? service.traffic_limit : "Трафик —",
     service.trial_days != null ? (Number(service.trial_days) > 0 ? "Тест " + service.trial_days + " дн." : "Без теста") : "Тест —"
   ];
-  return `<article class="service-list-card ${expanded ? "expanded" : ""}">
+  return `<article class="service-list-card ${expanded ? "expanded" : ""}" data-service-id="${id}">
     <button class="service-mini-card" type="button" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">
       ${serviceAvatar(service)}
       <span class="service-mini-copy"><span class="service-mini-name">${esc(displayServiceName(service))}</span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span></span>
@@ -409,8 +409,31 @@ document.addEventListener("click", event => {
   if (!service) return;
   const action = button.dataset.action;
   if (action === "toggle-details") {
-    state.expandedServiceId = state.expandedServiceId === service.id ? null : service.id;
-    renderCatalog();
+    const list = byId("provider-list");
+    const currentCard = button.closest(".service-list-card");
+    const wasExpanded = state.expandedServiceId === service.id;
+
+    // Update only the two affected cards; keep every other card and avatar in the DOM.
+    if (state.expandedServiceId) {
+      const previousCard = list.querySelector(`.service-list-card[data-service-id="${CSS.escape(state.expandedServiceId)}"]`);
+      if (previousCard && previousCard !== currentCard) {
+        previousCard.classList.remove("expanded");
+        previousCard.querySelector(".service-mini-card")?.setAttribute("aria-expanded", "false");
+        previousCard.querySelector(".service-detail-panel")?.remove();
+      }
+    }
+
+    if (wasExpanded) {
+      currentCard?.classList.remove("expanded");
+      currentCard?.querySelector(".service-detail-panel")?.remove();
+      button.setAttribute("aria-expanded", "false");
+      state.expandedServiceId = null;
+    } else {
+      currentCard?.classList.add("expanded");
+      button.setAttribute("aria-expanded", "true");
+      button.insertAdjacentHTML("afterend", serviceDetails(service));
+      state.expandedServiceId = service.id;
+    }
     return;
   }
   if (action === "connect") openReferral(service);

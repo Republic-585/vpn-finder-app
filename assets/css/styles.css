@@ -547,3 +547,23 @@ body{font-size:var(--type-body);line-height:1.45}
 #screen-owners .profile-form input,
 #screen-owners .profile-form textarea{font-size:16px;line-height:1.45}
 #screen-owners .profile-form .connect-button{border-radius:999px;font-size:var(--type-control);font-weight:var(--weight-semibold)}
+
+
+/* Project support capsule and Stars invoice dialog */
+.support-project-button{width:100%;min-height:52px;margin-top:12px;padding:0 18px;display:flex;align-items:center;justify-content:center;gap:9px;border:1px solid rgba(255,255,255,.08);border-radius:999px;background:var(--raised);color:var(--text);font-size:16px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.support-project-button:active{background:#414349;transform:scale(.99)}
+.support-project-button span:first-child{font-size:16px}
+.profile-supporter-badge{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:6px 11px;border:1px solid rgba(255,205,82,.24);border-radius:999px;background:rgba(255,205,82,.09);color:#ffd36b;font-size:12px;font-weight:600}
+.profile-supporter-badge[hidden],.support-dialog[hidden]{display:none}
+.support-dialog{position:fixed;z-index:100;inset:0;display:grid;place-items:center;padding:20px}
+.support-dialog-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.66);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.support-dialog-panel{position:relative;z-index:1;width:min(100%,390px);padding:24px 20px 18px;border:1px solid var(--line);border-radius:24px;background:var(--panel);box-shadow:0 22px 70px rgba(0,0,0,.42);text-align:left}
+.support-dialog-panel h2{margin:0 34px 9px 0;color:var(--text);font-size:21px;line-height:1.2;letter-spacing:-.035em}
+.support-dialog-panel>p:not(.support-dialog-status){margin:0 0 18px;color:var(--secondary);font-size:13px;line-height:1.5}
+.support-dialog-panel label{display:block;margin-bottom:7px;color:var(--secondary);font-size:12px;font-weight:600}
+.support-dialog-panel input{width:100%;height:48px;padding:0 13px;border:1px solid var(--line);border-radius:12px;background:var(--raised);color:var(--text);font-size:16px;outline:none}
+.support-dialog-panel input:focus{border-color:var(--bright)}
+.support-pay-button{width:100%;min-height:48px;margin-top:13px;border:0;border-radius:999px;background:var(--blue);color:#fff;font-size:14px;font-weight:650;cursor:pointer}
+.support-pay-button:disabled{opacity:.55;cursor:default}
+.support-dialog-close{position:absolute;top:13px;right:14px;width:34px;height:34px;border:0;border-radius:50%;background:var(--raised);color:var(--secondary);font-size:24px;line-height:1;cursor:pointer}
+.support-dialog-status{min-height:18px;margin:12px 0 0;color:var(--bright);font-size:12px;line-height:1.4}

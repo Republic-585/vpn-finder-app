@@ -215,6 +215,11 @@ function showScreen(name) {
   if (name === "favorites") renderFavorites();
   if (name === "compare") renderCompare();
   if (name === "profile") syncTelegramProfile();
+  const isProfileSubscreen = ["news", "contact", "owners"].includes(name);
+  try {
+    if (isProfileSubscreen) tg?.BackButton?.show();
+    else tg?.BackButton?.hide();
+  } catch (_) {}
 }
 const navBar = document.querySelector(".bottom-nav");
 if (navBar) {
@@ -314,6 +319,10 @@ if (navBar) {
       event.stopImmediatePropagation();
     }
   }, true);
+}
+if (tg?.BackButton) {
+  tg.BackButton.onClick(() => showScreen("profile"));
+  try { tg.BackButton.hide(); } catch (_) {}
 }
 document.querySelectorAll("[data-go]").forEach(button => {
   button.addEventListener("click", () => showScreen(button.dataset.go));

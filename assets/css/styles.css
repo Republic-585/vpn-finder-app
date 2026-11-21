@@ -83,14 +83,12 @@
 
 
 /* Telegram personal profile */
-.profile-view{min-height:calc(100vh - 150px);padding:44px 12px 36px;display:flex;flex-direction:column;align-items:center;text-align:center}
-.profile-photo-wrap{width:64px;height:64px;flex:0 0 64px;position:relative;overflow:hidden;border-radius:50%;background:var(--raised)}
-.profile-photo,.profile-avatar-fallback{width:64px;height:64px;display:block;border:0;border-radius:50%;object-fit:cover}
-.profile-avatar-fallback{display:grid;place-items:center;background:var(--raised);color:var(--bright);font-size:23px;font-weight:700}
-.profile-name{max-width:100%;margin:16px 0 0;overflow-wrap:anywhere;color:var(--text);font-size:17px;line-height:1.3;font-weight:650;letter-spacing:-.025em}
-.profile-page-link,.profile-page-empty{max-width:100%;margin-top:7px;overflow-wrap:anywhere;color:var(--muted);font-size:13px;line-height:1.35;font-weight:500;text-decoration:none}
-.profile-page-link:active{color:var(--bright)}
-.profile-page-link[hidden],.profile-page-empty[hidden],.profile-photo[hidden],.profile-avatar-fallback[hidden]{display:none}
+.profile-view{min-height:calc(100vh - 150px);padding:36px 12px 36px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.profile-photo-wrap{width:96px;height:96px;flex:0 0 96px;position:relative;overflow:hidden;border-radius:50%;background:var(--raised)}
+.profile-photo,.profile-avatar-fallback{width:96px;height:96px;display:block;border:0;border-radius:50%;object-fit:cover}
+.profile-avatar-fallback{display:grid;place-items:center;background:var(--raised);color:var(--bright);font-size:32px;font-weight:700}
+.profile-name{max-width:100%;margin:14px 0 0;overflow-wrap:anywhere;color:var(--text);font-size:17px;line-height:1.3;font-weight:650;letter-spacing:-.025em}
+.profile-photo[hidden],.profile-avatar-fallback[hidden]{display:none}
 
 
 /* Profile prompt uses the same featured-card surface as the four-avatar panel */
@@ -102,3 +100,6 @@
 .home-screen-action{width:calc(100% + 28px);min-height:48px;margin:0 -14px;padding:0 14px;display:flex;align-items:center;justify-content:flex-start;border:0;border-top:1px solid rgba(255,255,255,.09);background:transparent;color:var(--bright);font:inherit;font-size:13px;font-weight:600;text-align:left;text-decoration:none;cursor:pointer}
 .home-screen-action:active{background:rgba(255,255,255,.045)}
 .home-screen-dismiss{font-family:inherit}
+.home-screen-status{margin:0 -14px;padding:11px 14px;border-top:1px solid rgba(255,255,255,.09);color:var(--secondary);font-size:12px;line-height:1.4;text-align:left}
+.home-screen-status[hidden]{display:none}
+.home-screen-action:disabled{opacity:.65;cursor:default}

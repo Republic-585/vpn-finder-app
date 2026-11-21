@@ -288,7 +288,8 @@ body{font-size:var(--type-body);line-height:1.45}
 /* Three-tab navigation with a separate Telegram-green profile button */
 .bottom-nav-dock{
   position:fixed;z-index:20;left:50%;bottom:calc(9px + env(safe-area-inset-bottom));
-  transform:translateX(-50%);width:min(calc(100% - 28px),520px);
+  transform:translateX(-50%);transition:transform .22s cubic-bezier(.2,.8,.2,1);
+  width:min(calc(100% - 28px),520px);
   display:flex;align-items:stretch;gap:10px;
 }
 .bottom-nav-dock .bottom-nav{
@@ -331,5 +332,5 @@ body{font-size:var(--type-body);line-height:1.45}
   .main-content{padding-bottom:128px}
 }
 @media(prefers-reduced-motion:reduce){
-  .bottom-nav-dock .profile-nav-button{transition:none!important}
+  .bottom-nav-dock,.bottom-nav-dock .profile-nav-button{transition:none!important}
 }

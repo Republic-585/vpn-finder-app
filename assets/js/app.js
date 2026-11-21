@@ -480,6 +480,7 @@ syncTelegramProfile();
 trackEvent("app_open", { language: appLanguage });
 
 const search = byId("search");
+let searchAnalyticsTimer = null;
 const clearSearch = byId("clear-search");
 const toggleCatalog = byId("toggle-catalog");
 toggleCatalog?.addEventListener("click", () => {
@@ -490,7 +491,10 @@ toggleCatalog?.addEventListener("click", () => {
 search?.addEventListener("input", () => {
   state.query = search.value.trim().toLowerCase();
   clearSearch.hidden = !search.value;
-  trackEvent("search", { query_length: state.query.length });
+  clearTimeout(searchAnalyticsTimer);
+  searchAnalyticsTimer = setTimeout(() => {
+    if (state.query) trackEvent("search", { query_length: state.query.length });
+  }, 1200);
   renderCatalog();
 });
 clearSearch?.addEventListener("click", () => {

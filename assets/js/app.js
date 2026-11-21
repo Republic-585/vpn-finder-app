@@ -735,11 +735,10 @@ async function openReferral(service) {
     });
     const result = await response.json().catch(() => null);
     if (!response.ok || !result?.ok || !result.url) throw new Error("Referral redirect failed");
-    const url = new URL(result.url);
-    if (url.protocol !== "https:") throw new Error("Unsafe referral destination");
+    if (typeof result.url !== "string" || !result.url.startsWith("https://")) throw new Error("Unsafe referral destination");
     trackEvent("connect_click", { click_id: result.click_id }, service.id);
-    if (["t.me", "telegram.me"].includes(url.hostname)) tg.openTelegramLink(url.href);
-    else tg.openLink(url.href);
+    if (/^https:\/\/(t\.me|telegram\.me)(\/|\?|#|$)/i.test(result.url)) tg.openTelegramLink(result.url);
+    else tg.openLink(result.url);
   } catch (_) {
     try { tg?.showAlert?.(t("Не удалось открыть партнёрскую ссылку. Попробуйте ещё раз.")); } catch (_) {}
   }

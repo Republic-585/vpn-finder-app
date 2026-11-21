@@ -574,16 +574,16 @@ function visibleServices() {
 }
 
 const serviceAvatars = {
-  "VPN-001": "https://cdn4.telesco.pe/file/HFTCXNtS1l9FyWHH7x1wQZnBUel9c00BMEdkAAfnPj6cHNr7yJdVnYz9dnAAhqA6_P525XMcW62zfrgrQEiWsuy_6HF45E2Yq8r80-UqknwyAUi8FVIOyOosRm-chouDIOxakBrSdOYFXYvw7EIB2nkqY9-LUx5qRP2WHzBVbAJD7N0ihDAyMQcTthgc4YCboAJwm1r46Jw5BasipUyZ7q4HHCZA9QW6sxH-Bb9YvmXAot4nvPAmzoqSQ9I0k4Quhql27J2GB6GZGq6nzkVBk9EkYRhqvk0cdwK0xFjjsBdABUP4svtgdEq9Vl91OiVo4BiZmZUzT-lrK9hYzUMckw.jpg",
+  "VPN-001": "https://cdn4.telesco.pe/file/j46QtYOOiQPQt2e5sJdYCqT9Y5rx9nvUsxV5Co1yk_3QMoIXgsbgPnifxh6wYahHCf3a0uPnSADmYRwrILknFOmpjLwpSrpldyD6AfJwWTS9vfJ_g_q91jj-geaVjGIwo8DXwE1b3Lco9jbNOOMddhXI-bJ_7MLqc2UGRtnd9DM-X8bujPG0OCrv5C4fLs9l2aMtVzRrf8mp7DU4KcSO0yrapLvn1X58KKjAAilZOFoT0RoKmhQh8BsQj3AFdV1M_csgQ4taBli6q7y1cPnlnYtcvGMgechq4OzAIb94UbuTBVNVIVQGxv-r24IQcutSm_DYInIrdRvDSyGnoUakoQ.jpg",
   "VPN-002": "https://cdn4.telesco.pe/file/ehp8fYyDFuBitN9x8A4gavi--vbavvJdNd_r5_t105Jtt7NlVaDSh7tXUmU99TAZcew1PGSssPuLPC6_sNEBp8MsZlDjud-ua3mnqqHAJNr019vlAV6b7v3Xl39t0uH0vdKfXyhig6NUCJBc-wpYVuYPiZlGz_7u3d5WA0WC4tOTl8NO_SMidnw3q6aiZTzPNgUkzn2HFLy0_GlXWVVTceLUD5sMrzgBhElIk4fnAX4MqX3Bnp7MOUMpVs65eq6IPf79D_N_m0XxMcjDIkOgP_NW91grdAx5RCmeWrhI4oTnqVhpJBNQKo52Axq1AXLCTVj-Ne42L2T1FLPvevABqQ.jpg",
-  "VPN-003": "https://vlesswb.com/assets/logo.svg",
-  "VPN-004": "https://cdn4.telesco.pe/file/NJ2FgzPSeDiOrVJ0rKjFOunN8pdhXHFKDZRZWUSY1e8z8pQLL0sPgxRbbv5hXMLEHuk51_ptdK2ce6uTziYAY_SUqDP6MXP7ZqBCellsIN_PozZx7ZoAncBD7OJJBgCkyiXIqs6TRQM9kjF3X88g1giMFl7vtdgv4MNcl-hcxm5A5rtnAM-Cc4DFdoYv6qpQd6_ao6jPe0naAtlL5bL14Mw5kJIUeoHCM3HXGgHvksoJgUzn1tMjP-mRacP3NsxfmcC9dCHPOSkb2DOqNqoybZDzq5X33u3pM0QDsdPUvgwkxggeIqzwQcfvsYh5Zmyl1j0JwpdJK0gizbtNU6KD7w.jpg",
+  "VPN-003": "https://cdn4.telesco.pe/file/K4rdDvH4jNZqSQ2BCFAEfI9tYhm1JuKlHDJSIqX-Pug7P1pbU2-euIbmb9t8grRl0mEueCf29Azt-8kC9re2nFcvVDzK_mmlRqFER8FU8IEVHymVirHTz4VRdQR8n0qqgL4c4I-kh6AakwX-DMWu_I8s9SB8u2KTULJw9qbMtF7mnV7NY6XeGj7NlQ2BBbZ2_xoU2NtLeGmDmZZPYWDfGN-mzqvagH06AteXdSLRgSaq1okT3U0-Z-AQCNjTuvmlxmIy5BKJhFvbcRrJMmC_DGVbb7dm_geyWc04-IgfCArfSsFT5an__mtrJDRb9_favTTJov2B1RSZCRWG95R63w.jpg",
+  "VPN-004": "https://cdn4.telesco.pe/file/RwycPB0WAQtCY-ED4aJXcLqeKViuo_1wJumK66F8ISOKsLfS7sZSLNpT747zdT_6S4h9nCkIxPGYZGieDqIGqwLtl14quARW63Hdsbjf3qboTz3r_O4Q-8ifXmoWFuN-38UJhjQ0YVsKgNBls23h5wSm00lVJ3xnbjr7mO0l6t2fE2IwJNMoTPqAQMoWFInpAriERJWcI6b1UvF1wQCc7FgmJF3Z54Y3YWd_OhNZUU_PuvlcJhOGV9dOtuIZtK13KIZBeInXAEJ810LX1xpUNW1Ok04sCYVxt4rNJG8jMIBqjRxwDAYyUs04stjNnwJuQCKmdFHMzLuMIQvXNSc-Ag.jpg",
   "VPN-005": "https://cdn4.telesco.pe/file/GskBphrTLR1VGSEizlFuYJ8rUgRCqc-F_YBDNNU0Scoi-4hi8Ls63vVVRiqih-uT864su19WkR6nlLj3oc1TS6PdakkoIMML4hh3svE19fjsvEnculX0RUl35W8z1-UDGG3rvWst5Gkx7G_s0T7NaKMpBCCfFIQzq5D_RVroQIf0IEQn_H3Dn0804HblnQwNDexFUJvjOLia5I4w5AiQZQD047FY_cY-_d4HYx-Ns3XdTct9hoqmD2HSPUVeuAGCbO1dfCIz-_g8w2kmEr4cV6X74-8Xgnl_6rkOQ9DHwkGqBVuZfv5-mTXn0hx6LX51hDLoPXOJx4Y9iAtO1wyFIA.jpg",
   "VPN-006": "https://cdn4.telesco.pe/file/P423oxCFR5L-Hh1qLUgjRny3J17I8AU86gioX5qhjp7NfV2r6kVx40zJf4-qyzPW_4q_ys0v04HPlgBiYGNIu1AO79zzuLDHamUDOIIzER_ByX43WIm5J2BaieLAcuB4GfdpZBpYWiJWfrqWOoynj-8Rdos5O7aQ6ER5kQA1raEUN1ORcMwxmxuZFsmeyiv_v6YCdcDC5T_9ZkMjuqF4bu1cvEsJFj8UQmm9ESg3N3B_7PjhNSRh4F27PP637XJ-L5UAD5N0S-gmnkBMX2MRFdzfttW9Zpk-zM5KvY2UwLUWduylVEk2n_Vc9a8Z7zZv9Tu3AujZtZc4MQJpx-fBxQ.jpg",
-  "VPN-007": "https://cdn4.telesco.pe/file/L388RX3gGbzK6rsz_FkCnNraE6C_dAIaayCQpRTCBSdGlwGq7DY6LsNglMAH1f-uUuf_xUeZ25L1muFHjqvUrci5ljxJrtZx5VQzfeacIdtIf-0N6_EpKu1F3pFxL5fyijDb8EB_a9RZErXfJBGfGBFAM8kr1nBCAqc6n0BaLFE8JJggJGUG203URX9WUXwxihv9EhsEF-MQsusD26HlQG-pvO9mHc-asAoaUJgAK3DqnAWLeEGqfu56homL9Ts7THI1OJKERoULUe5yT4WCK4K_Lf9BRJfQI41w8Mg2aGASE06SlT2aqvPZ4KIxH1tzwfAQ8ZZYW9HTutzWOImgSg.jpg",
-  "VPN-008": "https://cdn4.telesco.pe/file/cyIVFb2jsQfy7VDfcIJ4iFiHtj2Hr4OF4AlO4H0b5SKHyo-2Bv-fmwaptgqXGFzEMVAAoSLmfZKIPcmGC1WBYt-ujRo6lIoOF_wjmMiP2xSeeN6m4OJaP4gNMr0QjzlQ9_1UDsCOZwK9CGzCsdscaVke6L5Hq9V31RGh0jtok2jq3bk_kWWdY8pNS4_dTRwqHXBUMQODFCGKS-iG2ZXcNtz9cxm92wSfhUvJ0WMkbprgzLqPYesgznss4mjsW570FwqMjsjRG6Uste2TJKwENwcKsWoFh7Rxi9ADetSdyt2zuxZkWXF8DAa1tZe49Um8N89aNi8rmjR4Rof4-XoAKg.jpg",
-  "VPN-009": "https://gotbot.cc/branding/apple-touch-icon.png?v=1",
-  "VPN-010": "https://cdn1.telesco.pe/file/WBw7jIbPbzVEzT489R3Avp8SK9qg6D3XllcC4_FK93ep1X1ehIc12VYpBU62jxzzlv6yco9fChzxSWscxh5wUeAHfHojLR_cBf64kMyCenPDk_3dS_dmPkUHiQ2-3D2RPQOXYVBZAecf6yLrP_V8zvzjOuBmjMo1QJ1xmyRTU-0pN21_m0lO-5orwgFOtsg1IIrLfNyPhimgXXcGF5HTqMwBzumSwNvYWinH9RKWOhKi4-JLX1roNXRB7ptd1djFNHJka8eTG2pEYgCjUbiJjvmboaelqbIK6vmsHSRzxs-T05Gki5-JVjaYKdQQfc6U5P245Qvk_c77Nx3KKxOkiw.jpg"
+  "VPN-007": "https://cdn4.telesco.pe/file/T5-2LHFeRt3_K1MGe8oNjzHp_F-1qNF5DjoF4zFXsPWdbfRuGTGXYpKXmCynAmAZGSYLwSloeoy8BiAeMw2ham5VLFNP8GI-C-e3nYXwono3Px1g79rPZybdzYg8JXH5dcJLtumheG1TTrT70srKMihcC8g7IcdYv7Kxk4GURXJavK2SWSv75vAuIQqg9Qs-qaX7wMkSUD_FhYaGmybREDtzCLF4k8klFnr0LcioRnceMKpm1Ij9PmFQSgw2GFwx6uaYYOV2a6-_lvG7p2srBUVaYYC5qL3PH54VRctBKFtlQ2eAj8I8y7mr_NYbYvF8lWyeNRgM7bSyjRkoIDJRDw.jpg",
+  "VPN-008": "https://cdn4.telesco.pe/file/G8AyrXHSsWQ-KLq7L4B7HnffPHRAgbepl2AzgRPXkoKuyCzMjQ0GAVP2NfCoHuVTvHS0koqqcgvI4IBY2-mcde-Rj6EEOzjbyqDE9qD1dLX4DuEW1672zySb5wpanOS1mXYcnRjXkmVZy9SonuatMxdAzqzjKg5nkfPkwQjNJHGU31VnWHnxqyA-WKs-4U5EJzjev0tD4xWfluQbX3bhrKfX222dEwv75E5FxWdTBX0R6yKOJUk_gDey4qwcZaGwtKYfOkInkXtolmD2TM_soGbGMIFDY7CkmOZ-a125VEOgW7xWjGmvXNoO0XOcTYrH6KCLmaibvntMHUfRREwZBA.jpg",
+  "VPN-009": "https://gotbot.cc/branding/logo-white.png",
+  "VPN-010": "https://cdn1.telesco.pe/file/an8T7RztDFxWIPC1bUqihI9w0cR56kzCl0M3ei5nhWLqvY6jVzmf81ZXxYesBVfe-LBtNYYoo8QJv6MxkelFUoRucqRPtFdPuB_ER7t4AnWFuG_YyyOc1le6ewnT2A-tF-9FJ0Nvo1DT1oPxLzBvUN0Q2_j9Au6HDU4pII1_drJ4WaYh7YMQ5VkRrqMlKDRUMx4U2ZMBElx9dlMLIlyocYATg-BPJWJEzpoperOk_C9abbWKaj_MUUA0zFWhWidrXTgKzzdDSQmTxl_lG9JYcb3HfmDHIER1NjDgb0yd7LEE90viqtmsHKhegT6rWpyS62l-KtHXbjcKd4DuuQLIiA.jpg"
 };
 function serviceAvatar(service, className = "service-avatar", prioritize = false) {
   const fallbackUrl = serviceAvatars[service.id] || "";
@@ -603,40 +603,7 @@ function serviceAvatar(service, className = "service-avatar", prioritize = false
   </span>`;
 }
 
-// Start downloading every catalog logo as soon as the service list arrives.
-// The first four remain highest priority; the rest warm the browser cache in parallel batches.
-function preloadServiceAvatars(services) {
-  const queue = services.map((service, index) => {
-    const primary = typeof service.logo_url === "string" && /^https:\/\//i.test(service.logo_url.trim())
-      ? service.logo_url.trim()
-      : "";
-    const fallback = serviceAvatars[service.id] || "";
-    return { url: primary || fallback, fallback: primary && fallback && primary !== fallback ? fallback : "", index };
-  }).filter(item => item.url);
-  let cursor = 0;
-  const workers = Array.from({ length: Math.min(8, queue.length) }, async () => {
-    while (cursor < queue.length) {
-      const item = queue[cursor++];
-      await new Promise(resolve => {
-        const image = new Image();
-        image.decoding = "async";
-        image.fetchPriority = item.index < 4 ? "high" : "low";
-        image.onload = resolve;
-        image.onerror = () => {
-          if (item.fallback) {
-            const backup = new Image();
-            backup.decoding = "async";
-            backup.onload = resolve;
-            backup.onerror = resolve;
-            backup.src = item.fallback;
-          } else resolve();
-        };
-        image.src = item.url;
-      });
-    }
-  });
-  Promise.all(workers).catch(() => {});
-}
+
 function serviceDetails(service) {
   const facts = [];
   if (service.min_price_rub != null) facts.push([t("Стоимость"), "от " + money(service.min_price_rub) + " ₽"]);
@@ -879,7 +846,6 @@ async function loadServices() {
     state.services = await response.json();
     state.featuredIds = state.services.slice(0, 4).map(service => service.id);
     renderCatalog();
-    preloadServiceAvatars(state.services);
     updateCounts();
   } catch (_) {
     list.innerHTML = `<div class="empty-state"><h3>${t("Не удалось загрузить")}</h3><button class="primary-button" type="button" id="retry-load">${t("Повторить")}</button></div>`;

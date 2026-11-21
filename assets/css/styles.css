@@ -58,9 +58,10 @@
 @keyframes featured-service-in{0%{opacity:0;transform:scale(.99)}100%{opacity:1;transform:scale(1)}}
 @media(prefers-reduced-motion:reduce){.popular-service{animation:none!important}}
 .avatar-fallback{display:grid;place-items:center;color:var(--bright);font-size:17px;font-weight:700}
-.catalog-compact-list{display:grid;gap:7px}
+.catalog-compact-list{display:grid;gap:0}
 .catalog-rest-list{margin-top:0;padding-top:0;border-top:0}
 .service-list-card{overflow:hidden;border:1px solid rgba(255,255,255,.055);border-radius:16px;background:var(--raised);transition:border-color .24s ease,background .24s ease}
+.catalog-compact-list>.service-list-card+.service-list-card{border-top:1px solid var(--line);border-radius:0}
 .service-list-card.expanded{border-color:rgba(106,178,242,.24);background:#303238}
 .service-mini-card{width:100%;min-height:76px;padding:11px 12px;display:flex;align-items:center;gap:12px;border:0;border-radius:0;background:transparent;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .22s ease}
 .service-mini-card:active{background:rgba(255,255,255,.035)}
@@ -73,6 +74,12 @@
 .service-mini-arrow{width:18px;height:18px;flex:0 0 auto;fill:none;stroke:#858991;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:transform .28s cubic-bezier(.2,.8,.2,1),stroke .2s}
 .service-list-card.expanded .service-mini-arrow{transform:rotate(90deg);stroke:var(--bright)}
 .service-detail-panel{padding:0 14px 14px 68px;animation:service-detail-in .28s cubic-bezier(.2,.8,.2,1) both}
+.service-detail-actions{display:flex;justify-content:flex-end;margin:0 0 5px}
+.service-detail-favorite{width:34px;height:34px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:transparent;color:var(--muted);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:color .18s,transform .18s}
+.service-detail-favorite:active{transform:scale(.9)}
+.service-detail-favorite svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.service-detail-favorite.is-favorite{color:#e53935}
+.service-detail-favorite.is-favorite svg{fill:currentColor;stroke:currentColor}
 @keyframes service-detail-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 .service-detail-description{margin:0 0 13px;color:var(--secondary);font-size:12px;line-height:1.55;font-weight:450}
 .service-detail-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:0 0 13px}

@@ -130,7 +130,9 @@
 .profile-form input:focus,.profile-form textarea:focus{border-color:var(--bright)}
 .profile-form .connect-button{width:100%;min-height:44px}
 .profile-form-status{min-height:16px;margin:0;color:var(--bright);font-size:11px;line-height:1.45}
-#screen-news .empty-state{margin-top:8px}
+#screen-news .news-post{margin-top:8px;padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}
+#screen-news .news-post h2{margin:0;color:var(--text);font-size:15px;line-height:1.3;font-weight:650;letter-spacing:-.02em}
+#screen-news .news-post p{margin:10px 0 0;color:var(--secondary);font-size:13px;line-height:1.55}
 
 
 /* Telegram-style colored icons in the profile menu */

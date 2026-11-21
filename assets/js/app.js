@@ -175,7 +175,15 @@ const translations = {
     "Тест ":"Trial ","Без теста":"No trial","Тест -":"Trial -","Устр. -":"Devices -","Трафик -":"Data -",
     "Загрузка":"Loading","Не удалось загрузить":"Could not load","Повторить":"Try again",
     "Откройте приложение через Telegram, чтобы отправить сообщение.":"Open the app through Telegram to send a message.",
-    "Отправляем…":"Sending…","Сообщение отправлено.":"Message sent.","Не удалось отправить. Попробуйте ещё раз.":"Could not send. Please try again."
+    "Отправляем…":"Sending…","Сообщение отправлено.":"Message sent.","Не удалось отправить. Попробуйте ещё раз.":"Could not send. Please try again.",
+    "Поддержать проект":"Support the project","Сумма в Stars":"Amount in Stars","Оплатить ⭐ Stars":"Pay ⭐ Stars",
+    "Укажи любую сумму в Telegram Stars. После оплаты ты получишь значок «Друг VPN Finder».":"Choose any amount in Telegram Stars. After payment, you will receive the “VPN Finder Friend” badge.",
+    "Друг VPN Finder":"VPN Finder Friend","Спасибо за поддержку VPN Finder!":"Thank you for supporting VPN Finder!",
+    "Введите целое число от 1 до 100 000 Stars.":"Enter a whole number from 1 to 100,000 Stars.",
+    "Создаём счёт…":"Creating invoice…","Ожидаем подтверждение оплаты…":"Waiting for payment confirmation…",
+    "Оплата прошла! Значок появится в профиле.":"Payment complete! Your badge will appear in your profile.",
+    "Оплата отменена.":"Payment cancelled.","Не удалось открыть оплату. Попробуйте ещё раз.":"Could not open payment. Please try again.",
+    "Откройте VPN Finder через Telegram, чтобы оплатить Stars.":"Open VPN Finder through Telegram to pay with Stars."
   }
 };
 let appLanguage = (() => {
@@ -514,6 +522,8 @@ let profileReady = false;
 let profileSyncPromise = null;
 
 function renderTelegramProfile(profile) {
+  const supporterBadge = byId("profile-supporter-badge");
+  if (supporterBadge) supporterBadge.hidden = profile.is_supporter !== true;
   const name = byId("profile-name");
   const photo = byId("profile-photo");
   const fallback = byId("profile-avatar-fallback");
@@ -549,7 +559,8 @@ function renderTelegramProfile(profile) {
 
 }
 
-async function syncTelegramProfile() {
+async function syncTelegramProfile(force = false) {
+  if (force) profileReady = false;
   if (profileReady) return;
   if (profileSyncPromise) return profileSyncPromise;
   if (!tg?.initData) {
@@ -582,6 +593,61 @@ async function syncTelegramProfile() {
     profileSyncPromise = null;
   }
 }
+
+// Stars support flow. The amount is selected by the user; invoice creation and payment verification stay server-side.
+const supportDialog = byId("support-dialog");
+const supportAmount = byId("support-amount");
+const supportPayButton = byId("support-pay-button");
+const supportStatus = byId("support-dialog-status");
+function closeSupportDialog() {
+  if (supportDialog) supportDialog.hidden = true;
+  if (supportStatus) supportStatus.textContent = "";
+}
+byId("support-project-button")?.addEventListener("click", () => {
+  if (!supportDialog) return;
+  supportDialog.hidden = false;
+  supportAmount?.focus();
+});
+byId("support-dialog-close")?.addEventListener("click", closeSupportDialog);
+supportDialog?.querySelector("[data-support-close]")?.addEventListener("click", closeSupportDialog);
+supportPayButton?.addEventListener("click", async () => {
+  const amount = Number(supportAmount?.value);
+  if (!Number.isSafeInteger(amount) || amount < 1 || amount > 100000) {
+    if (supportStatus) supportStatus.textContent = t("Введите целое число от 1 до 100 000 Stars.");
+    return;
+  }
+  if (!tg?.initData || typeof tg.openInvoice !== "function") {
+    if (supportStatus) supportStatus.textContent = t("Откройте VPN Finder через Telegram, чтобы оплатить Stars.");
+    return;
+  }
+  supportPayButton.disabled = true;
+  if (supportStatus) supportStatus.textContent = t("Создаём счёт…");
+  try {
+    const response = await fetch(SUPABASE_URL + "/functions/v1/telegram-bot", {
+      method: "POST",
+      headers: { apikey: SUPABASE_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "createSupportInvoice", initData: tg.initData, amount })
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.ok || !result.invoice_url) throw new Error("Invoice creation failed");
+    tg.openInvoice(result.invoice_url, status => {
+      if (status === "paid") {
+        if (supportStatus) supportStatus.textContent = t("Оплата прошла! Значок появится в профиле.");
+        window.setTimeout(() => syncTelegramProfile(true), 1500);
+      } else if (status === "cancelled") {
+        if (supportStatus) supportStatus.textContent = t("Оплата отменена.");
+      } else if (status === "failed") {
+        if (supportStatus) supportStatus.textContent = t("Не удалось открыть оплату. Попробуйте ещё раз.");
+      } else if (status === "pending") {
+        if (supportStatus) supportStatus.textContent = t("Ожидаем подтверждение оплаты…");
+      }
+    });
+  } catch (_) {
+    if (supportStatus) supportStatus.textContent = t("Не удалось открыть оплату. Попробуйте ещё раз.");
+  } finally {
+    supportPayButton.disabled = false;
+  }
+});
 
 // First launch creates or updates the user's account automatically.
 syncTelegramProfile();

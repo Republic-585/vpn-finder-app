@@ -371,19 +371,20 @@ body{font-size:var(--type-body);line-height:1.45}
 .bottom-nav-dock .profile-nav-button.is-current{border-width:3px!important;border-color:var(--telegram-accent)!important;box-shadow:0 8px 26px rgba(0,0,0,.34)!important}
 
 
-/* Volumetric gold Telegram Stars rating badge */
+/* One fixed-size, shared gold Telegram Star component across every screen */
 .popular-service{gap:4px}
 .popular-service-open{width:100%;min-width:0;padding:3px 1px 0;display:flex;flex-direction:column;align-items:center;gap:10px;border:0;background:transparent;color:var(--text);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .popular-service-open:active{transform:scale(.985)}
 .popular-service-open span:last-child{width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;color:#F5F5F5;font-size:13px;line-height:1.2;font-weight:600;letter-spacing:-.02em}
-.service-rating{position:relative;min-height:42px;display:flex;align-items:center;justify-content:flex-start;margin-top:3px}
-.service-rating-badge{position:relative;width:42px;height:42px;display:grid;place-items:center;padding:0;border:0;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .16s ease;filter:drop-shadow(0 2px 1px rgba(112,66,0,.34)) drop-shadow(0 4px 5px rgba(0,0,0,.2))}
-.service-rating-badge svg{width:40px;height:40px;display:block;overflow:visible}
+.service-rating{position:relative;width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;max-width:42px!important;max-height:42px!important;flex:0 0 42px!important;display:flex;align-items:center;justify-content:center;margin:3px 0 0;overflow:visible;box-sizing:border-box}
+.service-rating-badge{position:relative!important;display:grid!important;place-items:center!important;width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;max-width:42px!important;max-height:42px!important;flex:0 0 42px!important;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;font-size:0!important;line-height:0!important;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .16s ease;filter:drop-shadow(0 2px 1px rgba(112,66,0,.34)) drop-shadow(0 4px 5px rgba(0,0,0,.2))}
+.service-rating-badge svg{display:block!important;width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;max-width:42px!important;max-height:42px!important;overflow:visible}
 .service-rating-badge .telegram-star-shadow{fill:#9C5700;transform:translateY(.65px)}
 .service-rating-badge .telegram-star-face{stroke:#C77A08;stroke-width:.55;stroke-linejoin:round}
 .service-rating-badge .telegram-star-glint{fill:#FFF8D6;opacity:.72}
-.service-rating-badge span{position:absolute;top:50%;left:50%;transform:translate(-50%,-48%);color:#754000;font-size:13px;line-height:1;font-weight:900;text-shadow:0 1px 0 rgba(255,255,255,.45);font-variant-numeric:tabular-nums}
-.service-rating-badge:active{transform:scale(.88)}
+.service-rating-badge span{position:absolute!important;top:50%!important;left:50%!important;display:block!important;width:auto!important;height:auto!important;min-width:0!important;max-width:none!important;margin:0!important;padding:0!important;transform:translate(-50%,-48%)!important;color:#754000!important;font-family:inherit!important;font-size:13px!important;line-height:1!important;font-weight:900!important;letter-spacing:0!important;text-shadow:0 1px 0 rgba(255,255,255,.45);font-variant-numeric:tabular-nums;white-space:nowrap}
+.service-rating-badge.is-empty span{font-size:12px!important;opacity:.9}
+.service-rating-badge:active{transform:scale(.92)}
 .service-rating-badge:disabled{opacity:.55;cursor:default}
 .service-rating-choices{position:absolute;z-index:8;left:46px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:3px;padding:4px 5px;border:1px solid rgba(127,127,127,.16);border-radius:999px;background:var(--card-bg,#fff);box-shadow:0 4px 16px rgba(0,0,0,.16)}
 .service-rating-choices[hidden]{display:none!important}
@@ -394,7 +395,6 @@ body{font-size:var(--type-body);line-height:1.45}
 .service-mini-card:active{background:rgba(255,255,255,.035)}
 .service-mini-title-row{min-width:0;display:flex;align-items:center;gap:8px}
 .service-mini-title-row .service-mini-name{min-width:0}
-.service-mini-title-row .service-rating{flex:0 0 auto;min-height:42px;margin:0}
-.service-mini-title-row .service-rating-choices{left:45px}
-.popular-service .service-rating{justify-content:center;margin-top:1px}
+.service-mini-title-row .service-rating{margin:0!important}
+.popular-service .service-rating{justify-content:center;margin:1px auto 0!important}
 @media(prefers-reduced-motion:reduce){.service-rating-badge,.popular-service-open{transition:none!important}}

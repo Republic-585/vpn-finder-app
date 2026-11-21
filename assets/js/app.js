@@ -674,10 +674,8 @@ supportPayButton?.addEventListener("click", async () => {
 
 
 // Manual USDT support. This does not create invoices or verify blockchain payments.
-const cryptoAmountInput = byId("crypto-support-amount");
 const cryptoStatus = byId("crypto-support-status");
 const cryptoAddress = "UQBt5EVLJ5Q4lljC41RKTGMiXZBevXwRVXIES9Cgy_B9lLgo";
-const cryptoMinimum = 2.50;
 async function copySupportValue(value, successMessage) {
   try {
     if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
@@ -687,14 +685,6 @@ async function copySupportValue(value, successMessage) {
     if (cryptoStatus) cryptoStatus.textContent = t("Не удалось скопировать. Выдели значение и скопируй вручную.");
   }
 }
-byId("crypto-copy-amount")?.addEventListener("click", () => {
-  const amount = Number(cryptoAmountInput?.value);
-  if (!Number.isFinite(amount) || amount < cryptoMinimum || amount > 1000000) {
-    if (cryptoStatus) cryptoStatus.textContent = t("Минимальная сумма — 2,50 USDT.");
-    return;
-  }
-  copySupportValue(amount.toFixed(2), "Сумма скопирована.");
-});
 byId("crypto-copy-address")?.addEventListener("click", () => copySupportValue(cryptoAddress, "Адрес скопирован."));
 
 // First launch creates or updates the user's account automatically.

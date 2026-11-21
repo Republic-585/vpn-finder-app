@@ -476,6 +476,20 @@ if (tg?.BackButton) {
 document.querySelectorAll("[data-go]").forEach(button => {
   button.addEventListener("click", () => showScreen(button.dataset.go));
 });
+
+// Explicit press state for iOS Safari, where :active can be unreliable in embedded apps.
+const profileNavButton = byId("profile-nav-button");
+if (profileNavButton) {
+  const dock = profileNavButton.closest(".bottom-nav-dock");
+  const setProfilePressed = pressed => {
+    profileNavButton.classList.toggle("is-pressed", pressed);
+    dock?.classList.toggle("profile-press-active", pressed);
+  };
+  profileNavButton.addEventListener("pointerdown", () => setProfilePressed(true));
+  ["pointerup", "pointercancel", "pointerleave", "blur"].forEach(type => {
+    profileNavButton.addEventListener(type, () => setProfilePressed(false));
+  });
+}
 byId("profile-shortcut")?.addEventListener("click", () => showScreen("profile"));
 
 let profileReady = false;

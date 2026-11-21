@@ -682,6 +682,7 @@ function serviceCard(service, context = "catalog") {
       </div>` : context === "favorites" ? `<button class="round-action favorites-favorite-action selected" type="button" data-action="favorite" data-id="${id}" aria-label="${t("Избранное")}" aria-pressed="true">
         <svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.1-8.8 10.2-8.8 10.2S3.2 13.9 3.2 8.8A4.5 4.5 0 0 1 12 6.5a4.5 4.5 0 0 1 8.8 2.3Z"></path></svg>
       </button>` : ""}
+    </div>
     ${details.length ? `<div class="vpn-tags">${details.map(item => `<span class="vpn-tag">${esc(item)}</span>`).join("")}</div>` : ""}
     <div class="vpn-card-bottom">
       <button class="connect-button" type="button" data-action="connect" data-id="${id}">${t("Подключить")}</button>

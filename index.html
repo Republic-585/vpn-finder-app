@@ -9,9 +9,9 @@
 <link rel="preconnect" href="https://cdn4.telesco.pe" crossorigin>
 <link rel="preconnect" href="https://cdn1.telesco.pe" crossorigin>
 <link rel="preconnect" href="https://gotbot.cc" crossorigin>
-<link rel="stylesheet" href="./assets/css/styles.css?v=20261122-owners-form-v2">
+<link rel="stylesheet" href="./assets/css/styles.css?v=20261122-stars-support-v1">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script defer src="./assets/js/app.js?v=20261122-owners-form-v2"></script>
+<script defer src="./assets/js/app.js?v=20261122-stars-support-v1"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -46,6 +46,7 @@
         <div class="profile-avatar-fallback" id="profile-avatar-fallback">V</div>
       </div>
       <h1 class="profile-name" id="profile-name">Загрузка профиля…</h1>
+      <span class="profile-supporter-badge" id="profile-supporter-badge" hidden>⭐ Друг VPN Finder</span>
       <section class="home-screen-prompt" id="home-screen-prompt" aria-label="Добавление Finder VPN на экран Домой" hidden>
         <div class="home-screen-copy">
           <h2>Открывайте <strong>Finder</strong> в одно касание.</h2>
@@ -65,6 +66,19 @@
         <button class="profile-menu-row" id="analytics-menu-row" type="button" data-go="analytics" hidden><span class="profile-menu-leading"><span class="profile-icon-tile news-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-7"></path></svg></span><span>Аналитика</span></span><span class="profile-menu-chevron" aria-hidden="true">›</span></button>
         <button class="profile-menu-row" type="button" data-go="owners"><span class="profile-menu-leading"><span class="profile-icon-tile owners-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18M10 12v2h4v-2"></path></svg></span><span>Владельцам VPN</span></span><span class="profile-menu-chevron" aria-hidden="true">›</span></button>
       </nav>
+      <button class="support-project-button" id="support-project-button" type="button"><span aria-hidden="true">⭐</span><span>Поддержать проект</span></button>
+      <div class="support-dialog" id="support-dialog" hidden>
+        <div class="support-dialog-backdrop" data-support-close></div>
+        <section class="support-dialog-panel" role="dialog" aria-modal="true" aria-labelledby="support-dialog-title">
+          <button class="support-dialog-close" id="support-dialog-close" type="button" aria-label="Закрыть">×</button>
+          <h2 id="support-dialog-title">Поддержать проект</h2>
+          <p>Укажи любую сумму в Telegram Stars. После оплаты ты получишь значок «Друг VPN Finder».</p>
+          <label for="support-amount">Сумма в Stars</label>
+          <input id="support-amount" type="number" min="1" max="100000" step="1" inputmode="numeric" value="100">
+          <button class="support-pay-button" id="support-pay-button" type="button">Оплатить ⭐ Stars</button>
+          <p class="support-dialog-status" id="support-dialog-status" role="status" aria-live="polite"></p>
+        </section>
+      </div>
     </div>
   </section>
 

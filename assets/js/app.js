@@ -339,7 +339,7 @@ let moveIndicator = () => {};
 function showScreen(name) {
   if (name === "analytics" && Number(tg?.initDataUnsafe?.user?.id || 0) !== ANALYTICS_OWNER_TELEGRAM_ID) return;
   const navBar = document.querySelector(".bottom-nav");
-  const alreadyActive = nav.some(button => button.dataset.go === name && button.classList.contains("active"));
+  const alreadyActive = screens.some(screen => screen.dataset.screen === name && screen.classList.contains("active"));
   if (!alreadyActive && navBar) {
     navBar.classList.remove("is-switching");
     void navBar.offsetWidth;

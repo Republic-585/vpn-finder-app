@@ -87,37 +87,48 @@ async function loadAnalyticsDashboard() {
       contact_submit: "Сообщение отправлено",
       provider_submit: "Заявка отправлена"
     };
+    const formatAnalyticsDateTime = value => {
+      const date = new Date(value);
+      if (!Number.isFinite(date.getTime())) return { time: "—", date: "—" };
+      const time = new Intl.DateTimeFormat("ru-RU", {
+        timeZone: "Europe/Moscow", hour: "2-digit", minute: "2-digit", hourCycle: "h23"
+      }).format(date);
+      const day = new Intl.DateTimeFormat("ru-RU", {
+        timeZone: "Europe/Moscow", day: "2-digit", month: "2-digit", year: "numeric"
+      }).format(date);
+      return { time, date: day };
+    };
     const eventItems = (result.events || []).filter(item => keyEventNames[item.event_name]).slice(0, 20);
     const clickItems = (result.clicks || []).slice(0, 25);
     const userItems = (result.users || []).slice(0, 25);
-    const sourceCounts = new Map();
-    userItems.forEach(item => {
-      const source = item.source || "unknown";
-      sourceCounts.set(source, (sourceCounts.get(source) || 0) + 1);
-    });
-    const sourceEntries = [...sourceCounts.entries()].sort((a,b)=>b[1]-a[1]);
-    const maxSourceCount = Math.max(1, ...sourceEntries.map(([,count]) => count));
-    const sourceRows = sourceEntries.map(([source,count]) =>
-      '<div class="analytics-source-row"><div class="analytics-source-meta"><span>' + esc(source) + '</span><strong>' + count + '</strong></div><div class="analytics-source-track"><span style="width:' + Math.round(count / maxSourceCount * 100) + '%"></span></div></div>'
-    ).join("");
+    const usersByTelegramId = new Map(userItems.map(item => [String(item.telegram_id), item]));
     const userRows = userItems.map(item => {
       const profile = item.profile || {};
       const display = [profile.first_name, profile.last_name].filter(Boolean).join(" ") || "—";
-      return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + esc(display) + '</strong><span>' + esc(profile.username ? "@" + profile.username : String(item.telegram_id || "—")) + '</span></div><div class="analytics-list-meta"><span>' + t("Источник") + ': ' + esc(item.source || "—") + '</span><time>' + esc(new Date(item.last_seen_at).toLocaleString()) + '</time></div></article>';
+      const stamp = formatAnalyticsDateTime(item.last_seen_at);
+      return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + esc(display) + '</strong><span>' + esc(profile.username ? "@" + profile.username : String(item.telegram_id || "—")) + '</span></div><div class="analytics-list-meta"><span>' + t("Источник") + ': ' + esc(item.source || "—") + '</span><time><span>' + stamp.time + '</span><span>' + stamp.date + '</span></time></div></article>';
     }).join("");
-    const clickRows = clickItems.map(item =>
-      '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + esc(services.get(item.service_id) || item.service_id || "—") + '</strong><span>Telegram · ' + esc(String(item.telegram_id || "—")) + '</span></div><time class="analytics-list-time">' + esc(new Date(item.clicked_at).toLocaleString()) + '</time></article>'
-    ).join("");
-    const eventRows = eventItems.map(item =>
-      '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + t(keyEventNames[item.event_name]) + '</strong><span>' + esc(String(item.telegram_id || "—")) + (item.service_id ? ' · ' + esc(services.get(item.service_id) || item.service_id) : '') + '</span></div><time class="analytics-list-time">' + esc(new Date(item.occurred_at).toLocaleString()) + '</time></article>'
-    ).join("");
+    const clickRows = clickItems.map(item => {
+      const user = usersByTelegramId.get(String(item.telegram_id)) || {};
+      const profile = user.profile || item.profile || {};
+      const display = [profile.first_name, profile.last_name].filter(Boolean).join(" ") || item.user_name || "—";
+      const username = String(profile.username || item.username || "").replace(/^@/, "");
+      const userLink = username
+        ? '<a class="analytics-user-link" href="https://t.me/' + encodeURIComponent(username) + '" target="_blank" rel="noopener noreferrer">@' + esc(username) + '</a>'
+        : '<span class="analytics-user-link-muted">—</span>';
+      const stamp = formatAnalyticsDateTime(item.clicked_at);
+      return '<article class="analytics-list-item analytics-click-item"><div class="analytics-list-main"><strong>' + esc(services.get(item.service_id) || item.service_name || item.service_id || "—") + '</strong><span>' + esc(display) + '</span><span>' + userLink + '</span></div><time class="analytics-list-time"><span>' + stamp.time + '</span><span>' + stamp.date + '</span></time></article>';
+    }).join("");
+    const eventRows = eventItems.map(item => {
+      const stamp = formatAnalyticsDateTime(item.occurred_at);
+      return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + t(keyEventNames[item.event_name]) + '</strong><span>' + esc(String(item.telegram_id || "—")) + (item.service_id ? ' · ' + esc(services.get(item.service_id) || item.service_id) : '') + '</span></div><time class="analytics-list-time"><span>' + stamp.time + '</span><span>' + stamp.date + '</span></time></article>';
+    }).join("");
     root.innerHTML =
       '<div class="analytics-summary">' +
       '<article><strong>' + userItems.length + '</strong><span>' + t("Пользователи") + '</span></article>' +
       '<article><strong>' + Number(summary.sessions || 0) + '</strong><span>' + t("Сессии") + '</span></article>' +
       '<article><strong>' + Number(summary.clicks || 0) + '</strong><span>' + t("Партнёрские переходы") + '</span></article>' +
       '</div>' +
-      '<section class="analytics-section"><h2>' + t("Источники") + '</h2><div class="analytics-sources">' + (sourceRows || '<p class="analytics-empty">—</p>') + '</div></section>' +
       '<details class="analytics-disclosure"><summary><span>' + t("Пользователи") + '</span><span class="analytics-disclosure-count">' + userItems.length + '</span></summary><div class="analytics-list">' + (userRows || '<p class="analytics-empty">—</p>') + '</div></details>' +
       '<section class="analytics-section"><h2>' + t("Партнёрские переходы") + '</h2><div class="analytics-list analytics-clicks">' + (clickRows || '<p class="analytics-empty">—</p>') + '</div></section>' +
       '<details class="analytics-disclosure"><summary><span>' + t("Ключевые события") + '</span><span class="analytics-disclosure-count">' + eventItems.length + '</span></summary><div class="analytics-list">' + (eventRows || '<p class="analytics-empty">—</p>') + '</div></details>';

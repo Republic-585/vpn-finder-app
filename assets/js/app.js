@@ -733,22 +733,8 @@ function renderFavorites() {
   updateCounts();
 }
 function renderCompare() {
-  const items = state.services.filter(service => state.compare.has(service.id));
-  if (!items.length) {
-    byId("compare-list").innerHTML = `<div class="empty-state"><h3>${t("Выберите сервисы")}</h3><button class="primary-button" type="button" data-go="catalog">${t("Каталог")}</button></div>`;
-    updateCounts();
-    return;
-  }
-  const rows = [
-    [t("Цена"), service => service.min_price_rub == null ? t("В боте") : t("от ") + money(service.min_price_rub) + " ₽"],
-    [t("Устройства"), service => service.devices_limit ? service.devices_limit : t("Нет данных")],
-    [t("Страны"), service => service.countries_count ? service.countries_count + "+" : t("Нет данных")],
-  ];
-  byId("compare-list").innerHTML = `
-    <div class="compare-table-wrap"><table class="compare-table">
-      <thead><tr><th></th>${items.map(service => `<th><span>${esc(displayServiceName(service))}</span><button type="button" data-action="remove-compare" data-id="${esc(service.id)}" aria-label="${t("Убрать")}">×</button></th>`).join("")}</tr></thead>
-      <tbody>${rows.map(([label, getter]) => `<tr><th>${label}</th>${items.map(service => `<td>${esc(getter(service))}</td>`).join("")}</tr>`).join("")}</tbody>
-    </table></div>`;
+  const root = byId("compare-list");
+  if (root) root.innerHTML = "";
   updateCounts();
 }
 

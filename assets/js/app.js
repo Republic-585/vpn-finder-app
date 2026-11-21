@@ -754,8 +754,9 @@ function serviceMiniCard(service, index = 0) {
 }
 function serviceFeaturedItem(service) {
   const id = esc(service.id);
-  return `<div class="popular-service">
+  return `<div class="popular-service" data-featured-service="${id}">
     <button class="popular-service-open" type="button" data-action="connect" data-id="${id}">${serviceAvatar(service, "popular-avatar", true)}<span>${esc(displayServiceName(service))}</span></button>
+    ${ratingMarkup(service.id)}
   </div>`;
 }
 function serviceCard(service, context = "catalog") {

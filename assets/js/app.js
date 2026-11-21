@@ -17,7 +17,7 @@ const translations = {
     "Откройте приложение в Telegram, чтобы сменить язык.":"Open the app in Telegram to change the language.",
     "Поиск":"Search","Очистить поиск":"Clear search","Популярный выбор":"Popular services","Посмотреть все":"View all","Свернуть":"Show less",
     "Фильтры":"Filters","Все":"All","Бесплатно":"Free","Сравнение":"Compare","Избранное":"Favorites","Профиль":"Profile",
-    "Загрузка профиля…":"Loading profile…","Пользователь":"User","Откройте приложение через Telegram":"Open the app through Telegram",
+    "Загрузка профиля…":"Loading profile…","Не удалось загрузить профиль":"Could not load profile","Пользователь":"User","Откройте приложение через Telegram":"Open the app through Telegram",
     "Добавление Finder VPN на экран Домой":"Add Finder VPN to your Home Screen","Открывайте":"Open","в одно касание.":"with one tap.",
     "Добавьте":"Add","на экран Домой для быстрого доступа.":"to your Home Screen for quick access.",
     "Добавить на экран Домой":"Add to Home Screen","Скрыть":"Hide","Добавлено на экран Домой":"Added to Home Screen",
@@ -180,7 +180,7 @@ function esc(value) {
   }[ch]));
 }
 function money(value) {
-  return new Intl.NumberFormat("ru-RU").format(value);
+  return new Intl.NumberFormat(appLanguage === "en" ? "en-US" : "ru-RU").format(value);
 }
 function displayServiceName(service) {
   const clean = String(service?.name || "")

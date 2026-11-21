@@ -9,6 +9,39 @@ if (tg) {
 const SUPABASE_URL = "https://januqesxribuqzmmmdun.supabase.co";
 const SUPABASE_KEY = "sb_publishable_BaYxtXvRZCmfEzMHJbSCog_ebs4k6oK";
 const byId = id => document.getElementById(id);
+const LANGUAGE_KEY = "vpn-finder-language";
+let appLanguage = (() => {
+  try { return localStorage.getItem(LANGUAGE_KEY) === "en" ? "en" : "ru"; }
+  catch (_) { return "ru"; }
+})();
+function updateLanguageLabel() {
+  const value = byId("profile-language-value");
+  if (value) value.textContent = appLanguage === "en" ? "English" : "Русский";
+}
+function chooseLanguage() {
+  if (typeof tg?.showPopup !== "function") {
+    try { tg?.showAlert?.("Откройте приложение в Telegram, чтобы сменить язык."); } catch (_) {}
+    return;
+  }
+  tg.showPopup({
+    title: "Язык",
+    message: "Выберите язык приложения",
+    buttons: [
+      { id: "ru", type: "default", text: "Русский" },
+      { id: "en", type: "default", text: "English" },
+      { type: "cancel" }
+    ]
+  }, buttonId => {
+    if (buttonId !== "ru" && buttonId !== "en") return;
+    appLanguage = buttonId;
+    try { localStorage.setItem(LANGUAGE_KEY, appLanguage); } catch (_) {}
+    updateLanguageLabel();
+    try { tg?.HapticFeedback?.selectionChanged(); } catch (_) {}
+  });
+}
+updateLanguageLabel();
+byId("language-selector")?.addEventListener("click", chooseLanguage);
+
 
 const HOME_SCREEN_PROMPT_KEY = "vpn-finder-home-screen-prompt-hidden";
 function initHomeScreenPrompt() {
@@ -602,7 +635,7 @@ async function sendProfileInbox(kind, form, statusId) {
     const response = await fetch(SUPABASE_URL + "/functions/v1/miniapp-inbox", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ initData: tg.initData, kind, fields, language: "ru" })
+      body: JSON.stringify({ initData: tg.initData, kind, fields, language: appLanguage })
     });
     const result = await response.json().catch(() => null);
     if (!response.ok || !result?.ok) throw new Error("Delivery failed");

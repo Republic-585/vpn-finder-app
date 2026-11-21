@@ -219,8 +219,7 @@ function visibleServices() {
     const queryMatch = !state.query ||
       [service.name, service.description, ...(service.features || [])].join(" ").toLowerCase().includes(state.query);
     if (!queryMatch) return false;
-    if (state.filter === "trial") return Number(service.trial_days) > 0 || (service.plans || []).some(plan => Number(plan.price_rub) === 0);
-    if (state.filter === "multi") return Number(service.devices_limit) > 1;
+    if (state.filter === "free") return Number(service.min_price_rub) === 0 || (service.plans || []).some(plan => Number(plan.price_rub) === 0);
     return true;
   });
 }
@@ -252,11 +251,15 @@ function serviceDetails(service) {
   if (service.trial_days) facts.push(["Пробный период", service.trial_days + " дн."]);
   if (service.traffic_limit) facts.push(["Трафик", service.traffic_limit]);
   const platforms = Array.isArray(service.platforms) ? service.platforms : [];
-  const features = Array.isArray(service.features) ? service.features : [];
+  const allFeatures = Array.isArray(service.features) ? service.features : [];
+  const paymentPattern = /сбп|оплат|карт|visa|mastercard|мир|юmoney|юмани|крипт|usdt|ton|telegram stars|звезд|apple pay|google pay|paypal|перевод/i;
+  const payments = allFeatures.filter(item => paymentPattern.test(String(item)));
+  const features = allFeatures.filter(item => !paymentPattern.test(String(item)));
   return `<div class="service-detail-panel">
     ${service.description ? `<p class="service-detail-description">${esc(service.description)}</p>` : ""}
     ${facts.length ? `<div class="service-detail-facts">${facts.map(([label,value]) => `<div class="service-detail-fact"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join("")}</div>` : ""}
     ${platforms.length ? `<div class="service-detail-group"><span class="service-detail-label">Платформы</span><div class="service-detail-chips">${platforms.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
+    ${payments.length ? `<div class="service-detail-group"><span class="service-detail-label">Оплата</span><div class="service-detail-chips">${payments.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
     ${features.length ? `<div class="service-detail-group"><span class="service-detail-label">Возможности</span><div class="service-detail-chips">${features.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
     <button class="connect-button service-detail-connect" type="button" data-action="connect" data-id="${esc(service.id)}">Подключить</button>
   </div>`;

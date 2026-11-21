@@ -784,8 +784,7 @@ function serviceMiniCard(service, index = 0) {
 function serviceFeaturedItem(service) {
   const id = esc(service.id);
   return `<div class="popular-service" data-featured-service="${id}">
-    <button class="popular-service-open" type="button" data-action="connect" data-id="${id}">${serviceAvatar(service, "popular-avatar", true)}<span>${esc(displayServiceName(service))}</span></button>
-    ${ratingMarkup(service.id)}
+    <button class="popular-service-open" type="button" data-action="connect" data-id="${id}">${serviceAvatarWithRating(service, 0)}<span>${esc(displayServiceName(service))}</span></button>
   </div>`;
 }
 function serviceCard(service, context = "catalog") {
@@ -801,7 +800,7 @@ function serviceCard(service, context = "catalog") {
   const expanded = context === "favorites" && state.expandedServiceId === service.id;
   return `<article class="vpn-card ${expanded ? "expanded" : ""}" data-service="${id}" ${context === "favorites" ? `data-action="toggle-favorite-details" data-id="${id}"` : ""}>
     <div class="vpn-card-top">
-      ${serviceAvatar(service, "service-avatar", true)}
+      <span class="service-avatar-rating">${serviceAvatar(service, "service-avatar", true)}${ratingMarkup(service.id)}</span>
       <div class="service-title"><h3>${esc(displayServiceName(service))}</h3><div class="service-price">${price}</div></div>
       ${context === "catalog" ? `<div class="card-tools">
         <button class="round-action ${favorite ? "selected" : ""}" type="button" data-action="favorite" data-id="${id}" aria-label="${t("Избранное")}" aria-pressed="${favorite}">
@@ -814,7 +813,6 @@ function serviceCard(service, context = "catalog") {
         <svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.1-8.8 10.2-8.8 10.2S3.2 13.9 3.2 8.8A4.5 4.5 0 0 1 12 6.5a4.5 4.5 0 0 1 8.8 2.3Z"></path></svg>
       </button>` : ""}
     </div>
-    ${ratingMarkup(service.id)}
     ${details.length ? `<div class="vpn-tags">${details.map(item => `<span class="vpn-tag">${esc(item)}</span>`).join("")}</div>` : ""}
     ${context === "favorites" ? (!expanded ? `<div class="vpn-card-bottom favorites-card-actions">
       <button class="connect-button" type="button" data-action="connect" data-id="${id}">${t("Подключить")}</button>

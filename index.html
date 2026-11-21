@@ -6,9 +6,9 @@
 <meta name="theme-color" content="#202124">
 <meta name="description" content="VPN Finder">
 <title>VPN Finder</title>
-<link rel="stylesheet" href="./assets/css/styles.css?v=20261121-language-row1">
+<link rel="stylesheet" href="./assets/css/styles.css?v=20261121-language-popup1">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script defer src="./assets/js/app.js?v=20261121-language-row1"></script>
+<script defer src="./assets/js/app.js?v=20261121-language-popup1"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -54,7 +54,7 @@
         <button class="home-screen-action home-screen-dismiss" id="hide-home-screen-prompt" type="button">Скрыть</button>
       </section>
       <nav class="profile-menu" aria-label="Разделы профиля">
-        <div class="profile-menu-row profile-language-row"><span>Язык</span><span class="profile-language-value">Русский</span></div>
+        <button class="profile-menu-row profile-language-row" id="language-selector" type="button"><span>Язык</span><span class="profile-language-value" id="profile-language-value">Русский</span></button>
         <button class="profile-menu-row" type="button" data-go="news"><span>Новости</span><span aria-hidden="true">›</span></button>
         <button class="profile-menu-row" type="button" data-go="contact"><span>Связаться</span><span aria-hidden="true">›</span></button>
         <button class="profile-menu-row" type="button" data-go="owners"><span>Владельцам VPN</span><span aria-hidden="true">›</span></button>

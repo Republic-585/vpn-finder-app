@@ -49,7 +49,11 @@
 .popular-card{padding:18px 14px 14px;border:1px solid rgba(255,255,255,.055);border-radius:20px;background:var(--raised)}
 .popular-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .popular-service{min-width:0;padding:3px 1px 7px;display:flex;flex-direction:column;align-items:center;gap:10px;border:0;background:transparent;color:var(--text);cursor:pointer;-webkit-tap-highlight-color:transparent;animation:featured-service-in .34s cubic-bezier(.22,.61,.36,1) both}
-.popular-avatar{width:64px;height:64px;display:block;flex:0 0 auto;object-fit:cover;border-radius:50%;background:var(--raised);border:0}
+.popular-avatar{width:64px;height:64px;display:block;flex:0 0 64px}
+.avatar-frame{position:relative;overflow:hidden;display:block;flex:0 0 auto;border:0;border-radius:50%;background:var(--raised)}
+.avatar-image{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;border:0;border-radius:inherit;opacity:0;transition:opacity .14s ease}
+.avatar-image.is-loaded{opacity:1}
+.avatar-frame .avatar-fallback{position:absolute;inset:0;display:grid;place-items:center;border:0;border-radius:inherit;background:var(--raised);color:var(--bright);font-size:17px;font-weight:700}
 .popular-service span:last-child{width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;color:#F5F5F5;font-size:13px;line-height:1.2;font-weight:620;letter-spacing:-.02em}
 @keyframes featured-service-in{0%{opacity:0;transform:scale(.99)}100%{opacity:1;transform:scale(1)}}
 @media(prefers-reduced-motion:reduce){.popular-service{animation:none!important}}
@@ -60,7 +64,7 @@
 .service-list-card.expanded{border-color:rgba(106,178,242,.24);background:#303238}
 .service-mini-card{width:100%;min-height:76px;padding:11px 12px;display:flex;align-items:center;gap:12px;border:0;border-radius:0;background:transparent;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .22s ease}
 .service-mini-card:active{background:rgba(255,255,255,.035)}
-.service-avatar{width:44px;height:44px;display:block;flex:0 0 44px;object-fit:cover;border-radius:50%;background:#414349;border:1px solid rgba(255,255,255,.09)}
+.service-avatar{width:44px;height:44px;flex:0 0 44px}
 .service-mini-copy{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
 .service-mini-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-size:15.5px;font-weight:640;letter-spacing:-.025em}
 .service-mini-subtitle{display:flex;align-items:center;flex-wrap:wrap;column-gap:7px;row-gap:3px;color:var(--muted);font-size:12.5px;line-height:1.4;font-weight:500}
@@ -183,3 +187,23 @@
 
 /* Keep the owner-only analytics menu item hidden despite .profile-menu-row display:flex. */
 #analytics-menu-row[hidden]{display:none!important}
+
+/* Borderless card surfaces across the app; separators and form controls remain intact. */
+#screen-catalog .search-box,
+#screen-catalog .popular-card,
+#screen-catalog .service-list-card,
+.vpn-card,
+.empty-state,
+.profile-card,
+.settings-list,
+.compare-table-wrap,
+.home-screen-prompt,
+.profile-menu,
+.profile-form,
+.analytics-summary article,
+.analytics-disclosure {
+  border: 0 !important;
+}
+#screen-catalog .search-box{box-shadow:none!important;outline:0!important}
+.service-list-card.expanded{border:0!important}
+@media(min-width:700px){.app-shell{border:0!important}}

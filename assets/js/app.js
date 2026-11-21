@@ -616,7 +616,9 @@ function serviceDetails(service) {
   const paymentPattern = /сбп|оплат|карт|visa|mastercard|мир|юmoney|юмани|крипт|usdt|ton|telegram stars|звезд|apple pay|google pay|paypal|перевод/i;
   const payments = allFeatures.filter(item => paymentPattern.test(String(item)));
   const features = allFeatures.filter(item => !paymentPattern.test(String(item)));
+  const favorite = state.favorites.has(service.id);
   return `<div class="service-detail-panel">
+    <div class="service-detail-actions"><button class="service-detail-favorite ${favorite ? "is-favorite" : ""}" type="button" data-action="favorite-detail" data-id="${esc(service.id)}" aria-label="${favorite ? t("Убрать") : t("Избранное")}" aria-pressed="${favorite}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.1-8.8 11-8.8 11s-8.8-5.9-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path></svg></button></div>
     ${service.description ? `<p class="service-detail-description">${esc(service.description)}</p>` : ""}
     ${facts.length ? `<div class="service-detail-facts">${facts.map(([label,value]) => `<div class="service-detail-fact"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join("")}</div>` : ""}
     ${platforms.length ? `<div class="service-detail-group"><span class="service-detail-label">${t("Платформы")}</span><div class="service-detail-chips">${platforms.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
@@ -816,6 +818,15 @@ document.addEventListener("click", event => {
     return;
   }
   if (action === "connect") openReferral(service);
+  if (action === "favorite-detail") {
+    toggleSet(state.favorites, "vpn-finder-favorites", service.id);
+    const favorite = state.favorites.has(service.id);
+    button.classList.toggle("is-favorite", favorite);
+    button.setAttribute("aria-pressed", String(favorite));
+    button.setAttribute("aria-label", favorite ? t("Убрать") : t("Избранное"));
+    if (byId("screen-favorites")?.classList.contains("active")) renderFavorites();
+    return;
+  }
   if (action === "favorite") {
     const removing = state.favorites.has(service.id);
     toggleSet(state.favorites, "vpn-finder-favorites", service.id);

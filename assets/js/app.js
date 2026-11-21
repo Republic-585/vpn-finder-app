@@ -667,7 +667,7 @@ function cleanCardText(value) {
     .replace(/https?:\/\/\S+/gi, "")
     .replace(/@[A-Za-z0-9_]{3,}/g, "")
     .replace(/\s*\([^)]*\)/g, "")
-    .replace(/[\u2013\u2013]/g, "-")
+    .replace(/[\u2013\u2014]/g, "-")
     .replace(/\s+/g, " ")
     .trim();
 }

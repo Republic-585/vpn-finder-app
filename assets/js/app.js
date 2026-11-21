@@ -634,7 +634,7 @@ function serviceMiniCard(service, index = 0) {
   ];
   return `<article class="service-list-card ${expanded ? "expanded" : ""}" data-service-id="${id}">
     <button class="service-mini-card" type="button" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">
-      ${serviceAvatar(service)}
+      ${serviceAvatar(service, "service-avatar", index < 4)}
       <span class="service-mini-copy"><span class="service-mini-name">${esc(displayServiceName(service))}</span><span class="service-mini-subtitle">${compactFacts.map(item => `<span>${esc(item)}</span>`).join('<span class="service-mini-dot">·</span>')}</span></span>
       <svg class="service-mini-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
     </button>
@@ -701,7 +701,7 @@ function renderCatalog() {
   if (!state.featuredIds.length) state.featuredIds = state.services.slice(0, 4).map(service => service.id);
   const featured = state.featuredIds.map(id => state.services.find(service => service.id === id)).filter(Boolean);
   if (state.catalogExpanded) {
-    list.innerHTML = `<section class="popular-card"><div class="catalog-compact-list catalog-rest-list">${items.map(serviceMiniCard).join("")}</div></section>`;
+    list.innerHTML = `<section class="popular-card"><div class="catalog-compact-list catalog-rest-list">${items.map((service, index) => serviceMiniCard(service, index)).join("")}</div></section>`;
     return;
   }
   list.innerHTML = `<section class="popular-card">

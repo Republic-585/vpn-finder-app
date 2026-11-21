@@ -64,7 +64,7 @@ async function loadAnalyticsDashboard() {
     const summary = result.summary || {};
     const services = new Map((result.services || []).map(item => [item.id, item.name]));
     const eventRows = (result.events || []).slice(0, 25).map(item =>
-      '<tr><td>' + esc(item.event_name) + '</td><td>' + esc(services.get(item.service_id) || item.service_id || "—") + '</td><td>' + esc(new Date(item.occurred_at).toLocaleString()) + '</td></tr>'
+      '<tr><td>' + esc(item.event_name) + '</td><td>' + esc(String(item.telegram_id || "—")) + '</td><td>' + esc(services.get(item.service_id) || item.service_id || "—") + '</td><td>' + esc(new Date(item.occurred_at).toLocaleString()) + '</td></tr>'
     ).join("");
     const clickRows = (result.clicks || []).slice(0, 25).map(item =>
       '<tr><td>' + esc(services.get(item.service_id) || item.service_id) + '</td><td>' + esc(String(item.telegram_id || "—")) + '</td><td>' + esc(new Date(item.clicked_at).toLocaleString()) + '</td></tr>'
@@ -93,7 +93,7 @@ async function loadAnalyticsDashboard() {
       '<article><strong>' + Number(summary.conversions || 0) + '</strong><span>' + t("Конверсии") + '</span></article></div>' +
       '<h2>' + t("Пользователи и сессии") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Пользователь") + '</th><th>Telegram</th><th>' + t("Источник") + '</th><th>' + t("Активность") + '</th></tr></thead><tbody>' + (userRows || '<tr><td colspan="4">—</td></tr>') + '</tbody></table></div>' +
       '<h2>' + t("Источники трафика") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Источник") + '</th><th>' + t("Сессии") + '</th></tr></thead><tbody>' + (sourceRows || '<tr><td colspan="2">—</td></tr>') + '</tbody></table></div>' +
-      '<h2>' + t("Последние события") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Событие") + '</th><th>' + t("Сервис") + '</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (eventRows || '<tr><td colspan="3">—</td></tr>') + '</tbody></table></div>' +
+      '<h2>' + t("Последние события") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Событие") + '</th><th>Telegram ID</th><th>' + t("Сервис") + '</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (eventRows || '<tr><td colspan="4">—</td></tr>') + '</tbody></table></div>' +
       '<h2>' + t("Партнёрские переходы") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Сервис") + '</th><th>Telegram ID</th><th>' + t("Время") + '</th></tr></thead><tbody>' + (clickRows || '<tr><td colspan="3">—</td></tr>') + '</tbody></table></div>' +
       '<h2>' + t("Покупки и комиссии") + '</h2><div class="analytics-table-wrap"><table><thead><tr><th>' + t("Сервис") + '</th><th>' + t("Тип") + '</th><th>' + t("Статус") + '</th><th>' + t("Сумма") + '</th><th>' + t("Комиссия") + '</th></tr></thead><tbody>' + (conversionRows || '<tr><td colspan="5">—</td></tr>') + '</tbody></table></div>';
   } catch (_) {
@@ -713,7 +713,13 @@ async function openReferral(service) {
     const response = await fetch(SUPABASE_URL + "/functions/v1/affiliate-redirect", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ initData: tg.initData, session_token: analyticsToken, service_id: service.id })
+      body: JSON.stringify({
+        initData: tg.initData, session_token: analyticsToken, service_id: service.id,
+        source: new URLSearchParams(window.location.search).get("utm_source") || "telegram",
+        medium: new URLSearchParams(window.location.search).get("utm_medium") || "miniapp",
+        campaign: new URLSearchParams(window.location.search).get("utm_campaign") || "",
+        referrer_host: (() => { try { return document.referrer ? new URL(document.referrer).hostname : ""; } catch (_) { return ""; } })()
+      })
     });
     const result = await response.json().catch(() => null);
     if (!response.ok || !result?.ok || !result.url) throw new Error("Referral redirect failed");

@@ -95,8 +95,8 @@
 .home-screen-prompt{width:100%;max-width:none;margin-top:18px;padding:18px 14px 0;overflow:hidden;border:1px solid rgba(255,255,255,.055);border-radius:20px;background:var(--raised);text-align:left}
 .home-screen-prompt[hidden]{display:none}
 .home-screen-copy{padding:0 0 16px}
-.home-screen-copy h2{margin:0;color:var(--text);font-size:15px;line-height:1.35;font-weight:750;letter-spacing:-.02em}
-.home-screen-copy p{margin:6px 0 0;color:var(--secondary);font-size:12px;line-height:1.45;font-weight:400}
+.home-screen-copy h2{margin:0;color:var(--text);font-size:17px;line-height:1.35;font-weight:400;letter-spacing:-.02em}.home-screen-copy h2 strong{font-weight:750}
+.home-screen-copy p{margin:6px 0 0;color:var(--secondary);font-size:14px;line-height:1.45;font-weight:400}.home-screen-copy p strong{color:var(--text);font-weight:700}
 .home-screen-action{width:calc(100% + 28px);min-height:48px;margin:0 -14px;padding:0 14px;display:flex;align-items:center;justify-content:flex-start;border:0;border-top:1px solid rgba(255,255,255,.09);background:transparent;color:var(--bright);font:inherit;font-size:13px;font-weight:600;text-align:left;text-decoration:none;cursor:pointer}
 .home-screen-action:active{background:rgba(255,255,255,.045)}
 .home-screen-dismiss{font-family:inherit}

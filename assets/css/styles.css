@@ -384,7 +384,7 @@ body{font-size:var(--type-body);line-height:1.45}
 .service-rating-star.is-mine{filter:drop-shadow(0 0 2px rgba(0,122,255,.28))}
 .service-rating-star:active{transform:scale(.86)}
 .service-rating-star:disabled{opacity:.55;cursor:default;transform:none}
-.service-mini-copy .service-rating{margin-top:3px}
+.service-list-card>.service-rating{margin:-2px 12px 9px 88px}
 .popular-service .service-rating{justify-content:center;margin-top:1px}
 .vpn-card>.service-rating{margin:1px 0 9px 76px}
 @media(prefers-reduced-motion:reduce){.service-rating-star,.popular-service-open{transition:none!important}}

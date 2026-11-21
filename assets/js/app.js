@@ -394,7 +394,7 @@ function showScreen(name) {
   if (name === "favorites") renderFavorites();
   if (name === "compare") renderCompare();
   if (name === "profile") { syncTelegramProfile(); if (!analyticsAccessChecked) loadAnalyticsDashboard(); }
-  const isProfileSubscreen = ["news", "contact", "owners", "analytics"].includes(name);
+  const isProfileSubscreen = ["news", "contact", "owners", "analytics", "support"].includes(name);
   try {
     if (isProfileSubscreen) tg?.BackButton?.show();
     else tg?.BackButton?.hide();

@@ -177,6 +177,7 @@ const translations = {
     "Откройте приложение через Telegram, чтобы отправить сообщение.":"Open the app through Telegram to send a message.",
     "Отправляем…":"Sending…","Сообщение отправлено.":"Message sent.","Не удалось отправить. Попробуйте ещё раз.":"Could not send. Please try again.",
     "Поддержать проект":"Support the project","Сумма в Stars":"Amount in Stars","Оплатить ⭐ Stars":"Pay ⭐ Stars",
+    "Или укажи другую сумму в Stars":"Or enter another amount in Stars","Ориентир вознаграждения владельцу по ставке Telegram $0,013 за 1 Star; рублёвый пересчёт по курсу ЦБ на 21.11.2026. Это не цена покупки Stars.":"Estimated owner reward at Telegram's rate of $0.013 per Star; RUB conversion uses the Central Bank rate on Nov 21, 2026. This is not the purchase price of Stars.",
     "Укажи любую сумму в Telegram Stars. После оплаты ты получишь значок «Друг VPN Finder».":"Choose any amount in Telegram Stars. After payment, you will receive the “VPN Finder Friend” badge.",
     "Друг VPN Finder":"VPN Finder Friend","Спасибо за поддержку VPN Finder!":"Thank you for supporting VPN Finder!",
     "Введите целое число от 1 до 100 000 Stars.":"Enter a whole number from 1 to 100,000 Stars.",
@@ -598,6 +599,15 @@ async function syncTelegramProfile(force = false) {
 const supportAmount = byId("support-amount");
 const supportPayButton = byId("support-pay-button");
 const supportStatus = byId("support-dialog-status");
+document.querySelectorAll("[data-support-amount]").forEach(option => {
+  option.addEventListener("click", () => {
+    if (supportAmount) supportAmount.value = option.dataset.supportAmount;
+    document.querySelectorAll("[data-support-amount]").forEach(item => item.classList.toggle("is-selected", item === option));
+  });
+});
+supportAmount?.addEventListener("input", () => {
+  document.querySelectorAll("[data-support-amount]").forEach(item => item.classList.toggle("is-selected", Number(item.dataset.supportAmount) === Number(supportAmount.value)));
+});
 supportPayButton?.addEventListener("click", async () => {
   const amount = Number(supportAmount?.value);
   if (!Number.isSafeInteger(amount) || amount < 1 || amount > 100000) {

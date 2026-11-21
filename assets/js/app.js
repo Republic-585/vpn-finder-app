@@ -90,7 +90,7 @@ async function loadAnalyticsDashboard() {
     };
     const formatAnalyticsDateTime = value => {
       const date = new Date(value);
-      if (!Number.isFinite(date.getTime())) return { time: "—", date: "—" };
+      if (!Number.isFinite(date.getTime())) return { time: "-", date: "-" };
       const time = new Intl.DateTimeFormat("ru-RU", {
         timeZone: "Europe/Moscow", hour: "2-digit", minute: "2-digit", hourCycle: "h23"
       }).format(date);
@@ -105,24 +105,24 @@ async function loadAnalyticsDashboard() {
     const usersByTelegramId = new Map(userItems.map(item => [String(item.telegram_id), item]));
     const userRows = userItems.map(item => {
       const profile = item.profile || {};
-      const display = [profile.first_name, profile.last_name].filter(Boolean).join(" ") || "—";
+      const display = [profile.first_name, profile.last_name].filter(Boolean).join(" ") || "-";
       const stamp = formatAnalyticsDateTime(item.last_seen_at);
-      return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + esc(display) + '</strong><span>' + esc(profile.username ? "@" + profile.username : String(item.telegram_id || "—")) + '</span></div><div class="analytics-list-meta"><span>' + t("Источник") + ': ' + esc(item.source || "—") + '</span><time><span>' + stamp.time + '</span><span>' + stamp.date + '</span></time></div></article>';
+      return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + esc(display) + '</strong><span>' + esc(profile.username ? "@" + profile.username : String(item.telegram_id || "-")) + '</span></div><div class="analytics-list-meta"><span>' + t("Источник") + ': ' + esc(item.source || "-") + '</span><time><span>' + stamp.time + '</span><span>' + stamp.date + '</span></time></div></article>';
     }).join("");
     const clickRows = clickItems.map(item => {
       const user = usersByTelegramId.get(String(item.telegram_id)) || {};
       const profile = user.profile || item.profile || {};
-      const display = [profile.first_name, profile.last_name].filter(Boolean).join(" ") || item.user_name || "—";
+      const display = [profile.first_name, profile.last_name].filter(Boolean).join(" ") || item.user_name || "-";
       const username = String(profile.username || item.username || "").replace(/^@/, "");
       const userLink = username
         ? '<a class="analytics-user-link" href="https://t.me/' + encodeURIComponent(username) + '" target="_blank" rel="noopener noreferrer">@' + esc(username) + '</a>'
-        : '<span class="analytics-user-link-muted">—</span>';
+        : '<span class="analytics-user-link-muted">-</span>';
       const stamp = formatAnalyticsDateTime(item.clicked_at);
-      return '<article class="analytics-list-item analytics-click-item"><div class="analytics-list-main"><strong>' + esc(services.get(item.service_id) || item.service_name || item.service_id || "—") + '</strong><span>' + esc(display) + '</span><span>' + userLink + '</span></div><time class="analytics-list-time"><span>' + stamp.time + '</span><span>' + stamp.date + '</span></time></article>';
+      return '<article class="analytics-list-item analytics-click-item"><div class="analytics-list-main"><strong>' + esc(services.get(item.service_id) || item.service_name || item.service_id || "-") + '</strong><span>' + esc(display) + '</span><span>' + userLink + '</span></div><time class="analytics-list-time"><span>' + stamp.time + '</span><span>' + stamp.date + '</span></time></article>';
     }).join("");
     const eventRows = eventItems.map(item => {
       const stamp = formatAnalyticsDateTime(item.occurred_at);
-      return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + t(keyEventNames[item.event_name]) + '</strong><span>' + esc(String(item.telegram_id || "—")) + (item.service_id ? ' · ' + esc(services.get(item.service_id) || item.service_id) : '') + '</span></div><time class="analytics-list-time"><span>' + stamp.time + '</span><span>' + stamp.date + '</span></time></article>';
+      return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + t(keyEventNames[item.event_name]) + '</strong><span>' + esc(String(item.telegram_id || "-")) + (item.service_id ? ' · ' + esc(services.get(item.service_id) || item.service_id) : '') + '</span></div><time class="analytics-list-time"><span>' + stamp.time + '</span><span>' + stamp.date + '</span></time></article>';
     }).join("");
     root.innerHTML =
       '<div class="analytics-summary">' +
@@ -130,9 +130,9 @@ async function loadAnalyticsDashboard() {
       '<article><strong>' + Number(summary.sessions || 0) + '</strong><span>' + t("Сессии") + '</span></article>' +
       '<article><strong>' + Number(summary.clicks || 0) + '</strong><span>' + t("Партнёрские переходы") + '</span></article>' +
       '</div>' +
-      '<details class="analytics-disclosure"><summary><span>' + t("Пользователи") + '</span><span class="analytics-disclosure-count">' + userItems.length + '</span></summary><div class="analytics-list">' + (userRows || '<p class="analytics-empty">—</p>') + '</div></details>' +
-      '<section class="analytics-section"><h2>' + t("Партнёрские переходы") + '</h2><div class="analytics-list analytics-clicks">' + (clickRows || '<p class="analytics-empty">—</p>') + '</div></section>' +
-      '<details class="analytics-disclosure"><summary><span>' + t("Ключевые события") + '</span><span class="analytics-disclosure-count">' + eventItems.length + '</span></summary><div class="analytics-list">' + (eventRows || '<p class="analytics-empty">—</p>') + '</div></details>';
+      '<details class="analytics-disclosure"><summary><span>' + t("Пользователи") + '</span><span class="analytics-disclosure-count">' + userItems.length + '</span></summary><div class="analytics-list">' + (userRows || '<p class="analytics-empty">-</p>') + '</div></details>' +
+      '<section class="analytics-section"><h2>' + t("Партнёрские переходы") + '</h2><div class="analytics-list analytics-clicks">' + (clickRows || '<p class="analytics-empty">-</p>') + '</div></section>' +
+      '<details class="analytics-disclosure"><summary><span>' + t("Ключевые события") + '</span><span class="analytics-disclosure-count">' + eventItems.length + '</span></summary><div class="analytics-list">' + (eventRows || '<p class="analytics-empty">-</p>') + '</div></details>';
   } catch (_) {
     root.textContent = t("Не удалось загрузить аналитику.");
   } finally {
@@ -168,11 +168,11 @@ const translations = {
     "Название VPN":"VPN name","Официальный сайт":"Official website","Описание":"Description","Расскажите о сервисе":"Tell us about your service",
     "Контакт для связи":"Contact details","@username или email":"@username or email","Отправить заявку":"Submit request",
     "Finder":"Finder","Сравнить":"Compare","Каталог":"Directory","Ничего не найдено":"No results found","Пусто":"Nothing here yet",
-    "Выберите сервисы":"Choose services","Цена":"Price","Цена —":"Price —","Устройства":"Devices","Страны":"Countries","Нет данных":"Not available",
+    "Выберите сервисы":"Choose services","Цена":"Price","Цена -":"Price -","Устройства":"Devices","Страны":"Countries","Нет данных":"Not available",
     "В боте":"In bot","Убрать":"Remove","Подключить":"Connect","Тарифы в боте":"Plans in bot",
     "Стоимость":"Price","от ":"from ","Пробный период":"Free trial"," дн.":" days","Трафик":"Data",
     "Платформы":"Platforms","Оплата":"Payment","Возможности":"Features"," устр.":" devices"," стран":" countries",
-    "Тест ":"Trial ","Без теста":"No trial","Тест —":"Trial —","Устр. —":"Devices —","Трафик —":"Data —",
+    "Тест ":"Trial ","Без теста":"No trial","Тест -":"Trial -","Устр. -":"Devices -","Трафик -":"Data -",
     "Загрузка":"Loading","Не удалось загрузить":"Could not load","Повторить":"Try again",
     "Откройте приложение через Telegram, чтобы отправить сообщение.":"Open the app through Telegram to send a message.",
     "Отправляем…":"Sending…","Сообщение отправлено.":"Message sent.","Не удалось отправить. Попробуйте ещё раз.":"Could not send. Please try again."
@@ -632,7 +632,7 @@ const serviceAvatars = {
   "VPN-002": "https://cdn4.telesco.pe/file/ehp8fYyDFuBitN9x8A4gavi--vbavvJdNd_r5_t105Jtt7NlVaDSh7tXUmU99TAZcew1PGSssPuLPC6_sNEBp8MsZlDjud-ua3mnqqHAJNr019vlAV6b7v3Xl39t0uH0vdKfXyhig6NUCJBc-wpYVuYPiZlGz_7u3d5WA0WC4tOTl8NO_SMidnw3q6aiZTzPNgUkzn2HFLy0_GlXWVVTceLUD5sMrzgBhElIk4fnAX4MqX3Bnp7MOUMpVs65eq6IPf79D_N_m0XxMcjDIkOgP_NW91grdAx5RCmeWrhI4oTnqVhpJBNQKo52Axq1AXLCTVj-Ne42L2T1FLPvevABqQ.jpg",
   "VPN-003": "https://cdn4.telesco.pe/file/K4rdDvH4jNZqSQ2BCFAEfI9tYhm1JuKlHDJSIqX-Pug7P1pbU2-euIbmb9t8grRl0mEueCf29Azt-8kC9re2nFcvVDzK_mmlRqFER8FU8IEVHymVirHTz4VRdQR8n0qqgL4c4I-kh6AakwX-DMWu_I8s9SB8u2KTULJw9qbMtF7mnV7NY6XeGj7NlQ2BBbZ2_xoU2NtLeGmDmZZPYWDfGN-mzqvagH06AteXdSLRgSaq1okT3U0-Z-AQCNjTuvmlxmIy5BKJhFvbcRrJMmC_DGVbb7dm_geyWc04-IgfCArfSsFT5an__mtrJDRb9_favTTJov2B1RSZCRWG95R63w.jpg",
   "VPN-004": "https://cdn4.telesco.pe/file/RwycPB0WAQtCY-ED4aJXcLqeKViuo_1wJumK66F8ISOKsLfS7sZSLNpT747zdT_6S4h9nCkIxPGYZGieDqIGqwLtl14quARW63Hdsbjf3qboTz3r_O4Q-8ifXmoWFuN-38UJhjQ0YVsKgNBls23h5wSm00lVJ3xnbjr7mO0l6t2fE2IwJNMoTPqAQMoWFInpAriERJWcI6b1UvF1wQCc7FgmJF3Z54Y3YWd_OhNZUU_PuvlcJhOGV9dOtuIZtK13KIZBeInXAEJ810LX1xpUNW1Ok04sCYVxt4rNJG8jMIBqjRxwDAYyUs04stjNnwJuQCKmdFHMzLuMIQvXNSc-Ag.jpg",
-  "VPN-005": "https://cdn4.telesco.pe/file/GskBphrTLR1VGSEizlFuYJ8rUgRCqc-F_YBDNNU0Scoi-4hi8Ls63vVVRiqih-uT864su19WkR6nlLj3oc1TS6PdakkoIMML4hh3svE19fjsvEnculX0RUl35W8z1-UDGG3rvWst5Gkx7G_s0T7NaKMpBCCfFIQzq5D_RVroQIf0IEQn_H3Dn0804HblnQwNDexFUJvjOLia5I4w5AiQZQD047FY_cY-_d4HYx-Ns3XdTct9hoqmD2HSPUVeuAGCbO1dfCIz-_g8w2kmEr4cV6X74-8Xgnl_6rkOQ9DHwkGqBVuZfv5-mTXn0hx6LX51hDLoPXOJx4Y9iAtO1wyFIA.jpg",
+  "VPN-005": "https://play-lh.googleusercontent.com/RB7gAkVOOPNKZvn9erHnHpwcNNSEobIb3zPWUsok5giq3uD8_x0V5dhbfIjWNB2_7VW9nldW00v5bbgN0kRR2A",
   "VPN-006": "https://cdn4.telesco.pe/file/P423oxCFR5L-Hh1qLUgjRny3J17I8AU86gioX5qhjp7NfV2r6kVx40zJf4-qyzPW_4q_ys0v04HPlgBiYGNIu1AO79zzuLDHamUDOIIzER_ByX43WIm5J2BaieLAcuB4GfdpZBpYWiJWfrqWOoynj-8Rdos5O7aQ6ER5kQA1raEUN1ORcMwxmxuZFsmeyiv_v6YCdcDC5T_9ZkMjuqF4bu1cvEsJFj8UQmm9ESg3N3B_7PjhNSRh4F27PP637XJ-L5UAD5N0S-gmnkBMX2MRFdzfttW9Zpk-zM5KvY2UwLUWduylVEk2n_Vc9a8Z7zZv9Tu3AujZtZc4MQJpx-fBxQ.jpg",
   "VPN-007": "https://cdn4.telesco.pe/file/T5-2LHFeRt3_K1MGe8oNjzHp_F-1qNF5DjoF4zFXsPWdbfRuGTGXYpKXmCynAmAZGSYLwSloeoy8BiAeMw2ham5VLFNP8GI-C-e3nYXwono3Px1g79rPZybdzYg8JXH5dcJLtumheG1TTrT70srKMihcC8g7IcdYv7Kxk4GURXJavK2SWSv75vAuIQqg9Qs-qaX7wMkSUD_FhYaGmybREDtzCLF4k8klFnr0LcioRnceMKpm1Ij9PmFQSgw2GFwx6uaYYOV2a6-_lvG7p2srBUVaYYC5qL3PH54VRctBKFtlQ2eAj8I8y7mr_NYbYvF8lWyeNRgM7bSyjRkoIDJRDw.jpg",
   "VPN-008": "https://cdn4.telesco.pe/file/G8AyrXHSsWQ-KLq7L4B7HnffPHRAgbepl2AzgRPXkoKuyCzMjQ0GAVP2NfCoHuVTvHS0koqqcgvI4IBY2-mcde-Rj6EEOzjbyqDE9qD1dLX4DuEW1672zySb5wpanOS1mXYcnRjXkmVZy9SonuatMxdAzqzjKg5nkfPkwQjNJHGU31VnWHnxqyA-WKs-4U5EJzjev0tD4xWfluQbX3bhrKfX222dEwv75E5FxWdTBX0R6yKOJUk_gDey4qwcZaGwtKYfOkInkXtolmD2TM_soGbGMIFDY7CkmOZ-a125VEOgW7xWjGmvXNoO0XOcTYrH6KCLmaibvntMHUfRREwZBA.jpg",
@@ -651,7 +651,7 @@ function serviceAvatar(service, className = "service-avatar", prioritize = false
   const url = databaseUrl || fallbackUrl;
   const initial = esc((displayServiceName(service) || "V").slice(0, 1).toUpperCase());
   if (!url) return `<span class="${className} avatar-frame"><span class="avatar-fallback">${initial}</span></span>`;
-  const fallback = fallbackUrl && fallbackUrl !== url ? fallbackUrl : "";
+  const fallback = service.id === "VPN-005" ? "https://blook.app/images/home/hero-product.webp" : (fallbackUrl && fallbackUrl !== url ? fallbackUrl : "");
   return `<span class="${className} avatar-frame" aria-hidden="true">
     <span class="avatar-fallback">${initial}</span>
     <img class="avatar-image" src="${esc(url)}" data-fallback="${esc(fallback)}" alt="" width="64" height="64"
@@ -678,7 +678,6 @@ function serviceDetails(service, hideFavoriteAction = false) {
   const favorite = state.favorites.has(service.id);
   return `<div class="service-detail-panel">
     ${hideFavoriteAction ? "" : `<div class="service-detail-actions"><button class="service-detail-favorite ${favorite ? "is-favorite" : ""}" type="button" data-action="favorite-detail" data-id="${esc(service.id)}" aria-label="${favorite ? t("Убрать") : t("Избранное")}" aria-pressed="${favorite}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.1-8.8 11-8.8 11s-8.8-5.9-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"></path></svg></button></div>`}
-    ${service.description ? `<p class="service-detail-description">${esc(service.description)}</p>` : ""}
     ${facts.length ? `<div class="service-detail-facts">${facts.map(([label,value]) => `<div class="service-detail-fact"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join("")}</div>` : ""}
     ${platforms.length ? `<div class="service-detail-group"><span class="service-detail-label">${t("Платформы")}</span><div class="service-detail-chips">${platforms.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
     ${payments.length ? `<div class="service-detail-group"><span class="service-detail-label">${t("Оплата")}</span><div class="service-detail-chips">${payments.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
@@ -759,10 +758,10 @@ function serviceMiniCard(service, index = 0) {
   const id = esc(service.id);
   const expanded = state.expandedServiceId === service.id;
   const compactFacts = [
-    servicePriceText(service) == null ? t("Цена —") : t("от ") + servicePriceText(service),
-    service.devices_limit ? service.devices_limit + t(" устр.") : t("Устр. —"),
-    service.traffic_limit ? service.traffic_limit : t("Трафик —"),
-    service.trial_days != null ? (Number(service.trial_days) > 0 ? t("Тест ") + service.trial_days + t(" дн.") : t("Без теста")) : t("Тест —")
+    servicePriceText(service) == null ? t("Цена -") : t("от ") + servicePriceText(service),
+    service.devices_limit ? service.devices_limit + t(" устр.") : t("Устр. -"),
+    service.traffic_limit ? service.traffic_limit : t("Трафик -"),
+    service.trial_days != null ? (Number(service.trial_days) > 0 ? t("Тест ") + service.trial_days + t(" дн.") : t("Без теста")) : t("Тест -")
   ];
   return `<article class="service-list-card ${expanded ? "expanded" : ""}" data-service-id="${id}">
     <div class="service-mini-card" role="button" tabindex="0" data-action="toggle-details" data-id="${id}" aria-expanded="${expanded}">

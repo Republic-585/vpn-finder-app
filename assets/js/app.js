@@ -632,7 +632,6 @@ function serviceDetails(service, hideFavoriteAction = false) {
     ${payments.length ? `<div class="service-detail-group"><span class="service-detail-label">${t("Оплата")}</span><div class="service-detail-chips">${payments.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
     ${features.length ? `<div class="service-detail-group"><span class="service-detail-label">${t("Возможности")}</span><div class="service-detail-chips">${features.map(item => `<span>${esc(item)}</span>`).join("")}</div></div>` : ""}
     <button class="connect-button service-detail-connect" type="button" data-action="connect" data-id="${esc(service.id)}">${t("Подключить")}</button>
-    ${hideFavoriteAction ? `<button class="favorites-card-toggle is-expanded" type="button" data-action="toggle-favorite-details" data-id="${esc(service.id)}" aria-label="${t("Свернуть")}" aria-expanded="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>` : ""}
   </div>`;
 }
 function serviceMiniCard(service, index = 0) {
@@ -693,7 +692,7 @@ function serviceCard(service, context = "catalog") {
       <button class="connect-button" type="button" data-action="connect" data-id="${id}">${t("Подключить")}</button>
       ${context === "compare" ? `<button class="remove-button" type="button" data-action="remove-${context}" data-id="${id}">${t("Убрать")}</button>` : ""}
     </div>`}
-    ${expanded ? serviceDetails(service, true) : ""}
+    ${expanded ? serviceDetails(service, true) + `<button class="favorites-card-toggle is-expanded" type="button" data-action="toggle-favorite-details" data-id="${id}" aria-label="${t("Свернуть")}" aria-expanded="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button>` : ""}
   </article>`;
 }
 function renderCatalog() {

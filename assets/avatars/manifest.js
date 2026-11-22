@@ -24,7 +24,7 @@ window.VPN_AVATAR_ASSETS = {
   "VPN-022": "./assets/avatars/VPN-022.jpg",
   "VPN-023": "./assets/avatars/VPN-023.jpg",
   "VPN-025": "./assets/avatars/VPN-025.jpg",
-  "VPN-028": "./assets/avatars/VPN-028.jpg",
+  "VPN-028": "./assets/avatars/VPN-028.png",
   "VPN-030": "./assets/avatars/VPN-030.jpg",
   "VPN-031": "./assets/avatars/VPN-031.jpg",
   "VPN-032": "./assets/avatars/VPN-032.jpg",

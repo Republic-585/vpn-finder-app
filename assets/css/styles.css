@@ -1035,3 +1035,11 @@ body{font-size:var(--type-body);line-height:1.45}
   .bottom-nav-dock .nav-item.is-tapping svg,
   .bottom-nav-dock .nav-item.is-tapping svg path{animation:none!important;stroke-dasharray:none!important;stroke-dashoffset:0!important}
 }
+
+
+/* Explicit per-tab overrides outrank the legacy tap and selected-state keyframes. */
+.bottom-nav-dock .nav-item.is-tapping[data-go="catalog"] svg,
+.bottom-nav-dock .nav-item.is-tapping[data-go="compare"] svg,
+.bottom-nav-dock .nav-item.is-tapping[data-go="favorites"] svg{
+  animation:telegram-tab-settle .56s cubic-bezier(.2,.75,.25,1) both!important;
+}

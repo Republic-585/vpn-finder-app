@@ -1656,3 +1656,62 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   object-fit:contain!important;
 }
 #screen-catalog .catalog-promo-wrap .catalog-promo-dismiss{display:none!important}
+
+
+/* Match the four-avatar featured card width and keep the close control independent from the banner link. */
+#screen-catalog .catalog-promo-wrap{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin:0 0 22px!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner img{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-dismiss{
+  position:absolute!important;
+  z-index:20!important;
+  top:7px!important;
+  right:7px!important;
+  display:grid!important;
+  place-items:center!important;
+  width:30px!important;
+  height:30px!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:50%!important;
+  background:transparent!important;
+  color:#fff!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  cursor:pointer!important;
+  -webkit-tap-highlight-color:transparent!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-dismiss svg{
+  display:block!important;
+  width:17px!important;
+  height:17px!important;
+  fill:none!important;
+  stroke:#fff!important;
+  stroke-width:2.4!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-dismiss:active{transform:scale(.92)!important}

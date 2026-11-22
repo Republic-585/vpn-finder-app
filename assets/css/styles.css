@@ -1819,3 +1819,22 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 #screen-catalog .catalog-rest-list > .service-list-card + .service-list-card {
   border-top: 1px solid var(--line) !important;
 }
+
+
+/* Align expanded-catalog separators with the text and disclosure chevron. */
+#screen-catalog .catalog-rest-list > .service-list-card {
+  position: relative !important;
+}
+#screen-catalog .catalog-rest-list > .service-list-card + .service-list-card {
+  border-top: 0 !important;
+}
+#screen-catalog .catalog-rest-list > .service-list-card + .service-list-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 88px;
+  right: 12px;
+  height: 1px;
+  background: var(--line);
+  pointer-events: none;
+}

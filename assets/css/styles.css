@@ -1326,3 +1326,26 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   #screen-catalog .catalog-promo-wrap .catalog-promo-copy{max-width:66%}
   #screen-catalog .catalog-promo-wrap .catalog-promo-copy strong{font-size:18px}
 }
+
+
+/* Banner artwork refinement: crisp 3D gift, shield avatar and overlapping brand star. */
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner{overflow:hidden;min-height:142px;padding-right:130px;background:linear-gradient(108deg,#4D2BC5 0%,#7544D9 48%,#BD7AF0 100%)}
+#screen-catalog .catalog-promo-wrap .catalog-promo-art{position:absolute;z-index:3;right:-4px;bottom:-13px;width:205px;height:174px;display:block;opacity:1;filter:drop-shadow(0 6px 8px rgba(37,13,93,.2));pointer-events:none}
+#screen-catalog .catalog-promo-wrap .catalog-promo-art svg{display:block;width:100%;height:100%;overflow:visible}
+#screen-catalog .catalog-promo-wrap .catalog-promo-copy{max-width:64%;gap:10px}
+#screen-catalog .catalog-promo-wrap .catalog-promo-copy strong{font-size:clamp(18px,5vw,23px);line-height:1.12}
+#screen-catalog .catalog-promo-wrap .catalog-promo-more{font-size:13px}
+#screen-catalog .catalog-promo-wrap .catalog-promo-dismiss{z-index:6;top:9px;right:9px;width:29px;height:29px;border:1px solid rgba(255,255,255,.28)!important;border-radius:50%;background:rgba(48,25,103,.42)!important;color:#fff!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+#screen-catalog .catalog-promo-wrap .catalog-promo-dismiss svg{width:15px;height:15px;stroke:#fff;stroke-width:2.1}
+@media(max-width:390px){
+  #screen-catalog .catalog-promo-wrap .catalog-promo-banner{min-height:132px;padding:16px 116px 16px 16px}
+  #screen-catalog .catalog-promo-wrap .catalog-promo-art{right:-10px;bottom:-10px;width:184px;height:156px}
+  #screen-catalog .catalog-promo-wrap .catalog-promo-copy{max-width:65%;gap:8px}
+  #screen-catalog .catalog-promo-wrap .catalog-promo-copy strong{font-size:20px}
+}
+@media(max-width:350px){
+  #screen-catalog .catalog-promo-wrap .catalog-promo-banner{padding-right:106px}
+  #screen-catalog .catalog-promo-wrap .catalog-promo-art{right:-18px;bottom:-11px;width:171px;height:145px}
+  #screen-catalog .catalog-promo-wrap .catalog-promo-copy{max-width:66%}
+  #screen-catalog .catalog-promo-wrap .catalog-promo-copy strong{font-size:18px}
+}

@@ -764,18 +764,23 @@ body{font-size:var(--type-body);line-height:1.45}
 }
 
 
-/* Profile outline: subtle living pulse, without rotating the gradient or touching the photo. */
-@keyframes profile-ring-breathe{
-  0%,100%{opacity:.82;filter:saturate(.96) brightness(.98)}
-  50%{opacity:1;filter:saturate(1.12) brightness(1.04)}
+
+/* Restore the original profile ring treatment from its first bottom-dock version. */
+.bottom-nav-dock .profile-nav-button::before{
+  content:""!important;display:block!important;opacity:0!important;
+  background:radial-gradient(ellipse at 27% 13%,rgba(255,255,255,.72) 0,rgba(255,255,255,.22) 9%,transparent 28%),linear-gradient(145deg,rgba(255,255,255,.20),transparent 38%,rgba(255,255,255,.08) 72%,transparent)!important;
+  mix-blend-mode:screen!important;transition:opacity .35s ease!important;
 }
+.bottom-nav-dock .profile-nav-button.is-current::before{opacity:.92!important;animation:profile-gloss-breathe 3.2s ease-in-out infinite!important}
 .bottom-nav-dock .profile-nav-button.is-current::after{
-  animation:profile-ring-breathe 4.8s ease-in-out infinite!important;
+  background:conic-gradient(from 0deg,#48E6D0 0%,#6DE7A7 22%,#20C9B5 46%,#A0F3C2 68%,#32DCC8 84%,#48E6D0 100%)!important;
+  animation:profile-ring-flow 5.5s linear infinite,profile-ring-breathe 3.2s ease-in-out infinite!important;opacity:1!important;
 }
-@media (prefers-reduced-motion:reduce){
-  .bottom-nav-dock .profile-nav-button.is-current::after{
-    animation:none!important;
-    opacity:1!important;
-    filter:none!important;
-  }
+.bottom-nav-dock .profile-nav-button.is-current{
+  border-color:rgba(80,225,194,.55)!important;
+  box-shadow:0 0 0 1px rgba(64,220,190,.18),0 0 14px rgba(42,220,183,.2),0 8px 26px rgba(0,0,0,.34)!important;
 }
+@keyframes profile-ring-flow{to{transform:rotate(360deg)}}
+@keyframes profile-ring-breathe{0%,100%{filter:brightness(.94) saturate(1)}50%{filter:brightness(1.2) saturate(1.22)}}
+@keyframes profile-gloss-breathe{0%,100%{opacity:.62}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.bottom-nav-dock .profile-nav-button.is-current::before,.bottom-nav-dock .profile-nav-button.is-current::after{animation:none!important}}

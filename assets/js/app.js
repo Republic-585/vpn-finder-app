@@ -371,10 +371,10 @@ function navHaptic() {
 let moveIndicator = () => {};
 const BACK_SCREENS = new Set(["news", "contact", "owners", "analytics", "support"]);
 let ownersBackScreen = "catalog";
-function showScreen(name) {
+function showScreen(name, backScreen = null) {
   if (name === "owners") {
     const currentScreen = document.querySelector(".screen.active")?.dataset.screen;
-    if (currentScreen && currentScreen !== "owners") ownersBackScreen = currentScreen;
+    ownersBackScreen = backScreen || (currentScreen && currentScreen !== "owners" ? currentScreen : ownersBackScreen) || "catalog";
   }
   const promoScreen = byId("catalog-promo-screen");
   if (promoScreen && !promoScreen.hidden) {
@@ -580,7 +580,7 @@ document.addEventListener("touchend", event => {
 document.addEventListener("touchcancel", () => { backSwipeStart = null; }, { passive: true });
 
 document.querySelectorAll("[data-go]").forEach(button => {
-  button.addEventListener("click", () => showScreen(button.dataset.go));
+  button.addEventListener("click", () => showScreen(button.dataset.go, button.dataset.backScreen || null));
 });
 
 // Explicit press state for iOS Safari, where :active can be unreliable in embedded apps.
@@ -1122,7 +1122,7 @@ document.addEventListener("click", event => {
     return;
   }
   if (button.dataset.go) {
-    showScreen(button.dataset.go);
+    showScreen(button.dataset.go, button.dataset.backScreen || null);
     return;
   }
   if (button.dataset.action === "open-add-service") {

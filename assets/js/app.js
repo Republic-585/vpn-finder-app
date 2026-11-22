@@ -370,7 +370,12 @@ function navHaptic() {
 }
 let moveIndicator = () => {};
 const BACK_SCREENS = new Set(["news", "contact", "owners", "analytics", "support"]);
+let ownersBackScreen = "catalog";
 function showScreen(name) {
+  if (name === "owners") {
+    const currentScreen = document.querySelector(".screen.active")?.dataset.screen;
+    if (currentScreen && currentScreen !== "owners") ownersBackScreen = currentScreen;
+  }
   const promoScreen = byId("catalog-promo-screen");
   if (promoScreen && !promoScreen.hidden) {
     promoScreen.hidden = true;
@@ -534,7 +539,7 @@ if (tg?.BackButton) {
       return;
     }
     const activeScreen = document.querySelector(".screen.active");
-    showScreen(activeScreen?.dataset.screen === "owners" ? "catalog" : "profile");
+    showScreen(activeScreen?.dataset.screen === "owners" ? ownersBackScreen : "profile");
   });
   try { tg.BackButton.hide(); } catch (_) {}
 }

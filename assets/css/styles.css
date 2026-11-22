@@ -1989,7 +1989,7 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
     max-height:72px!important;
     flex:0 0 72px!important;
   }
-  .popular-service-open > .service-avatar-rating > .service-rating{left:43px!important;top:47px!important}
+  .popular-service-open > .service-avatar-rating > .service-rating{left:-2px!important;top:-10px!important}
 }
 @media(max-width:345px){
   .popular-grid{grid-template-columns:repeat(4,64px)!important;gap:0!important}
@@ -2004,5 +2004,5 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
     max-height:64px!important;
     flex:0 0 64px!important;
   }
-  .popular-service-open > .service-avatar-rating > .service-rating{left:35px!important;top:39px!important}
+  .popular-service-open > .service-avatar-rating > .service-rating{left:-2px!important;top:-10px!important}
 }

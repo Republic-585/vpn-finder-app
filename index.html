@@ -6,10 +6,10 @@
 <meta name="theme-color" content="#202124">
 <meta name="description" content="VPN Finder">
 <title>VPN Finder</title>
-<link rel="stylesheet" href="./assets/css/styles.css?v=20261122-gift-banner-v7">
+<link rel="stylesheet" href="./assets/css/styles.css?v=20261123-search-suggestions-v1">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="./assets/avatars/manifest.js?v=20261123-avatar-local-v2"></script>
-<script defer src="./assets/js/app.js?v=20261123-smart-search-v1"></script>
+<script defer src="./assets/js/app.js?v=20261123-search-suggestions-v1"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -27,6 +27,7 @@
       <input id="search" type="search" placeholder="Поиск" autocomplete="off">
       <button id="clear-search" class="clear-search" type="button" aria-label="Очистить поиск" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"></path></svg></button>
     </label>
+    <div class="search-suggestions" id="search-suggestions" hidden></div>
     <div class="catalog-promo-wrap popular-card" id="catalog-promo-banner">
       <div class="catalog-promo-banner">
         <img src="./assets/images/VPN%20Finder%20Gift%20Box%20Promotion.png" alt="VPN Finder — продвижение VPN-сервиса">

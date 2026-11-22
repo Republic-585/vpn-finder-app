@@ -1043,3 +1043,20 @@ body{font-size:var(--type-body);line-height:1.45}
 .bottom-nav-dock .nav-item.is-tapping[data-go="favorites"] svg{
   animation:telegram-tab-settle .56s cubic-bezier(.2,.75,.25,1) both!important;
 }
+
+
+/* Keep navigation glyphs pixel-anchored: animate the drawing, never move the SVG box. */
+.bottom-nav-dock .nav-item.is-tapping svg{
+  transform:translate3d(0,0,0)!important;
+  transform-origin:50% 50%!important;
+}
+@keyframes telegram-tab-settle{
+  0%{opacity:.82;transform:translate3d(0,0,0)!important}
+  48%{opacity:1;transform:translate3d(0,0,0)!important}
+  100%{opacity:1;transform:translate3d(0,0,0)!important}
+}
+@keyframes telegram-tab-sparkle{
+  0%{opacity:.45;transform:translate3d(0,0,0) rotate(-10deg)}
+  58%{opacity:1;transform:translate3d(0,0,0) rotate(5deg)}
+  100%{opacity:1;transform:translate3d(0,0,0) rotate(0)}
+}

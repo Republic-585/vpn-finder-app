@@ -1833,7 +1833,7 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   position: absolute;
   top: 0;
   left: 88px;
-  right: 12px;
+  right: 42px;
   height: 1px;
   background: var(--line);
   pointer-events: none;

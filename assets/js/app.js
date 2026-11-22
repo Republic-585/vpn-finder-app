@@ -369,6 +369,7 @@ function navHaptic() {
   } catch (_) {}
 }
 let moveIndicator = () => {};
+const BACK_SCREENS = new Set(["news", "contact", "owners", "analytics", "support"]);
 function showScreen(name) {
   if (name === "analytics" && Number(tg?.initDataUnsafe?.user?.id || 0) !== ANALYTICS_OWNER_TELEGRAM_ID) return;
   const navBar = document.querySelector(".bottom-nav");
@@ -394,7 +395,7 @@ function showScreen(name) {
   if (name === "favorites") renderFavorites();
   if (name === "compare") renderCompare();
   if (name === "profile") { syncTelegramProfile(); if (!analyticsAccessChecked) loadAnalyticsDashboard(); }
-  const isProfileSubscreen = ["news", "contact", "owners", "analytics", "support"].includes(name);
+  const isProfileSubscreen = BACK_SCREENS.has(name);
   try {
     if (isProfileSubscreen) tg?.BackButton?.show();
     else tg?.BackButton?.hide();
@@ -508,6 +509,42 @@ if (tg?.BackButton) {
   tg.BackButton.onClick(() => showScreen("profile"));
   try { tg.BackButton.hide(); } catch (_) {}
 }
+
+// iOS-style edge swipe: start at the left edge and move right to go back.
+let backSwipeStart = null;
+document.addEventListener("touchstart", event => {
+  if (event.touches.length !== 1 || !document.querySelector(".screen.active")) {
+    backSwipeStart = null;
+    return;
+  }
+  const activeScreen = document.querySelector(".screen.active");
+  if (!BACK_SCREENS.has(activeScreen?.dataset.screen)) {
+    backSwipeStart = null;
+    return;
+  }
+  const touch = event.touches[0];
+  if (touch.clientX > 28 || event.target.closest("input, textarea, select, [data-no-back-swipe]")) {
+    backSwipeStart = null;
+    return;
+  }
+  backSwipeStart = { x: touch.clientX, y: touch.clientY };
+}, { passive: true });
+document.addEventListener("touchend", event => {
+  if (!backSwipeStart || event.changedTouches.length !== 1) {
+    backSwipeStart = null;
+    return;
+  }
+  const touch = event.changedTouches[0];
+  const deltaX = touch.clientX - backSwipeStart.x;
+  const deltaY = Math.abs(touch.clientY - backSwipeStart.y);
+  backSwipeStart = null;
+  if (deltaX >= 90 && deltaY <= 70 && deltaX > deltaY * 1.25) {
+    const activeScreen = document.querySelector(".screen.active");
+    if (BACK_SCREENS.has(activeScreen?.dataset.screen)) showScreen("profile");
+  }
+}, { passive: true });
+document.addEventListener("touchcancel", () => { backSwipeStart = null; }, { passive: true });
+
 document.querySelectorAll("[data-go]").forEach(button => {
   button.addEventListener("click", () => showScreen(button.dataset.go));
 });

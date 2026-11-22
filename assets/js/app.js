@@ -804,10 +804,12 @@ function serviceAvatar(service, className = "service-avatar", prioritize = false
   const databaseUrl = typeof service.logo_url === "string" && /^https:\/\//i.test(service.logo_url.trim())
     ? service.logo_url.trim()
     : "";
-  const url = databaseUrl || fallbackUrl;
+  // Prefer the version mirrored to our own GitHub Pages origin.
+  const localUrl = window.VPN_AVATAR_ASSETS?.[service.id] || "";
+  const url = localUrl || databaseUrl || fallbackUrl;
   const initial = esc((displayServiceName(service) || "V").slice(0, 1).toUpperCase());
   if (!url) return `<span class="${className} avatar-frame"><span class="avatar-fallback">${initial}</span></span>`;
-  const fallback = service.id === "VPN-005" ? "https://blook.app/images/home/hero-product.webp" : (fallbackUrl && fallbackUrl !== url ? fallbackUrl : "");
+  const fallback = databaseUrl && databaseUrl !== url ? databaseUrl : (fallbackUrl && fallbackUrl !== url ? fallbackUrl : (service.id === "VPN-005" ? "https://blook.app/images/home/hero-product.webp" : ""));
   return `<span class="${className} avatar-frame" aria-hidden="true">
     <span class="avatar-fallback">${initial}</span>
     <img class="avatar-image" src="${esc(url)}" data-fallback="${esc(fallback)}" alt="" width="64" height="64"

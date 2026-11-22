@@ -1520,3 +1520,55 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 @media(prefers-reduced-motion:reduce){
   #screen-catalog .catalog-promo-wrap .catalog-promo-dismiss{transition:none}
 }
+
+
+/* Replace legacy compact promo-card rules with the full-width supplied artwork. */
+#screen-catalog .catalog-promo-wrap{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0 0 22px!important;
+  padding:0!important;
+  overflow:visible!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  border:0!important;
+  border-radius:18px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  line-height:0!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner::before,
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner::after{
+  content:none!important;
+  display:none!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner img{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  object-fit:contain!important;
+  border:0!important;
+  border-radius:inherit!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-dismiss{
+  z-index:10!important;
+}

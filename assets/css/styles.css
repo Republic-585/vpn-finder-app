@@ -1089,59 +1089,57 @@ body{font-size:var(--type-body);line-height:1.45}
   transform:none!important;
 }
 
-/* Stable Telegram-style navigation icon drawing: animate strokes, never move glyphs. */
-.bottom-nav-dock .nav-item svg,
-.bottom-nav-dock .nav-item.is-tapping svg{
+/* Telegram tab stroke reveal: use real SVG user-space lengths (no pathLength normalization). */
+.bottom-nav-dock .nav-item.is-tapping[data-go="catalog"].active svg,
+.bottom-nav-dock .nav-item.is-tapping[data-go="compare"].active svg,
+.bottom-nav-dock .nav-item.is-tapping[data-go="favorites"].active svg,
+.bottom-nav-dock .nav-item.is-tapping[data-go="catalog"] svg,
+.bottom-nav-dock .nav-item.is-tapping[data-go="compare"] svg,
+.bottom-nav-dock .nav-item.is-tapping[data-go="favorites"] svg{
+  animation:none!important;
   transform:none!important;
-  transform-origin:50% 50%!important;
-  transition:none!important;
-}
-.bottom-nav-dock .nav-item svg path{
-  transform:none!important;
-  stroke-dasharray:none!important;
-  stroke-dashoffset:0!important;
-}
-.bottom-nav-dock .nav-item.is-tapping svg{
-  animation:telegram-tab-settle .56s ease both!important;
+  opacity:1!important;
 }
 .bottom-nav-dock .nav-item.is-tapping svg path{
-  stroke-dasharray:100!important;
-  stroke-dashoffset:100!important;
-  animation:telegram-tab-draw .44s .02s ease-out forwards!important;
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-linecap:butt!important;
+  stroke-dashoffset:initial!important;
+  transform:none!important;
 }
 .bottom-nav-dock .nav-item.is-tapping[data-go="catalog"] svg path:first-child{
-  animation:telegram-tab-draw .48s .02s ease-out forwards!important;
+  stroke-dasharray:54!important;
+  stroke-dashoffset:54!important;
+  animation: vpn-tab-reveal 480ms ease-out 0ms forwards!important;
 }
 .bottom-nav-dock .nav-item.is-tapping[data-go="catalog"] svg path:last-child{
-  animation:telegram-tab-draw .28s .22s ease-out forwards!important;
+  stroke-dasharray:10!important;
+  stroke-dashoffset:10!important;
+  animation: vpn-tab-reveal 280ms ease-out 210ms forwards!important;
 }
 .bottom-nav-dock .nav-item.is-tapping[data-go="compare"] svg path:first-child{
-  animation:telegram-tab-draw .42s .02s ease-out forwards!important;
+  stroke-dasharray:17!important;
+  stroke-dashoffset:17!important;
+  animation: vpn-tab-reveal 420ms ease-out 0ms forwards!important;
 }
 .bottom-nav-dock .nav-item.is-tapping[data-go="compare"] svg path:last-child{
-  animation:telegram-tab-draw .46s .08s ease-out forwards,telegram-tab-sparkle .46s .08s ease-out both!important;
+  stroke-dasharray:42!important;
+  stroke-dashoffset:42!important;
+  animation: vpn-tab-reveal 440ms ease-out 70ms forwards!important;
 }
 .bottom-nav-dock .nav-item.is-tapping[data-go="favorites"] svg path:first-child{
-  animation:telegram-tab-draw .44s .02s ease-out forwards!important;
+  stroke-dasharray:42!important;
+  stroke-dashoffset:42!important;
+  animation: vpn-tab-reveal 460ms ease-out 0ms forwards!important;
 }
-@keyframes telegram-tab-settle{
-  0%{opacity:.82;transform:none}
-  48%{opacity:1;transform:none}
-  100%{opacity:1;transform:none}
-}
-@keyframes telegram-tab-draw{
+@keyframes vpn-tab-reveal{
   to{stroke-dashoffset:0}
 }
-@keyframes telegram-tab-sparkle{
-  0%{opacity:.35}
-  58%{opacity:1}
-  100%{opacity:1}
-}
 @media(prefers-reduced-motion:reduce){
-  .bottom-nav-dock .nav-item.is-tapping svg,
   .bottom-nav-dock .nav-item.is-tapping svg path{
     animation:none!important;
     stroke-dasharray:none!important;
     stroke-dashoffset:0!important;
+    stroke-linecap:round!important;
   }
 }

@@ -1126,14 +1126,6 @@ document.addEventListener("click", event => {
     try { tg?.BackButton?.hide(); } catch (_) {}
     return;
   }
-  if (button.dataset.action === "dismiss-catalog-promo") {
-    event.preventDefault();
-    event.stopPropagation();
-    const banner = button.closest(".catalog-promo-wrap");
-    if (banner) banner.hidden = true;
-    haptic();
-    return;
-  }
   const service = state.services.find(item => item.id === button.dataset.id);
   if (!service) return;
   const action = button.dataset.action;

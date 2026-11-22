@@ -27,20 +27,40 @@
       <input id="search" type="search" placeholder="Поиск" autocomplete="off">
       <button id="clear-search" class="clear-search" type="button" aria-label="Очистить поиск" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"></path></svg></button>
     </label>
+    <button class="catalog-promo-banner" type="button" data-action="open-add-service" aria-label="Добавьте VPN-сервис в каталог. Подробнее">
+      <span class="catalog-promo-copy">
+        <strong>Добавьте VPN-сервис<br>в каталог</strong>
+        <span class="catalog-promo-more">Подробнее <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6"></path></svg></span>
+      </span>
+      <span class="catalog-promo-art" aria-hidden="true">
+        <svg viewBox="0 0 240 210">
+          <defs>
+            <linearGradient id="giftBoxA" x1="38" y1="104" x2="173" y2="190" gradientUnits="userSpaceOnUse"><stop stop-color="#B7A0FF"/><stop offset="1" stop-color="#7544E8"/></linearGradient>
+            <linearGradient id="giftLidA" x1="47" y1="76" x2="178" y2="125" gradientUnits="userSpaceOnUse"><stop stop-color="#E3D7FF"/><stop offset="1" stop-color="#A77BFF"/></linearGradient>
+            <linearGradient id="giftRibbonA" x1="105" y1="60" x2="142" y2="178" gradientUnits="userSpaceOnUse"><stop stop-color="#A9F0FF"/><stop offset="1" stop-color="#55BDF4"/></linearGradient>
+            <linearGradient id="giftCoinA" x1="25" y1="31" x2="105" y2="111" gradientUnits="userSpaceOnUse"><stop stop-color="#79D7FF"/><stop offset="1" stop-color="#2875E8"/></linearGradient>
+          </defs>
+          <path d="M19 157c27-55 65-84 113-86 34-1 62 14 82 43" fill="none" stroke="#E8DFFF" stroke-width="3" stroke-dasharray="5 9" opacity=".8"/>
+          <g transform="rotate(-13 73 85)"><circle cx="72" cy="83" r="43" fill="#173D9C" opacity=".35"/><circle cx="72" cy="78" r="40" fill="url(#giftCoinA)" stroke="#A7E8FF" stroke-width="5"/><circle cx="72" cy="78" r="31" fill="none" stroke="#BDEBFF" stroke-width="2" opacity=".6"/><path d="m72 51 8 17 19 3-14 13 3 19-16-9-17 9 4-19-14-13 19-3 8-17Z" fill="#FFD84D" stroke="#F7A928" stroke-width="3" stroke-linejoin="round"/></g>
+          <g transform="rotate(-8 139 139)">
+            <path d="m73 112 70-35 74 36-72 40-72-41Z" fill="url(#giftLidA)" stroke="#D9C8FF" stroke-width="3"/>
+            <path d="m73 112 72 41v49l-72-43v-47Z" fill="#8C61EB" stroke="#C7B2FF" stroke-width="3"/>
+            <path d="m145 153 72-40v48l-72 41v-49Z" fill="url(#giftBoxA)" stroke="#C7B2FF" stroke-width="3"/>
+            <path d="m132 104 24-13 26 13-25 15-25-15Z" fill="#D8F7FF"/>
+            <path d="m148 119 17-10v90l-17 10v-90Z" fill="url(#giftRibbonA)"/>
+            <path d="M143 94c-24-6-30-26-17-33 14-7 26 12 29 31 8-21 25-32 35-21 12 13-7 28-29 31" fill="none" stroke="url(#giftRibbonA)" stroke-width="11" stroke-linecap="round"/>
+            <path d="m143 153 24-13v48l-24 14v-49Z" fill="#B6F1FF" opacity=".9"/>
+          </g>
+          <path d="m213 42 4 10 10 4-10 4-4 10-4-10-10-4 10-4 4-10Z" fill="#FFF" opacity=".95"/>
+          <circle cx="31" cy="130" r="5" fill="#FFF" opacity=".9"/><circle cx="211" cy="181" r="4" fill="#FFF" opacity=".8"/>
+        </svg>
+      </span>
+    </button>
     <div class="catalog-section-heading"><h2>Популярный выбор</h2><button id="toggle-catalog" type="button" aria-expanded="false">Посмотреть все</button></div>
     <div class="filter-strip" role="group" aria-label="Фильтры" hidden>
       <button class="filter-chip active" type="button" data-filter="all">Все</button>
       <button class="filter-chip" type="button" data-filter="free">Бесплатно</button>
     </div>
-    <button class="catalog-promo-banner" type="button" data-action="open-add-service" aria-label="Добавьте VPN сервис в каталог. Подробнее">
-      <span class="catalog-promo-copy">
-        <strong>Добавьте VPN сервис<br>в каталог</strong>
-        <span class="catalog-promo-more">Подробнее <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 10 4 4 8-8"></path></svg></span>
-      </span>
-      <span class="catalog-promo-art" aria-hidden="true">
-        <svg viewBox="0 0 132 112"><path class="promo-orbit" d="M13 77c12-31 37-50 65-49 18 1 32 10 42 25"/><path class="promo-shield" d="M65 13 99 27v25c0 24-15 39-34 47C46 91 31 76 31 52V27l34-14Z"/><path class="promo-lock" d="M54 49v-8a11 11 0 0 1 22 0v8m-27 0h32v25H49z"/><path class="promo-check" d="m59 61 5 5 10-11"/><circle class="promo-spark" cx="19" cy="31" r="4"/><circle class="promo-spark" cx="112" cy="89" r="3"/></svg>
-      </span>
-    </button>
     <div class="provider-list" id="provider-list"><div class="loading-state"><span class="loader"></span></div></div>
   </section>
 
@@ -162,7 +182,21 @@
   <div class="catalog-promo-screen-content">
     <span class="catalog-promo-kicker">VPN FINDER · ДЛЯ ВЛАДЕЛЬЦЕВ VPN</span>
     <div class="catalog-promo-emblem" aria-hidden="true">
-      <svg viewBox="0 0 100 100"><path d="M50 8 83 22v24c0 23-14 38-33 47C31 84 17 69 17 46V22L50 8Z"/><path d="m36 50 10 10 20-22"/></svg>
+      <svg viewBox="0 0 240 210">
+        <defs>
+          <linearGradient id="giftBoxB" x1="38" y1="104" x2="173" y2="190" gradientUnits="userSpaceOnUse"><stop stop-color="#B7A0FF"/><stop offset="1" stop-color="#7544E8"/></linearGradient>
+          <linearGradient id="giftLidB" x1="47" y1="76" x2="178" y2="125" gradientUnits="userSpaceOnUse"><stop stop-color="#E3D7FF"/><stop offset="1" stop-color="#A77BFF"/></linearGradient>
+          <linearGradient id="giftRibbonB" x1="105" y1="60" x2="142" y2="178" gradientUnits="userSpaceOnUse"><stop stop-color="#A9F0FF"/><stop offset="1" stop-color="#55BDF4"/></linearGradient>
+          <linearGradient id="giftCoinB" x1="25" y1="31" x2="105" y2="111" gradientUnits="userSpaceOnUse"><stop stop-color="#79D7FF"/><stop offset="1" stop-color="#2875E8"/></linearGradient>
+        </defs>
+        <circle cx="72" cy="78" r="40" fill="url(#giftCoinB)" stroke="#A7E8FF" stroke-width="5"/>
+        <path d="m72 51 8 17 19 3-14 13 3 19-16-9-17 9 4-19-14-13 19-3 8-17Z" fill="#FFD84D" stroke="#F7A928" stroke-width="3"/>
+        <path d="m73 112 70-35 74 36-72 40-72-41Z" fill="url(#giftLidB)" stroke="#D9C8FF" stroke-width="3"/>
+        <path d="m73 112 72 41v49l-72-43v-47Z" fill="#8C61EB" stroke="#C7B2FF" stroke-width="3"/>
+        <path d="m145 153 72-40v48l-72 41v-49Z" fill="url(#giftBoxB)" stroke="#C7B2FF" stroke-width="3"/>
+        <path d="m148 119 17-10v90l-17 10v-90Z" fill="url(#giftRibbonB)"/>
+        <path d="M143 94c-24-6-30-26-17-33 14-7 26 12 29 31 8-21 25-32 35-21 12 13-7 28-29 31" fill="none" stroke="url(#giftRibbonB)" stroke-width="11" stroke-linecap="round"/>
+      </svg>
     </div>
     <h1 id="catalog-promo-title">Добавьте ваш сервис</h1>
     <p>Расскажите о своём VPN — мы рассмотрим заявку для каталога Finder.</p>

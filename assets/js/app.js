@@ -523,7 +523,7 @@ document.addEventListener("touchstart", event => {
     return;
   }
   const touch = event.touches[0];
-  if (touch.clientX > 28 || event.target.closest("input, textarea, select, [data-no-back-swipe]")) {
+  if (touch.clientX > 64 || event.target.closest("input, textarea, select, [data-no-back-swipe]")) {
     backSwipeStart = null;
     return;
   }

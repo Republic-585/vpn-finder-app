@@ -942,3 +942,24 @@ body{font-size:var(--type-body);line-height:1.45}
   .bottom-nav-dock .nav-item.is-tapping,
   .bottom-nav-dock .nav-item.is-tapping svg{animation:none!important}
 }
+
+
+/* Navigation icons: transform their actual glyph on tap, then smoothly return. */
+.bottom-nav-dock .nav-item svg.is-morphing{
+  animation:nav-icon-morph-in .24s cubic-bezier(.2,.75,.25,1) both!important;
+}
+.bottom-nav-dock .nav-item svg.is-morph-return{
+  animation:nav-icon-morph-out .24s cubic-bezier(.2,.75,.25,1) both!important;
+}
+@keyframes nav-icon-morph-in{
+  0%{opacity:0;transform:scale(.72) rotate(-18deg)}
+  100%{opacity:1;transform:scale(1) rotate(0)}
+}
+@keyframes nav-icon-morph-out{
+  0%{opacity:0;transform:scale(.86) rotate(12deg)}
+  100%{opacity:1;transform:scale(1) rotate(0)}
+}
+@media(prefers-reduced-motion:reduce){
+  .bottom-nav-dock .nav-item svg.is-morphing,
+  .bottom-nav-dock .nav-item svg.is-morph-return{animation:none!important}
+}

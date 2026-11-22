@@ -770,15 +770,69 @@ toggleCatalog?.addEventListener("click", () => {
   haptic();
   renderCatalog();
 });
+const searchSuggestions = byId("search-suggestions");
+const SEARCH_SUGGESTION_WORDS = [
+  "iPhone", "iOS", "Android", "Windows", "macOS", "MacBook",
+  "до 100 рублей", "до 200 рублей", "до 300 рублей",
+  "безлимит", "пробный период", "белые списки",
+  "несколько устройств", "для семьи", "США", "Германия", "Турция"
+];
+function getSearchSuggestions(value) {
+  const query = normalizeSearchText(value);
+  if (!query) return [];
+  const lastWord = query.split(" ").pop();
+  const words = [...SEARCH_SUGGESTION_WORDS];
+  state.services.forEach(service => {
+    words.push(service.name);
+    (service.platforms || []).forEach(item => words.push(item));
+    (service.features || []).forEach(item => words.push(String(item)));
+  });
+  const unique = [...new Set(words.map(item => String(item).trim()).filter(Boolean))];
+  return unique
+    .filter(item => {
+      const normalized = normalizeSearchText(item);
+      return normalized.startsWith(lastWord) && normalized !== query;
+    })
+    .sort((a, b) => a.length - b.length)
+    .slice(0, 6);
+}
+function renderSearchSuggestions() {
+  if (!searchSuggestions || !search) return;
+  const suggestions = getSearchSuggestions(search.value);
+  if (document.activeElement !== search || !suggestions.length) {
+    searchSuggestions.hidden = true;
+    searchSuggestions.innerHTML = "";
+    return;
+  }
+  searchSuggestions.innerHTML = suggestions.map(item =>
+    `<button class="search-suggestion" type="button" data-suggestion="${esc(item)}">${esc(item)}</button>`
+  ).join("");
+  searchSuggestions.hidden = false;
+}
 search?.addEventListener("input", () => {
   state.query = search.value.trim().toLowerCase();
   clearSearch.hidden = !search.value;
+  renderCatalog();
+  renderSearchSuggestions();
+});
+search?.addEventListener("focus", renderSearchSuggestions);
+search?.addEventListener("blur", () => setTimeout(() => {
+  if (searchSuggestions) searchSuggestions.hidden = true;
+}, 120));
+searchSuggestions?.addEventListener("click", event => {
+  const button = event.target.closest("[data-suggestion]");
+  if (!button || !search) return;
+  search.value = button.dataset.suggestion;
+  state.query = search.value.trim().toLowerCase();
+  clearSearch.hidden = !search.value;
+  searchSuggestions.hidden = true;
   renderCatalog();
 });
 clearSearch?.addEventListener("click", () => {
   search.value = "";
   state.query = "";
   clearSearch.hidden = true;
+  if (searchSuggestions) searchSuggestions.hidden = true;
   renderCatalog();
   search.focus();
 });

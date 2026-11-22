@@ -1838,3 +1838,13 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   background: var(--line);
   pointer-events: none;
 }
+
+
+/* Align catalog heading and expand/collapse action on the same text baseline. */
+#screen-catalog .catalog-section-heading {
+  align-items: baseline !important;
+}
+#screen-catalog .catalog-section-heading h2,
+#screen-catalog #toggle-catalog {
+  line-height: 1.25 !important;
+}

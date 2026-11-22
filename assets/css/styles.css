@@ -367,10 +367,6 @@ body{font-size:var(--type-body);line-height:1.45}
   display:grid;place-items:center;background:var(--raised);color:#fff;
   font-size:22px;font-weight:650;letter-spacing:-.04em;
 }
-/* Telegram blue is reserved for the selected navigation icon and pressed profile ring. */
-.bottom-nav-dock .nav-item.active{color:#fff}
-.bottom-nav-dock .nav-item.active svg{color:var(--blue);stroke:currentColor}
-
 .profile-nav-button img[hidden],.profile-nav-button span[hidden]{display:none}
 .bottom-nav .nav-indicator[hidden]{display:none}
 .main-content{padding-bottom:calc(112px + env(safe-area-inset-bottom))}

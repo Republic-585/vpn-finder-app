@@ -918,3 +918,27 @@ body{font-size:var(--type-body);line-height:1.45}
       rgba(255,255,255,.07) 62%,
       rgba(255,255,255,0) 100%);
 }
+
+
+/* Restart a distinct icon morph on every navigation tap, including the current tab. */
+.bottom-nav-dock .nav-item.is-tapping[data-go="catalog"] svg{
+  animation:finder-scan .42s ease both!important;
+}
+.bottom-nav-dock .nav-item.is-tapping[data-go="compare"] svg{
+  animation:compare-spark .48s cubic-bezier(.2,.8,.2,1) both!important;
+}
+.bottom-nav-dock .nav-item.is-tapping[data-go="favorites"] svg{
+  animation:favorites-heart .42s cubic-bezier(.2,.8,.2,1) both!important;
+}
+.bottom-nav-dock .nav-item.is-tapping{
+  animation:nav-tap-feedback .22s ease-out both;
+}
+@keyframes nav-tap-feedback{
+  0%{filter:brightness(1); }
+  45%{filter:brightness(1.22);}
+  100%{filter:brightness(1);}
+}
+@media(prefers-reduced-motion:reduce){
+  .bottom-nav-dock .nav-item.is-tapping,
+  .bottom-nav-dock .nav-item.is-tapping svg{animation:none!important}
+}

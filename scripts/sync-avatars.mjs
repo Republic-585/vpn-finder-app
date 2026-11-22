@@ -11,7 +11,7 @@ const fallbackBlock = app.match(/const serviceAvatars = \{([\s\S]*?)\n\};/);
 if (!fallbackBlock) throw new Error("Cannot find the serviceAvatars source map");
 const fallbackUrls = Object.fromEntries([...fallbackBlock[1].matchAll(/"(VPN-\d+)":\s*"([^"]+)"/g)].map((m) => [m[1], m[2]]));
 
-const response = await fetch(`${supabaseUrl}/rest/v1/vpn_services?select=id,name,logo_url,status&status=eq.active&order=id.asc`, {
+const response = await fetch(`${supabaseUrl}/rest/v1/vpn_services?select=id,name,logo_url,bot_url,source_urls,status&status=eq.active&order=id.asc`, {
   headers: { apikey: supabaseKey }
 });
 if (!response.ok) throw new Error(`Supabase service list failed: HTTP ${response.status}`);
@@ -54,16 +54,42 @@ async function fetchImage(url) {
 }
 
 for (const service of services) {
-  const candidates = [...new Set([service.logo_url, fallbackUrls[service.id]].filter((v) => typeof v === "string" && /^https:\/\//i.test(v)))];
-  if (!candidates.length) throw new Error(`${service.id} (${service.name}) has no configured logo source`);
+  const directCandidates = [...new Set([service.logo_url, fallbackUrls[service.id]].filter((v) => typeof v === "string" && /^https:\/\//i.test(v)))];
+  const pageCandidates = [...new Set([service.bot_url, ...(Array.isArray(service.source_urls) ? service.source_urls : [])].filter((v) => typeof v === "string" && /^https:\/\//i.test(v)))];
   let downloaded;
   let usedUrl;
   const errors = [];
-  for (const candidate of candidates) {
-    try { downloaded = await fetchImage(candidate); usedUrl = candidate; break; }
-    catch (error) { errors.push(`${candidate}: ${error.message}`); }
+  const tryImages = async (candidates) => {
+    for (const candidate of candidates) {
+      try { downloaded = await fetchImage(candidate); usedUrl = candidate; return true; }
+      catch (error) { errors.push(`${candidate}: ${error.message}`); }
+    }
+    return false;
+  };
+  await tryImages(directCandidates);
+  if (!downloaded) {
+    for (const pageUrl of pageCandidates) {
+      try {
+        const page = await fetch(pageUrl, { redirect: "follow", headers: { "user-agent": "Mozilla/5.0 VPN-Finder-Avatar-Mirror/1.0", accept: "text/html,application/xhtml+xml" } });
+        if (!page.ok) throw new Error(`HTTP ${page.status}`);
+        const html = await page.text();
+        const imageUrls = [];
+        const patterns = [
+          /<meta[^>]+(?:property|name)=["'](?:og:image|twitter:image|twitter:image:src)["'][^>]+content=["']([^"']+)["']/gi,
+          /<meta[^>]+content=["']([^"']+)["'][^>]+(?:property|name)=["'](?:og:image|twitter:image|twitter:image:src)["']/gi,
+          /<link[^>]+rel=["'][^"']*(?:icon|apple-touch-icon)[^"']*["'][^>]+href=["']([^"']+)["']/gi
+        ];
+        for (const pattern of patterns) {
+          for (const match of html.matchAll(pattern)) {
+            try { imageUrls.push(new URL(match[1].replace(/&amp;/g, "&"), page.url || pageUrl).href); } catch {}
+          }
+        }
+        if (!await tryImages([...new Set(imageUrls)])) errors.push(`${pageUrl}: no working social/logo image found`);
+      } catch (error) { errors.push(`${pageUrl}: page discovery failed: ${error.message}`); }
+      if (downloaded) break;
+    }
   }
-  if (!downloaded) throw new Error(`Cannot mirror avatar for ${service.id} (${service.name}): ${errors.join(" | ")}`);
+  if (!downloaded) throw new Error(`Cannot mirror avatar for ${service.id} (${service.name}): ${errors.slice(0, 8).join(" | ")}`);
   const filename = `${service.id}.${downloaded.extension}`;
   await fs.writeFile(path.join(outDir, filename), downloaded.buffer);
   manifest[service.id] = `./assets/avatars/${filename}`;

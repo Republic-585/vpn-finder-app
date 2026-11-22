@@ -886,3 +886,19 @@ body{font-size:var(--type-body);line-height:1.45}
       rgba(255,255,255,.07) 62%,
       rgba(255,255,255,0) 100%);
 }
+
+
+/* Navigation dock: give the side-faded outline a subtle diagonal tilt. */
+.bottom-nav-dock .bottom-nav::after{
+  background:
+    radial-gradient(ellipse 55% 100% at 0% 42%,
+      rgba(255,255,255,.34) 0%,
+      rgba(255,255,255,.20) 28%,
+      rgba(255,255,255,.07) 62%,
+      rgba(255,255,255,0) 100%),
+    radial-gradient(ellipse 55% 100% at 100% 58%,
+      rgba(255,255,255,.34) 0%,
+      rgba(255,255,255,.20) 28%,
+      rgba(255,255,255,.07) 62%,
+      rgba(255,255,255,0) 100%);
+}

@@ -6,10 +6,10 @@
 <meta name="theme-color" content="#202124">
 <meta name="description" content="VPN Finder">
 <title>VPN Finder</title>
-<link rel="stylesheet" href="./assets/css/styles.css?v=20261122-major-vpn-catalog-v3">
+<link rel="stylesheet" href="./assets/css/styles.css?v=20261122-major-vpn-catalog-v4">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="./assets/avatars/manifest.js?v=20261122-avatar-local-v1"></script>
-<script defer src="./assets/js/app.js?v=20261122-major-vpn-catalog-v1"></script>
+<script defer src="./assets/js/app.js?v=20261122-major-vpn-catalog-v2"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -27,7 +27,8 @@
       <input id="search" type="search" placeholder="Поиск" autocomplete="off">
       <button id="clear-search" class="clear-search" type="button" aria-label="Очистить поиск" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"></path></svg></button>
     </label>
-    <button class="catalog-promo-banner" type="button" data-action="open-add-service" aria-label="Добавьте VPN-сервис в каталог. Подробнее">
+    <div class="catalog-promo-wrap">
+      <button class="catalog-promo-banner" type="button" data-action="open-add-service" aria-label="Добавьте VPN-сервис в каталог. Подробнее">
       <span class="catalog-promo-copy">
         <strong>Добавьте VPN-сервис<br>в каталог</strong>
         <span class="catalog-promo-more">Подробнее <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6"></path></svg></span>
@@ -56,6 +57,8 @@
         </svg>
       </span>
     </button>
+      <button class="catalog-promo-dismiss" type="button" data-action="dismiss-catalog-promo" aria-label="Закрыть баннер"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m7 7 10 10M17 7 7 17"></path></svg></button>
+    </div>
     <div class="catalog-section-heading"><h2>Популярный выбор</h2><button id="toggle-catalog" type="button" aria-expanded="false">Посмотреть все</button></div>
     <div class="filter-strip" role="group" aria-label="Фильтры" hidden>
       <button class="filter-chip active" type="button" data-filter="all">Все</button>

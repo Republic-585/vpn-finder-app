@@ -533,7 +533,8 @@ if (tg?.BackButton) {
       try { tg.BackButton.hide(); } catch (_) {}
       return;
     }
-    showScreen("profile");
+    const activeScreen = document.querySelector(".screen.active");
+    showScreen(activeScreen?.dataset.screen === "owners" ? "catalog" : "profile");
   });
   try { tg.BackButton.hide(); } catch (_) {}
 }

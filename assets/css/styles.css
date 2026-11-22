@@ -784,3 +784,27 @@ body{font-size:var(--type-body);line-height:1.45}
 @keyframes profile-ring-breathe{0%,100%{filter:brightness(.94) saturate(1)}50%{filter:brightness(1.2) saturate(1.22)}}
 @keyframes profile-gloss-breathe{0%,100%{opacity:.62}50%{opacity:1}}
 @media(prefers-reduced-motion:reduce){.bottom-nav-dock .profile-nav-button.is-current::before,.bottom-nav-dock .profile-nav-button.is-current::after{animation:none!important}}
+
+
+/* Profile avatar: keep every animated effect inside the ring only. */
+.bottom-nav-dock .profile-nav-button::before,
+.bottom-nav-dock .profile-nav-button.is-current::before{
+  content:none!important;
+  display:none!important;
+  opacity:0!important;
+  animation:none!important;
+  background:none!important;
+  filter:none!important;
+  box-shadow:none!important;
+}
+.bottom-nav-dock .profile-nav-button.is-current,
+.bottom-nav-dock .profile-nav-button.is-pressed{
+  box-shadow:none!important;
+}
+.bottom-nav-dock .profile-nav-button img,
+.bottom-nav-dock .profile-nav-button span{
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+}

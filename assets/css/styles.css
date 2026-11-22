@@ -1003,3 +1003,151 @@ body{font-size:var(--type-body);line-height:1.45}
 @media(prefers-reduced-motion:reduce){.catalog-promo-submit:active,#screen-catalog .catalog-promo-banner:active{transform:none}}
 
 body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
+
+
+/* Final polish: VPN-only catalog entry points and full-screen owner invitation. */
+#screen-catalog .catalog-topline{
+  min-height:52px;
+  margin:2px 2px 17px;
+  align-items:center;
+}
+#screen-catalog .catalog-topline-title{
+  color:var(--text);
+  font-size:clamp(23px,6.2vw,27px);
+  line-height:1.04;
+  font-weight:760;
+  letter-spacing:-.055em;
+}
+#screen-catalog .catalog-add-button{
+  min-height:39px;
+  padding:0 14px;
+  gap:7px;
+  border:1px solid rgba(108,174,255,.17);
+  background:rgba(82,136,193,.16);
+  color:#83B9F1;
+  font-size:12.5px;
+  font-weight:680;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035);
+  transition:background .18s ease,transform .18s ease,border-color .18s ease;
+}
+#screen-catalog .catalog-add-button:active{
+  background:rgba(82,136,193,.25);
+  border-color:rgba(108,174,255,.3);
+}
+#screen-catalog .catalog-promo-banner{
+  min-height:146px;
+  margin:2px 0 24px;
+  padding:21px 20px;
+  border-radius:25px;
+  background:linear-gradient(112deg,#20C9B5 0%,#48E6D0 48%,#6DE7A7 100%);
+  box-shadow:0 12px 30px rgba(21,190,165,.12),inset 0 1px 0 rgba(255,255,255,.28);
+}
+#screen-catalog .catalog-promo-banner::before{
+  width:218px;
+  height:218px;
+  right:-48px;
+  top:-86px;
+  border-color:rgba(255,255,255,.32);
+  box-shadow:0 0 0 18px rgba(255,255,255,.065),0 0 0 39px rgba(255,255,255,.045);
+}
+.catalog-promo-copy{gap:13px}
+.catalog-promo-copy strong{
+  max-width:255px;
+  font-size:clamp(21px,5.4vw,25px);
+  line-height:1.08;
+  letter-spacing:-.05em;
+}
+.catalog-promo-more{
+  gap:8px;
+  color:rgba(5,45,42,.82);
+  font-size:13px;
+  font-weight:700;
+}
+.catalog-promo-more svg{
+  width:18px;
+  height:18px;
+  padding:2px;
+  border:1px solid rgba(5,45,42,.25);
+  border-radius:50%;
+}
+.catalog-promo-art{
+  right:9px;
+  bottom:-2px;
+  width:138px;
+  height:117px;
+}
+.catalog-promo-screen{
+  padding:calc(20px + env(safe-area-inset-top)) 22px calc(24px + env(safe-area-inset-bottom));
+  background:
+    radial-gradient(ellipse at 50% 34%,rgba(255,255,255,.24),transparent 43%),
+    radial-gradient(ellipse at 100% 0%,rgba(255,255,255,.2),transparent 38%),
+    linear-gradient(145deg,#20C9B5 0%,#48E6D0 48%,#6DE7A7 100%);
+}
+.catalog-promo-back{
+  width:46px;
+  height:46px;
+  border-color:rgba(5,69,62,.15);
+  background:rgba(255,255,255,.24);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.32);
+  transition:transform .18s ease,background .18s ease;
+}
+.catalog-promo-back:active{transform:scale(.94);background:rgba(255,255,255,.38)}
+.catalog-promo-screen-content{
+  width:min(100%,430px);
+  padding:10px 0 24px;
+}
+.catalog-promo-kicker{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:29px;
+  margin-bottom:25px;
+  padding:0 12px;
+  border:1px solid rgba(255,255,255,.4);
+  border-radius:999px;
+  background:rgba(255,255,255,.19);
+  color:rgba(5,57,51,.78);
+  font-size:10px;
+  line-height:1;
+  font-weight:800;
+  letter-spacing:.09em;
+}
+.catalog-promo-emblem{
+  width:124px;
+  height:124px;
+  margin-bottom:30px;
+  border-radius:38px;
+  background:rgba(255,255,255,.25);
+  box-shadow:0 20px 54px rgba(0,91,79,.14),inset 0 1px 0 rgba(255,255,255,.55);
+}
+.catalog-promo-screen-content h1{
+  max-width:360px;
+  font-size:clamp(36px,9.5vw,48px);
+  line-height:1;
+  letter-spacing:-.065em;
+}
+.catalog-promo-screen-content p{
+  max-width:320px;
+  margin-top:18px;
+  font-size:15px;
+  line-height:1.5;
+}
+.catalog-promo-screen-bottom{margin-top:22px}
+.catalog-promo-submit{
+  min-height:58px;
+  border-radius:19px;
+  background:#5288C1;
+  box-shadow:0 10px 25px rgba(31,82,135,.24),inset 0 1px 0 rgba(255,255,255,.2);
+  transition:transform .18s ease,filter .18s ease;
+}
+@media(max-width:380px){
+  #screen-catalog .catalog-topline-title{font-size:21px}
+  #screen-catalog .catalog-add-button{min-height:36px;padding:0 10px;font-size:11.5px}
+  #screen-catalog .catalog-promo-banner{min-height:132px;padding:17px 15px}
+  .catalog-promo-art{right:-5px;width:119px;height:104px}
+  .catalog-promo-copy strong{max-width:218px;font-size:20px}
+  .catalog-promo-kicker{font-size:9px;letter-spacing:.07em}
+}
+@media(prefers-reduced-motion:reduce){
+  #screen-catalog .catalog-add-button,.catalog-promo-back,.catalog-promo-submit{transition:none}
+}

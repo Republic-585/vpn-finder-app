@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T22:32:03.536Z",
+  "generatedAt": "2026-11-22T22:43:51.844Z",
   "count": 35,
   "avatars": [
     {
@@ -221,11 +221,11 @@
     {
       "id": "VPN-028",
       "name": "Cipher VPN",
-      "file": "VPN-028.png",
-      "bytes": 104427,
-      "sha256": "ebd2c3a5f8ae2da86695868527f89b41935542a2337c580ba2c922aa951d8438",
-      "sourceHost": "ciphervpn.site",
-      "finalHost": "ciphervpn.site"
+      "file": "VPN-028.jpg",
+      "bytes": 36593,
+      "sha256": "677edc3a3f9ce7fc0ff2ea52701b530d75a6144bc3418dc1f427e75bbe5eea54",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
     },
     {
       "id": "VPN-030",

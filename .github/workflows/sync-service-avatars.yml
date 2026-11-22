@@ -1,0 +1,46 @@
+name: Mirror service avatars
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "assets/js/app.js"
+      - "scripts/sync-avatars.mjs"
+      - ".github/workflows/sync-service-avatars.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: "23 4 * * 1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: service-avatar-mirror
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Download and validate every active avatar
+        run: node scripts/sync-avatars.mjs
+      - name: Commit mirrored images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/avatars
+          if git diff --cached --quiet; then
+            echo "Avatar mirror is already up to date."
+          else
+            git commit -m "Mirror active service avatars locally"
+            git push
+          fi

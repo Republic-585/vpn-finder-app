@@ -933,40 +933,38 @@ body{font-size:var(--type-body);line-height:1.45}
 }
 
 
-/* Telegram-inspired tab icon microanimations: each glyph has its own motion. */
-.bottom-nav-dock .nav-item{color:#fff!important}
+/* Stable Telegram-style tab microanimations: visual feedback without SVG transforms. */
+.bottom-nav-dock .nav-item,
 .bottom-nav-dock .nav-item.active{color:#fff!important}
-.bottom-nav-dock .nav-item svg{color:inherit;stroke:currentColor;transform-origin:50% 50%;transform-box:fill-box}
-.bottom-nav-dock .nav-item.active svg{color:var(--blue)!important;stroke:currentColor!important}
+.bottom-nav-dock .nav-item svg{
+  color:#fff!important;stroke:#fff!important;
+  transform:none!important;transform-origin:initial;transform-box:view-box;
+}
 .bottom-nav-dock .nav-item.is-tapping[data-go="catalog"] svg{
-  animation:telegram-shield-bounce 520ms cubic-bezier(.22,.78,.28,1) both!important;
+  animation:telegram-shield-pulse 520ms ease-out both!important;
 }
 .bottom-nav-dock .nav-item.is-tapping[data-go="compare"] svg{
-  animation:telegram-spark-wiggle 560ms cubic-bezier(.25,.8,.25,1) both!important;
+  animation:telegram-spark-flash 560ms ease-out both!important;
 }
 .bottom-nav-dock .nav-item.is-tapping[data-go="favorites"] svg{
-  animation:telegram-heart-pop 540ms cubic-bezier(.2,.85,.25,1) both!important;
+  animation:telegram-heart-pulse 540ms ease-out both!important;
 }
-@keyframes telegram-shield-bounce{
-  0%{transform:translateY(0) scale(1)}
-  28%{transform:translateY(-2px) scale(1.09)}
-  52%{transform:translateY(1px) scale(.97)}
-  74%{transform:translateY(-.5px) scale(1.025)}
-  100%{transform:translateY(0) scale(1)}
+@keyframes telegram-shield-pulse{
+  0%,100%{stroke-width:1.75;filter:brightness(1)}
+  35%{stroke-width:2.35;filter:brightness(1.22)}
+  65%{stroke-width:1.9;filter:brightness(1.08)}
 }
-@keyframes telegram-spark-wiggle{
-  0%{transform:rotate(0) scale(1)}
-  24%{transform:rotate(-9deg) scale(.96)}
-  48%{transform:rotate(8deg) scale(1.07)}
-  72%{transform:rotate(-3deg) scale(1.025)}
-  100%{transform:rotate(0) scale(1)}
+@keyframes telegram-spark-flash{
+  0%,100%{stroke-width:1.75;opacity:1}
+  25%{stroke-width:2.35;opacity:.78}
+  55%{stroke-width:2;opacity:1}
+  75%{stroke-width:2.2;opacity:.88}
 }
-@keyframes telegram-heart-pop{
-  0%{transform:scale(1)}
-  28%{transform:scale(1.17)}
-  48%{transform:scale(.94)}
-  70%{transform:scale(1.07)}
-  100%{transform:scale(1)}
+@keyframes telegram-heart-pulse{
+  0%,100%{stroke-width:1.75;filter:brightness(1)}
+  30%{stroke-width:2.45;filter:brightness(1.25)}
+  52%{stroke-width:1.85;filter:brightness(1)}
+  72%{stroke-width:2.15;filter:brightness(1.12)}
 }
 @media(prefers-reduced-motion:reduce){
   .bottom-nav-dock .nav-item.is-tapping svg{animation:none!important}

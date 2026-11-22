@@ -358,7 +358,7 @@ body{font-size:var(--type-body);line-height:1.45}
 
 /* Explicit iOS touch feedback for the detached profile avatar. */
 .bottom-nav-dock.profile-press-active{transform:translateX(-50%) scale(1.006)!important;}
-.bottom-nav-dock .profile-nav-button.is-pressed{border-color:#5288C1!important;box-shadow:0 0 0 2px rgba(82,136,193,.28),0 8px 26px rgba(0,0,0,.34)!important;transform:scale(.985)!important;filter:brightness(1.03)!important;}
+.bottom-nav-dock .profile-nav-button.is-pressed{border-color:#35DCC4!important;box-shadow:0 0 0 2px rgba(53,220,196,.22),0 8px 26px rgba(0,0,0,.34)!important;transform:scale(.985)!important;filter:brightness(1.03)!important;}
 .bottom-nav-dock .profile-nav-button.is-pressed img,.bottom-nav-dock .profile-nav-button.is-pressed span{transform:scale(.995);}
 
 
@@ -385,10 +385,10 @@ body{font-size:var(--type-body);line-height:1.45}
 @keyframes compare-spark{0%{transform:scale(.82) rotate(-12deg)}55%{transform:scale(1.16) rotate(12deg)}100%{transform:scale(1) rotate(0)}}
 @keyframes favorites-heart{0%{transform:scale(.78)}38%{transform:scale(1.2)}65%{transform:scale(.94)}100%{transform:scale(1)}}
 @media(prefers-reduced-motion:reduce){.bottom-nav-dock .nav-item.active,.bottom-nav-dock .nav-item.active svg,.bottom-nav-dock .nav-item:active svg{animation:none!important;transform:none!important}}
-.bottom-nav-dock .profile-nav-button:active,.bottom-nav-dock .profile-nav-button:focus-visible{border-color:var(--telegram-accent)!important}
-.bottom-nav-dock .profile-nav-button.is-pressed{border-color:var(--telegram-accent)!important;box-shadow:0 0 0 2px rgba(0,122,255,.3),0 8px 26px rgba(0,0,0,.34)!important}
+.bottom-nav-dock .profile-nav-button:active,.bottom-nav-dock .profile-nav-button:focus-visible{border-color:#35DCC4!important}
+.bottom-nav-dock .profile-nav-button.is-pressed{border-color:#35DCC4!important;box-shadow:0 0 0 2px rgba(53,220,196,.22),0 8px 26px rgba(0,0,0,.34)!important}
 .bottom-nav-dock .profile-nav-button{border-width:2px!important}
-.bottom-nav-dock .profile-nav-button.is-current{border-width:3px!important;border-color:var(--telegram-accent)!important;box-shadow:0 8px 26px rgba(0,0,0,.34)!important}
+.bottom-nav-dock .profile-nav-button.is-current{border:2px solid #35DCC4!important;box-shadow:0 0 0 1px rgba(53,220,196,.18),0 0 14px rgba(42,220,183,.2),0 8px 26px rgba(0,0,0,.34)!important}
 
 
 /* One fixed-size, shared gold Telegram Star component across every screen */
@@ -700,3 +700,9 @@ body{font-size:var(--type-body);line-height:1.45}
   display:none!important;
   animation:none!important;
 }
+
+#profile-nav-button,#profile-nav-button.is-current,#profile-nav-button.is-pressed,
+#profile-nav-button:active,#profile-nav-button:focus-visible{border:2px solid #35DCC4!important}
+#profile-nav-button.is-current::after{opacity:1!important}
+#screen-profile .profile-photo-wrap,#screen-profile #profile-photo,#screen-profile #profile-avatar-fallback{border:0!important;outline:0!important;box-shadow:none!important}
+#screen-profile .profile-photo-wrap::before,#screen-profile .profile-photo-wrap::after{content:none!important;display:none!important}

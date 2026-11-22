@@ -2008,11 +2008,11 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 }
 
 
-/* Featured four-avatar block: nudge rating stars slightly toward 10 o'clock. */
+/* Featured four-avatar block: move rating stars slightly toward 4 o'clock. */
 #screen-catalog .popular-service-open > .service-avatar-rating > .service-rating{
   left:auto!important;
   top:auto!important;
   right:-10px!important;
   bottom:-10px!important;
-  transform:translate(-8px,-8px)!important;
+  transform:translate(0,0)!important;
 }

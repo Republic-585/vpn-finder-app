@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-22T16:47:18.739Z",
-  "count": 26,
+  "generatedAt": "2026-11-23T00:00:00.000Z",
+  "count": 35,
   "avatars": [
     {
       "id": "VPN-001",
@@ -235,6 +235,78 @@
       "sha256": "77429a4644b6565ec3849d65c25f87b5ed43c322b03dc763d25a9bfa8427dcce",
       "sourceHost": "cdn4.telesco.pe",
       "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-031",
+      "name": "Capybara VPN",
+      "file": "VPN-031.jpg",
+      "bytes": 13122,
+      "sourceHost": "user-uploaded",
+      "finalHost": "github-pages"
+    },
+    {
+      "id": "VPN-032",
+      "name": "Ковёр VPN",
+      "file": "VPN-032.jpg",
+      "bytes": 11295,
+      "sourceHost": "user-uploaded",
+      "finalHost": "github-pages"
+    },
+    {
+      "id": "VPN-033",
+      "name": "MSEVPN",
+      "file": "VPN-033.jpg",
+      "bytes": 22973,
+      "sourceHost": "user-uploaded",
+      "finalHost": "github-pages"
+    },
+    {
+      "id": "VPN-034",
+      "name": "Lagom VPN",
+      "file": "VPN-034.jpg",
+      "bytes": 15619,
+      "sourceHost": "user-uploaded",
+      "finalHost": "github-pages"
+    },
+    {
+      "id": "VPN-035",
+      "name": "ReepNet.VPN",
+      "file": "VPN-035.jpg",
+      "bytes": 35151,
+      "sourceHost": "user-uploaded",
+      "finalHost": "github-pages"
+    },
+    {
+      "id": "VPN-037",
+      "name": "Cult VPN",
+      "file": "VPN-037.jpg",
+      "bytes": 57616,
+      "sourceHost": "user-uploaded",
+      "finalHost": "github-pages"
+    },
+    {
+      "id": "VPN-038",
+      "name": "Quattro VPN",
+      "file": "VPN-038.jpg",
+      "bytes": 15679,
+      "sourceHost": "user-uploaded",
+      "finalHost": "github-pages"
+    },
+    {
+      "id": "VPN-039",
+      "name": "Ultima VPN",
+      "file": "VPN-039.jpg",
+      "bytes": 19030,
+      "sourceHost": "user-uploaded",
+      "finalHost": "github-pages"
+    },
+    {
+      "id": "VPN-040",
+      "name": "ADD VPN",
+      "file": "VPN-040.jpg",
+      "bytes": 18095,
+      "sourceHost": "user-uploaded",
+      "finalHost": "github-pages"
     }
   ]
 }

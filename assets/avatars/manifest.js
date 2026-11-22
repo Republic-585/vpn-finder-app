@@ -25,5 +25,14 @@ window.VPN_AVATAR_ASSETS = {
   "VPN-023": "./assets/avatars/VPN-023.jpg",
   "VPN-025": "./assets/avatars/VPN-025.jpg",
   "VPN-028": "./assets/avatars/VPN-028.jpg",
-  "VPN-030": "./assets/avatars/VPN-030.jpg"
+  "VPN-030": "./assets/avatars/VPN-030.jpg",
+  "VPN-031": "./assets/avatars/VPN-031.jpg",
+  "VPN-032": "./assets/avatars/VPN-032.jpg",
+  "VPN-033": "./assets/avatars/VPN-033.jpg",
+  "VPN-034": "./assets/avatars/VPN-034.jpg",
+  "VPN-035": "./assets/avatars/VPN-035.jpg",
+  "VPN-037": "./assets/avatars/VPN-037.jpg",
+  "VPN-038": "./assets/avatars/VPN-038.jpg",
+  "VPN-039": "./assets/avatars/VPN-039.jpg",
+  "VPN-040": "./assets/avatars/VPN-040.jpg"
 };

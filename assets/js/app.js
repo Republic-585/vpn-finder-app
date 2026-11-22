@@ -765,10 +765,49 @@ trackEvent("app_open", { language: appLanguage });
 const search = byId("search");
 const clearSearch = byId("clear-search");
 const toggleCatalog = byId("toggle-catalog");
+function animateCatalogTransition(list, previousHeight) {
+  if (!list || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const nextHeight = list.getBoundingClientRect().height;
+  if (!previousHeight || !nextHeight || Math.abs(nextHeight - previousHeight) < 2) return;
+
+  list.style.height = previousHeight + "px";
+  list.style.overflow = "hidden";
+  const heightAnimation = list.animate(
+    [{ height: previousHeight + "px" }, { height: nextHeight + "px" }],
+    { duration: 480, easing: "cubic-bezier(.22, 1, .36, 1)" }
+  );
+  heightAnimation.onfinish = () => {
+    list.style.height = "";
+    list.style.overflow = "";
+  };
+  heightAnimation.oncancel = () => {
+    list.style.height = "";
+    list.style.overflow = "";
+  };
+
+  [...list.querySelectorAll(".popular-grid, .service-list-card")].forEach((item, index) => {
+    item.animate(
+      [
+        { opacity: 0, transform: "translateY(9px) scale(.992)" },
+        { opacity: 1, transform: "translateY(0) scale(1)" }
+      ],
+      {
+        duration: 330,
+        delay: Math.min(index * 12, 150),
+        easing: "cubic-bezier(.22, 1, .36, 1)",
+        fill: "both"
+      }
+    );
+  });
+}
+
 toggleCatalog?.addEventListener("click", () => {
+  const list = byId("provider-list");
+  const previousHeight = list?.getBoundingClientRect().height || 0;
   state.catalogExpanded = !state.catalogExpanded;
   haptic();
   renderCatalog();
+  animateCatalogTransition(list, previousHeight);
 });
 const searchSuggestions = byId("search-suggestions");
 const SEARCH_SUGGESTION_WORDS = [

@@ -808,3 +808,13 @@ body{font-size:var(--type-body);line-height:1.45}
   box-shadow:none!important;
   filter:none!important;
 }
+
+
+/* Navigation dock: lighter translucent glass, with the existing blur preserved. */
+.bottom-nav-dock .bottom-nav{
+  background:rgba(39,40,43,.38)!important;
+  border-color:rgba(255,255,255,.07)!important;
+}
+.bottom-nav-dock .bottom-nav::before{
+  background:linear-gradient(155deg,rgba(255,255,255,.028),transparent 42%,rgba(255,255,255,.01))!important;
+}

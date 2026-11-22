@@ -668,3 +668,35 @@ body{font-size:var(--type-body);line-height:1.45}
   height:1px;
   background:rgba(255,255,255,.09);
 }
+
+
+/* Final profile avatar colors: keep the agreed aqua ring and remove profile-photo decoration. */
+.bottom-nav-dock .profile-nav-button,
+.bottom-nav-dock .profile-nav-button.is-current,
+.bottom-nav-dock .profile-nav-button.is-pressed,
+.bottom-nav-dock .profile-nav-button:active,
+.bottom-nav-dock .profile-nav-button:focus-visible{
+  border-color:rgba(80,225,194,.72)!important;
+}
+.bottom-nav-dock .profile-nav-button.is-current{
+  border-width:2px!important;
+  box-shadow:0 0 0 1px rgba(64,220,190,.18),0 0 14px rgba(42,220,183,.2),0 8px 26px rgba(0,0,0,.34)!important;
+}
+.bottom-nav-dock .profile-nav-button.is-pressed{
+  box-shadow:0 0 0 2px rgba(64,220,190,.24),0 8px 26px rgba(0,0,0,.34)!important;
+}
+.profile-view .profile-photo-wrap,
+.profile-view .profile-photo,
+.profile-view .profile-avatar-fallback{
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+}
+.profile-view .profile-photo-wrap::before,
+.profile-view .profile-photo-wrap::after,
+.profile-view .profile-photo::before,
+.profile-view .profile-photo::after{
+  content:none!important;
+  display:none!important;
+  animation:none!important;
+}

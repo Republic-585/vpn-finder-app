@@ -587,3 +587,10 @@ body{font-size:var(--type-body);line-height:1.45}
 .crypto-support-note{margin-top:12px;font-size:11px}
 .crypto-support .profile-form-status{min-height:18px;margin-bottom:0}
 @media(max-width:360px){.crypto-support{padding:14px}}
+
+/* Finder catalog top row */
+#screen-catalog .catalog-topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 13px;min-height:30px}
+#screen-catalog .catalog-add-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:28px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--text);font:inherit;font-size:12px;line-height:1.2;font-weight:var(--weight-medium);white-space:nowrap;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#screen-catalog .catalog-add-button svg{width:14px;height:14px;flex:0 0 14px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#screen-catalog .catalog-topline-title{color:var(--secondary);font-size:14px;line-height:1.2;font-weight:var(--weight-semibold);letter-spacing:-.02em;white-space:nowrap}
+#screen-catalog .catalog-add-button:active{opacity:.72}

@@ -1900,8 +1900,8 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 }
 .popular-service-open > .service-avatar-rating > .service-rating {
   position: absolute !important;
-  left: 38px !important;
-  top: 38px !important;
+  left: 35px !important;
+  top: 35px !important;
   right: auto !important;
   bottom: auto !important;
   display: block !important;

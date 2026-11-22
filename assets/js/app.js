@@ -1479,20 +1479,24 @@ loadServices();
 
 function animateFeaturedRotation() {
   const grid = byId("provider-list")?.querySelector(".popular-grid");
-  if (!grid || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
-  [...grid.querySelectorAll(".popular-service")].forEach((item, index) => {
-    item.animate(
-      [
-        { opacity: 0, transform: "translateY(7px) scale(.975)", filter: "blur(2px)" },
-        { opacity: 1, transform: "translateY(0) scale(1)", filter: "blur(0)" }
-      ],
-      {
-        duration: 420,
-        delay: index * 42,
-        easing: "cubic-bezier(.22, 1, .36, 1)",
-        fill: "both"
-      }
-    );
+  if (!grid) return;
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+  // Wait until each new avatar is ready so its Telegram star fades in at exactly the same time.
+  const images = [...grid.querySelectorAll(".popular-service .avatar-image")];
+  const ready = images.map(img => img.complete
+    ? Promise.resolve()
+    : new Promise(resolve => {
+        img.addEventListener("load", resolve, { once: true });
+        img.addEventListener("error", resolve, { once: true });
+      })
+  );
+  grid.style.opacity = "0";
+  Promise.all(ready).then(() => {
+    if (!grid.isConnected) return;
+    grid.animate(
+      [{ opacity: 0 }, { opacity: 1 }],
+      { duration: 300, easing: "cubic-bezier(.22, 1, .36, 1)", fill: "both" }
+    ).onfinish = () => { grid.style.opacity = ""; };
   });
 }
 function rotateFeaturedServices() {

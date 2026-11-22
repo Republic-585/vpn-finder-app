@@ -6,10 +6,10 @@
 <meta name="theme-color" content="#202124">
 <meta name="description" content="VPN Finder">
 <title>VPN Finder</title>
-<link rel="stylesheet" href="./assets/css/styles.css?v=20261122-gift-banner-v5">
+<link rel="stylesheet" href="./assets/css/styles.css?v=20261122-gift-banner-v6">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="./assets/avatars/manifest.js?v=20261122-avatar-local-v1"></script>
-<script defer src="./assets/js/app.js?v=20261122-major-vpn-catalog-v2"></script>
+<script defer src="./assets/js/app.js?v=20261122-banner-close-v2"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -27,13 +27,11 @@
       <input id="search" type="search" placeholder="Поиск" autocomplete="off">
       <button id="clear-search" class="clear-search" type="button" aria-label="Очистить поиск" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"></path></svg></button>
     </label>
-    <div class="catalog-promo-wrap" id="catalog-promo-banner">
+    <div class="catalog-promo-wrap popular-card" id="catalog-promo-banner">
       <button class="catalog-promo-banner" type="button" data-go="owners" aria-label="Подробнее о размещении VPN-сервиса">
         <img src="./assets/images/VPN%20Finder%20Gift%20Box%20Promotion.png" alt="VPN Finder — продвижение VPN-сервиса. Подробнее">
       </button>
-      <button class="catalog-promo-dismiss" type="button" data-action="dismiss-catalog-promo" aria-label="Закрыть баннер">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"></path></svg>
-      </button>
+      <button class="catalog-promo-dismiss" type="button" data-action="dismiss-catalog-promo" aria-label="Закрыть баннер"></button>
     </div>
     <div class="catalog-section-heading"><h2>Популярный выбор</h2><button id="toggle-catalog" type="button" aria-expanded="false">Посмотреть все</button></div>
     <div class="filter-strip" role="group" aria-label="Фильтры" hidden>

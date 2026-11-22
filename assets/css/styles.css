@@ -1948,17 +1948,17 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   .popular-grid{gap:0!important}
 }
 
-/* Featured avatars: fill the panel evenly while keeping each star anchored to its avatar. */
+/* Featured avatars: integer-width tracks prevent alternating star offsets on iOS. */
 .popular-grid{
   width:calc(100% + 20px)!important;
   margin-left:-10px!important;
-  grid-template-columns:repeat(4,minmax(0,1fr))!important;
-  justify-content:stretch!important;
-  gap:0!important;
+  grid-template-columns:repeat(4,76px)!important;
+  justify-content:center!important;
+  gap:12px!important;
 }
 .popular-service{
-  width:100%!important;
-  min-width:0!important;
+  width:76px!important;
+  min-width:76px!important;
   padding-left:0!important;
   padding-right:0!important;
 }
@@ -1977,6 +1977,8 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   top:51px!important;
 }
 @media(max-width:375px){
+  .popular-grid{grid-template-columns:repeat(4,72px)!important;gap:8px!important}
+  .popular-service{width:72px!important;min-width:72px!important}
   .popular-service-open > .service-avatar-rating,
   .popular-service-open > .service-avatar-rating > .service-avatar{
     width:72px!important;
@@ -1987,12 +1989,11 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
     max-height:72px!important;
     flex:0 0 72px!important;
   }
-  .popular-service-open > .service-avatar-rating > .service-rating{
-    left:43px!important;
-    top:47px!important;
-  }
+  .popular-service-open > .service-avatar-rating > .service-rating{left:43px!important;top:47px!important}
 }
 @media(max-width:345px){
+  .popular-grid{grid-template-columns:repeat(4,64px)!important;gap:0!important}
+  .popular-service{width:64px!important;min-width:64px!important}
   .popular-service-open > .service-avatar-rating,
   .popular-service-open > .service-avatar-rating > .service-avatar{
     width:64px!important;
@@ -2003,8 +2004,5 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
     max-height:64px!important;
     flex:0 0 64px!important;
   }
-  .popular-service-open > .service-avatar-rating > .service-rating{
-    left:35px!important;
-    top:39px!important;
-  }
+  .popular-service-open > .service-avatar-rating > .service-rating{left:35px!important;top:39px!important}
 }

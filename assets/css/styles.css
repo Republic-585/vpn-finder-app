@@ -1855,3 +1855,17 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 #screen-catalog .filter-chip {
   display: none !important;
 }
+
+
+/* Telegram-like native-feeling catalog expand/collapse motion. */
+#provider-list {
+  transform-origin: top center;
+}
+@media (prefers-reduced-motion: reduce) {
+  #provider-list,
+  #provider-list * {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}

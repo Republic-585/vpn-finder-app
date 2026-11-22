@@ -1777,3 +1777,30 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   -webkit-tap-highlight-color:transparent!important;
 }
 #screen-catalog .catalog-promo-wrap .catalog-promo-dismiss svg{display:none!important}
+
+
+/* Slightly widen the artwork; only the printed "Подробнее" area is interactive. */
+#screen-catalog .catalog-promo-wrap.popular-card{
+  width:calc(100% + 8px)!important;
+  margin-left:-4px!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner{
+  position:relative!important;
+  pointer-events:none!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-more-hit{
+  position:absolute!important;
+  z-index:25!important;
+  left:5%!important;
+  bottom:8%!important;
+  width:34%!important;
+  height:20%!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:8px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  cursor:pointer!important;
+  -webkit-tap-highlight-color:transparent!important;
+}

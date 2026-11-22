@@ -1881,3 +1881,56 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   transition: none !important;
   will-change: auto !important;
 }
+
+
+/* Featured tiles: lock every rating star to the same avatar-relative coordinates. */
+.popular-service-open > .service-avatar-rating {
+  position: relative !important;
+  display: block !important;
+  width: 64px !important;
+  height: 64px !important;
+  min-width: 64px !important;
+  min-height: 64px !important;
+  max-width: 64px !important;
+  max-height: 64px !important;
+  flex: 0 0 64px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  translate: none !important;
+}
+.popular-service-open > .service-avatar-rating > .service-rating {
+  position: absolute !important;
+  right: -10px !important;
+  bottom: -10px !important;
+  left: auto !important;
+  top: auto !important;
+  display: block !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  max-width: 36px !important;
+  max-height: 36px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex: 0 0 36px !important;
+  transform: none !important;
+  translate: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+.popular-service-open > .service-avatar-rating > .service-rating > .service-rating-badge,
+.popular-service-open > .service-avatar-rating > .service-rating > .service-rating-badge svg {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  max-width: 36px !important;
+  max-height: 36px !important;
+  margin: 0 !important;
+  transform: none !important;
+  translate: none !important;
+  animation: none !important;
+  transition: none !important;
+}

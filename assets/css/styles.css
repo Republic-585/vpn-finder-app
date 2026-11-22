@@ -762,3 +762,20 @@ body{font-size:var(--type-body);line-height:1.45}
     #35CDBB 100%)!important;
   animation:none!important;
 }
+
+
+/* Profile outline: subtle living pulse, without rotating the gradient or touching the photo. */
+@keyframes profile-ring-breathe{
+  0%,100%{opacity:.82;filter:saturate(.96) brightness(.98)}
+  50%{opacity:1;filter:saturate(1.12) brightness(1.04)}
+}
+.bottom-nav-dock .profile-nav-button.is-current::after{
+  animation:profile-ring-breathe 4.8s ease-in-out infinite!important;
+}
+@media (prefers-reduced-motion:reduce){
+  .bottom-nav-dock .profile-nav-button.is-current::after{
+    animation:none!important;
+    opacity:1!important;
+    filter:none!important;
+  }
+}

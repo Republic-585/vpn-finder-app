@@ -706,3 +706,38 @@ body{font-size:var(--type-body);line-height:1.45}
 #profile-nav-button.is-current::after{opacity:1!important}
 #screen-profile .profile-photo-wrap,#screen-profile #profile-photo,#screen-profile #profile-avatar-fallback{border:0!important;outline:0!important;box-shadow:none!important}
 #screen-profile .profile-photo-wrap::before,#screen-profile .profile-photo-wrap::after{content:none!important;display:none!important}
+
+
+/* Profile avatar: keep visual effects strictly on the animated outline. */
+.bottom-nav-dock .profile-nav-button,
+.bottom-nav-dock .profile-nav-button.is-current,
+.bottom-nav-dock .profile-nav-button.is-pressed,
+.bottom-nav-dock .profile-nav-button:active,
+.bottom-nav-dock .profile-nav-button:focus-visible{
+  border-color:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+.bottom-nav-dock .profile-nav-button::before{
+  content:none!important;
+  display:none!important;
+  opacity:0!important;
+  animation:none!important;
+}
+.bottom-nav-dock .profile-nav-button.is-current::after{
+  opacity:1!important;
+}
+.bottom-nav-dock .profile-nav-button.is-pressed{
+  transform:scale(.985)!important;
+}
+.bottom-nav-dock .profile-nav-button.is-pressed img,
+.bottom-nav-dock .profile-nav-button.is-pressed span{
+  transform:none!important;
+  filter:none!important;
+}
+.bottom-nav-dock .profile-nav-button img{
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+}

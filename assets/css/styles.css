@@ -1848,3 +1848,10 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 #screen-catalog #toggle-catalog {
   line-height: 1.25 !important;
 }
+
+
+/* The catalog no longer uses the All / Free filter chips. */
+#screen-catalog .filter-strip,
+#screen-catalog .filter-chip {
+  display: none !important;
+}

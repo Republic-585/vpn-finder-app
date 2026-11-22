@@ -1868,3 +1868,16 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
     transition-duration: .01ms !important;
   }
 }
+
+
+/* Keep featured rating stars pixel-locked while the four avatars fade in. */
+.popular-service .service-avatar-rating,
+.popular-service .service-rating,
+.popular-service .service-rating-badge,
+.popular-service .service-rating-badge svg {
+  transform: none !important;
+  translate: none !important;
+  animation: none !important;
+  transition: none !important;
+  will-change: auto !important;
+}

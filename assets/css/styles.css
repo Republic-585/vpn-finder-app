@@ -2008,12 +2008,14 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 }
 
 
-/* Featured stars: align the avatar circle with the star's upper-left inner notch.
-   Coordinates scale with the avatar diameter (76/72/64px), without per-screen nudges. */
-#screen-catalog .popular-service-open > .service-avatar-rating > .service-rating{
-  left:calc(85.355% - 12.24px)!important;
-  top:calc(85.355% - 11.45px)!important;
+/* Universal avatar/star geometry.
+   The star's upper-left inner notch (8.16, 7.63 in a 24x24 viewBox)
+   meets the avatar circle at 45 degrees. Both offsets are percentages:
+   avatar-relative placement + star-relative translation, so either size can change. */
+.service-avatar-rating > .service-rating{
+  left:85.355%!important;
+  top:85.355%!important;
   right:auto!important;
   bottom:auto!important;
-  transform:none!important;
+  transform:translate(-34%,-31.8%)!important;
 }

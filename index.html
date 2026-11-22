@@ -22,6 +22,15 @@
         <span>Добавить в каталог</span>
       </button>
     </div>
+    <button class="catalog-promo-banner" type="button" data-action="open-add-service" aria-label="Добавьте VPN сервис в каталог. Подробнее">
+      <span class="catalog-promo-copy">
+        <strong>Добавьте VPN сервис<br>в каталог</strong>
+        <span class="catalog-promo-more">Подробнее <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 10 4 4 8-8"></path></svg></span>
+      </span>
+      <span class="catalog-promo-art" aria-hidden="true">
+        <svg viewBox="0 0 132 112"><path class="promo-orbit" d="M13 77c12-31 37-50 65-49 18 1 32 10 42 25"/><path class="promo-shield" d="M65 13 99 27v25c0 24-15 39-34 47C46 91 31 76 31 52V27l34-14Z"/><path class="promo-lock" d="M54 49v-8a11 11 0 0 1 22 0v8m-27 0h32v25H49z"/><path class="promo-check" d="m59 61 5 5 10-11"/><circle class="promo-spark" cx="19" cy="31" r="4"/><circle class="promo-spark" cx="112" cy="89" r="3"/></svg>
+      </span>
+    </button>
     <label class="search-box">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 4 4"></path></svg>
       <input id="search" type="search" placeholder="Поиск" autocomplete="off">
@@ -146,6 +155,21 @@
 
   </section>
 </main>
+<section class="catalog-promo-screen" id="catalog-promo-screen" aria-modal="true" role="dialog" aria-labelledby="catalog-promo-title" hidden>
+  <button class="catalog-promo-back" type="button" data-action="close-add-service" aria-label="Назад">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+  </button>
+  <div class="catalog-promo-screen-content">
+    <div class="catalog-promo-emblem" aria-hidden="true">
+      <svg viewBox="0 0 100 100"><path d="M50 8 83 22v24c0 23-14 38-33 47C31 84 17 69 17 46V22L50 8Z"/><path d="m36 50 10 10 20-22"/></svg>
+    </div>
+    <h1 id="catalog-promo-title">Добавьте ваш сервис</h1>
+    <p>Расскажите о своём VPN — мы рассмотрим заявку для каталога Finder.</p>
+  </div>
+  <div class="catalog-promo-screen-bottom">
+    <button class="catalog-promo-submit" type="button" data-go="owners">Добавить сервис</button>
+  </div>
+</section>
 <div class="bottom-nav-dock">
   <nav class="bottom-nav" aria-label="Основная навигация">
     <button class="nav-item active" type="button" data-go="catalog" aria-current="page">

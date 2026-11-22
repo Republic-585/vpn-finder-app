@@ -990,18 +990,18 @@ body{font-size:var(--type-body);line-height:1.45}
   transform-origin:50% 50%;
 }
 .bottom-nav-dock .nav-item.is-tapping[data-go="catalog"] svg path:first-child{
-  stroke-dasharray:999;
-  stroke-dashoffset:999;
+  stroke-dasharray:80;
+  stroke-dashoffset:80;
   animation:telegram-tab-draw .48s .02s ease-out forwards;
 }
 .bottom-nav-dock .nav-item.is-tapping[data-go="catalog"] svg path:last-child{
-  stroke-dasharray:999;
-  stroke-dashoffset:999;
+  stroke-dasharray:24;
+  stroke-dashoffset:24;
   animation:telegram-tab-draw .28s .22s ease-out forwards;
 }
 .bottom-nav-dock .nav-item.is-tapping[data-go="compare"] svg path:first-child{
-  stroke-dasharray:999;
-  stroke-dashoffset:999;
+  stroke-dasharray:32;
+  stroke-dashoffset:32;
   animation:telegram-tab-draw .42s ease-out forwards;
 }
 .bottom-nav-dock .nav-item.is-tapping[data-go="compare"] svg path:last-child{
@@ -1010,8 +1010,8 @@ body{font-size:var(--type-body);line-height:1.45}
   animation:telegram-tab-sparkle .48s .08s cubic-bezier(.2,.8,.2,1) both;
 }
 .bottom-nav-dock .nav-item.is-tapping[data-go="favorites"] svg path:first-child{
-  stroke-dasharray:999;
-  stroke-dashoffset:999;
+  stroke-dasharray:64;
+  stroke-dashoffset:64;
   animation:telegram-tab-draw .42s ease-out forwards,telegram-tab-heart-fill .2s .34s ease forwards;
 }
 @keyframes telegram-tab-settle{

@@ -792,11 +792,63 @@ document.querySelectorAll(".filter-chip").forEach(chip => {
   });
 });
 
+function normalizeSearchText(value) {
+  return String(value ?? "")
+    .normalize("NFKC")
+    .toLocaleLowerCase("ru-RU")
+    .replace(/ё/g, "е")
+    .replace(/[^\\p{L}\\p{N}]+/gu, " ")
+    .trim();
+}
+const SEARCH_SYNONYMS = {
+  "айфон": ["iphone", "ios"], "айфона": ["iphone", "ios"], "айфоне": ["iphone", "ios"],
+  "iphone": ["ios"], "ios": ["iphone"],
+  "айпад": ["ipad", "ios"], "ipad": ["ios"],
+  "макбук": ["macbook", "macos", "mac"], "мак": ["mac", "macos"], "macbook": ["mac", "macos"],
+  "андроид": ["android"], "виндовс": ["windows"], "винда": ["windows"],
+  "безлимит": ["безлимитный", "unlimited"], "безлимитный": ["безлимит", "unlimited"],
+  "пробник": ["пробный", "тест", "trial"], "триал": ["пробный", "тест", "trial"],
+  "семья": ["семейный", "несколько", "устройств"], "семейный": ["семья", "несколько", "устройств"],
+  "дешевый": ["недорогой"], "дешево": ["недорого"], "недорогой": ["дешевый"]
+};
+function searchServiceText(service) {
+  const platforms = Array.isArray(service.platforms) ? service.platforms : [];
+  const features = Array.isArray(service.features) ? service.features : [];
+  const plans = service.plans == null ? "" : JSON.stringify(service.plans);
+  const devices = Number(service.devices_limit || 0);
+  const extra = [];
+  if (devices >= 3) extra.push("семья семейный несколько устройств");
+  if (Number(service.trial_days || 0) > 0) extra.push("бесплатный пробный период тест trial");
+  if (/безлимит|unlimited/i.test(String(service.traffic_limit || ""))) extra.push("безлимит безлимитный");
+  if (service.whitelist_support === true) extra.push("белые списки whitelist");
+  return normalizeSearchText([
+    service.name, service.description, ...features, ...platforms,
+    service.traffic_limit, service.devices_limit, service.countries_count,
+    service.trial_days, plans, ...extra
+  ].join(" "));
+}
+function queryMatchesService(query, service) {
+  if (!query) return true;
+  let remaining = query;
+  const priceLimitMatch = remaining.match(/(?:до|не\\s+дороже|максимум|меньше)\\s*(\\d{1,7})\\s*(?:₽|руб(?:лей|ля|ль)?|р)?/i);
+  if (priceLimitMatch) {
+    const price = Number(service.min_price ?? service.min_price_rub);
+    if (!Number.isFinite(price) || price > Number(priceLimitMatch[1])) return false;
+    remaining = remaining.replace(priceLimitMatch[0], " ");
+  }
+  const terms = normalizeSearchText(remaining)
+    .split(/\\s+/)
+    .filter(term => !["руб", "рубль", "рубля", "рублей", "р", "цена", "vpn", "для", "на", "и", "с", "по", "мне", "нужен", "нужна"].includes(term));
+  if (!terms.length) return true;
+  const haystack = searchServiceText(service);
+  return terms.every(term => {
+    const alternatives = [term, ...(SEARCH_SYNONYMS[term] || [])];
+    return alternatives.some(value => haystack.includes(normalizeSearchText(value)));
+  });
+}
 function visibleServices() {
   return state.services.filter(service => {
-    const queryMatch = !state.query ||
-      [service.name, service.description, ...(service.features || [])].join(" ").toLowerCase().includes(state.query);
-    if (!queryMatch) return false;
+    if (!queryMatchesService(state.query, service)) return false;
     if (state.filter === "free") return false;
     return true;
   });

@@ -513,7 +513,7 @@ if (navBar) {
   });
   navBar.addEventListener("animationend", event => {
     const item = event.target.closest?.(".nav-item.is-tapping");
-    if (item && event.animationName.startsWith("telegram-tab-")) {
+    if (item && event.target.matches("svg") && event.animationName === "telegram-tab-settle") {
       item.classList.remove("is-tapping");
     }
   });

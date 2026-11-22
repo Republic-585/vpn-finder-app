@@ -1477,6 +1477,24 @@ byId("provider-form")?.addEventListener("submit", event => {
 
 loadServices();
 
+function animateFeaturedRotation() {
+  const grid = byId("provider-list")?.querySelector(".popular-grid");
+  if (!grid || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+  [...grid.querySelectorAll(".popular-service")].forEach((item, index) => {
+    item.animate(
+      [
+        { opacity: 0, transform: "translateY(7px) scale(.975)", filter: "blur(2px)" },
+        { opacity: 1, transform: "translateY(0) scale(1)", filter: "blur(0)" }
+      ],
+      {
+        duration: 420,
+        delay: index * 42,
+        easing: "cubic-bezier(.22, 1, .36, 1)",
+        fill: "both"
+      }
+    );
+  });
+}
 function rotateFeaturedServices() {
   if (document.visibilityState !== "visible") return;
   const catalog = byId("screen-catalog");
@@ -1491,6 +1509,7 @@ function rotateFeaturedServices() {
   }
   state.featuredIds = next.map(service => service.id);
   renderCatalog();
+  animateFeaturedRotation();
 }
 window.setInterval(rotateFeaturedServices, 7000);
 })();

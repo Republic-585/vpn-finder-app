@@ -42,5 +42,7 @@ jobs:
             echo "Avatar mirror is already up to date."
           else
             git commit -m "Mirror active service avatars locally"
-            git push
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
           fi

@@ -832,3 +832,30 @@ body{font-size:var(--type-body);line-height:1.45}
   backdrop-filter:blur(12px) saturate(125%)!important;
   -webkit-backdrop-filter:blur(12px) saturate(125%)!important;
 }
+
+
+/* Navigation dock: asymmetric corner-fade glass outline. */
+.bottom-nav-dock .bottom-nav{
+  position:relative;
+  isolation:isolate;
+  border-color:transparent!important;
+}
+.bottom-nav-dock .bottom-nav::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:3;
+  padding:1px;
+  border-radius:inherit;
+  pointer-events:none;
+  background:linear-gradient(135deg,
+    rgba(255,255,255,.30) 0%,
+    rgba(255,255,255,.15) 28%,
+    rgba(255,255,255,.055) 58%,
+    rgba(255,255,255,.012) 82%,
+    rgba(255,255,255,0) 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  mask-composite:exclude;
+}

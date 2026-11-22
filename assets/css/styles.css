@@ -1715,3 +1715,65 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))!important;
 }
 #screen-catalog .catalog-promo-wrap .catalog-promo-dismiss:active{transform:scale(.92)!important}
+
+
+/* Promo artwork uses the same outer sizing model as the four-avatar popular card. */
+#screen-catalog .catalog-promo-wrap.popular-card{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  padding:0!important;
+  margin:0 0 22px!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  border:0!important;
+  border-radius:20px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#screen-catalog .catalog-promo-wrap.popular-card .catalog-promo-banner{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:inherit!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  line-height:0!important;
+}
+#screen-catalog .catalog-promo-wrap.popular-card .catalog-promo-banner img{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  height:auto!important;
+  margin:0!important;
+  padding:0!important;
+  object-fit:contain!important;
+  border-radius:inherit!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-dismiss{
+  position:absolute!important;
+  z-index:30!important;
+  top:0!important;
+  right:0!important;
+  display:block!important;
+  width:46px!important;
+  height:46px!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  color:transparent!important;
+  opacity:0!important;
+  cursor:pointer!important;
+  -webkit-tap-highlight-color:transparent!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-dismiss svg{display:none!important}

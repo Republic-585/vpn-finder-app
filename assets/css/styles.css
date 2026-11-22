@@ -963,3 +963,10 @@ body{font-size:var(--type-body);line-height:1.45}
   .bottom-nav-dock .nav-item svg.is-morphing,
   .bottom-nav-dock .nav-item svg.is-morph-return{animation:none!important}
 }
+
+
+/* Match active navigation icon color to catalog primary buttons. */
+.bottom-nav-dock .nav-item.active svg{
+  color:var(--blue)!important;
+  stroke:currentColor!important;
+}

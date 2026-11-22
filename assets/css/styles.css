@@ -1060,3 +1060,31 @@ body{font-size:var(--type-body);line-height:1.45}
   58%{opacity:1;transform:translate3d(0,0,0) rotate(5deg)}
   100%{opacity:1;transform:translate3d(0,0,0) rotate(0)}
 }
+
+
+/* Keep tab glyph geometry identical before, during and after the stroke reveal. */
+.bottom-nav-dock .nav-item svg,
+.bottom-nav-dock .nav-item.is-tapping svg{
+  transform:none!important;
+  transform-origin:50% 50%!important;
+  transition:none!important;
+}
+.bottom-nav-dock .nav-item.is-tapping svg path{
+  transform:none!important;
+  transform-origin:50% 50%!important;
+}
+.bottom-nav-dock .nav-item.is-tapping svg{
+  animation:telegram-tab-settle .56s ease both!important;
+}
+@keyframes telegram-tab-settle{
+  0%,100%{opacity:1;transform:none!important}
+}
+@keyframes telegram-tab-sparkle{
+  0%,100%{opacity:1;transform:none}
+  58%{opacity:1;transform:none}
+}
+.bottom-nav-dock .nav-item:not(.is-tapping) svg path{
+  stroke-dasharray:none!important;
+  stroke-dashoffset:0!important;
+  transform:none!important;
+}

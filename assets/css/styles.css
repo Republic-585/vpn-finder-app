@@ -825,3 +825,10 @@ body{font-size:var(--type-body);line-height:1.45}
   backdrop-filter:blur(12px) saturate(150%)!important;
   -webkit-backdrop-filter:blur(12px) saturate(150%)!important;
 }
+
+
+/* Navigation dock: set backdrop color saturation to 125%. */
+.bottom-nav-dock .bottom-nav{
+  backdrop-filter:blur(12px) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(12px) saturate(125%)!important;
+}

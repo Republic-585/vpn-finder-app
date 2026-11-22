@@ -981,7 +981,7 @@ body{font-size:var(--type-body);line-height:1.45}
 .catalog-promo-more{display:inline-flex;align-items:center;gap:7px;color:rgba(5,45,42,.78);font-size:14px;line-height:1;font-weight:650}
 .catalog-promo-more svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .catalog-promo-art{position:absolute;right:7px;bottom:-4px;width:132px;height:112px;display:block;opacity:.98}
-.catalog-promo-art svg{width:100%;height:100%;overflow:visible}
+.catalog-promo-art img{display:block;width:100%;height:100%;object-fit:contain;object-position:center bottom}
 .catalog-promo-art .promo-orbit{fill:none;stroke:rgba(255,255,255,.64);stroke-width:2;stroke-dasharray:3 5}
 .catalog-promo-art .promo-shield{fill:#F1FFF9;stroke:rgba(7,89,78,.2);stroke-width:2}
 .catalog-promo-art .promo-lock{fill:#35C7A6;stroke:#168F7C;stroke-width:2.5;stroke-linejoin:round}

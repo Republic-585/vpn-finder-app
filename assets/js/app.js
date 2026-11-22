@@ -525,7 +525,16 @@ if (navBar) {
   });
 }
 if (tg?.BackButton) {
-  tg.BackButton.onClick(() => showScreen("profile"));
+  tg.BackButton.onClick(() => {
+    const promo = byId("catalog-promo-screen");
+    if (promo && !promo.hidden) {
+      promo.hidden = true;
+      document.body.classList.remove("catalog-promo-open");
+      try { tg.BackButton.hide(); } catch (_) {}
+      return;
+    }
+    showScreen("profile");
+  });
   try { tg.BackButton.hide(); } catch (_) {}
 }
 

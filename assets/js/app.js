@@ -504,6 +504,18 @@ if (navBar) {
       event.stopImmediatePropagation();
     }
   }, true);
+  navBar.addEventListener("click", event => {
+    const item = event.target.closest(".nav-item");
+    if (!item || !navBar.contains(item)) return;
+    item.classList.remove("is-tapping");
+    void item.offsetWidth;
+    item.classList.add("is-tapping");
+  });
+  navBar.addEventListener("animationend", event => {
+    if (event.target.classList.contains("nav-item") && event.animationName === "nav-tap-feedback") {
+      event.target.classList.remove("is-tapping");
+    }
+  });
 }
 if (tg?.BackButton) {
   tg.BackButton.onClick(() => showScreen("profile"));

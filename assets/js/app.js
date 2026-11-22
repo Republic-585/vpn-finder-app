@@ -151,7 +151,7 @@ const translations = {
     "Переходы":"Clicks","Последние события":"Recent events","Пользователи":"Users","Источники":"Sources","Ключевые события":"Key events","Открытие приложения":"App opened","Просмотр сервиса":"Service viewed","Переход по ссылке":"Affiliate link opened","Сообщение отправлено":"Message sent","Заявка отправлена":"Provider request sent",
     "Партнёрские переходы":"Affiliate clicks","Событие":"Event","Сервис":"Service","Время":"Time",
     "Аналитика":"Analytics","Пользователи и сессии":"Users and sessions","Пользователь":"User","Источник":"Source","Активность":"Activity","Источники трафика":"Traffic sources","Тип":"Type","Статус":"Status","Сумма":"Amount","Комиссия":"Commission","Не удалось открыть партнёрскую ссылку. Попробуйте ещё раз.":"Could not open the partner link. Please try again.",
-    "Поиск":"Search","Очистить поиск":"Clear search","Популярный выбор":"Popular services","Посмотреть все":"View all","Свернуть":"Show less",
+    "Поиск":"Search","Очистить поиск":"Clear search","Популярный выбор":"Popular services","Добавьте VPN сервис":"Add your VPN service","в каталог":"to the directory","Подробнее":"Learn more","Добавьте ваш сервис":"Add your service","Расскажите о своём VPN — мы рассмотрим заявку для каталога Finder.":"Tell us about your VPN. We’ll review it for the Finder directory.","Добавить сервис":"Add service","Посмотреть все":"View all","Свернуть":"Show less",
     "Фильтры":"Filters","Все":"All","Бесплатно":"Free","Сравнение":"Compare","Избранное":"Favorites","Профиль":"Profile",
     "Загрузка профиля…":"Loading profile…","Не удалось загрузить профиль":"Could not load profile","Пользователь":"User","Откройте приложение через Telegram":"Open the app through Telegram",
     "Добавление Finder VPN на экран Домой":"Add Finder VPN to your Home Screen","Открывайте":"Open","в одно касание.":"with one tap.",
@@ -371,6 +371,11 @@ function navHaptic() {
 let moveIndicator = () => {};
 const BACK_SCREENS = new Set(["news", "contact", "owners", "analytics", "support"]);
 function showScreen(name) {
+  const promoScreen = byId("catalog-promo-screen");
+  if (promoScreen && !promoScreen.hidden) {
+    promoScreen.hidden = true;
+    document.body.classList.remove("catalog-promo-open");
+  }
   if (name === "analytics" && Number(tg?.initDataUnsafe?.user?.id || 0) !== ANALYTICS_OWNER_TELEGRAM_ID) return;
   const navBar = document.querySelector(".bottom-nav");
   const alreadyActive = screens.some(screen => screen.dataset.screen === name && screen.classList.contains("active"));
@@ -1074,6 +1079,15 @@ async function openReferral(service) {
 }
 
 document.addEventListener("keydown", event => {
+  if (event.key === "Escape") {
+    const promo = byId("catalog-promo-screen");
+    if (promo && !promo.hidden) {
+      promo.hidden = true;
+      document.body.classList.remove("catalog-promo-open");
+      try { tg?.BackButton?.hide(); } catch (_) {}
+      return;
+    }
+  }
   const row = event.target.closest(".service-mini-card[role='button']");
   if (!row || event.target.closest("button") || (event.key !== "Enter" && event.key !== " ")) return;
   event.preventDefault();
@@ -1085,6 +1099,22 @@ document.addEventListener("click", event => {
   if (!button) return;
   if (button.dataset.go) {
     showScreen(button.dataset.go);
+    return;
+  }
+  if (button.dataset.action === "open-add-service") {
+    const promo = byId("catalog-promo-screen");
+    if (promo) {
+      promo.hidden = false;
+      document.body.classList.add("catalog-promo-open");
+      try { tg?.BackButton?.show(); } catch (_) {}
+    }
+    return;
+  }
+  if (button.dataset.action === "close-add-service") {
+    const promo = byId("catalog-promo-screen");
+    if (promo) promo.hidden = true;
+    document.body.classList.remove("catalog-promo-open");
+    try { tg?.BackButton?.hide(); } catch (_) {}
     return;
   }
   const service = state.services.find(item => item.id === button.dataset.id);

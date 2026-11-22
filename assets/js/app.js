@@ -1110,6 +1110,14 @@ document.addEventListener("click", event => {
     showScreen(button.dataset.go);
     return;
   }
+  if (button.dataset.action === "dismiss-catalog-promo") {
+    event.preventDefault();
+    event.stopPropagation();
+    const banner = button.closest(".catalog-promo-wrap");
+    if (banner) banner.remove();
+    haptic();
+    return;
+  }
   if (button.dataset.action === "open-add-service") {
     const promo = byId("catalog-promo-screen");
     if (promo) {

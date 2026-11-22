@@ -396,10 +396,6 @@ body{font-size:var(--type-body);line-height:1.45}
 }
 
 
-/* Selected tab color and indicator geometry. */
-:root{--telegram-accent:#007AFF}
-.bottom-nav-dock .nav-item.active svg{color:var(--telegram-accent)!important;stroke:currentColor!important}
-.bottom-nav-dock .nav-item{overflow:visible}
 .bottom-nav-dock .nav-indicator{top:3px;height:54px}
 
 .bottom-nav-dock .profile-nav-button:active,.bottom-nav-dock .profile-nav-button:focus-visible{border-color:#35DCC4!important}
@@ -937,38 +933,41 @@ body{font-size:var(--type-body);line-height:1.45}
 }
 
 
-/* One navigation animation only: draw SVG strokes without moving the icons. */
-.bottom-nav-dock .nav-item svg,
-.bottom-nav-dock .nav-item.is-tapping svg{
-  transform:none!important;transform-origin:50% 50%!important;transition:none!important;
+/* Telegram-inspired tab icon microanimations: each glyph has its own motion. */
+.bottom-nav-dock .nav-item{color:#fff!important}
+.bottom-nav-dock .nav-item.active{color:#fff!important}
+.bottom-nav-dock .nav-item svg{color:inherit;stroke:currentColor;transform-origin:50% 50%;transform-box:fill-box}
+.bottom-nav-dock .nav-item.active svg{color:var(--blue)!important;stroke:currentColor!important}
+.bottom-nav-dock .nav-item.is-tapping[data-go="catalog"] svg{
+  animation:telegram-shield-bounce 520ms cubic-bezier(.22,.78,.28,1) both!important;
 }
-.bottom-nav-dock .nav-item svg path{
-  fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;
-  stroke-dasharray:none;stroke-dashoffset:0;transform:none!important;
+.bottom-nav-dock .nav-item.is-tapping[data-go="compare"] svg{
+  animation:telegram-spark-wiggle 560ms cubic-bezier(.25,.8,.25,1) both!important;
 }
-.bottom-nav-dock .nav-item.is-tapping svg{
-  animation:nav-stroke-finish 560ms linear both!important;
+.bottom-nav-dock .nav-item.is-tapping[data-go="favorites"] svg{
+  animation:telegram-heart-pop 540ms cubic-bezier(.2,.85,.25,1) both!important;
 }
-.bottom-nav-dock .nav-item.is-tapping svg path{
-  stroke-dasharray:1!important;stroke-dashoffset:1!important;
-  animation:nav-stroke-draw 480ms ease-out 0ms forwards!important;
+@keyframes telegram-shield-bounce{
+  0%{transform:translateY(0) scale(1)}
+  28%{transform:translateY(-2px) scale(1.09)}
+  52%{transform:translateY(1px) scale(.97)}
+  74%{transform:translateY(-.5px) scale(1.025)}
+  100%{transform:translateY(0) scale(1)}
 }
-.bottom-nav-dock .nav-item.is-tapping[data-go="catalog"] svg path:last-child{
-  animation-duration:260ms!important;animation-delay:210ms!important;
+@keyframes telegram-spark-wiggle{
+  0%{transform:rotate(0) scale(1)}
+  24%{transform:rotate(-9deg) scale(.96)}
+  48%{transform:rotate(8deg) scale(1.07)}
+  72%{transform:rotate(-3deg) scale(1.025)}
+  100%{transform:rotate(0) scale(1)}
 }
-.bottom-nav-dock .nav-item.is-tapping[data-go="compare"] svg path:first-child{
-  animation-duration:360ms!important;
+@keyframes telegram-heart-pop{
+  0%{transform:scale(1)}
+  28%{transform:scale(1.17)}
+  48%{transform:scale(.94)}
+  70%{transform:scale(1.07)}
+  100%{transform:scale(1)}
 }
-.bottom-nav-dock .nav-item.is-tapping[data-go="compare"] svg path:last-child{
-  animation-duration:440ms!important;animation-delay:60ms!important;
-}
-.bottom-nav-dock .nav-item.is-tapping[data-go="favorites"] svg path:first-child{
-  animation-duration:480ms!important;
-}
-@keyframes nav-stroke-draw{to{stroke-dashoffset:0}}
-@keyframes nav-stroke-finish{from{opacity:1}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){
-  .bottom-nav-dock .nav-item.is-tapping svg,
-  .bottom-nav-dock .nav-item.is-tapping svg path{animation:none!important}
-  .bottom-nav-dock .nav-item svg path{stroke-dasharray:none!important;stroke-dashoffset:0!important}
+  .bottom-nav-dock .nav-item.is-tapping svg{animation:none!important}
 }

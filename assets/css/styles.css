@@ -1937,3 +1937,13 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   animation: none !important;
   transition: none !important;
 }
+
+/* Featured avatars: use whole-pixel columns to prevent odd-column star jitter on iOS. */
+.popular-grid{
+  grid-template-columns:repeat(4,64px)!important;
+  justify-content:center!important;
+  gap:8px!important;
+}
+@media(max-width:360px){
+  .popular-grid{gap:0!important}
+}

@@ -1457,3 +1457,66 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   #screen-catalog .catalog-promo-wrap .catalog-promo-copy strong{font-size:14.5px!important;max-width:130px!important}
   #screen-catalog .catalog-promo-wrap .catalog-promo-art{right:-12px!important;width:136px!important;height:108px!important}
 }
+
+
+/* VPN Finder gift promotion image banner */
+#screen-catalog .catalog-promo-wrap{
+  position:relative;
+  width:100%;
+  margin:0 0 22px;
+  overflow:visible;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner{
+  display:block;
+  width:100%;
+  margin:0;
+  padding:0;
+  overflow:hidden;
+  border:0;
+  border-radius:20px;
+  background:transparent;
+  box-shadow:none;
+  line-height:0;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner img{
+  display:block;
+  width:100%;
+  height:auto;
+  border:0;
+  object-fit:contain;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-dismiss{
+  position:absolute;
+  z-index:5;
+  top:9px;
+  right:9px;
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  padding:0;
+  border:1px solid rgba(255,255,255,.42);
+  border-radius:50%;
+  background:rgba(20,20,28,.42);
+  color:#fff;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-dismiss svg{
+  width:15px;
+  height:15px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2.2;
+  stroke-linecap:round;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-dismiss:active{
+  transform:scale(.92);
+}
+@media(prefers-reduced-motion:reduce){
+  #screen-catalog .catalog-promo-wrap .catalog-promo-dismiss{transition:none}
+}

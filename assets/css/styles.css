@@ -1948,29 +1948,50 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   .popular-grid{gap:0!important}
 }
 
-/* Featured avatars: slightly larger circles with balanced responsive spacing. */
+/* Featured avatars: fill the panel evenly while keeping each star anchored to its avatar. */
+.popular-grid{
+  width:100%!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  justify-content:stretch!important;
+  gap:0!important;
+}
+.popular-service{
+  width:100%!important;
+  min-width:0!important;
+  padding-left:0!important;
+  padding-right:0!important;
+}
 .popular-service-open > .service-avatar-rating,
 .popular-service-open > .service-avatar-rating > .service-avatar{
-  width:68px!important;
-  height:68px!important;
-  min-width:68px!important;
-  min-height:68px!important;
-  max-width:68px!important;
-  max-height:68px!important;
-  flex:0 0 68px!important;
+  width:76px!important;
+  height:76px!important;
+  min-width:76px!important;
+  min-height:76px!important;
+  max-width:76px!important;
+  max-height:76px!important;
+  flex:0 0 76px!important;
 }
 .popular-service-open > .service-avatar-rating > .service-rating{
-  left:39px!important;
-  top:43px!important;
+  left:47px!important;
+  top:51px!important;
 }
-.popular-grid{
-  grid-template-columns:repeat(4,68px)!important;
-  gap:12px!important;
+@media(max-width:375px){
+  .popular-service-open > .service-avatar-rating,
+  .popular-service-open > .service-avatar-rating > .service-avatar{
+    width:72px!important;
+    height:72px!important;
+    min-width:72px!important;
+    min-height:72px!important;
+    max-width:72px!important;
+    max-height:72px!important;
+    flex:0 0 72px!important;
+  }
+  .popular-service-open > .service-avatar-rating > .service-rating{
+    left:43px!important;
+    top:47px!important;
+  }
 }
-@media(max-width:390px){
-  .popular-grid{gap:7px!important}
-}
-@media(max-width:360px){
+@media(max-width:345px){
   .popular-service-open > .service-avatar-rating,
   .popular-service-open > .service-avatar-rating > .service-avatar{
     width:64px!important;
@@ -1984,9 +2005,5 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   .popular-service-open > .service-avatar-rating > .service-rating{
     left:35px!important;
     top:39px!important;
-  }
-  .popular-grid{
-    grid-template-columns:repeat(4,64px)!important;
-    gap:0!important;
   }
 }

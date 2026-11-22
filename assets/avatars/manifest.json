@@ -1,0 +1,240 @@
+{
+  "generatedAt": "2026-11-22T16:44:00.163Z",
+  "count": 26,
+  "avatars": [
+    {
+      "id": "VPN-001",
+      "name": "Panther VPN",
+      "file": "VPN-001.jpg",
+      "bytes": 25539,
+      "sha256": "d8aaf8a1768e5339361ab07dd17f542c376d2c66547cc56361ecf97dd27d23d8",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-002",
+      "name": "EtherVPN",
+      "file": "VPN-002.jpg",
+      "bytes": 11164,
+      "sha256": "c3d181ede0e33eacf11e5c1e1494f53cc5d7091eeb020ad7540fd6b5b0b80293",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-003",
+      "name": "VlessWB",
+      "file": "VPN-003.jpg",
+      "bytes": 22329,
+      "sha256": "77b010105d400f0be2a025a80f0c7d0d21e3d0b1c570169dbfe1911ca8688c29",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-004",
+      "name": "PlusOne VPN",
+      "file": "VPN-004.jpg",
+      "bytes": 5822,
+      "sha256": "94b16a0503a895b5c52f9b8f0e50d93ebb4dabffea634b4855963c5f6c88e2b3",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-005",
+      "name": "Blook VPN",
+      "file": "VPN-005.png",
+      "bytes": 81796,
+      "sha256": "204dd890583b3dd951a8fef3b45d031d1bf4361edb6f03f318e5f287faba3460",
+      "sourceHost": "play-lh.googleusercontent.com",
+      "finalHost": "play-lh.googleusercontent.com"
+    },
+    {
+      "id": "VPN-006",
+      "name": "Moy VPN",
+      "file": "VPN-006.jpg",
+      "bytes": 5224,
+      "sha256": "02646ae1d9f5bffd7c60b5843bde19bd5acdfb51bd9574057ee1e8a1767aa946",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-007",
+      "name": "VPN GROZA",
+      "file": "VPN-007.jpg",
+      "bytes": 15675,
+      "sha256": "d07ae4673670fbab24f9773f3ec881656b51f825e87a20d6d2788212cadb3369",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-008",
+      "name": "HelperVPN",
+      "file": "VPN-008.jpg",
+      "bytes": 15886,
+      "sha256": "020e52381b191ec758ea9ea305d9510d44b92558c05f1cc708fc808698a44ab0",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-009",
+      "name": "GotBot VPN",
+      "file": "VPN-009.png",
+      "bytes": 8822,
+      "sha256": "6c67e684e3c2dee1ed6a2ae303f6d09252bcfde5b4a3c2297763480fe6537787",
+      "sourceHost": "gotbot.cc",
+      "finalHost": "gotbot.cc"
+    },
+    {
+      "id": "VPN-010",
+      "name": "Midas VPN",
+      "file": "VPN-010.jpg",
+      "bytes": 13078,
+      "sha256": "bdb5e9e15373184383ae1bc30a36316cef95e13ce375ae34eabfafe43982eb95",
+      "sourceHost": "cdn1.telesco.pe",
+      "finalHost": "cdn1.telesco.pe"
+    },
+    {
+      "id": "VPN-011",
+      "name": "Adrenaline VPN",
+      "file": "VPN-011.jpg",
+      "bytes": 16015,
+      "sha256": "4bc8ccc799b6833dd5967171df237509173774c1c17303a80a42be4a6605c53f",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-012",
+      "name": "CheburNET",
+      "file": "VPN-012.jpg",
+      "bytes": 36430,
+      "sha256": "ddd218a2ae6f10ae900ebfbac0568255c54347525d6645ad177645a05efb9d8f",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-013",
+      "name": "SilVPN",
+      "file": "VPN-013.jpg",
+      "bytes": 12522,
+      "sha256": "53018147fa1458f723bc0130ced32e86db6fc06eb8412a144cde45fb433419f8",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-014",
+      "name": "Horizon VPN",
+      "file": "VPN-014.jpg",
+      "bytes": 12335,
+      "sha256": "5fc8bd4bc88a4e92241368d4405e6fa7774b405af19ea1c7da5d805aefd0e26b",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-015",
+      "name": "Durev VPN",
+      "file": "VPN-015.jpg",
+      "bytes": 18241,
+      "sha256": "e98e7b210a2f9e55568db8ceaf15195aaa7ab560a83d04b084017426be4806d2",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-016",
+      "name": "CanaraVPN",
+      "file": "VPN-016.png",
+      "bytes": 14774,
+      "sha256": "d856d41de38b082782e86b06de1c3073cd78a692972656a3a174b1f9db933e61",
+      "sourceHost": "canaravpn.com",
+      "finalHost": "canaravpn.com"
+    },
+    {
+      "id": "VPN-017",
+      "name": "EndorVPN",
+      "file": "VPN-017.jpg",
+      "bytes": 7543,
+      "sha256": "6afc28c4c688020e90017ee1e1bc131aeaca4c81d1a44f2459d0740fb6ea0f9c",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-018",
+      "name": "RedShieldVPN",
+      "file": "VPN-018.jpg",
+      "bytes": 6102,
+      "sha256": "96d3cd55b6147f8f41337efc366fbdd1be16de255257d9cb23c9323b46e84f23",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-019",
+      "name": "Stasis VPN",
+      "file": "VPN-019.jpg",
+      "bytes": 37492,
+      "sha256": "39ced19d4938181274bff7788a99f7c085f279f5eaeeebc59311ffcdd22a8903",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-020",
+      "name": "V2App VPN",
+      "file": "VPN-020.jpg",
+      "bytes": 11628,
+      "sha256": "95f30c1813d7be6fd0bfb1af037280ae1db78f6870c00684a3fb16ed17735e45",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-021",
+      "name": "Banana Shield",
+      "file": "VPN-021.jpg",
+      "bytes": 14200,
+      "sha256": "0600d0995a1db6d5a8fe7f5063d1e57f5a93e1913d55130abe3d15752f6e1f1d",
+      "sourceHost": "cdn1.telesco.pe",
+      "finalHost": "cdn1.telesco.pe"
+    },
+    {
+      "id": "VPN-022",
+      "name": "Obraz VPN",
+      "file": "VPN-022.jpg",
+      "bytes": 39577,
+      "sha256": "810e49da095196fded3a9cd68433d831f59a978173e14382800785a84db1e7fe",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-023",
+      "name": "SpeedShield VPN",
+      "file": "VPN-023.jpg",
+      "bytes": 11996,
+      "sha256": "d0fcb6b2f3d4189247dc5800073a6d3ee65538fd1b11df5ce9b9e4904b314f8c",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-025",
+      "name": "Verno VPN",
+      "file": "VPN-025.jpg",
+      "bytes": 18730,
+      "sha256": "ac541a8ddaf0fadd519fbf71aaeaefaa9cb00b202772b23852ff8ccfa401b0b9",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-028",
+      "name": "Cipher VPN",
+      "file": "VPN-028.jpg",
+      "bytes": 36593,
+      "sha256": "677edc3a3f9ce7fc0ff2ea52701b530d75a6144bc3418dc1f427e75bbe5eea54",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    },
+    {
+      "id": "VPN-030",
+      "name": "VPN Eagle",
+      "file": "VPN-030.jpg",
+      "bytes": 31358,
+      "sha256": "77429a4644b6565ec3849d65c25f87b5ed43c322b03dc763d25a9bfa8427dcce",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
+    }
+  ]
+}

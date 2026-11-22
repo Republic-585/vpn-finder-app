@@ -1245,3 +1245,24 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   #screen-catalog .catalog-promo-art{right:-19px;width:170px;height:148px}
 }
 @media(prefers-reduced-motion:reduce){#screen-catalog .catalog-promo-dismiss{transition:none}}
+
+
+/* Restore the original first VPN Finder promo banner variant. */
+#screen-catalog .catalog-promo-wrap{margin:0 0 22px;overflow:visible}
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner{position:relative;isolation:isolate;width:100%;min-height:132px;margin:1px 0 0;padding:19px 18px;display:flex;align-items:center;justify-content:space-between;gap:8px;overflow:hidden;border:0;border-radius:23px;background:linear-gradient(112deg,#20BDAF 0%,#48D8B5 52%,#82E7A5 100%);color:#082E2B;text-align:left;box-shadow:none}
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner::before{content:"";position:absolute;z-index:-1;width:190px;height:190px;right:-42px;top:-74px;border:1px solid rgba(255,255,255,.27);border-radius:50%;box-shadow:0 0 0 17px rgba(255,255,255,.055),0 0 0 36px rgba(255,255,255,.045)}
+#screen-catalog .catalog-promo-wrap .catalog-promo-copy{position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;gap:12px;min-width:0;max-width:unset}
+#screen-catalog .catalog-promo-wrap .catalog-promo-copy strong{max-width:245px;color:#082E2B;font-size:clamp(19px,5vw,24px);line-height:1.12;font-weight:760;letter-spacing:-.045em;text-shadow:none}
+#screen-catalog .catalog-promo-wrap .catalog-promo-more{display:inline-flex;align-items:center;gap:7px;color:rgba(5,45,42,.78);font-size:14px;line-height:1;font-weight:650}
+#screen-catalog .catalog-promo-wrap .catalog-promo-more svg{width:17px;height:17px;padding:0;border:0;border-radius:0;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#screen-catalog .catalog-promo-wrap .catalog-promo-art{position:absolute;right:7px;bottom:-4px;width:132px;height:112px;display:block;opacity:.98;filter:none;pointer-events:none}
+#screen-catalog .catalog-promo-wrap .catalog-promo-art svg{width:100%;height:100%;overflow:visible}
+#screen-catalog .catalog-promo-wrap .promo-orbit{fill:none;stroke:rgba(255,255,255,.64);stroke-width:2;stroke-dasharray:3 5}
+#screen-catalog .catalog-promo-wrap .promo-shield{fill:#F1FFF9;stroke:rgba(7,89,78,.2);stroke-width:2}
+#screen-catalog .catalog-promo-wrap .promo-lock{fill:#35C7A6;stroke:#168F7C;stroke-width:2.5;stroke-linejoin:round}
+#screen-catalog .catalog-promo-wrap .promo-check{fill:none;stroke:#fff;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+#screen-catalog .catalog-promo-wrap .promo-spark{fill:#F5FFF9;stroke:rgba(255,255,255,.5);stroke-width:2}
+#screen-catalog .catalog-promo-dismiss{top:9px;right:9px;width:30px;height:30px;border:0!important;border-radius:50%;background:rgba(5,69,62,.2)!important;color:#fff!important;box-shadow:none}
+#screen-catalog .catalog-promo-dismiss svg{width:16px;height:16px;stroke:#fff;stroke-width:2.2}
+@media(max-width:390px){#screen-catalog .catalog-promo-wrap .catalog-promo-banner{min-height:124px;padding:17px 15px}#screen-catalog .catalog-promo-wrap .catalog-promo-art{right:-7px;width:119px;height:104px}#screen-catalog .catalog-promo-wrap .catalog-promo-copy strong{max-width:215px;font-size:20px}}
+@media(prefers-reduced-motion:reduce){#screen-catalog .catalog-promo-wrap .catalog-promo-banner:active{transform:none}}

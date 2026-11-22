@@ -1572,3 +1572,54 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 #screen-catalog .catalog-promo-wrap .catalog-promo-dismiss{
   z-index:10!important;
 }
+
+
+/* Final image-banner alignment and clean close glyph. */
+#screen-catalog .catalog-promo-wrap{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin:0 0 22px!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:16px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner img{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  margin:0!important;
+  object-fit:contain!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-dismiss{
+  top:7px!important;
+  right:7px!important;
+  width:25px!important;
+  height:25px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:#fff!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-dismiss svg{
+  width:17px!important;
+  height:17px!important;
+  stroke:#fff!important;
+  stroke-width:2.4!important;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.45));
+}

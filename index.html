@@ -92,6 +92,46 @@
   <path d="m29 49 3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7Z" fill="#FFFFFF" opacity=".92"/>
   <path d="m242 105 2.5 5.5 5.5 2.5-5.5 2.5-2.5 5.5-2.5-5.5-5.5-2.5 5.5-2.5 2.5-5.5Z" fill="#FFFFFF" opacity=".82"/>
 </svg></span>
+    </button>
+      <button class="catalog-promo-dismiss" type="button" data-action="dismiss-catalog-promo" aria-label="Закрыть баннер"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m7 7 10 10M17 7 7 17"></path></svg></button>
+    </div>
+    <div class="catalog-section-heading"><h2>Популярный выбор</h2><button id="toggle-catalog" type="button" aria-expanded="false">Посмотреть все</button></div>
+    <div class="filter-strip" role="group" aria-label="Фильтры" hidden>
+      <button class="filter-chip active" type="button" data-filter="all">Все</button>
+      <button class="filter-chip" type="button" data-filter="free">Бесплатно</button>
+    </div>
+    <div class="provider-list" id="provider-list"><div class="loading-state"><span class="loader"></span></div></div>
+  </section>
+
+  <section class="screen" id="screen-compare" data-screen="compare">
+    <div id="compare-list"></div>
+  </section>
+
+  <section class="screen" id="screen-favorites" data-screen="favorites">
+    <div class="page-heading"><h1>Избранное</h1></div>
+    <div id="favorites-list"></div>
+  </section>
+
+  <section class="screen" id="screen-profile" data-screen="profile">
+    <div class="profile-view" aria-live="polite">
+      <div class="profile-photo-wrap">
+        <img class="profile-photo" id="profile-photo" alt="" hidden referrerpolicy="no-referrer">
+        <div class="profile-avatar-fallback" id="profile-avatar-fallback">V</div>
+      </div>
+      <h1 class="profile-name" id="profile-name">Загрузка профиля…</h1>
+      <span class="profile-supporter-badge" id="profile-supporter-badge" hidden>⭐ Друг VPN Finder</span>
+      <section class="home-screen-prompt" id="home-screen-prompt" aria-label="Добавление Finder VPN на экран Домой" hidden>
+        <div class="home-screen-copy">
+          <h2>Открывайте <strong>Finder</strong> в одно касание.</h2>
+          <p>Добавьте <strong>Finder</strong> на экран Домой для быстрого доступа.</p>
+        </div>
+        <button class="home-screen-action" id="add-home-screen" type="button">Добавить на экран Домой</button>
+        <p class="home-screen-status" id="home-screen-status" role="status" hidden></p>
+        <button class="home-screen-action home-screen-dismiss" id="hide-home-screen-prompt" type="button">Скрыть</button>
+      </section>
+      <nav class="profile-menu" aria-label="Разделы профиля">
+        <button class="profile-menu-row profile-language-row" id="language-selector" type="button">
+          <span class="profile-menu-leading"><span class="profile-icon-tile language-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M3.5 12h17M12 3.5a13 13 0 0 1 0 17M12 3.5a13 13 0 0 0 0 17"></path></svg></span><span>Язык</span></span>
           <span class="profile-menu-trailing"><span class="profile-language-value" id="profile-language-value">Русский</span><span class="profile-menu-chevron" aria-hidden="true">›</span></span>
         </button>
         <button class="profile-menu-row" type="button" data-go="news"><span class="profile-menu-leading"><span class="profile-icon-tile news-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h14v15H5z"></path><path d="M8 8h8M8 11.5h8M8 15h5"></path><path d="M3 7v11a2 2 0 0 0 2 2"></path></svg></span><span>Новости</span></span><span class="profile-menu-chevron" aria-hidden="true">›</span></button>

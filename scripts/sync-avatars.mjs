@@ -12,7 +12,7 @@ if (!fallbackBlock) throw new Error("Cannot find the serviceAvatars source map")
 const fallbackUrls = Object.fromEntries([...fallbackBlock[1].matchAll(/"(VPN-\d+)":\s*"([^"]+)"/g)].map((m) => [m[1], m[2]]));
 
 const response = await fetch(`${supabaseUrl}/rest/v1/vpn_services?select=id,name,logo_url,status&status=eq.active&order=id.asc`, {
-  headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` }
+  headers: { apikey: supabaseKey }
 });
 if (!response.ok) throw new Error(`Supabase service list failed: HTTP ${response.status}`);
 const services = await response.json();

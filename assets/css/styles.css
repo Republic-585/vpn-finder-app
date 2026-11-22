@@ -2009,13 +2009,20 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 
 
 /* Universal avatar/star geometry.
-   The star's upper-left inner notch (8.16, 7.63 in a 24x24 viewBox)
-   meets the avatar circle at 45 degrees. Both offsets are percentages:
-   avatar-relative placement + star-relative translation, so either size can change. */
+   Keep the star fixed to its avatar anchor; suppress layout/entrance motion on the badge wrapper. */
 .service-avatar-rating > .service-rating{
   left:85.355%!important;
   top:85.355%!important;
   right:auto!important;
   bottom:auto!important;
   transform:translate(-34%,-31.8%)!important;
+  transition:none!important;
+  animation:none!important;
+  will-change:auto!important;
+}
+.service-avatar-rating{
+  transform:none!important;
+  translate:none!important;
+  transition:none!important;
+  animation:none!important;
 }

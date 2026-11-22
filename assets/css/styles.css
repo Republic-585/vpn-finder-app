@@ -1204,3 +1204,44 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 #screen-catalog .catalog-promo-dismiss svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 #screen-catalog .catalog-promo-dismiss:active{transform:scale(.9);background:rgba(35,18,87,.4);border-color:rgba(255,255,255,.5)}
 @media(prefers-reduced-motion:reduce){#screen-catalog .catalog-promo-dismiss{transition:none}}
+
+
+/* Premium catalog banner artwork and high-contrast dismiss control. */
+#screen-catalog .catalog-promo-wrap{position:relative;isolation:isolate;overflow:visible}
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner{
+  position:relative;overflow:visible;min-height:146px;padding-right:122px;
+  background:linear-gradient(112deg,#5630C7 0%,#7741D9 48%,#B16AE8 100%);
+  color:#fff;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner::before{
+  right:-28px;top:-86px;width:220px;height:220px;
+  border-color:rgba(255,255,255,.2);
+  box-shadow:0 0 0 20px rgba(255,255,255,.055),0 0 0 43px rgba(255,255,255,.035);
+}
+#screen-catalog .catalog-promo-copy{max-width:65%;gap:13px}
+#screen-catalog .catalog-promo-copy strong{max-width:100%;color:#fff;text-shadow:0 1px 1px rgba(40,12,94,.12)}
+#screen-catalog .catalog-promo-more{color:rgba(255,255,255,.9)}
+#screen-catalog .catalog-promo-art{
+  position:absolute;z-index:3;right:-18px;bottom:-20px;
+  width:205px;height:176px;display:block;opacity:1;pointer-events:none;
+  filter:drop-shadow(0 8px 10px rgba(37,13,93,.2));
+}
+#screen-catalog .catalog-promo-art svg{width:100%;height:100%;overflow:visible}
+#screen-catalog .catalog-promo-dismiss{
+  top:9px;right:9px;width:32px;height:32px;
+  border:0!important;border-radius:50%;
+  background:#292B32!important;color:#fff!important;
+  box-shadow:0 2px 7px rgba(25,12,58,.26),inset 0 1px 0 rgba(255,255,255,.12);
+}
+#screen-catalog .catalog-promo-dismiss svg{width:18px;height:18px;stroke:#fff;stroke-width:2.3}
+#screen-catalog .catalog-promo-dismiss:active{background:#17191F!important;transform:scale(.92)}
+@media(max-width:390px){
+  #screen-catalog .catalog-promo-wrap .catalog-promo-banner{min-height:142px;padding-right:112px}
+  #screen-catalog .catalog-promo-copy{max-width:67%}
+  #screen-catalog .catalog-promo-art{right:-17px;bottom:-17px;width:185px;height:160px}
+}
+@media(max-width:350px){
+  #screen-catalog .catalog-promo-copy strong{font-size:19px}
+  #screen-catalog .catalog-promo-art{right:-19px;width:170px;height:148px}
+}
+@media(prefers-reduced-motion:reduce){#screen-catalog .catalog-promo-dismiss{transition:none}}

@@ -1056,9 +1056,7 @@ function refreshRatingBadgesInPlace() {
     if (!owner) return;
     const serviceId = owner.dataset.featuredService || owner.dataset.serviceId || owner.dataset.service;
     if (!serviceId) return;
-
-    // Keep the existing star SVG and its layout node intact. Only refresh
-    // the displayed score and vote state after ratings arrive from the API.
+    // Preserve the original star SVG and layout node; update only rating text/state.
     const rating = state.ratings.get(serviceId) || {};
     const personal = Number(rating.my_rating) || 0;
     const average = Number(rating.average) || 0;
@@ -1070,7 +1068,7 @@ function refreshRatingBadgesInPlace() {
     if (badge) {
       badge.classList.toggle("has-vote", Boolean(personal));
       badge.setAttribute("aria-label", hasRatings ? "Рейтинг " + shown + " из 5" : "Рейтинг пока не сформирован");
-      badge.disabled = badge.tagName === "BUTTON" && state.ratingPending.has(serviceId);
+      if (badge.tagName === "BUTTON") badge.disabled = state.ratingPending.has(serviceId);
     }
     current.setAttribute("aria-label", hasRatings ? "Рейтинг " + shown + " из 5" : "Рейтинг пока не сформирован");
     current.querySelectorAll(".service-rating-choice").forEach(choice => {

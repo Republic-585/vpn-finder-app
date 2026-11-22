@@ -818,3 +818,10 @@ body{font-size:var(--type-body);line-height:1.45}
 .bottom-nav-dock .bottom-nav::before{
   background:linear-gradient(155deg,rgba(255,255,255,.028),transparent 42%,rgba(255,255,255,.01))!important;
 }
+
+
+/* Navigation dock: reduce backdrop blur to 12px. */
+.bottom-nav-dock .bottom-nav{
+  backdrop-filter:blur(12px) saturate(150%)!important;
+  -webkit-backdrop-filter:blur(12px) saturate(150%)!important;
+}

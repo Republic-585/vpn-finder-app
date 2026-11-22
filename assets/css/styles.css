@@ -741,3 +741,10 @@ body{font-size:var(--type-body);line-height:1.45}
   box-shadow:none!important;
   filter:none!important;
 }
+
+
+/* Remove the last pale glint from the animated profile outline. */
+.bottom-nav-dock .profile-nav-button.is-current::after{
+  background:conic-gradient(from 0deg,#35CDBB 0%,#38C9A7 22%,#20BDAA 46%,#35CDBB 68%,#2BC5B6 84%,#35CDBB 100%)!important;
+  animation:profile-ring-flow 5.5s linear infinite!important;
+}

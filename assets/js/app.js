@@ -1477,28 +1477,6 @@ byId("provider-form")?.addEventListener("submit", event => {
 
 loadServices();
 
-function animateFeaturedRotation() {
-  const grid = byId("provider-list")?.querySelector(".popular-grid");
-  if (!grid) return;
-  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
-  // Wait until each new avatar is ready so its Telegram star fades in at exactly the same time.
-  const images = [...grid.querySelectorAll(".popular-service .avatar-image")];
-  const ready = images.map(img => img.complete
-    ? Promise.resolve()
-    : new Promise(resolve => {
-        img.addEventListener("load", resolve, { once: true });
-        img.addEventListener("error", resolve, { once: true });
-      })
-  );
-  grid.style.opacity = "0";
-  Promise.all(ready).then(() => {
-    if (!grid.isConnected) return;
-    grid.animate(
-      [{ opacity: 0 }, { opacity: 1 }],
-      { duration: 300, easing: "cubic-bezier(.22, 1, .36, 1)", fill: "both" }
-    ).onfinish = () => { grid.style.opacity = ""; };
-  });
-}
 function rotateFeaturedServices() {
   if (document.visibilityState !== "visible") return;
   const catalog = byId("screen-catalog");
@@ -1513,7 +1491,6 @@ function rotateFeaturedServices() {
   }
   state.featuredIds = next.map(service => service.id);
   renderCatalog();
-  animateFeaturedRotation();
 }
 window.setInterval(rotateFeaturedServices, 7000);
 })();

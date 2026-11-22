@@ -6,10 +6,10 @@
 <meta name="theme-color" content="#202124">
 <meta name="description" content="VPN Finder">
 <title>VPN Finder</title>
-<link rel="stylesheet" href="./assets/css/styles.css?v=20261122-nav-stable-white-v11">
+<link rel="stylesheet" href="./assets/css/styles.css?v=20261122-major-vpn-catalog-v1">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="./assets/avatars/manifest.js?v=20261122-avatar-local-v1"></script>
-<script defer src="./assets/js/app.js?v=20261122-avatar-local-v10"></script>
+<script defer src="./assets/js/app.js?v=20261122-major-vpn-catalog-v1"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -22,15 +22,6 @@
         <span>Добавить в каталог</span>
       </button>
     </div>
-    <button class="catalog-promo-banner" type="button" data-action="open-add-service" aria-label="Добавьте VPN сервис в каталог. Подробнее">
-      <span class="catalog-promo-copy">
-        <strong>Добавьте VPN сервис<br>в каталог</strong>
-        <span class="catalog-promo-more">Подробнее <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 10 4 4 8-8"></path></svg></span>
-      </span>
-      <span class="catalog-promo-art" aria-hidden="true">
-        <svg viewBox="0 0 132 112"><path class="promo-orbit" d="M13 77c12-31 37-50 65-49 18 1 32 10 42 25"/><path class="promo-shield" d="M65 13 99 27v25c0 24-15 39-34 47C46 91 31 76 31 52V27l34-14Z"/><path class="promo-lock" d="M54 49v-8a11 11 0 0 1 22 0v8m-27 0h32v25H49z"/><path class="promo-check" d="m59 61 5 5 10-11"/><circle class="promo-spark" cx="19" cy="31" r="4"/><circle class="promo-spark" cx="112" cy="89" r="3"/></svg>
-      </span>
-    </button>
     <label class="search-box">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 4 4"></path></svg>
       <input id="search" type="search" placeholder="Поиск" autocomplete="off">
@@ -41,6 +32,15 @@
       <button class="filter-chip active" type="button" data-filter="all">Все</button>
       <button class="filter-chip" type="button" data-filter="free">Бесплатно</button>
     </div>
+    <button class="catalog-promo-banner" type="button" data-action="open-add-service" aria-label="Добавьте VPN сервис в каталог. Подробнее">
+      <span class="catalog-promo-copy">
+        <strong>Добавьте VPN сервис<br>в каталог</strong>
+        <span class="catalog-promo-more">Подробнее <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 10 4 4 8-8"></path></svg></span>
+      </span>
+      <span class="catalog-promo-art" aria-hidden="true">
+        <svg viewBox="0 0 132 112"><path class="promo-orbit" d="M13 77c12-31 37-50 65-49 18 1 32 10 42 25"/><path class="promo-shield" d="M65 13 99 27v25c0 24-15 39-34 47C46 91 31 76 31 52V27l34-14Z"/><path class="promo-lock" d="M54 49v-8a11 11 0 0 1 22 0v8m-27 0h32v25H49z"/><path class="promo-check" d="m59 61 5 5 10-11"/><circle class="promo-spark" cx="19" cy="31" r="4"/><circle class="promo-spark" cx="112" cy="89" r="3"/></svg>
+      </span>
+    </button>
     <div class="provider-list" id="provider-list"><div class="loading-state"><span class="loader"></span></div></div>
   </section>
 

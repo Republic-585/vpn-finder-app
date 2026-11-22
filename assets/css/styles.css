@@ -82,7 +82,7 @@
 .avatar-image{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;border:0;border-radius:inherit;opacity:0;transition:opacity .14s ease}
 .avatar-image.is-loaded{opacity:1}
 .avatar-frame .avatar-fallback{position:absolute;inset:0;display:grid;place-items:center;border:0;border-radius:inherit;background:var(--raised);color:var(--bright);font-size:17px;font-weight:700}
-.popular-service span:last-child{width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;color:#F5F5F5;font-size:13px;line-height:1.2;font-weight:600;letter-spacing:-.02em}
+.popular-service > .popular-service-open > span:last-child{width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;color:#F5F5F5;font-size:13px;line-height:1.2;font-weight:600;letter-spacing:-.02em}
 @media(prefers-reduced-motion:reduce){.popular-service{animation:none!important}}
 .avatar-fallback{display:grid;place-items:center;color:var(--bright);font-size:17px;font-weight:700}
 .catalog-compact-list{display:grid;gap:0}
@@ -119,7 +119,7 @@
 .service-detail-chips span{padding:6px 9px;border-radius:9px;background:rgba(255,255,255,.055);color:var(--secondary);font-size:10px}
 .service-detail-connect{width:100%;margin-top:14px;min-height:42px;border-radius:12px}
 @media(max-width:360px){.service-detail-panel{padding-left:14px}}
-@media(max-width:360px){.popular-avatar{width:56px;height:56px}.popular-grid{gap:4px}.popular-service span:last-child{font-size:12px}}
+@media(max-width:360px){.popular-avatar{width:56px;height:56px}.popular-grid{gap:4px}.popular-service > .popular-service-open > span:last-child{font-size:12px}}
 
 
 /* Telegram personal profile */
@@ -260,7 +260,7 @@ body{font-size:var(--type-body);line-height:1.45}
 .page-heading h1{font-size:var(--type-display);line-height:1.12;font-weight:var(--weight-bold);letter-spacing:-.04em}
 #screen-catalog .catalog-section-heading h2,.analytics-dashboard h2{font-size:var(--type-section);line-height:1.25;font-weight:var(--weight-semibold);letter-spacing:-.025em}
 .service-title h3,.service-mini-name{font-size:var(--type-card-title);line-height:1.25;font-weight:var(--weight-semibold);letter-spacing:-.02em}
-.popular-service span:last-child{font-size:var(--type-secondary);line-height:1.3;font-weight:var(--weight-semibold)}
+.popular-service > .popular-service-open > span:last-child{font-size:var(--type-secondary);line-height:1.3;font-weight:var(--weight-semibold)}
 .service-price,.profile-menu-leading>span,.profile-menu-row{font-size:var(--type-control);font-weight:var(--weight-medium)}
 .search-box input,.profile-form input,.profile-form textarea{font-size:var(--type-body);line-height:1.4}
 .connect-button,.primary-button,.remove-button,.home-screen-action,#screen-catalog #toggle-catalog{font-size:var(--type-control);font-weight:var(--weight-semibold)}
@@ -402,7 +402,7 @@ body{font-size:var(--type-body);line-height:1.45}
 /* One fixed-size, shared gold Telegram Star component across every screen */
 .popular-service{gap:4px}
 .popular-service-open{width:100%;min-width:0;padding:3px 1px 0;display:flex;flex-direction:column;align-items:center;gap:10px;border:0;background:transparent;color:var(--text);cursor:default;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
-.popular-service-open span:last-child{width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;color:#F5F5F5;font-size:13px;line-height:1.2;font-weight:600;letter-spacing:-.02em}
+.popular-service-open > span:last-child{width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;color:#F5F5F5;font-size:13px;line-height:1.2;font-weight:600;letter-spacing:-.02em}
 .service-rating{position:relative;width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;max-width:36px!important;max-height:36px!important;flex:0 0 36px!important;display:flex;align-items:center;justify-content:center;margin:3px 0 0;overflow:visible;box-sizing:border-box}
 .service-rating-badge{position:relative!important;display:grid!important;place-items:center!important;width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;max-width:36px!important;max-height:36px!important;flex:0 0 36px!important;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;font-size:0!important;line-height:0!important;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .16s ease;filter:drop-shadow(0 2px 1px rgba(112,66,0,.34)) drop-shadow(0 4px 5px rgba(0,0,0,.2))}
 .service-rating-badge svg{display:block!important;width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;max-width:36px!important;max-height:36px!important;overflow:visible}
@@ -1900,10 +1900,10 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 }
 .popular-service-open > .service-avatar-rating > .service-rating {
   position: absolute !important;
-  right: -10px !important;
-  bottom: -10px !important;
-  left: auto !important;
-  top: auto !important;
+  left: 38px !important;
+  top: 38px !important;
+  right: auto !important;
+  bottom: auto !important;
   display: block !important;
   width: 36px !important;
   height: 36px !important;

@@ -1189,3 +1189,18 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 .catalog-promo-emblem{width:min(72vw,240px)}
 }
 @media(prefers-reduced-motion:reduce){#screen-catalog .catalog-promo-banner:active,.catalog-promo-submit:active{transform:none}}
+
+
+/* Catalog promo dismiss control: compact SVG close button in the banner corner. */
+#screen-catalog .catalog-promo-wrap{position:relative;width:100%;margin:0 0 23px}
+#screen-catalog .catalog-promo-wrap .catalog-promo-banner{margin:0}
+#screen-catalog .catalog-promo-dismiss{
+  position:absolute;z-index:5;top:10px;right:10px;width:28px;height:28px;
+  display:grid;place-items:center;padding:0;border:1px solid rgba(255,255,255,.28);
+  border-radius:50%;background:rgba(35,18,87,.22);color:rgba(255,255,255,.94);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:background .16s ease,transform .16s ease,border-color .16s ease;
+}
+#screen-catalog .catalog-promo-dismiss svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#screen-catalog .catalog-promo-dismiss:active{transform:scale(.9);background:rgba(35,18,87,.4);border-color:rgba(255,255,255,.5)}
+@media(prefers-reduced-motion:reduce){#screen-catalog .catalog-promo-dismiss{transition:none}}

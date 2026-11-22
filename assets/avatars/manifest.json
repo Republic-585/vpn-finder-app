@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T16:44:00.163Z",
+  "generatedAt": "2026-11-22T16:47:18.739Z",
   "count": 26,
   "avatars": [
     {
@@ -195,8 +195,8 @@
       "id": "VPN-022",
       "name": "Obraz VPN",
       "file": "VPN-022.jpg",
-      "bytes": 39577,
-      "sha256": "810e49da095196fded3a9cd68433d831f59a978173e14382800785a84db1e7fe",
+      "bytes": 38510,
+      "sha256": "1af9168f940b213072eaf923c028067c57120fbcd5d9facaafef41f545b36d60",
       "sourceHost": "cdn4.telesco.pe",
       "finalHost": "cdn4.telesco.pe"
     },

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T00:00:00.000Z",
+  "generatedAt": "2026-11-22T21:44:05.066Z",
   "count": 35,
   "avatars": [
     {
@@ -240,73 +240,82 @@
       "id": "VPN-031",
       "name": "Capybara VPN",
       "file": "VPN-031.jpg",
-      "bytes": 13122,
-      "sourceHost": "user-uploaded",
-      "finalHost": "github-pages"
+      "bytes": 8406,
+      "sha256": "6f221989f0e536454999d45a8fe268dfdd79dd12cc7872cb12e01e830eefcad5",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
     },
     {
       "id": "VPN-032",
       "name": "Ковёр VPN",
       "file": "VPN-032.jpg",
-      "bytes": 11295,
-      "sourceHost": "user-uploaded",
-      "finalHost": "github-pages"
+      "bytes": 7100,
+      "sha256": "0e7dceddce4b7641358143a21e6235d32bb4dce79a1e2b35f000e595b2c04a6d",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
     },
     {
       "id": "VPN-033",
       "name": "MSEVPN",
       "file": "VPN-033.jpg",
-      "bytes": 22973,
-      "sourceHost": "user-uploaded",
-      "finalHost": "github-pages"
+      "bytes": 15565,
+      "sha256": "cb7625e7210352046ecd5e7369d5ca324bbe63db9c42a14b372743e1d4963997",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
     },
     {
       "id": "VPN-034",
       "name": "Lagom VPN",
       "file": "VPN-034.jpg",
-      "bytes": 15619,
-      "sourceHost": "user-uploaded",
-      "finalHost": "github-pages"
+      "bytes": 10152,
+      "sha256": "7bf322f75addc4b59481ef8c8301ed779cb77b44ea7ada6743c6655fd6571863",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
     },
     {
       "id": "VPN-035",
       "name": "ReepNet.VPN",
       "file": "VPN-035.jpg",
-      "bytes": 35151,
-      "sourceHost": "user-uploaded",
-      "finalHost": "github-pages"
+      "bytes": 24540,
+      "sha256": "dc4134990ce5feefba97728f80bb45b86deb07762822a2e4d18caa5b4bb2fdc4",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
     },
     {
       "id": "VPN-037",
-      "name": "Cult VPN",
+      "name": "C-VPN / Cult VPN",
       "file": "VPN-037.jpg",
-      "bytes": 57616,
-      "sourceHost": "user-uploaded",
-      "finalHost": "github-pages"
+      "bytes": 40537,
+      "sha256": "7294e74a03a34ef7938db3e24cd84a7fbd2b112966b9a0ec447479384128a805",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
     },
     {
       "id": "VPN-038",
       "name": "Quattro VPN",
       "file": "VPN-038.jpg",
-      "bytes": 15679,
-      "sourceHost": "user-uploaded",
-      "finalHost": "github-pages"
+      "bytes": 10944,
+      "sha256": "c6b09ecc0964ce4fd832ead299cb5f6483b689583081a16348b77a2c66764197",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
     },
     {
       "id": "VPN-039",
       "name": "Ultima VPN",
       "file": "VPN-039.jpg",
-      "bytes": 19030,
-      "sourceHost": "user-uploaded",
-      "finalHost": "github-pages"
+      "bytes": 12599,
+      "sha256": "91f0286c093a88c40f2d981d6eec27ab89b06ffbf19093ab5c0d06e8140d3e00",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
     },
     {
       "id": "VPN-040",
-      "name": "ADD VPN",
+      "name": "Official VPN",
       "file": "VPN-040.jpg",
-      "bytes": 18095,
-      "sourceHost": "user-uploaded",
-      "finalHost": "github-pages"
+      "bytes": 11811,
+      "sha256": "f0efd70627feb482c495881bcb329e2edb928b2b70157d317ccd11d0a0d6ea3a",
+      "sourceHost": "cdn4.telesco.pe",
+      "finalHost": "cdn4.telesco.pe"
     }
   ]
 }

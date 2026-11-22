@@ -1106,16 +1106,17 @@ document.addEventListener("keydown", event => {
 document.addEventListener("click", event => {
   const button = event.target.closest("[data-action], [data-go]");
   if (!button) return;
-  if (button.dataset.go) {
-    showScreen(button.dataset.go);
-    return;
-  }
   if (button.dataset.action === "dismiss-catalog-promo") {
     event.preventDefault();
     event.stopPropagation();
+    event.stopImmediatePropagation();
     const banner = button.closest(".catalog-promo-wrap");
     if (banner) banner.remove();
     haptic();
+    return;
+  }
+  if (button.dataset.go) {
+    showScreen(button.dataset.go);
     return;
   }
   if (button.dataset.action === "open-add-service") {

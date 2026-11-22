@@ -594,3 +594,59 @@ body{font-size:var(--type-body);line-height:1.45}
 #screen-catalog .catalog-add-button svg{width:14px;height:14px;flex:0 0 14px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 #screen-catalog .catalog-topline-title{color:var(--secondary);font-size:14px;line-height:1.2;font-weight:var(--weight-semibold);letter-spacing:-.02em;white-space:nowrap}
 #screen-catalog .catalog-add-button:active{opacity:.72}
+
+
+/* Profile menu separators align with the label start and disclosure arrow. */
+.profile-menu-row{
+  position:relative;
+  border-bottom:0;
+}
+.profile-menu-row:not(:last-child)::after{
+  content:"";
+  position:absolute;
+  left:61px;
+  right:27px;
+  bottom:0;
+  height:1px;
+  background:var(--line);
+  pointer-events:none;
+}
+.profile-menu-row .profile-menu-trailing .profile-language-value{
+  color:var(--muted);
+  font-size:var(--type-control);
+  line-height:1.3;
+  font-weight:var(--weight-medium);
+}
+
+/* Center the add-to-home prompt and inset its separators like the profile menu. */
+.home-screen-copy{text-align:center}
+.home-screen-action{
+  position:relative;
+  justify-content:center;
+  text-align:center;
+  border-top:0;
+}
+.home-screen-action::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:14px;
+  right:14px;
+  height:1px;
+  background:rgba(255,255,255,.09);
+  pointer-events:none;
+}
+.home-screen-status{
+  position:relative;
+  border-top:0;
+  text-align:center;
+}
+.home-screen-status::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:14px;
+  right:14px;
+  height:1px;
+  background:rgba(255,255,255,.09);
+}

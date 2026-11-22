@@ -9,7 +9,7 @@ on:
       - ".github/workflows/sync-service-avatars.yml"
   workflow_dispatch:
   schedule:
-    - cron: "23 4 * * 1"
+    - cron: "17 * * * *"
 
 permissions:
   contents: write

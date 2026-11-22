@@ -1088,3 +1088,60 @@ body{font-size:var(--type-body);line-height:1.45}
   stroke-dashoffset:0!important;
   transform:none!important;
 }
+
+/* Stable Telegram-style navigation icon drawing: animate strokes, never move glyphs. */
+.bottom-nav-dock .nav-item svg,
+.bottom-nav-dock .nav-item.is-tapping svg{
+  transform:none!important;
+  transform-origin:50% 50%!important;
+  transition:none!important;
+}
+.bottom-nav-dock .nav-item svg path{
+  transform:none!important;
+  stroke-dasharray:none!important;
+  stroke-dashoffset:0!important;
+}
+.bottom-nav-dock .nav-item.is-tapping svg{
+  animation:telegram-tab-settle .56s ease both!important;
+}
+.bottom-nav-dock .nav-item.is-tapping svg path{
+  stroke-dasharray:100!important;
+  stroke-dashoffset:100!important;
+  animation:telegram-tab-draw .44s .02s ease-out forwards!important;
+}
+.bottom-nav-dock .nav-item.is-tapping[data-go="catalog"] svg path:first-child{
+  animation:telegram-tab-draw .48s .02s ease-out forwards!important;
+}
+.bottom-nav-dock .nav-item.is-tapping[data-go="catalog"] svg path:last-child{
+  animation:telegram-tab-draw .28s .22s ease-out forwards!important;
+}
+.bottom-nav-dock .nav-item.is-tapping[data-go="compare"] svg path:first-child{
+  animation:telegram-tab-draw .42s .02s ease-out forwards!important;
+}
+.bottom-nav-dock .nav-item.is-tapping[data-go="compare"] svg path:last-child{
+  animation:telegram-tab-draw .46s .08s ease-out forwards,telegram-tab-sparkle .46s .08s ease-out both!important;
+}
+.bottom-nav-dock .nav-item.is-tapping[data-go="favorites"] svg path:first-child{
+  animation:telegram-tab-draw .44s .02s ease-out forwards!important;
+}
+@keyframes telegram-tab-settle{
+  0%{opacity:.82;transform:none}
+  48%{opacity:1;transform:none}
+  100%{opacity:1;transform:none}
+}
+@keyframes telegram-tab-draw{
+  to{stroke-dashoffset:0}
+}
+@keyframes telegram-tab-sparkle{
+  0%{opacity:.35}
+  58%{opacity:1}
+  100%{opacity:1}
+}
+@media(prefers-reduced-motion:reduce){
+  .bottom-nav-dock .nav-item.is-tapping svg,
+  .bottom-nav-dock .nav-item.is-tapping svg path{
+    animation:none!important;
+    stroke-dasharray:none!important;
+    stroke-dashoffset:0!important;
+  }
+}

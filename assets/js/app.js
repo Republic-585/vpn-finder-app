@@ -510,6 +510,31 @@ if (navBar) {
     item.classList.remove("is-tapping");
     void item.offsetWidth;
     item.classList.add("is-tapping");
+
+    const icon = item.querySelector("svg");
+    if (!icon) return;
+    if (!icon.dataset.originalMarkup) icon.dataset.originalMarkup = icon.innerHTML;
+    icon.classList.remove("is-morphing", "is-morph-return");
+    const alternates = {
+      catalog: '<circle cx="12" cy="12" r="8.2"></circle><circle cx="12" cy="12" r="3.2"></circle><path d="M12 1.8v3M12 19.2v3M1.8 12h3M19.2 12h3"></path>',
+      compare: '<path d="M4 6h16M4 12h16M4 18h16"></path><path d="m7 3-3 3 3 3M17 9l3 3-3 3M7 15l-3 3 3 3"></path>',
+      favorites: '<path fill="currentColor" stroke="none" d="M12 21s-9-5.8-9-12a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.2-9 12-9 12Z"></path>'
+    };
+    const alternate = alternates[item.dataset.go];
+    if (!alternate) return;
+    icon.innerHTML = alternate;
+    icon.classList.add("is-morphing");
+  });
+  navBar.addEventListener("animationend", event => {
+    const icon = event.target;
+    if (!(icon instanceof SVGElement)) return;
+    if (event.animationName === "nav-icon-morph-in" && icon.classList.contains("is-morphing")) {
+      icon.innerHTML = icon.dataset.originalMarkup || icon.innerHTML;
+      icon.classList.remove("is-morphing");
+      icon.classList.add("is-morph-return");
+    } else if (event.animationName === "nav-icon-morph-out" && icon.classList.contains("is-morph-return")) {
+      icon.classList.remove("is-morph-return");
+    }
   });
   navBar.addEventListener("animationend", event => {
     if (event.target.classList.contains("nav-item") && event.animationName === "nav-tap-feedback") {

@@ -809,7 +809,6 @@ const SEARCH_SYNONYMS = {
   "безлимит": ["безлимитный", "unlimited"], "безлимитный": ["безлимит", "unlimited"],
   "пробник": ["пробный", "тест", "trial"], "триал": ["пробный", "тест", "trial"],
   "семья": ["семейный", "несколько", "устройств"], "семейный": ["семья", "несколько", "устройств"],
-  "дешевый": ["недорогой"], "дешево": ["недорого"], "недорогой": ["дешевый"]
 };
 function searchServiceText(service) {
   const platforms = Array.isArray(service.platforms) ? service.platforms : [];
@@ -824,7 +823,7 @@ function searchServiceText(service) {
   return normalizeSearchText([
     service.name, service.description, ...features, ...platforms,
     service.traffic_limit, service.devices_limit, service.countries_count,
-    service.trial_days, plans, ...extra
+    service.min_price, service.min_price_rub, service.trial_days, plans, ...extra
   ].join(" "));
 }
 function queryMatchesService(query, service) {

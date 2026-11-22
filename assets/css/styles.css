@@ -1901,7 +1901,7 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 .popular-service-open > .service-avatar-rating > .service-rating {
   position: absolute !important;
   left: 35px !important;
-  top: 35px !important;
+  top: 39px !important;
   right: auto !important;
   bottom: auto !important;
   display: block !important;
@@ -1921,6 +1921,10 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 }
 .popular-service-open > .service-avatar-rating > .service-rating > .service-rating-badge,
 .popular-service-open > .service-avatar-rating > .service-rating > .service-rating-badge svg {
+  transition: none !important;
+  animation: none !important;
+  will-change: auto !important;
+  backface-visibility: hidden !important;
   width: 36px !important;
   height: 36px !important;
   min-width: 36px !important;

@@ -1050,6 +1050,20 @@ function ratingMarkup(serviceId, interactive = false) {
     ${interactive ? `<div class="service-rating-choices" hidden>${[1,2,3,4,5].map(value => `<button class="service-rating-choice ${personal === value ? "is-selected" : ""}" type="button" data-action="rate" data-id="${esc(serviceId)}" data-rating="${value}" aria-label="Поставить оценку ${value}" ${disabled ? "disabled" : ""}>${value}</button>`).join("")}</div>` : ""}
   </div>`;
 }
+function refreshRatingBadgesInPlace() {
+  document.querySelectorAll(".service-rating").forEach(current => {
+    const owner = current.closest("[data-featured-service], .service-list-card[data-service-id], .vpn-card[data-service]");
+    if (!owner) return;
+    const serviceId = owner.dataset.featuredService || owner.dataset.serviceId || owner.dataset.service;
+    if (!serviceId) return;
+    const interactive = current.querySelector(".service-rating-badge")?.tagName === "BUTTON";
+    const holder = document.createElement("div");
+    holder.innerHTML = ratingMarkup(serviceId, interactive);
+    const next = holder.firstElementChild;
+    if (next) current.replaceWith(next);
+  });
+}
+
 async function loadServiceRatings() {
   if (!tg?.initData || !state.services.length) return;
   try {
@@ -1062,8 +1076,9 @@ async function loadServiceRatings() {
     const result = await response.json().catch(() => null);
     if (!response.ok || !result?.ok) return;
     state.ratings = new Map((result.ratings || []).map(item => [item.service_id, item]));
-    renderCatalog();
-    if (byId("screen-favorites")?.classList.contains("active")) renderFavorites();
+    // Update only the rating badges. Re-rendering the catalog here recreated
+    // every avatar and star on each app launch, causing visible position jumps.
+    refreshRatingBadgesInPlace();
   } catch (_) { /* Ratings must never interrupt catalog loading. */ }
 }
 async function saveServiceRating(serviceId, value) {

@@ -797,7 +797,7 @@ function normalizeSearchText(value) {
     .normalize("NFKC")
     .toLocaleLowerCase("ru-RU")
     .replace(/ё/g, "е")
-    .replace(/[^\\p{L}\\p{N}]+/gu, " ")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
     .trim();
 }
 const SEARCH_SYNONYMS = {
@@ -830,14 +830,14 @@ function searchServiceText(service) {
 function queryMatchesService(query, service) {
   if (!query) return true;
   let remaining = query;
-  const priceLimitMatch = remaining.match(/(?:до|не\\s+дороже|максимум|меньше)\\s*(\\d{1,7})\\s*(?:₽|руб(?:лей|ля|ль)?|р)?/i);
+  const priceLimitMatch = remaining.match(/(?:до|не\s+дороже|максимум|меньше)\s*(\d{1,7})\s*(?:₽|руб(?:лей|ля|ль)?|р)?/i);
   if (priceLimitMatch) {
     const price = Number(service.min_price ?? service.min_price_rub);
     if (!Number.isFinite(price) || price > Number(priceLimitMatch[1])) return false;
     remaining = remaining.replace(priceLimitMatch[0], " ");
   }
   const terms = normalizeSearchText(remaining)
-    .split(/\\s+/)
+    .split(/\s+/)
     .filter(term => !["руб", "рубль", "рубля", "рублей", "р", "цена", "vpn", "для", "на", "и", "с", "по", "мне", "нужен", "нужна"].includes(term));
   if (!terms.length) return true;
   const haystack = searchServiceText(service);

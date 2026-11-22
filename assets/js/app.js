@@ -1056,11 +1056,27 @@ function refreshRatingBadgesInPlace() {
     if (!owner) return;
     const serviceId = owner.dataset.featuredService || owner.dataset.serviceId || owner.dataset.service;
     if (!serviceId) return;
-    const interactive = current.querySelector(".service-rating-badge")?.tagName === "BUTTON";
-    const holder = document.createElement("div");
-    holder.innerHTML = ratingMarkup(serviceId, interactive);
-    const next = holder.firstElementChild;
-    if (next) current.replaceWith(next);
+
+    // Keep the existing star SVG and its layout node intact. Only refresh
+    // the displayed score and vote state after ratings arrive from the API.
+    const rating = state.ratings.get(serviceId) || {};
+    const personal = Number(rating.my_rating) || 0;
+    const average = Number(rating.average) || 0;
+    const hasRatings = Number(rating.count) > 0;
+    const shown = hasRatings ? String(Math.max(1, Math.min(5, Math.round(average)))) : "";
+    const badge = current.querySelector(".service-rating-badge");
+    const number = badge?.querySelector("span");
+    if (number) number.textContent = shown;
+    if (badge) {
+      badge.classList.toggle("has-vote", Boolean(personal));
+      badge.setAttribute("aria-label", hasRatings ? "Рейтинг " + shown + " из 5" : "Рейтинг пока не сформирован");
+      badge.disabled = badge.tagName === "BUTTON" && state.ratingPending.has(serviceId);
+    }
+    current.setAttribute("aria-label", hasRatings ? "Рейтинг " + shown + " из 5" : "Рейтинг пока не сформирован");
+    current.querySelectorAll(".service-rating-choice").forEach(choice => {
+      choice.classList.toggle("is-selected", Number(choice.dataset.rating) === personal);
+      choice.disabled = state.ratingPending.has(serviceId);
+    });
   });
 }
 

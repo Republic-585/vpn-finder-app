@@ -1806,3 +1806,16 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 }
 
 .search-suggestions{display:flex;flex-wrap:wrap;gap:7px;margin:-6px 0 13px}.search-suggestions[hidden]{display:none}.search-suggestion{min-height:30px;padding:0 11px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--secondary);font:inherit;font-size:12px;cursor:pointer}.search-suggestion:active{background:var(--raised)}
+
+
+/* Expanded catalog: flat service rows with subtle separators, no card backplates. */
+#screen-catalog .catalog-rest-list > .service-list-card,
+#screen-catalog .catalog-rest-list > .service-list-card.expanded {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+#screen-catalog .catalog-rest-list > .service-list-card + .service-list-card {
+  border-top: 1px solid var(--line) !important;
+}

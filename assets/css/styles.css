@@ -970,3 +970,68 @@ body{font-size:var(--type-body);line-height:1.45}
   color:var(--blue)!important;
   stroke:currentColor!important;
 }
+
+
+/* Telegram-inspired navigation: white selected state and one-shot vector glyph motion. */
+.bottom-nav-dock .nav-item.active,
+.bottom-nav-dock .nav-item.active>span,
+.bottom-nav-dock .nav-item.active svg{
+  color:#fff!important;
+}
+.bottom-nav-dock .nav-item.active svg{
+  stroke:#fff!important;
+  animation:none!important;
+}
+.bottom-nav-dock .nav-item.active svg path{
+  stroke:currentColor;
+}
+.bottom-nav-dock .nav-item.is-tapping svg{
+  animation:telegram-tab-settle .56s cubic-bezier(.2,.75,.25,1) both!important;
+  transform-origin:50% 50%;
+}
+.bottom-nav-dock .nav-item.is-tapping[data-go="catalog"] svg path:first-child{
+  stroke-dasharray:80;
+  stroke-dashoffset:80;
+  animation:telegram-tab-draw .48s .02s ease-out forwards;
+}
+.bottom-nav-dock .nav-item.is-tapping[data-go="catalog"] svg path:last-child{
+  stroke-dasharray:24;
+  stroke-dashoffset:24;
+  animation:telegram-tab-draw .28s .22s ease-out forwards;
+}
+.bottom-nav-dock .nav-item.is-tapping[data-go="compare"] svg path:first-child{
+  stroke-dasharray:32;
+  stroke-dashoffset:32;
+  animation:telegram-tab-draw .42s ease-out forwards;
+}
+.bottom-nav-dock .nav-item.is-tapping[data-go="compare"] svg path:last-child{
+  transform-box:fill-box;
+  transform-origin:center;
+  animation:telegram-tab-sparkle .48s .08s cubic-bezier(.2,.8,.2,1) both;
+}
+.bottom-nav-dock .nav-item.is-tapping[data-go="favorites"] svg path:first-child{
+  stroke-dasharray:64;
+  stroke-dashoffset:64;
+  animation:telegram-tab-draw .42s ease-out forwards,telegram-tab-heart-fill .2s .34s ease forwards;
+}
+@keyframes telegram-tab-settle{
+  0%{transform:scale(.94)}
+  48%{transform:scale(1.08)}
+  76%{transform:scale(.985)}
+  100%{transform:scale(1)}
+}
+@keyframes telegram-tab-draw{
+  to{stroke-dashoffset:0}
+}
+@keyframes telegram-tab-sparkle{
+  0%{opacity:.35;transform:scale(.55) rotate(-18deg)}
+  58%{opacity:1;transform:scale(1.12) rotate(8deg)}
+  100%{opacity:1;transform:scale(1) rotate(0)}
+}
+@keyframes telegram-tab-heart-fill{
+  to{fill:currentColor}
+}
+@media(prefers-reduced-motion:reduce){
+  .bottom-nav-dock .nav-item.is-tapping svg,
+  .bottom-nav-dock .nav-item.is-tapping svg path{animation:none!important;stroke-dasharray:none!important;stroke-dashoffset:0!important}
+}

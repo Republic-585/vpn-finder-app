@@ -1001,3 +1001,5 @@ body{font-size:var(--type-body);line-height:1.45}
 .catalog-promo-submit:active{transform:scale(.985);filter:brightness(1.07)}
 @media(max-width:380px){#screen-catalog .catalog-topline-title{font-size:21px}#screen-catalog .catalog-add-button{padding:0 10px;font-size:12px}#screen-catalog .catalog-promo-banner{min-height:124px;padding:17px 15px} .catalog-promo-art{right:-7px;width:119px;height:104px}.catalog-promo-copy strong{max-width:215px;font-size:20px}}
 @media(prefers-reduced-motion:reduce){.catalog-promo-submit:active,#screen-catalog .catalog-promo-banner:active{transform:none}}
+
+body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}

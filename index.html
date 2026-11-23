@@ -14,10 +14,11 @@
   }
 }
 </script>
-<link rel="stylesheet" href="./assets/css/styles.css?v=20261123-3d-gift-v4">
+<link rel="stylesheet" href="./assets/css/styles.css?v=20261123-native-gift-v1">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="./assets/avatars/manifest.js?v=20261123-avatar-local-v2"></script>
 <script defer src="./assets/js/app.js?v=20261123-owner-promo-screen-v1"></script>
+<script defer src="./assets/js/owner-promo-gift.js?v=20261123-native-gift-v1"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -147,6 +148,22 @@
 
   <section class="screen owner-promo-screen" id="screen-owner-promo" data-screen="owner-promo" aria-label="Подарок VPN Finder">
     <div class="gift-stage" id="owner-gift-stage">
+      <div class="gift-scene gift-native-scene" id="gift-native-scene" aria-label="Анимированная подарочная коробка">
+        <div class="gift-sparkles" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="gift-art" aria-hidden="true">
+          <div class="gift-inner"></div>
+          <img class="gift-art-body" src="./assets/images/Glossy%20Blue%20Gift%20with%20Golden%20Bow.png" alt="" draggable="false">
+          <div class="gift-reward" aria-hidden="true">
+            <svg viewBox="0 0 48 48" role="presentation"><path d="M24 3 40 9v12c0 11-6.8 18.7-16 24C14.8 39.7 8 32 8 21V9L24 3Z" fill="url(#vpnGold)" stroke="#fff1bd" stroke-width="1.5"/><path d="m16 24 5 5 11-12" fill="none" stroke="#174caa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="vpnGold" x1="8" y1="3" x2="40" y2="45"><stop stop-color="#fff1a8"/><stop offset=".48" stop-color="#ffc94d"/><stop offset="1" stop-color="#e99016"/></linearGradient></defs></svg>
+            <span>VPN</span>
+          </div>
+          <img class="gift-art-lid" src="./assets/images/Glossy%20Blue%20Gift%20with%20Golden%20Bow.png" alt="" draggable="false">
+        </div>
+        <div class="gift-ground-glow" aria-hidden="true"></div>
+      </div>
+
       <div class="gift-copy">
         <span class="gift-eyebrow">VPN FINDER · ДЛЯ ВЛАДЕЛЬЦЕВ</span>
         <h1>Откройте новые возможности</h1>

@@ -2800,3 +2800,11 @@ body.support-native-cta .bottom-nav-dock .profile-nav-button{display:none!import
   #screen-support .support-orbit-front::after,
   #screen-owner-promo .owner-promo-orbit-front::after{animation:none!important;opacity:.42}
 }
+
+/* The orbit glint gradually dims as it travels away. */
+@keyframes hero-orbit-glint{
+  0%{offset-distance:0%;opacity:1}
+  35%{opacity:.72}
+  70%{opacity:.34}
+  100%{offset-distance:100%;opacity:.12}
+}

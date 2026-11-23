@@ -2113,3 +2113,32 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 @keyframes gift-aura-breathe{0%,100%{opacity:.82;scale:1}50%{opacity:1;scale:1.07}}
 @keyframes gift-particle-burst{0%{opacity:0;transform:translate(-50%,-50%) scale(.15)}18%{opacity:1}75%{opacity:.9}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.45)}}
 @media(prefers-reduced-motion:reduce){.gift-stage.is-opening .gift-aura{animation:none;opacity:1}.gift-stage.is-opening .gift-particle{display:none}.gift-stage.is-opening .gift-token{animation:none;opacity:0}}
+
+
+/* Gift box geometry pass: readable 3D body and hinged lid. */
+.gift-box{width:210px;height:154px;transform-style:preserve-3d;perspective:900px}
+.gift-box-inside{left:9px;right:9px;top:30px;height:28px;z-index:1;border-radius:4px 4px 9px 9px;background:linear-gradient(180deg,#061735 0%,#0a2a59 58%,#174b8d 100%);box-shadow:inset 0 8px 12px rgba(0,0,0,.55),0 1px 0 rgba(255,255,255,.16)}
+.gift-box-base{z-index:2;left:0;right:0;bottom:0;height:116px;border-radius:7px 7px 15px 15px;transform:translateZ(16px);overflow:visible;background:linear-gradient(100deg,#103f91 0%,#1b64c7 16%,#398fff 38%,#2475df 62%,#104baf 84%,#092f76 100%);box-shadow:inset 0 2px 0 rgba(255,255,255,.42),inset 0 -12px 18px rgba(0,20,70,.42),0 13px 20px rgba(0,0,0,.22)}
+.gift-box-base:before{inset:0;border-radius:inherit;background:linear-gradient(105deg,rgba(255,255,255,.16),transparent 25% 65%,rgba(0,0,0,.16)),linear-gradient(180deg,rgba(255,255,255,.15),transparent 24% 78%,rgba(0,0,0,.18))}
+.gift-box-base:after{left:0;right:0;bottom:0;height:8px;border-radius:0 0 15px 15px;background:linear-gradient(90deg,#08295f,rgba(102,176,255,.42) 48%,#08295f)}
+.gift-box-side{position:absolute;z-index:1;left:209px;top:38px;width:30px;height:116px;transform-origin:left center;transform:rotateY(90deg);border-radius:0 5px 12px 0;background:linear-gradient(90deg,#0b347b 0%,#1552a8 52%,#071f50 100%);box-shadow:inset -5px 0 9px rgba(0,0,0,.25)}
+.gift-box-top{position:absolute;z-index:1;left:0;top:23px;width:210px;height:30px;transform-origin:center bottom;transform:rotateX(90deg) translateZ(-1px);border-radius:6px 6px 2px 2px;background:linear-gradient(90deg,#1a5bb4,#55a0ff 42%,#1d63c3 100%);box-shadow:inset 0 2px 4px rgba(255,255,255,.38),inset 0 -5px 8px rgba(0,25,80,.3)}
+.gift-top-ribbon{position:absolute;left:calc(50% - 14.5px);top:0;width:29px;height:100%;background:linear-gradient(90deg,#9e590b,#e6a92c 18%,#fff0a0 39%,#ffd34f 57%,#e7a21c 82%,#8c4c08)}
+.gift-front-ribbon{z-index:3;width:29px;left:calc(50% - 14.5px);background:linear-gradient(90deg,#92500a 0%,#d89520 17%,#fff1a5 39%,#ffd34f 57%,#d88c16 82%,#804306 100%);box-shadow:inset 1px 0 rgba(255,255,255,.52),inset -1px 0 rgba(92,43,0,.48),0 2px 7px rgba(0,0,0,.16)}
+.gift-lid{z-index:6;left:-10px;top:12px;width:230px;height:45px;border-radius:8px 8px 5px 5px;transform-origin:50% 0%;transform-style:preserve-3d;backface-visibility:visible;background:linear-gradient(100deg,#0b3d91 0%,#1c65c8 18%,#56a2ff 43%,#2878e5 70%,#0b3987 100%);box-shadow:inset 0 3px 0 rgba(255,255,255,.58),inset 0 -5px 9px rgba(0,25,80,.4),0 12px 18px rgba(0,0,0,.3)}
+.gift-lid:after{left:0;right:0;bottom:-8px;height:9px;border-radius:0 0 5px 5px;background:linear-gradient(90deg,#092f72,#2878df 45%,#092f72);transform:translateZ(-5px)}
+.gift-lid-ribbon{width:29px;left:calc(50% - 14.5px);background:linear-gradient(90deg,#92500a,#d89520 17%,#fff1a5 39%,#ffd34f 57%,#d88c16 82%,#804306)}
+.gift-bow{top:-34px;width:57px;height:42px;border-width:9px;border-radius:78% 16% 72% 20%;background:linear-gradient(145deg,#fff8c7 0%,#ffe17a 24%,#e9a522 62%,#a95b09 100%);filter:drop-shadow(0 4px 3px rgba(0,0,0,.24))}
+.gift-bow-left{left:58px;transform:rotate(25deg) skewY(8deg) translateZ(4px)}
+.gift-bow-right{right:58px;transform:scaleX(-1) rotate(25deg) skewY(8deg) translateZ(4px)}
+.gift-bow-knot{z-index:2;top:-9px;width:23px;height:21px;border-radius:7px;background:linear-gradient(135deg,#fff8ca 0%,#ffdf70 38%,#bf7410 100%)}
+.gift-stage.is-opening .gift-lid{animation:gift-lid-open-geometry 1s .58s cubic-bezier(.16,.86,.22,1) forwards}
+@keyframes gift-lid-open-geometry{
+  0%{transform:translateZ(15px) rotateX(0deg)}
+  56%{transform:translate3d(0,-21px,43px) rotateX(-138deg)}
+  76%{transform:translate3d(0,-15px,36px) rotateX(-124deg)}
+  89%{transform:translate3d(0,-19px,40px) rotateX(-133deg)}
+  100%{transform:translate3d(0,-18px,38px) rotateX(-130deg)}
+}
+@media(max-width:380px){.gift-box{transform:translateX(-50%) scale(.94);transform-origin:center top}}
+@media(prefers-reduced-motion:reduce){.gift-stage.is-opening .gift-lid{transform:translate3d(0,-18px,38px) rotateX(-130deg)}}

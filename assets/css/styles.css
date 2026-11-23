@@ -2629,3 +2629,59 @@ body.support-native-cta .bottom-nav-dock .profile-nav-button{display:none!import
 @media(max-height:700px){
   #screen-support .support-art{margin-bottom:12px!important}
 }
+
+
+/* Support screen typography: use the shared VPN Finder type scale consistently. */
+#screen-support,#screen-support *{font-family:var(--font-family)!important;font-synthesis:none}
+#screen-support .support-hero h1{
+  font-size:var(--type-display)!important;line-height:1.12!important;
+  font-weight:var(--weight-bold)!important;letter-spacing:-.04em!important;
+}
+#screen-support .support-hero p{
+  font-size:var(--type-secondary)!important;line-height:1.5!important;
+  font-weight:var(--weight-regular)!important;letter-spacing:normal!important;
+}
+#screen-support .support-tab{
+  font-size:var(--type-control)!important;line-height:1.25!important;
+  font-weight:var(--weight-semibold)!important;letter-spacing:normal!important;
+}
+#screen-support .support-section-title{
+  font-size:var(--type-secondary)!important;line-height:1.4!important;
+  font-weight:var(--weight-semibold)!important;letter-spacing:normal!important;
+}
+#screen-support .support-preset strong{
+  font-size:var(--type-card-title)!important;line-height:1.25!important;
+  font-weight:var(--weight-semibold)!important;letter-spacing:-.02em!important;
+}
+#screen-support .support-preset span{
+  font-size:var(--type-secondary)!important;line-height:1.35!important;
+  font-weight:var(--weight-regular)!important;letter-spacing:normal!important;
+}
+#screen-support .support-form label{
+  font-size:var(--type-caption)!important;line-height:1.4!important;
+  font-weight:var(--weight-medium)!important;letter-spacing:normal!important;
+}
+#screen-support .support-form input{
+  font-size:var(--type-body)!important;line-height:1.4!important;
+  font-weight:var(--weight-regular)!important;letter-spacing:normal!important;
+}
+#screen-support .profile-form-status{
+  font-size:var(--type-caption)!important;line-height:1.4!important;
+  font-weight:var(--weight-regular)!important;letter-spacing:normal!important;
+}
+#screen-support .crypto-support-kicker{
+  font-size:var(--type-caption)!important;line-height:1.4!important;
+  font-weight:var(--weight-medium)!important;letter-spacing:normal!important;
+}
+#screen-support .crypto-support-card h2{
+  font-size:var(--type-section)!important;line-height:1.25!important;
+  font-weight:var(--weight-semibold)!important;letter-spacing:-.025em!important;
+}
+#screen-support .crypto-support-note{
+  font-size:var(--type-secondary)!important;line-height:1.5!important;
+  font-weight:var(--weight-regular)!important;letter-spacing:normal!important;
+}
+#screen-support .crypto-support-address{
+  font-size:var(--type-caption)!important;line-height:1.4!important;
+  font-weight:var(--weight-regular)!important;letter-spacing:0!important;
+}

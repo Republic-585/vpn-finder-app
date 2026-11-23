@@ -2754,3 +2754,30 @@ body.support-native-cta .bottom-nav-dock .profile-nav-button{display:none!import
   #screen-support .support-orbit-b::after,
   #screen-owner-promo .owner-promo-orbit-b::after{animation:none;opacity:.75}
 }
+
+
+/* Subtle, slow orbit glint; the orbit itself passes in front of the artwork. */
+#screen-support .support-orbit-b,
+#screen-owner-promo .owner-promo-orbit-b{
+  z-index:3!important;
+  border-color:rgba(255,220,151,.075)!important;
+}
+#screen-support .support-orb,
+#screen-owner-promo .owner-promo-art img{
+  position:relative;
+  z-index:2!important;
+}
+#screen-support .support-orbit-b::after,
+#screen-owner-promo .owner-promo-orbit-b::after{
+  z-index:4;
+  width:5px;
+  height:5px;
+  opacity:.58;
+  background:radial-gradient(circle,rgba(255,249,229,.9) 0%,rgba(255,224,166,.55) 42%,rgba(255,190,83,0) 78%);
+  box-shadow:0 0 3px 1px rgba(255,224,157,.22),0 0 7px 2px rgba(255,190,83,.12);
+  animation:hero-orbit-glint 24s linear infinite!important;
+}
+@media(prefers-reduced-motion:reduce){
+  #screen-support .support-orbit-b::after,
+  #screen-owner-promo .owner-promo-orbit-b::after{animation:none!important;opacity:.42}
+}

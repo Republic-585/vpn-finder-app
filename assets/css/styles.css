@@ -2190,3 +2190,110 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   #screen-owner-promo .owner-promo-spark{animation:none!important}
 }
 
+
+
+/* Premium Telegram-native owner promotion stage. */
+:root{--tg-native-bg:var(--tg-theme-bg-color,#202124)}
+#screen-owner-promo.owner-promo-screen{
+  position:fixed;inset:0;z-index:40;width:100%;height:100vh;height:100dvh;min-height:100svh;
+  margin:0;padding:calc(env(safe-area-inset-top) + 18px) 22px calc(env(safe-area-inset-bottom) + 22px);
+  display:none;flex-direction:column;align-items:center;justify-content:space-between;gap:12px;
+  overflow:hidden;background:var(--tg-native-bg);isolation:isolate;
+}
+#screen-owner-promo.owner-promo-screen.active{display:flex;animation:owner-promo-enter .5s cubic-bezier(.2,.8,.2,1) both}
+#screen-owner-promo.owner-promo-screen::before{
+  content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 39%,rgba(69,145,226,.15),transparent 52%),
+             radial-gradient(ellipse at 50% 100%,rgba(30,94,174,.10),transparent 48%);
+}
+#screen-owner-promo .owner-promo-content{
+  width:100%;max-width:440px;min-height:0;flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:0;
+}
+#screen-owner-promo .owner-promo-art{
+  position:relative;width:min(88vw,340px);height:clamp(220px,36svh,330px);flex:0 1 auto;
+  margin:0 auto clamp(14px,3svh,28px);display:grid;place-items:center;isolation:isolate;
+}
+#screen-owner-promo .owner-promo-art::before{
+  content:"";position:absolute;z-index:-2;left:50%;top:55%;width:82%;height:72%;
+  transform:translate(-50%,-50%);border-radius:50%;
+  background:radial-gradient(ellipse,rgba(61,143,255,.24),rgba(61,143,255,.08) 42%,transparent 72%);
+  filter:blur(22px);animation:owner-aura 4.8s ease-in-out infinite;
+}
+#screen-owner-promo .owner-promo-art img{
+  position:relative;z-index:2;display:block;width:min(76%,260px);height:100%;max-height:300px;
+  object-fit:contain;filter:drop-shadow(0 18px 20px rgba(0,0,0,.28)) drop-shadow(0 0 18px rgba(91,166,255,.16));
+  transform:translate3d(0,0,0);animation:owner-gift-float 5.2s cubic-bezier(.42,0,.58,1) infinite;
+  will-change:transform,filter;
+}
+#screen-owner-promo .owner-promo-shadow{
+  position:absolute;z-index:1;left:50%;top:83%;width:48%;height:17%;border-radius:50%;
+  transform:translateX(-50%);background:rgba(0,0,0,.42);filter:blur(15px);
+  animation:owner-shadow-float 5.2s ease-in-out infinite;
+}
+#screen-owner-promo .owner-promo-copy{width:100%;text-align:center}
+#screen-owner-promo .owner-promo-eyebrow{
+  display:block;margin:0 auto 14px;color:var(--bright);font-size:10px;font-weight:800;
+  letter-spacing:.17em;text-align:center;
+}
+#screen-owner-promo .owner-promo-copy h1{
+  max-width:360px;margin:0 auto;color:var(--text);font-size:clamp(29px,8vw,38px);
+  line-height:1.04;letter-spacing:-.06em;font-weight:850;text-align:center;
+  text-wrap:balance;
+}
+#screen-owner-promo .owner-promo-copy p{
+  max-width:330px;margin:15px auto 0;color:var(--secondary);font-size:15px;
+  line-height:1.55;text-align:center;text-wrap:pretty;
+}
+#screen-owner-promo .owner-promo-spark{
+  position:absolute;z-index:3;display:block;color:#FFE6A0;line-height:1;
+  text-shadow:0 0 8px rgba(255,218,126,.8),0 0 22px rgba(255,194,70,.55);
+  pointer-events:none;animation:owner-gift-sparkle 3s ease-in-out infinite;
+}
+#screen-owner-promo .owner-promo-spark-a{top:13%;right:16%;font-size:28px}
+#screen-owner-promo .owner-promo-spark-b{top:45%;left:9%;font-size:23px;animation-delay:.7s}
+#screen-owner-promo .owner-promo-spark-c{right:8%;bottom:20%;font-size:25px;animation-delay:1.3s}
+#screen-owner-promo .owner-promo-spark-d{left:22%;top:20%;font-size:38px;animation-delay:1.8s}
+#screen-owner-promo .owner-promo-spark-e{right:24%;top:70%;font-size:19px;animation-delay:2.2s}
+#screen-owner-promo .owner-promo-orbit{
+  position:absolute;z-index:0;left:50%;top:50%;width:84%;height:70%;
+  border:1px solid rgba(154,198,255,.12);border-radius:50%;
+  transform:translate(-50%,-50%) rotate(-18deg);pointer-events:none;
+}
+#screen-owner-promo .owner-promo-orbit-b{width:100%;height:54%;transform:translate(-50%,-50%) rotate(24deg);border-color:rgba(255,220,151,.10)}
+#screen-owner-promo .owner-promo-footer{
+  position:relative;z-index:4;width:100%;max-width:440px;flex:0 0 auto;
+  padding:12px 0 0;text-align:center;
+}
+#screen-owner-promo .owner-promo-cta{
+  width:100%;min-height:58px;padding:0 22px;border:0;border-radius:18px;
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  color:#15202b;background:linear-gradient(180deg,#FFE49A 0%,#F7C95D 100%);
+  box-shadow:0 9px 26px rgba(242,184,68,.22),inset 0 1px 0 rgba(255,255,255,.8);
+  font-size:16px;font-weight:800;letter-spacing:-.02em;cursor:pointer;
+  transition:transform .18s ease,filter .18s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+#screen-owner-promo .owner-promo-cta:active{transform:scale(.975);filter:brightness(1.06)}
+#screen-owner-promo .owner-promo-cta svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#screen-owner-promo .owner-promo-footnote{display:block;margin:12px auto 0;color:var(--muted);font-size:11px;line-height:1.35;text-align:center}
+.app-shell:has(#screen-owner-promo.active) .bottom-nav-dock{display:none!important}
+@keyframes owner-aura{0%,100%{opacity:.65;transform:translate(-50%,-50%) scale(.92)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}}
+@keyframes owner-shadow-float{0%,100%{opacity:.7;transform:translateX(-50%) scaleX(.94)}50%{opacity:.42;transform:translateX(-50%) scaleX(.78)}}
+@keyframes owner-gift-float{0%,100%{transform:translate3d(0,5px,0) rotate(-1.2deg)}50%{transform:translate3d(0,-12px,0) rotate(1.2deg)}}
+@keyframes owner-gift-sparkle{0%,100%{opacity:.3;transform:scale(.72) rotate(-18deg)}45%{opacity:1;transform:scale(1.18) rotate(14deg)}70%{opacity:.65;transform:scale(.94) rotate(-4deg)}}
+@media(max-height:700px){
+  #screen-owner-promo.owner-promo-screen{padding-top:calc(env(safe-area-inset-top) + 10px);padding-bottom:calc(env(safe-area-inset-bottom) + 12px);gap:6px}
+  #screen-owner-promo .owner-promo-art{height:clamp(170px,30svh,220px);margin-bottom:10px}
+  #screen-owner-promo .owner-promo-art img{width:min(70%,210px)}
+  #screen-owner-promo .owner-promo-copy h1{font-size:clamp(26px,7vw,32px)}
+  #screen-owner-promo .owner-promo-copy p{margin-top:10px;font-size:13px}
+  #screen-owner-promo .owner-promo-cta{min-height:54px}
+}
+@media(prefers-reduced-motion:reduce){
+  #screen-owner-promo.owner-promo-screen.active,
+  #screen-owner-promo .owner-promo-art img,
+  #screen-owner-promo .owner-promo-spark,
+  #screen-owner-promo .owner-promo-shadow,
+  #screen-owner-promo .owner-promo-art::before{animation:none!important}
+}

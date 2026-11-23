@@ -2298,3 +2298,14 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   #screen-owner-promo .owner-promo-art::before{animation:none!important}
 }
 
+
+/* Match Telegram's native top chrome and the full Mini App canvas to one backdrop. */
+html,body,.app-shell{
+  background:var(--tg-native-bg,#202124)!important;
+}
+#screen-owner-promo.owner-promo-screen{
+  top:0!important;
+  background-color:var(--tg-native-bg,#202124)!important;
+  background-image:radial-gradient(ellipse at 50% 39%,rgba(69,145,226,.15),transparent 52%),
+                   radial-gradient(ellipse at 50% 100%,rgba(30,94,174,.10),transparent 48%)!important;
+}

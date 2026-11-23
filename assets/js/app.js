@@ -4,17 +4,15 @@ if (tg) {
   tg.ready();
   tg.expand();
   const applyTelegramColors = () => {
-    const nativeBg = tg.themeParams?.bg_color || "#202124";
-    document.documentElement.style.setProperty("--tg-native-bg", nativeBg);
-    document.documentElement.style.colorScheme = tg.colorScheme || "dark";
-    document.documentElement.style.backgroundColor = nativeBg;
-    document.body.style.backgroundColor = nativeBg;
+    // Keep Telegram's native chrome aligned with the app's graphite surface.
+    const appBg = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim() || "#202124";
+    document.documentElement.style.setProperty("--tg-native-bg", appBg);
+    document.documentElement.style.colorScheme = "dark";
     const themeMeta = document.querySelector('meta[name="theme-color"]');
-    if (themeMeta) themeMeta.setAttribute("content", nativeBg);
+    if (themeMeta) themeMeta.setAttribute("content", appBg);
     try {
-      // Telegram draws its native top bar outside the web page; this colors that area.
-      tg.setHeaderColor(nativeBg);
-      tg.setBackgroundColor(nativeBg);
+      tg.setHeaderColor(appBg);
+      tg.setBackgroundColor(appBg);
     } catch (_) {}
   };
   applyTelegramColors();

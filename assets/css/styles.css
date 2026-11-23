@@ -2139,3 +2139,15 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   #screen-owner-promo .gift-stage.gift-fallback-ready .gift-reference-image{animation:none}
   #screen-owner-promo .gift-stage.gift-fallback-open .gift-reference-image{animation:none;transform:translate(-50%,-50%) scale(1.04)}
 }
+
+
+/* Make the complete catalog promotion artwork open the owner promo screen. */
+#screen-catalog .catalog-promo-wrap .catalog-promo-more-hit{
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  border-radius:inherit!important;
+}
+#screen-catalog .catalog-promo-wrap .catalog-promo-dismiss{
+  z-index:31!important;
+}

@@ -2442,3 +2442,36 @@ body::-webkit-scrollbar,
   #screen-owner-promo .owner-promo-cta,.remove-button,
   #screen-catalog .catalog-add-button{transition:none!important}
 }
+
+
+/* Final typography normalization for every text-bearing button.
+   Icon-only controls keep their icon sizing; button labels follow one scale. */
+button{
+  font-family:var(--font-family)!important;
+  font-synthesis:none;
+}
+button:not(.round-action):not(.clear-search):not(.catalog-promo-more-hit):not(.catalog-promo-dismiss):not(.favorites-favorite-action):not(.profile-nav-button){
+  font-size:14px!important;
+  font-weight:600!important;
+  line-height:1.2!important;
+  letter-spacing:normal!important;
+}
+.nav-item,
+.home-screen-action,
+.profile-menu-row,
+#screen-catalog #toggle-catalog,
+#screen-catalog .catalog-add-button,
+.support-tab,
+.connect-button,
+.primary-button,
+.remove-button,
+.catalog-promo-submit,
+#screen-owner-promo .owner-promo-cta{
+  font-size:14px!important;
+  font-weight:600!important;
+  line-height:1.2!important;
+  letter-spacing:normal!important;
+}
+.support-preset{font-family:var(--font-family)!important}
+.support-preset strong{font-size:14px!important;font-weight:600!important;line-height:1.2!important}
+.support-preset span{font-size:12px!important;font-weight:500!important;line-height:1.2!important}

@@ -78,6 +78,11 @@ if (tg) {
   };
   tg.onEvent?.("themeChanged", reapplyTelegramColors);
   tg.onEvent?.("viewportChanged", applyTelegramColors);
+  const syncTelegramFullscreenClass = () => {
+    document.body.classList.toggle("telegram-fullscreen", Boolean(tg.isFullscreen));
+  };
+  tg.onEvent?.("fullscreenChanged", syncTelegramFullscreenClass);
+  syncTelegramFullscreenClass();
   try { tg.expand(); } catch (_) {}
   // The static splash and first interface frame are already in the DOM.
   try { tg.ready(); } catch (_) {}

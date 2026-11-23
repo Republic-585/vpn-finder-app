@@ -2500,7 +2500,7 @@ button:not(.round-action):not(.clear-search):not(.catalog-promo-more-hit):not(.c
   filter:blur(13px);
   box-shadow:0 0 24px rgba(255,255,255,.16),0 0 44px rgba(255,255,255,.09);
   transform:none;
-  animation:support-native-button-shine 2.8s cubic-bezier(.35,0,.55,1) infinite;
+  animation:support-native-button-shine 2.5s cubic-bezier(.35,0,.55,1) infinite;
 }
 @keyframes support-native-button-shine{
   0%,8%{left:-86%;opacity:0}

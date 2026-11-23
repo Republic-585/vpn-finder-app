@@ -632,6 +632,51 @@ document.addEventListener("touchend", event => {
 }, { passive: true });
 document.addEventListener("touchcancel", () => { backSwipeStart = null; }, { passive: true });
 
+// Horizontal navigation between the four primary tabs.
+// Gestures start only on free page space; content and controls keep their native behavior.
+const primarySwipeScreens = ["catalog", "compare", "favorites", "profile"];
+const tabSwipeExcluded = [
+  "button", "a", "input", "textarea", "select", "label",
+  ".vpn-card", ".service-list-card", ".popular-card", ".search-box",
+  ".filter-strip", ".compare-table-wrap", ".profile-menu", ".home-screen-prompt",
+  ".profile-photo-wrap", ".support-tabs", ".support-panel", ".profile-form",
+  ".news-post", ".analytics-dashboard", ".catalog-promo-wrap",
+  ".owner-promo-content", ".owner-promo-footer", ".page-heading",
+  ".catalog-topline", ".catalog-section-heading", "[data-no-tab-swipe]",
+  "[contenteditable='true']"
+].join(",");
+let tabSwipeStart = null;
+document.addEventListener("touchstart", event => {
+  if (event.touches.length !== 1) {
+    tabSwipeStart = null;
+    return;
+  }
+  const active = document.querySelector(".screen.active")?.dataset.screen;
+  const touch = event.touches[0];
+  if (!primarySwipeScreens.includes(active) || event.target.closest(tabSwipeExcluded)) {
+    tabSwipeStart = null;
+    return;
+  }
+  tabSwipeStart = { x: touch.clientX, y: touch.clientY, screen: active };
+}, { passive: true });
+document.addEventListener("touchend", event => {
+  if (!tabSwipeStart || event.changedTouches.length !== 1) {
+    tabSwipeStart = null;
+    return;
+  }
+  const touch = event.changedTouches[0];
+  const dx = touch.clientX - tabSwipeStart.x;
+  const dy = Math.abs(touch.clientY - tabSwipeStart.y);
+  const startScreen = tabSwipeStart.screen;
+  tabSwipeStart = null;
+  if (Math.abs(dx) < 72 || dy > 65 || Math.abs(dx) < dy * 1.35) return;
+  const currentIndex = primarySwipeScreens.indexOf(startScreen);
+  const nextIndex = currentIndex + (dx < 0 ? 1 : -1);
+  if (nextIndex < 0 || nextIndex >= primarySwipeScreens.length) return;
+  showScreen(primarySwipeScreens[nextIndex]);
+}, { passive: true });
+document.addEventListener("touchcancel", () => { tabSwipeStart = null; }, { passive: true });
+
 document.querySelectorAll("[data-go]").forEach(button => {
   button.addEventListener("click", () => showScreen(button.dataset.go, button.dataset.backScreen || null));
 });

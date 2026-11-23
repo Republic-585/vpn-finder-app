@@ -2545,3 +2545,11 @@ body.support-native-cta .bottom-nav-dock .profile-nav-button{display:none!import
   #screen-support .support-hero{padding-bottom:7px!important}
   #screen-support .support-preset{min-height:52px!important}
 }
+
+
+/* Match the selected support method to the light-graphite navigation indicator. */
+#screen-support .support-tab.is-active{
+  background:rgba(91,93,99,.72)!important;
+  color:#fff!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 2px 7px rgba(0,0,0,.12)!important;
+}

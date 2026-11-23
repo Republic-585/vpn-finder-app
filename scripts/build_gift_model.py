@@ -28,7 +28,7 @@ parts["Lid_Blue"] = lid_top.union(skirt_outer.cut(skirt_inner))
 parts["Lid_Ribbon_X"] = cq.Workplane("XY").box(band_w, D-5, 1.5, centered=(True, True, False)).translate((0, 0, H+6))
 parts["Lid_Ribbon_Y"] = cq.Workplane("XY").box(W-5, band_w, 1.5, centered=(True, True, False)).translate((0, 0, H+6))
 for sign in (-1, 1):
-    parts["Bow_Loop_"+str(sign)] = (cq.Workplane("XZ").center(sign*10, H+13).ellipse(18, 10).ellipse(13.5, 6.2).extrude(3.2, both=True).rotate((0,0,0), (0,1,0), sign*13))
+    parts["Bow_Loop_"+str(sign)] = cq.Workplane("XZ").center(sign*10, H+13).ellipse(18, 10).ellipse(13.5, 6.2).extrude(3.2, both=True)
 parts["Bow_Knot"] = cq.Workplane("XY").box(15, 11, 8, centered=(True, True, True)).edges().fillet(2).translate((0, 0, H+14))
 for sign in (-1, 1):
     parts["Bow_Tail_"+str(sign)] = (cq.Workplane("XY").box(10, 20, 2.5, centered=(True, True, False)).rotate((0,0,0), (0,0,1), sign*25).translate((sign*13, -13, H+7.2)))
@@ -53,3 +53,5 @@ print("Built CAD gift model:", os.path.join(OUT, "VPN_Finder_Gift_Box.glb"))
 print("Named parts:", list(scene.graph.nodes_geometry))
 
 # Trigger CAD build after workflow installation.
+
+# Bow loops stay close to the center knot so the silhouette matches the approved gift reference.

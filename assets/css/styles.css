@@ -2610,3 +2610,22 @@ body.support-native-cta .bottom-nav-dock .profile-nav-button{display:none!import
   #screen-support .support-orb,#screen-support .support-art-shadow,
   #screen-support .support-spark{animation:none!important}
 }
+
+
+/* Support screen spacing and crypto wallet field alignment with the Stars amount input. */
+#screen-support .support-art{margin-bottom:16px!important}
+#screen-support .crypto-address-wrap{
+  min-height:42px!important;padding:0 14px!important;gap:10px!important;
+  border:1px solid rgba(255,255,255,.13)!important;border-radius:14px!important;
+  background:rgba(255,255,255,.07)!important;
+}
+#screen-support .crypto-support-address{
+  display:block;flex:1 1 auto;min-width:0;padding:0!important;margin:0!important;
+  border:0!important;border-radius:0!important;background:transparent!important;
+  color:#fff!important;font-family:inherit!important;font-size:11px!important;
+  line-height:1.4!important;overflow-wrap:anywhere;
+}
+#screen-support .crypto-copy-symbol{color:rgba(255,255,255,.68)!important}
+@media(max-height:700px){
+  #screen-support .support-art{margin-bottom:12px!important}
+}

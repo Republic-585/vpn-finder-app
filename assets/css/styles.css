@@ -2489,25 +2489,24 @@ button:not(.round-action):not(.clear-search):not(.catalog-promo-more-hit):not(.c
   content:"";
   position:absolute;
   z-index:2;
-  top:-55%;
-  left:-68%;
-  width:62%;
-  height:210%;
+  top:-65%;
+  left:-86%;
+  width:82%;
+  height:230%;
   pointer-events:none;
   border-radius:50%;
   background:
-    radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.24) 0%,rgba(255,255,255,.12) 30%,rgba(255,255,255,0) 72%),
-    linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.08) 24%,rgba(255,255,255,.48) 48%,rgba(255,255,255,.72) 50%,rgba(255,255,255,.38) 54%,rgba(255,255,255,.08) 76%,rgba(255,255,255,0) 100%);
-  filter:blur(7px);
-  box-shadow:0 0 16px rgba(255,255,255,.22),0 0 30px rgba(255,255,255,.12);
+    radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.24) 0%,rgba(255,255,255,.17) 22%,rgba(255,255,255,.09) 46%,rgba(255,255,255,0) 76%);
+  filter:blur(13px);
+  box-shadow:0 0 24px rgba(255,255,255,.16),0 0 44px rgba(255,255,255,.09);
   transform:none;
-  animation:support-native-button-shine 3.8s ease-in-out infinite;
+  animation:support-native-button-shine 2.8s cubic-bezier(.35,0,.55,1) infinite;
 }
 @keyframes support-native-button-shine{
-  0%,22%{left:-68%;opacity:0}
-  32%{opacity:.92}
-  70%{left:112%;opacity:.92}
-  82%,100%{left:112%;opacity:0}
+  0%,8%{left:-86%;opacity:0}
+  18%{opacity:.9}
+  62%{left:112%;opacity:.9}
+  72%,100%{left:112%;opacity:0}
 }
 @media(prefers-reduced-motion:reduce){
   #screen-support #support-pay-button::after,

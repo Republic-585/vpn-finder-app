@@ -2296,3 +2296,7 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   #screen-owner-promo .owner-promo-art::before{animation:none!important}
 }
 
+
+
+/* Graphite canvas is continuous on every Mini App screen, including safe-area edges. */
+html,body,.app-shell{background-color:#202124!important}

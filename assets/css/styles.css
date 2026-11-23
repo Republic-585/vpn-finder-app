@@ -2110,3 +2110,32 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 }
 
 #screen-owner-promo .gift-reference-image{position:absolute;left:50%;top:50%;display:block;width:min(100%,360px);height:100%;max-height:360px;object-fit:contain;transform:translate(-50%,-50%);filter:drop-shadow(0 18px 18px rgba(0,25,70,.18))}
+
+
+/* Interactive motion for the reference-art fallback when WebGL is unavailable. */
+#screen-owner-promo .gift-stage.gift-fallback-ready .gift-reference-image{
+  transform:translate(-50%,-50%) perspective(900px) rotateX(var(--gift-tilt-x,0deg)) rotateY(var(--gift-tilt-y,0deg));
+  transform-origin:50% 58%;
+  animation:gift-fallback-float 4.8s ease-in-out infinite;
+  transition:filter .35s ease;
+  will-change:transform;
+}
+@keyframes gift-fallback-float{
+  0%,100%{translate:0 0;scale:1}
+  50%{translate:0 -9px;scale:1.018}
+}
+#screen-owner-promo .gift-stage.gift-fallback-open .gift-reference-image{
+  animation:gift-fallback-open .95s cubic-bezier(.2,.8,.2,1) both;
+  filter:drop-shadow(0 26px 26px rgba(0,55,145,.25)) brightness(1.08);
+}
+@keyframes gift-fallback-open{
+  0%{translate:0 0;scale:1;rotate:0deg}
+  28%{translate:0 -20px;scale:1.045;rotate:-2deg}
+  52%{translate:0 5px;scale:.985;rotate:1deg}
+  76%{translate:0 -8px;scale:1.025;rotate:-.6deg}
+  100%{translate:0 0;scale:1;rotate:0deg}
+}
+@media(prefers-reduced-motion:reduce){
+  #screen-owner-promo .gift-stage.gift-fallback-ready .gift-reference-image{animation:none}
+  #screen-owner-promo .gift-stage.gift-fallback-open .gift-reference-image{animation:none;transform:translate(-50%,-50%) scale(1.04)}
+}

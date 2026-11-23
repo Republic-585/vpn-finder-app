@@ -1,60 +1,262 @@
 import * as THREE from "https://esm.sh/three@0.170.0";
 import { RoundedBoxGeometry } from "https://esm.sh/three@0.170.0/examples/jsm/geometries/RoundedBoxGeometry.js";
+
 (() => {
-const screen=document.getElementById("screen-owner-promo"), host=document.getElementById("owner-gift-canvas");
-if(!screen||!host)return;
-const scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(32,1,.1,50);
-camera.position.set(4.2,3.1,5.7); camera.lookAt(0,1.4,0);
-const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:"high-performance"});
-renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.6)); renderer.setSize(host.clientWidth||360,host.clientHeight||330,false);
-renderer.outputColorSpace=THREE.SRGBColorSpace; renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.15;
-renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap; host.appendChild(renderer.domElement);
-scene.add(new THREE.HemisphereLight(0xc9e4ff,0x10234a,2.1));
-const key=new THREE.DirectionalLight(0xffffff,4.2); key.position.set(-3.8,7,5); key.castShadow=true; key.shadow.mapSize.set(1024,1024); scene.add(key);
-const rim=new THREE.PointLight(0x4b9dff,38,12,2); rim.position.set(3.5,3.4,-2.8); scene.add(rim);
-const glow=new THREE.PointLight(0xffc64d,0,7,2); glow.position.set(0,2.2,1.5); scene.add(glow);
-const blue=new THREE.MeshPhysicalMaterial({color:0x1262cf,metalness:.22,roughness:.19,clearcoat:1,clearcoatRoughness:.12});
-const side=new THREE.MeshPhysicalMaterial({color:0x07347e,metalness:.28,roughness:.24,clearcoat:.9});
-const lidMat=new THREE.MeshPhysicalMaterial({color:0x287fe5,metalness:.2,roughness:.16,clearcoat:1});
-const gold=new THREE.MeshPhysicalMaterial({color:0xf5b82e,metalness:.92,roughness:.2,clearcoat:1});
-const goldHi=new THREE.MeshPhysicalMaterial({color:0xffdf79,metalness:.84,roughness:.16,clearcoat:1});
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(100,100),new THREE.ShadowMaterial({opacity:.22})); floor.rotation.x=-Math.PI/2; floor.position.y=-.04; floor.receiveShadow=true; scene.add(floor);
-const gift=new THREE.Group(); scene.add(gift);
-const body=new THREE.Mesh(new RoundedBoxGeometry(2.72,1.78,1.96,7,.12),blue); body.position.y=.91; body.castShadow=true; body.receiveShadow=true; gift.add(body);
-const front=new THREE.Mesh(new RoundedBoxGeometry(.38,1.8,.04,4,.018),gold); front.position.set(0,.91,1); gift.add(front);
-const sideRibbon=new THREE.Mesh(new RoundedBoxGeometry(.04,1.8,.38,4,.018),gold); sideRibbon.position.set(1.37,.91,0); gift.add(sideRibbon);
-const topRibbon=new THREE.Mesh(new RoundedBoxGeometry(.38,.04,1.99,4,.018),goldHi); topRibbon.position.set(0,1.81,0); gift.add(topRibbon);
-const hinge=new THREE.Group(); hinge.position.set(0,1.83,-.91); gift.add(hinge);
-const lid=new THREE.Mesh(new RoundedBoxGeometry(2.98,.38,2.18,7,.105),lidMat); lid.position.set(0,.19,.91); lid.castShadow=true; hinge.add(lid);
-const lidRibbon=new THREE.Mesh(new RoundedBoxGeometry(.4,.4,2.19,5,.025),gold); lidRibbon.position.set(0,.19,.91); hinge.add(lidRibbon);
-const bow=new THREE.Group(); bow.position.set(0,.43,.92); hinge.add(bow);
-function loop(sideSign){const pts=[[0,0,0],[sideSign*.2,.18,.02],[sideSign*.55,.34,.03],[sideSign*.88,.25,.02],[sideSign*.84,.02,0],[sideSign*.45,-.03,-.02]];const curve=new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(...p)),true,"catmullrom",.45);const m=new THREE.Mesh(new THREE.TubeGeometry(curve,56,.105,12,true),goldHi);m.castShadow=true;bow.add(m);}
-loop(1); loop(-1);
-const knot=new THREE.Mesh(new RoundedBoxGeometry(.39,.3,.3,6,.11),gold); knot.position.set(0,.01,.11); bow.add(knot);
-const tailShape=new THREE.Shape(); tailShape.moveTo(-.12,.08);tailShape.bezierCurveTo(-.25,-.16,-.4,-.48,-.38,-.68);tailShape.lineTo(-.12,-.56);tailShape.lineTo(.05,-.72);tailShape.bezierCurveTo(.12,-.43,.1,-.14,.12,.08);tailShape.closePath();
-const tailGeo=new THREE.ExtrudeGeometry(tailShape,{depth:.055,bevelEnabled:true,bevelSegments:3,steps:1,bevelSize:.035,bevelThickness:.035});
-const tail=new THREE.Mesh(tailGeo,gold);tail.position.set(-.38,-.05,-.03);tail.castShadow=true;bow.add(tail);
-const tail2=new THREE.Mesh(tailGeo,goldHi);tail2.position.set(.38,-.05,-.03);tail2.rotation.y=Math.PI;tail2.castShadow=true;bow.add(tail2);
-const token=new THREE.Group();gift.add(token);token.position.set(0,1.32,.12);token.scale.setScalar(.001);
-const coin=new THREE.Mesh(new THREE.CylinderGeometry(.48,.48,.13,64),gold);coin.rotation.x=Math.PI/2;coin.castShadow=true;token.add(coin);
-const face=new THREE.Mesh(new THREE.CircleGeometry(.405,64),new THREE.MeshPhysicalMaterial({color:0x0d4caa,metalness:.42,roughness:.22,clearcoat:1}));face.position.z=.071;token.add(face);
-const shieldShape=new THREE.Shape();shieldShape.moveTo(0,.29);shieldShape.quadraticCurveTo(.2,.2,.27,.17);shieldShape.lineTo(.25,-.08);shieldShape.quadraticCurveTo(.2,-.28,0,-.37);shieldShape.quadraticCurveTo(-.2,-.28,-.25,-.08);shieldShape.lineTo(-.27,.17);shieldShape.quadraticCurveTo(-.2,.2,0,.29);
-const shield=new THREE.Mesh(new THREE.ExtrudeGeometry(shieldShape,{depth:.035,bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:.018,bevelThickness:.018}),goldHi);shield.position.z=.09;token.add(shield);
-const sparks=new THREE.Group();scene.add(sparks);const sparkMat=new THREE.MeshBasicMaterial({color:0xffd56a});
-for(let i=0;i<18;i++){const s=new THREE.Mesh(new THREE.SphereGeometry(.02,8,8),sparkMat);const a=i*2.399;s.position.set(Math.cos(a)*(1.8+(i%4)*.2),.6+(i%6)*.42,Math.sin(a)*(1.6+(i%3)*.2));s.userData.p=i*.7;sparks.add(s);}
-let active=false,raf=0,opened=false,startAt=0;
-const ease=t=>1-Math.pow(1-t,3);
-function begin(){opened=false;startAt=performance.now();active=true;if(!raf)raf=requestAnimationFrame(draw);}
-function draw(now){raf=0;if(!active)return;const t=(now-startAt)/1000,arrival=ease(Math.min(1,t/.82));
-gift.position.y=-.28*(1-arrival)+Math.sin(t*1.25)*.025*arrival;gift.rotation.y=-.2+Math.sin(t*.62)*.055;gift.rotation.z=Math.sin(t*.9)*.012;
-const lt=Math.max(0,Math.min(1,(t-.8)/1.08));hinge.rotation.x=-1.95*ease(lt)+(lt>0?Math.sin(lt*Math.PI)*-.11:0);
-const rt=ease(Math.max(0,Math.min(1,(t-1.28)/.92)));token.scale.setScalar(rt);token.position.y=1.2+rt*1.28;token.rotation.y=t*1.1;glow.intensity=rt*34;
-sparks.visible=t>1.05;sparks.children.forEach(s=>s.scale.setScalar(.55+.45*Math.abs(Math.sin(t*2+s.userData.p))));
-renderer.render(scene,camera);raf=requestAnimationFrame(draw);if(t>7)opened=true;}
-function resize(){const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false);}
-new ResizeObserver(resize).observe(host);
-new IntersectionObserver(entries=>{const visible=entries.some(e=>e.isIntersecting);active=visible&&screen.classList.contains("active");if(active&&!raf){if(!opened)begin();else raf=requestAnimationFrame(draw);}if(!active&&raf){cancelAnimationFrame(raf);raf=0;}},{threshold:.05}).observe(screen);
-new MutationObserver(()=>{if(screen.classList.contains("active"))begin();else{active=false;if(raf)cancelAnimationFrame(raf);raf=0;}}).observe(screen,{attributes:true,attributeFilter:["class"]});
-document.addEventListener("visibilitychange",()=>{if(document.hidden){active=false;if(raf)cancelAnimationFrame(raf);raf=0;}else if(screen.classList.contains("active"))begin();});
-resize();renderer.render(scene,camera);
+  const screen = document.getElementById("screen-owner-promo");
+  const host = document.getElementById("owner-gift-canvas");
+  if (!screen || !host) return;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 50);
+  camera.position.set(4.2, 3.1, 5.7);
+  camera.lookAt(0, 1.25, 0);
+
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.6));
+  renderer.setSize(host.clientWidth || 360, host.clientHeight || 330, false);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.12;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  host.appendChild(renderer.domElement);
+
+  scene.add(new THREE.HemisphereLight(0xe8dcff, 0x241044, 2.15));
+  const key = new THREE.DirectionalLight(0xffffff, 4.1);
+  key.position.set(-3.8, 7, 5);
+  key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024);
+  scene.add(key);
+  const rim = new THREE.PointLight(0xa77aff, 34, 12, 2);
+  rim.position.set(3.5, 3.4, -2.8);
+  scene.add(rim);
+  const warm = new THREE.PointLight(0xffc65a, 0, 7, 2);
+  warm.position.set(0, 2.2, 1.5);
+  scene.add(warm);
+
+  const purple = new THREE.MeshPhysicalMaterial({ color: 0x5424a5, metalness: 0.22, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.12 });
+  const purpleLight = new THREE.MeshPhysicalMaterial({ color: 0x7944d4, metalness: 0.18, roughness: 0.18, clearcoat: 1 });
+  const purpleDark = new THREE.MeshPhysicalMaterial({ color: 0x32136f, metalness: 0.28, roughness: 0.25, clearcoat: 0.9 });
+  const inner = new THREE.MeshPhysicalMaterial({ color: 0x241044, metalness: 0.12, roughness: 0.32, clearcoat: 0.5 });
+  const gold = new THREE.MeshPhysicalMaterial({ color: 0xf5b82e, metalness: 0.92, roughness: 0.19, clearcoat: 1 });
+  const goldHi = new THREE.MeshPhysicalMaterial({ color: 0xffdf79, metalness: 0.84, roughness: 0.15, clearcoat: 1 });
+  const emblem = new THREE.MeshPhysicalMaterial({ color: 0x1c78e8, metalness: 0.38, roughness: 0.2, clearcoat: 1 });
+  const white = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0.12, roughness: 0.22, clearcoat: 1 });
+
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.ShadowMaterial({ opacity: 0.2 }));
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = -0.04;
+  floor.receiveShadow = true;
+  scene.add(floor);
+
+  const gift = new THREE.Group();
+  scene.add(gift);
+
+  const box = new THREE.Group();
+  gift.add(box);
+  const addBoxPart = (w, h, d, material, x, y, z, radius = 0.06) => {
+    const mesh = new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 6, radius), material);
+    mesh.position.set(x, y, z);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    box.add(mesh);
+    return mesh;
+  };
+
+  // Open, hollow gift body: the interior floor and four thick walls remain visible.
+  addBoxPart(2.62, 0.2, 1.92, purpleDark, 0, 0.12, 0, 0.07);
+  addBoxPart(2.62, 1.58, 0.18, purple, 0, 0.94, 0.88, 0.07);
+  addBoxPart(2.62, 1.58, 0.18, purpleDark, 0, 0.94, -0.88, 0.07);
+  addBoxPart(0.18, 1.58, 1.58, purpleLight, -1.22, 0.94, 0, 0.07);
+  addBoxPart(0.18, 1.58, 1.58, purple, 1.22, 0.94, 0, 0.07);
+  addBoxPart(2.38, 0.045, 1.66, inner, 0, 0.245, 0, 0.025);
+
+  // Gold piping around the open rim.
+  const rimFront = addBoxPart(2.58, 0.055, 0.055, goldHi, 0, 1.75, 0.89, 0.02);
+  const rimBack = addBoxPart(2.58, 0.055, 0.055, gold, 0, 1.75, -0.89, 0.02);
+  addBoxPart(0.055, 0.055, 1.72, goldHi, -1.24, 1.75, 0, 0.02);
+  addBoxPart(0.055, 0.055, 1.72, gold, 1.24, 1.75, 0, 0.02);
+
+  // Broad satin ribbons run down the outer front and side faces.
+  addBoxPart(0.34, 1.58, 0.045, gold, 0, 0.94, 0.985, 0.018);
+  addBoxPart(0.045, 1.58, 0.34, goldHi, 1.325, 0.94, 0, 0.018);
+  addBoxPart(0.34, 0.045, 1.88, goldHi, 0, 1.77, 0, 0.018);
+
+  // Hinged lid opens backward, exposing the box cavity.
+  const hinge = new THREE.Group();
+  hinge.position.set(0, 1.78, -0.86);
+  gift.add(hinge);
+  const lid = new THREE.Mesh(new RoundedBoxGeometry(2.82, 0.27, 2.05, 7, 0.1), purpleLight);
+  lid.position.set(0, 0.13, 0.96);
+  lid.castShadow = true;
+  lid.receiveShadow = true;
+  hinge.add(lid);
+
+  const lidTopBand = new THREE.Mesh(new RoundedBoxGeometry(0.34, 0.045, 1.96, 5, 0.02), goldHi);
+  lidTopBand.position.set(0, 0.274, 0.96);
+  hinge.add(lidTopBand);
+  const lidFrontBand = new THREE.Mesh(new RoundedBoxGeometry(0.34, 0.25, 0.045, 5, 0.018), gold);
+  lidFrontBand.position.set(0, 0.13, 1.98);
+  hinge.add(lidFrontBand);
+
+  // A restrained sculptural gold bow on the outside of the raised lid.
+  const bow = new THREE.Group();
+  bow.position.set(0, 0.38, 0.94);
+  hinge.add(bow);
+  function makeLoop(sign) {
+    const points = [
+      [0, 0, 0], [sign * 0.2, 0.18, 0.02], [sign * 0.55, 0.34, 0.03],
+      [sign * 0.88, 0.25, 0.02], [sign * 0.84, 0.02, 0], [sign * 0.45, -0.03, -0.02]
+    ];
+    const curve = new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(...p)), true, "catmullrom", 0.45);
+    const loop = new THREE.Mesh(new THREE.TubeGeometry(curve, 56, 0.09, 12, true), goldHi);
+    loop.castShadow = true;
+    bow.add(loop);
+  }
+  makeLoop(1);
+  makeLoop(-1);
+  const knot = new THREE.Mesh(new RoundedBoxGeometry(0.34, 0.26, 0.28, 6, 0.09), gold);
+  knot.position.set(0, 0.01, 0.11);
+  bow.add(knot);
+
+  // VPN shield avatar: a glossy circular medallion with the shield mark and a star overlapping its lower-right edge.
+  const token = new THREE.Group();
+  gift.add(token);
+  token.position.set(0, 1.22, 0.08);
+  token.scale.setScalar(0.001);
+
+  const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.57, 0.57, 0.16, 72), gold);
+  disc.rotation.x = Math.PI / 2;
+  disc.castShadow = true;
+  token.add(disc);
+  const discFace = new THREE.Mesh(new THREE.CircleGeometry(0.505, 72), emblem);
+  discFace.position.z = 0.087;
+  token.add(discFace);
+
+  const shieldShape = new THREE.Shape();
+  shieldShape.moveTo(0, 0.34);
+  shieldShape.quadraticCurveTo(0.2, 0.25, 0.31, 0.2);
+  shieldShape.lineTo(0.28, -0.1);
+  shieldShape.quadraticCurveTo(0.22, -0.34, 0, -0.43);
+  shieldShape.quadraticCurveTo(-0.22, -0.34, -0.28, -0.1);
+  shieldShape.lineTo(-0.31, 0.2);
+  shieldShape.quadraticCurveTo(-0.2, 0.25, 0, 0.34);
+  const shieldMesh = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(shieldShape, { depth: 0.055, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.025, bevelThickness: 0.025 }),
+    white
+  );
+  shieldMesh.position.set(0, 0, 0.105);
+  shieldMesh.castShadow = true;
+  token.add(shieldMesh);
+
+  // Simple VPN glyph inside the shield.
+  const glyph = new THREE.Group();
+  glyph.position.set(0, -0.015, 0.17);
+  token.add(glyph);
+  const strokeMat = new THREE.MeshPhysicalMaterial({ color: 0x5424a5, metalness: 0.28, roughness: 0.2, clearcoat: 1 });
+  const bar1 = new THREE.Mesh(new RoundedBoxGeometry(0.075, 0.36, 0.035, 5, 0.03), strokeMat);
+  bar1.position.set(-0.095, 0, 0);
+  bar1.rotation.z = -0.48;
+  glyph.add(bar1);
+  const bar2 = new THREE.Mesh(new RoundedBoxGeometry(0.075, 0.36, 0.035, 5, 0.03), strokeMat);
+  bar2.position.set(0.095, 0, 0);
+  bar2.rotation.z = 0.48;
+  glyph.add(bar2);
+
+  const starShape = new THREE.Shape();
+  for (let i = 0; i < 10; i++) {
+    const a = Math.PI / 2 + i * Math.PI / 5;
+    const r = i % 2 === 0 ? 0.22 : 0.095;
+    const x = Math.cos(a) * r;
+    const y = Math.sin(a) * r;
+    if (i === 0) starShape.moveTo(x, y);
+    else starShape.lineTo(x, y);
+  }
+  starShape.closePath();
+  const star = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(starShape, { depth: 0.07, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.025, bevelThickness: 0.025 }),
+    goldHi
+  );
+  star.position.set(0.38, -0.34, 0.16);
+  star.castShadow = true;
+  token.add(star);
+
+  const sparks = new THREE.Group();
+  scene.add(sparks);
+  const sparkMat = new THREE.MeshBasicMaterial({ color: 0xffd56a });
+  for (let i = 0; i < 18; i++) {
+    const spark = new THREE.Mesh(new THREE.SphereGeometry(0.02, 8, 8), sparkMat);
+    const angle = i * 2.399;
+    spark.position.set(Math.cos(angle) * (1.8 + (i % 4) * 0.2), 0.6 + (i % 6) * 0.42, Math.sin(angle) * (1.6 + (i % 3) * 0.2));
+    spark.userData.phase = i * 0.7;
+    sparks.add(spark);
+  }
+
+  let active = false, raf = 0, opened = false, startAt = 0;
+  const ease = t => 1 - Math.pow(1 - t, 3);
+  function begin() {
+    opened = false;
+    startAt = performance.now();
+    active = true;
+    if (!raf) raf = requestAnimationFrame(draw);
+  }
+  function draw(now) {
+    raf = 0;
+    if (!active) return;
+    const t = (now - startAt) / 1000;
+    const arrival = ease(Math.min(1, t / 0.82));
+    gift.position.y = -0.28 * (1 - arrival) + Math.sin(t * 1.25) * 0.025 * arrival;
+    gift.rotation.y = -0.2 + Math.sin(t * 0.62) * 0.055;
+    gift.rotation.z = Math.sin(t * 0.9) * 0.012;
+
+    const lidT = Math.max(0, Math.min(1, (t - 0.8) / 1.08));
+    hinge.rotation.x = -1.95 * ease(lidT) + (lidT > 0 ? Math.sin(lidT * Math.PI) * -0.11 : 0);
+
+    const rise = ease(Math.max(0, Math.min(1, (t - 1.28) / 0.92)));
+    token.scale.setScalar(rise);
+    token.position.y = 1.2 + rise * 1.28;
+    token.rotation.set(-0.12, t * 1.1, -0.16);
+    warm.intensity = rise * 34;
+    sparks.visible = t > 1.05;
+    sparks.children.forEach(s => s.scale.setScalar(0.55 + 0.45 * Math.abs(Math.sin(t * 2 + s.userData.phase))));
+
+    renderer.render(scene, camera);
+    raf = requestAnimationFrame(draw);
+    if (t > 7) opened = true;
+  }
+  function resize() {
+    const width = Math.max(1, host.clientWidth);
+    const height = Math.max(1, host.clientHeight);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height, false);
+  }
+  new ResizeObserver(resize).observe(host);
+  new IntersectionObserver(entries => {
+    const visible = entries.some(e => e.isIntersecting);
+    active = visible && screen.classList.contains("active");
+    if (active && !raf) {
+      if (!opened) begin();
+      else raf = requestAnimationFrame(draw);
+    }
+    if (!active && raf) { cancelAnimationFrame(raf); raf = 0; }
+  }, { threshold: 0.05 }).observe(screen);
+  new MutationObserver(() => {
+    if (screen.classList.contains("active")) begin();
+    else {
+      active = false;
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+    }
+  }).observe(screen, { attributes: true, attributeFilter: ["class"] });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      active = false;
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+    } else if (screen.classList.contains("active")) begin();
+  });
+
+  resize();
+  renderer.render(scene, camera);
 })();

@@ -2028,27 +2028,6 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 }
 
 
-/* Owner promo: actual parametric CAD gift, loaded as GLB. */
-#screen-owner-promo.owner-promo-screen{min-height:calc(100svh - 130px);padding:0 2px 28px;overflow:hidden}
-.owner-promo-screen.active{animation:owner-promo-enter .34s cubic-bezier(.2,.75,.2,1) both}
-@keyframes owner-promo-enter{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
-.gift-stage{min-height:calc(100svh - 165px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 0 28px;text-align:center;overflow:hidden}
-.gift-scene{position:relative;width:min(100%,430px);height:390px;display:grid;place-items:center;isolation:isolate}
-#screen-owner-promo .gift-webgl-host{position:absolute;inset:0;width:100%;height:100%;z-index:2}
-#screen-owner-promo .gift-webgl-host canvas{display:block;width:100%;height:100%;outline:none}
-#screen-owner-promo .gift-ground-glow{position:absolute;left:50%;top:55%;width:250px;height:180px;z-index:0;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(ellipse,rgba(49,133,255,.24),rgba(49,133,255,.08) 48%,transparent 72%);filter:blur(22px);opacity:0}
-#screen-owner-promo .gift-reference-image{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:16px}
-.gift-copy{position:relative;z-index:3;width:min(100%,390px);padding:0 18px;opacity:0;transform:translateY(12px)}
-.gift-eyebrow{display:inline-block;margin-bottom:12px;color:var(--bright);font-size:10px;font-weight:800;letter-spacing:.16em}
-.gift-copy h1{margin:0;color:var(--text);font-size:clamp(25px,7vw,32px);line-height:1.08;letter-spacing:-.055em;font-weight:800}
-.gift-copy p{max-width:330px;margin:12px auto 0;color:var(--secondary);font-size:14px;line-height:1.5}
-.gift-stage.is-opening .gift-ground-glow{animation:gift-glow-in .8s .35s ease-out forwards}
-.gift-stage.is-opening .gift-copy{animation:gift-copy-in .55s 1.25s cubic-bezier(.2,.8,.2,1) forwards}
-@keyframes gift-glow-in{to{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
-@keyframes gift-copy-in{to{opacity:1;transform:translateY(0)}}
-@media(max-width:380px){.gift-scene{height:350px}}
-@media(prefers-reduced-motion:reduce){.gift-stage.is-opening .gift-copy{animation:none;opacity:1;transform:none}.gift-stage.is-opening .gift-ground-glow{opacity:.7}}
- 
 /* Catalog expanded rows: keep the rating star anchored to the avatar, independent of row expansion. */
 #screen-catalog .service-list-card > .service-mini-card > .service-avatar-rating{
   position:relative!important;
@@ -2104,9 +2083,28 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 }
 
 
-/* Three.js promo gift: isolated transparent WebGL scene for the owner-promo screen. */
-#screen-owner-promo .gift-webgl-host{position:absolute;inset:0;width:100%;height:100%;z-index:2;overflow:visible;pointer-events:none}
+
+
+/* Owner promo — dedicated interactive 3D gift stage. */
+#screen-owner-promo.owner-promo-screen{min-height:calc(100svh - 130px);padding:0 2px 28px;overflow:hidden}
+#screen-owner-promo.owner-promo-screen.active{animation:owner-promo-enter .34s cubic-bezier(.2,.75,.2,1) both}
+@keyframes owner-promo-enter{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+#screen-owner-promo .gift-stage{min-height:calc(100svh - 165px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0 28px;text-align:center;overflow:hidden}
+#screen-owner-promo .gift-scene{position:relative;width:min(100%,460px);height:clamp(340px,48svh,440px);display:grid;place-items:center;isolation:isolate;flex:0 0 auto}
+#screen-owner-promo .gift-webgl-host{position:absolute;inset:0;z-index:2;width:100%;height:100%;overflow:visible;pointer-events:none}
 #screen-owner-promo .gift-webgl-host canvas{display:block;width:100%;height:100%;outline:none;pointer-events:none}
-#screen-owner-promo .gift-reference-image{position:absolute;left:50%;top:50%;display:block;width:min(100%,360px);height:100%;max-height:360px;object-fit:contain;transform:translate(-50%,-50%);filter:drop-shadow(0 18px 18px rgba(0,25,70,.18))}
-@media(max-width:380px){#screen-owner-promo .gift-webgl-host canvas{width:100%;height:100%}}
-@media(prefers-reduced-motion:reduce){#screen-owner-promo .gift-stage.is-opening .gift-reference-image{animation:none}}
+#screen-owner-promo .gift-ground-glow{position:absolute;left:50%;top:74%;width:270px;height:170px;z-index:0;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(ellipse,rgba(49,133,255,.2),rgba(49,133,255,.065) 48%,transparent 72%);filter:blur(22px);opacity:0}
+#screen-owner-promo .gift-copy{position:relative;z-index:3;width:min(100%,390px);padding:0 18px;opacity:0;transform:translateY(12px)}
+#screen-owner-promo .gift-eyebrow{display:inline-block;margin-bottom:12px;color:var(--bright);font-size:10px;font-weight:800;letter-spacing:.16em}
+#screen-owner-promo .gift-copy h1{margin:0;color:var(--text);font-size:clamp(25px,7vw,32px);line-height:1.08;letter-spacing:-.055em;font-weight:800}
+#screen-owner-promo .gift-copy p{max-width:330px;margin:12px auto 0;color:var(--secondary);font-size:14px;line-height:1.5}
+#screen-owner-promo .gift-stage.is-opening .gift-ground-glow{animation:gift-glow-in .8s .35s ease-out forwards}
+#screen-owner-promo .gift-stage.is-opening .gift-copy{animation:gift-copy-in .55s 1.25s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes gift-glow-in{to{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
+@keyframes gift-copy-in{to{opacity:1;transform:translateY(0)}}
+@media(max-width:380px){#screen-owner-promo .gift-scene{height:350px}}
+@media(prefers-reduced-motion:reduce){
+  #screen-owner-promo.owner-promo-screen.active{animation:none}
+  #screen-owner-promo .gift-stage.is-opening .gift-copy{animation:none;opacity:1;transform:none}
+  #screen-owner-promo .gift-stage.is-opening .gift-ground-glow{opacity:.7}
+}

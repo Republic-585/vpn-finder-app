@@ -2089,12 +2089,12 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 #screen-owner-promo.owner-promo-screen{min-height:calc(100svh - 130px);padding:0 2px 28px;overflow:hidden}
 #screen-owner-promo.owner-promo-screen.active{animation:owner-promo-enter .34s cubic-bezier(.2,.75,.2,1) both}
 @keyframes owner-promo-enter{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
-#screen-owner-promo .gift-stage{min-height:calc(100svh - 165px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0 28px;text-align:center;overflow:hidden}
+#screen-owner-promo .gift-stage{min-height:calc(100svh - 165px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 0 40px;text-align:center;overflow:hidden}
 #screen-owner-promo .gift-scene{position:relative;width:min(100%,460px);height:clamp(340px,48svh,440px);display:grid;place-items:center;isolation:isolate;flex:0 0 auto}
 #screen-owner-promo .gift-webgl-host{position:absolute;inset:0;z-index:2;width:100%;height:100%;overflow:visible;pointer-events:none}
 #screen-owner-promo .gift-webgl-host canvas{display:block;width:100%;height:100%;outline:none;pointer-events:none}
 #screen-owner-promo .gift-ground-glow{position:absolute;left:50%;top:74%;width:270px;height:170px;z-index:0;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(ellipse,rgba(49,133,255,.2),rgba(49,133,255,.065) 48%,transparent 72%);filter:blur(22px);opacity:0}
-#screen-owner-promo .gift-copy{position:relative;z-index:3;width:min(100%,390px);padding:0 18px;opacity:0;transform:translateY(12px)}
+#screen-owner-promo .gift-copy{position:relative;z-index:3;width:min(100%,390px);padding:0 18px;opacity:1;transform:none}
 #screen-owner-promo .gift-eyebrow{display:inline-block;margin-bottom:12px;color:var(--bright);font-size:10px;font-weight:800;letter-spacing:.16em}
 #screen-owner-promo .gift-copy h1{margin:0;color:var(--text);font-size:clamp(25px,7vw,32px);line-height:1.08;letter-spacing:-.055em;font-weight:800}
 #screen-owner-promo .gift-copy p{max-width:330px;margin:12px auto 0;color:var(--secondary);font-size:14px;line-height:1.5}

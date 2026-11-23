@@ -2108,3 +2108,5 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   #screen-owner-promo .gift-stage.is-opening .gift-copy{animation:none;opacity:1;transform:none}
   #screen-owner-promo .gift-stage.is-opening .gift-ground-glow{opacity:.7}
 }
+
+#screen-owner-promo .gift-reference-image{position:absolute;left:50%;top:50%;display:block;width:min(100%,360px);height:100%;max-height:360px;object-fit:contain;transform:translate(-50%,-50%);filter:drop-shadow(0 18px 18px rgba(0,25,70,.18))}

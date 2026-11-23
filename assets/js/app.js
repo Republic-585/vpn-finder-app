@@ -1,6 +1,6 @@
 (() => {
 const tg = window.Telegram?.WebApp;
-const ownerPromoNativeButton = tg?.MainButton || tg?.BottomButton || null;
+const ownerPromoNativeButton = tg?.BottomButton || tg?.MainButton || null;
 if (ownerPromoNativeButton) {
   try {
     ownerPromoNativeButton.setParams({
@@ -411,7 +411,7 @@ function showScreen(name, backScreen = null) {
         text: "Добавить сервис",
         color: tg?.themeParams?.button_color || "#3390EC",
         text_color: tg?.themeParams?.button_text_color || "#FFFFFF",
-      has_shine_effect: true,
+        has_shine_effect: true,
         is_active: true,
         is_visible: true
       });

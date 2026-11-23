@@ -3,7 +3,14 @@ const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
   tg.expand();
-  try { tg.setHeaderColor("#202124"); tg.setBackgroundColor("#202124"); } catch (_) {}
+  const applyTelegramColors = () => {
+    const nativeBg = tg.themeParams?.bg_color || "#202124";
+    document.documentElement.style.setProperty("--tg-native-bg", nativeBg);
+    document.documentElement.style.colorScheme = tg.colorScheme || "dark";
+    try { tg.setHeaderColor(nativeBg); tg.setBackgroundColor(nativeBg); } catch (_) {}
+  };
+  applyTelegramColors();
+  tg.onEvent?.("themeChanged", applyTelegramColors);
 }
 
 const SUPABASE_URL = "https://januqesxribuqzmmmdun.supabase.co";

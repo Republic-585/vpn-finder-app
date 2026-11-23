@@ -1,5 +1,5 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js";
-import { RoundedBoxGeometry } from "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/geometries/RoundedBoxGeometry.js";
+import * as THREE from "https://esm.sh/three@0.170.0";
+import { RoundedBoxGeometry } from "https://esm.sh/three@0.170.0/examples/jsm/geometries/RoundedBoxGeometry.js";
 (() => {
 const screen=document.getElementById("screen-owner-promo"), host=document.getElementById("owner-gift-canvas");
 if(!screen||!host)return;

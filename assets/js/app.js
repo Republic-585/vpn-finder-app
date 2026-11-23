@@ -77,20 +77,24 @@ const startupSplashStartedAt = performance.now();
 let startupSplashFinished = false;
 let startupHapticTimer = null;
 let startupHapticStage = 0;
-const startupHapticLevels = ["soft", "medium", "heavy", "rigid"];
+const startupHapticLevels = ["soft", "medium", "heavy"];
+const startupHapticDurations = [12, 22, 34];
 const pulseStartupHaptic = () => {
-  if (startupSplashFinished || document.visibilityState === "hidden") return;
+  if (startupSplashFinished || document.visibilityState === "hidden" || startupHapticStage >= 3) {
+    startupHapticTimer = null;
+    return;
+  }
   try {
     if (tg?.HapticFeedback?.impactOccurred) {
-      const level = startupHapticLevels[Math.min(startupHapticStage, startupHapticLevels.length - 1)];
-      tg.HapticFeedback.impactOccurred(level);
+      tg.HapticFeedback.impactOccurred(startupHapticLevels[startupHapticStage]);
     } else if (typeof navigator.vibrate === "function") {
-      const durations = [12, 22, 34, 48, 58];
-      navigator.vibrate(durations[Math.min(startupHapticStage, durations.length - 1)]);
+      navigator.vibrate(startupHapticDurations[startupHapticStage]);
     }
   } catch (_) {}
-  startupHapticStage = Math.min(startupHapticStage + 1, 4);
-  startupHapticTimer = window.setTimeout(pulseStartupHaptic, startupHapticStage < 4 ? 420 : 680);
+  startupHapticStage += 1;
+  startupHapticTimer = startupHapticStage < 3
+    ? window.setTimeout(pulseStartupHaptic, 420)
+    : null;
 };
 const startStartupHaptics = () => {
   if (startupHapticTimer || startupSplashFinished) return;
@@ -110,11 +114,6 @@ const finishStartupSplash = () => {
   const splash = document.getElementById("startup-splash");
   document.body.classList.add("app-ready");
   if (!splash) return;
-  // A final strong impulse marks the moment the catalog is ready.
-  try {
-    if (tg?.HapticFeedback?.impactOccurred) tg.HapticFeedback.impactOccurred("rigid");
-    else if (typeof navigator.vibrate === "function") navigator.vibrate(58);
-  } catch (_) {}
   const entranceRemaining = Math.max(0, 560 - (performance.now() - startupSplashStartedAt));
   window.setTimeout(() => {
     requestAnimationFrame(() => {

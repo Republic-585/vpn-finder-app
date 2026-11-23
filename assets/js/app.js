@@ -371,20 +371,6 @@ function navHaptic() {
 let moveIndicator = () => {};
 const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analytics", "support"]);
 let ownersBackScreen = "catalog";
-let ownerPromoGiftAnimation = null;
-function initOwnerPromoGift() {
-  const host = document.getElementById("owner-promo-lottie");
-  if (!host || host.dataset.initialized === "true" || !window.lottie) return;
-  host.dataset.initialized = "true";
-  ownerPromoGiftAnimation = window.lottie.loadAnimation({
-    container: host,
-    renderer: "svg",
-    loop: true,
-    autoplay: true,
-    path: "./assets/animations/vpn-finder-gift-lottie.json"
-  });
-  ownerPromoGiftAnimation.setSpeed(0.85);
-}
 function showScreen(name, backScreen = null) {
   if (name === "owners") {
     const currentScreen = document.querySelector(".screen.active")?.dataset.screen;
@@ -404,7 +390,6 @@ function showScreen(name, backScreen = null) {
     navBar.classList.add("is-switching");
   }
   screens.forEach(screen => screen.classList.toggle("active", screen.dataset.screen === name));
-  if (name === "owner-promo") initOwnerPromoGift();
   nav.forEach(button => {
     const active = button.dataset.go === name;
     button.classList.toggle("active", active);

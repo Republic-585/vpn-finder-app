@@ -2139,3 +2139,43 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   #screen-owner-promo .gift-stage.gift-fallback-ready .gift-reference-image{animation:none}
   #screen-owner-promo .gift-stage.gift-fallback-open .gift-reference-image{animation:none;transform:translate(-50%,-50%) scale(1.04)}
 }
+
+
+/* Native Telegram Mini App gift scene — lightweight layered PNG + CSS motion. */
+#screen-owner-promo .gift-native-scene{position:relative;width:min(100%,390px);height:clamp(330px,47svh,420px);display:grid;place-items:center;isolation:isolate;flex:0 0 auto;overflow:visible}
+#screen-owner-promo .gift-art{position:relative;width:min(100%,360px);aspect-ratio:1295/1214;z-index:2;transform:translateY(3px);animation:gift-art-float 4.6s ease-in-out infinite;filter:drop-shadow(0 20px 20px rgba(5,35,90,.2));will-change:transform}
+#screen-owner-promo .gift-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
+#screen-owner-promo .gift-art-body{z-index:2;clip-path:polygon(19% 52%,80% 56%,78% 82%,22% 80%); }
+#screen-owner-promo .gift-inner{position:absolute;z-index:1;left:21%;top:51%;width:59%;height:14%;clip-path:polygon(0 0,100% 12%,88% 100%,12% 88%);background:linear-gradient(145deg,#123c91 0%,#071f57 54%,#1b55b8 100%);box-shadow:inset 0 9px 18px rgba(0,0,0,.28);opacity:0;transform:scaleY(.4);transform-origin:top;transition:opacity .3s ease,transform .55s cubic-bezier(.2,.8,.2,1)}
+#screen-owner-promo .gift-art-lid{z-index:4;clip-path:polygon(19% 12%,78% 13%,89% 56%,20% 52%);transform-origin:51% 53%;transform-style:preserve-3d;backface-visibility:visible;transition:transform 1.05s cubic-bezier(.2,.8,.18,1);will-change:transform}
+#screen-owner-promo .gift-reward{position:absolute;z-index:3;left:50%;top:54%;width:54px;height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;opacity:0;transform:translate(-50%,-105px) scale(.55);filter:drop-shadow(0 6px 8px rgba(0,0,0,.25));}
+#screen-owner-promo .gift-reward svg{width:43px;height:43px}
+#screen-owner-promo .gift-reward span{margin-top:-5px;color:#fff;font-size:8px;line-height:1;font-weight:900;letter-spacing:.08em;text-shadow:0 1px 3px #143b83}
+#screen-owner-promo .gift-sparkles{position:absolute;inset:4% 0 7%;z-index:5;pointer-events:none}
+#screen-owner-promo .gift-sparkles i{position:absolute;width:7px;height:7px;border-radius:50%;background:radial-gradient(circle,#fff9d7 0 18%,#ffd66b 35%,rgba(255,190,45,0) 74%);filter:drop-shadow(0 0 5px rgba(255,195,70,.9));opacity:0;animation:gift-sparkle 2.8s ease-in-out infinite}
+#screen-owner-promo .gift-sparkles i:nth-child(1){left:13%;top:35%;animation-delay:.1s}
+#screen-owner-promo .gift-sparkles i:nth-child(2){left:81%;top:28%;animation-delay:.8s}
+#screen-owner-promo .gift-sparkles i:nth-child(3){left:8%;top:67%;animation-delay:1.4s}
+#screen-owner-promo .gift-sparkles i:nth-child(4){left:89%;top:65%;animation-delay:.5s}
+#screen-owner-promo .gift-sparkles i:nth-child(5){left:27%;top:12%;animation-delay:1.1s}
+#screen-owner-promo .gift-sparkles i:nth-child(6){left:70%;top:9%;animation-delay:1.8s}
+#screen-owner-promo .gift-sparkles i:nth-child(7){left:50%;top:4%;animation-delay:.6s}
+#screen-owner-promo .gift-sparkles i:nth-child(8){left:92%;top:45%;animation-delay:1.6s}
+#screen-owner-promo .gift-sparkles i:nth-child(9){left:5%;top:48%;animation-delay:2s}
+#screen-owner-promo .gift-sparkles i:nth-child(10){left:61%;top:78%;animation-delay:1.3s}
+#screen-owner-promo .gift-sparkles i:nth-child(3n){width:11px;height:11px}
+#screen-owner-promo .gift-ground-glow{position:absolute;left:50%;top:76%;width:250px;height:100px;z-index:0;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse,rgba(44,125,255,.2),rgba(49,133,255,.06) 48%,transparent 72%);filter:blur(18px);opacity:.65}
+#screen-owner-promo .gift-stage.is-opening .gift-art{animation:gift-art-arrive .9s cubic-bezier(.2,.8,.2,1) both, gift-art-float 4.6s 1s ease-in-out infinite}
+#screen-owner-promo .gift-stage.is-opening .gift-art-lid{animation:gift-lid-open 1.15s 1.1s cubic-bezier(.2,.8,.18,1) forwards}
+#screen-owner-promo .gift-stage.is-opening .gift-inner{opacity:1;transform:scaleY(1);transition-delay:1.3s}
+#screen-owner-promo .gift-stage.is-opening .gift-reward{animation:gift-reward-drop 1.15s 1.65s cubic-bezier(.18,.78,.25,1) forwards}
+#screen-owner-promo .gift-stage.is-opening .gift-sparkles i{animation-name:gift-sparkle-burst}
+#screen-owner-promo .gift-stage.is-opening .gift-sparkles i:nth-child(2n){animation-delay:.35s}
+@keyframes gift-art-float{0%,100%{translate:0 0}50%{translate:0 -9px}}
+@keyframes gift-art-arrive{0%{transform:translateY(22px) scale(.88);opacity:0}100%{transform:translateY(3px) scale(1);opacity:1}}
+@keyframes gift-lid-open{0%{transform:rotateX(0) translateY(0)}55%{transform:rotateX(-72deg) translateY(-20px)}100%{transform:rotateX(-68deg) translateY(-17px)}}
+@keyframes gift-reward-drop{0%{opacity:0;transform:translate(-50%,-115px) scale(.55) rotate(-12deg)}25%{opacity:1}72%{opacity:1;transform:translate(-50%,14px) scale(1.05) rotate(5deg)}88%{transform:translate(-50%,2px) scale(.92) rotate(-2deg)}100%{opacity:1;transform:translate(-50%,7px) scale(1) rotate(0)}}
+@keyframes gift-sparkle{0%,100%{opacity:0;transform:scale(.3)}45%{opacity:.95;transform:scale(1.2)}70%{opacity:.35;transform:scale(.7)}}
+@keyframes gift-sparkle-burst{0%,100%{opacity:.2;transform:scale(.5)}35%{opacity:1;transform:scale(1.55)}65%{opacity:.65;transform:scale(.9)}}
+@media(prefers-reduced-motion:reduce){#screen-owner-promo .gift-art,#screen-owner-promo .gift-sparkles i{animation:none!important}#screen-owner-promo .gift-art-lid{transform:rotateX(-65deg)!important}#screen-owner-promo .gift-inner{opacity:1;transform:none}#screen-owner-promo .gift-reward{opacity:1;transform:translate(-50%,7px)}}
+@media(max-width:380px){#screen-owner-promo .gift-native-scene{height:clamp(300px,43svh,360px)}#screen-owner-promo .gift-art{width:min(100%,330px)}}

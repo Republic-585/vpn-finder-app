@@ -2477,66 +2477,34 @@ button:not(.round-action):not(.clear-search):not(.catalog-promo-more-hit):not(.c
 .support-preset span{font-size:12px!important;font-weight:500!important;line-height:1.2!important}
 
 
-/* Support project: demo-style Telegram BottomButton shine on the two support actions. */
-#screen-support #support-pay-button,
-#screen-support #crypto-copy-address{
-  position:relative!important;
-  isolation:isolate;
-  overflow:hidden;
-}
-#screen-support #support-pay-button::before,
-#screen-support #crypto-copy-address::before{
-  content:"";
-  position:absolute;
-  z-index:2;
-  top:0;
-  left:-100%;
-  width:100%;
-  height:100%;
-  pointer-events:none;
-  background:linear-gradient(120deg,transparent,rgba(255,255,255,.2),transparent);
-  animation:support-native-button-shine 6s ease-in-out infinite;
-}
-@keyframes support-native-button-shine{
-  0%{left:-100%}
-  12%,100%{left:100%}
-}
-@media(prefers-reduced-motion:reduce){
-  #screen-support #support-pay-button::before,
-  #screen-support #crypto-copy-address::before{animation:none!important;display:none!important}
-}
 
-
-/* Support actions: mirror the native Telegram BottomButton proportions and label scale. */
-#screen-support #support-pay-button,
-#screen-support #crypto-copy-address{
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  box-sizing:border-box!important;
-  width:100%!important;
-  min-width:0!important;
-  min-height:48px!important;
-  height:48px!important;
-  margin:0!important;
-  padding:0 22px!important;
-  border:0!important;
-  border-radius:999px!important;
-  background:var(--tg-theme-button-color,var(--blue))!important;
-  color:var(--tg-theme-button-text-color,#fff)!important;
-  font-family:var(--font-family)!important;
-  font-size:16px!important;
-  font-weight:600!important;
-  line-height:1.2!important;
-  letter-spacing:normal!important;
-  text-align:center!important;
-  white-space:nowrap!important;
-  box-shadow:none!important;
-  -webkit-font-smoothing:antialiased!important;
-  -webkit-tap-highlight-color:transparent;
-}
-#screen-support #support-pay-button:active,
-#screen-support #crypto-copy-address:active{
-  transform:scale(.98);
-  filter:brightness(1.06);
-}
+/* VPN Finder support screen — restrained native Telegram layout. */
+#screen-support{padding-bottom:calc(28px + env(safe-area-inset-bottom))}
+#screen-support .support-hero{text-align:center;padding:8px 8px 22px}
+#screen-support .support-orb{display:block;width:min(62vw,238px);height:auto;max-height:238px;object-fit:contain;margin:0 auto 8px;animation:support-orb-float 6.5s ease-in-out infinite;filter:drop-shadow(0 12px 24px rgba(0,0,0,.2))}
+#screen-support .support-hero h1{margin:0;color:#fff;font-size:27px;line-height:1.12;letter-spacing:-.055em;font-weight:700}
+#screen-support .support-hero p{max-width:290px;margin:9px auto 0;color:rgba(255,255,255,.68);font-size:13px;line-height:1.5}
+@keyframes support-orb-float{0%,100%{transform:translate3d(0,0,0) rotate(-1deg)}50%{transform:translate3d(0,-8px,0) rotate(1deg)}}
+#screen-support .support-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:0 0 18px;padding:4px;border:1px solid rgba(255,255,255,.1);border-radius:999px;background:rgba(255,255,255,.07)}
+#screen-support .support-tab{min-height:40px;border-radius:999px;background:transparent;color:rgba(255,255,255,.62);font:inherit;font-size:13px;font-weight:600}
+#screen-support .support-tab.is-active{background:#fff;color:#202124;box-shadow:0 1px 5px rgba(0,0,0,.15)}
+#screen-support .support-panel[hidden]{display:none}
+#screen-support .support-stars-panel,#screen-support .crypto-support{margin:0;padding:0;border:0;background:transparent}
+#screen-support .support-section-title{margin:0 0 12px;color:#fff;font-size:14px;font-weight:600}
+#screen-support .support-presets{gap:8px;margin:0 0 18px}
+#screen-support .support-preset{min-height:72px;border:1px solid rgba(255,255,255,.11);border-radius:17px;background:rgba(255,255,255,.055);color:#fff}
+#screen-support .support-preset span{color:rgba(255,255,255,.56)}
+#screen-support .support-preset.is-selected{border-color:rgba(255,203,75,.8);background:rgba(255,203,75,.11)}
+#screen-support .support-form label{display:block;margin-top:0;color:rgba(255,255,255,.75);font-size:12px;font-weight:500}
+#screen-support .support-form input{width:100%;margin-top:8px;min-height:48px;padding:0 14px;border:1px solid rgba(255,255,255,.13);border-radius:14px;background:rgba(255,255,255,.07);color:#fff;font-size:16px}
+#screen-support .profile-form-status{min-height:18px;margin:10px 0 0;color:rgba(255,255,255,.72);font-size:12px;line-height:1.45}
+#screen-support .crypto-support-card{padding:20px 17px;border:1px solid rgba(255,255,255,.1);border-radius:20px;background:rgba(255,255,255,.055)}
+#screen-support .crypto-support-kicker{color:rgba(255,255,255,.48);font-size:10px;font-weight:700;letter-spacing:.12em}
+#screen-support .crypto-support-card h2{margin:8px 0 7px;color:#fff;font-size:20px;letter-spacing:-.035em}
+#screen-support .crypto-support-note{margin:0 0 17px;color:rgba(255,255,255,.65);font-size:12px;line-height:1.5}
+#screen-support .crypto-address-wrap{display:flex;align-items:center;gap:10px;padding:13px 12px;border:1px solid rgba(255,255,255,.11);border-radius:13px;background:rgba(0,0,0,.13)}
+#screen-support .crypto-support-address{min-width:0;overflow-wrap:anywhere;color:#fff;font-family:inherit;font-size:11px;line-height:1.5}
+#screen-support .crypto-copy-symbol{flex:0 0 auto;color:rgba(255,255,255,.68);font-size:20px}
+#screen-support #support-pay-button[hidden],#screen-support #crypto-copy-address[hidden]{display:none!important}
+#screen-support .support-pay-button,#screen-support #crypto-copy-address{display:none!important}
+@media(prefers-reduced-motion:reduce){#screen-support .support-orb{animation:none}}

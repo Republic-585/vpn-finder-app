@@ -6,10 +6,10 @@
 <meta name="theme-color" content="#202124">
 <meta name="description" content="VPN Finder">
 <title>VPN Finder</title>
-<link rel="stylesheet" href="./assets/css/styles.css?v=20261123-support-button-shine-v8">
+<link rel="stylesheet" href="./assets/css/styles.css?v=20261123-support-screen-v9">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="./assets/avatars/manifest.js?v=20261123-avatar-local-v2"></script>
-<script defer src="./assets/js/app.js?v=20261123-support-button-shine-v5"></script>
+<script defer src="./assets/js/app.js?v=20261123-support-screen-v9"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -93,37 +93,46 @@
     </article>
   </section>
 
-  <section class="screen" id="screen-support" data-screen="support">
-    <div class="page-heading"><h1>Поддержать проект</h1></div>
+  <section class="screen support-screen" id="screen-support" data-screen="support">
+    <div class="support-hero">
+      <img class="support-orb" src="./assets/images/support-star-orb.png" alt="Голубая стеклянная сфера с золотой звездой">
+      <h1>Поддержать VPN Finder</h1>
+      <p>Помоги проекту развиваться и делать поиск VPN удобнее.</p>
+    </div>
+
     <div class="support-tabs" role="tablist" aria-label="Способ поддержки">
       <button class="support-tab is-active" id="support-tab-stars" type="button" role="tab" aria-selected="true" aria-controls="support-panel-stars" data-support-tab="stars">Telegram Stars</button>
       <button class="support-tab" id="support-tab-crypto" type="button" role="tab" aria-selected="false" aria-controls="support-panel-crypto" data-support-tab="crypto">Crypto</button>
     </div>
 
-    <section class="support-panel" id="support-panel-stars" role="tabpanel" aria-labelledby="support-tab-stars">
+    <section class="support-panel support-stars-panel" id="support-panel-stars" role="tabpanel" aria-labelledby="support-tab-stars">
       <form class="profile-form support-form" id="support-form" onsubmit="return false">
+        <p class="support-section-title">Выбери сумму поддержки</p>
         <div class="support-presets" aria-label="Варианты поддержки">
-          <button class="support-preset is-selected" type="button" data-support-amount="100"><strong>100 <svg class="telegram-stars-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><defs><linearGradient id="telegram-star-gold-100" x1="5" y1="2" x2="19" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF2A6"/><stop offset=".32" stop-color="#FFD84D"/><stop offset=".68" stop-color="#FFB800"/><stop offset="1" stop-color="#E98500"/></linearGradient><linearGradient id="telegram-star-shine-100" x1="8" y1="4" x2="16" y2="15" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFFFF" stop-opacity=".9"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient></defs><path d="M12 1.65c.55 0 1.04.31 1.29.81l2.55 5.17 5.7.83c1.18.17 1.65 1.62.8 2.45l-4.12 4.02.97 5.68c.2 1.18-1.03 2.08-2.08 1.52L12 19.45l-5.1 2.68c-1.06.56-2.29-.34-2.09-1.52l.98-5.68-4.13-4.02c-.85-.83-.38-2.28.8-2.45l5.7-.83 2.55-5.17c.25-.5.74-.81 1.29-.81Z" fill="url(#telegram-star-gold-100)" stroke="#D98A00" stroke-width=".55"/><path d="m12 3.3 2.3 4.66 5.15.75-3.73 3.64.88 5.13L12 15.06l-4.6 2.42.88-5.13-3.73-3.64 5.15-.75L12 3.3Z" fill="url(#telegram-star-shine-100)" opacity=".7"/><path d="m12 2.5 2.05 4.15" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-opacity=".8" stroke-width="1.1"/></svg></strong><span>$1.30 · ≈107 ₽</span></button>
-          <button class="support-preset" type="button" data-support-amount="500"><strong>500 <svg class="telegram-stars-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><defs><linearGradient id="telegram-star-gold-500" x1="5" y1="2" x2="19" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF2A6"/><stop offset=".32" stop-color="#FFD84D"/><stop offset=".68" stop-color="#FFB800"/><stop offset="1" stop-color="#E98500"/></linearGradient><linearGradient id="telegram-star-shine-500" x1="8" y1="4" x2="16" y2="15" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFFFF" stop-opacity=".9"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient></defs><path d="M12 1.65c.55 0 1.04.31 1.29.81l2.55 5.17 5.7.83c1.18.17 1.65 1.62.8 2.45l-4.12 4.02.97 5.68c.2 1.18-1.03 2.08-2.08 1.52L12 19.45l-5.1 2.68c-1.06.56-2.29-.34-2.09-1.52l.98-5.68-4.13-4.02c-.85-.83-.38-2.28.8-2.45l5.7-.83 2.55-5.17c.25-.5.74-.81 1.29-.81Z" fill="url(#telegram-star-gold-500)" stroke="#D98A00" stroke-width=".55"/><path d="m12 3.3 2.3 4.66 5.15.75-3.73 3.64.88 5.13L12 15.06l-4.6 2.42.88-5.13-3.73-3.64 5.15-.75L12 3.3Z" fill="url(#telegram-star-shine-500)" opacity=".7"/><path d="m12 2.5 2.05 4.15" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-opacity=".8" stroke-width="1.1"/></svg></strong><span>$6.50 · ≈534 ₽</span></button>
-          <button class="support-preset" type="button" data-support-amount="1000"><strong>1 000 <svg class="telegram-stars-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><defs><linearGradient id="telegram-star-gold-1000" x1="5" y1="2" x2="19" y2="22" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF2A6"/><stop offset=".32" stop-color="#FFD84D"/><stop offset=".68" stop-color="#FFB800"/><stop offset="1" stop-color="#E98500"/></linearGradient><linearGradient id="telegram-star-shine-1000" x1="8" y1="4" x2="16" y2="15" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFFFF" stop-opacity=".9"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient></defs><path d="M12 1.65c.55 0 1.04.31 1.29.81l2.55 5.17 5.7.83c1.18.17 1.65 1.62.8 2.45l-4.12 4.02.97 5.68c.2 1.18-1.03 2.08-2.08 1.52L12 19.45l-5.1 2.68c-1.06.56-2.29-.34-2.09-1.52l.98-5.68-4.13-4.02c-.85-.83-.38-2.28.8-2.45l5.7-.83 2.55-5.17c.25-.5.74-.81 1.29-.81Z" fill="url(#telegram-star-gold-1000)" stroke="#D98A00" stroke-width=".55"/><path d="m12 3.3 2.3 4.66 5.15.75-3.73 3.64.88 5.13L12 15.06l-4.6 2.42.88-5.13-3.73-3.64 5.15-.75L12 3.3Z" fill="url(#telegram-star-shine-1000)" opacity=".7"/><path d="m12 2.5 2.05 4.15" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-opacity=".8" stroke-width="1.1"/></svg></strong><span>$13.00 · ≈1 068 ₽</span></button>
+          <button class="support-preset is-selected" type="button" data-support-amount="100"><strong>100 <svg class="telegram-stars-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 1.65c.55 0 1.04.31 1.29.81l2.55 5.17 5.7.83c1.18.17 1.65 1.62.8 2.45l-4.12 4.02.97 5.68c.2 1.18-1.03 2.08-2.08 1.52L12 19.45l-5.1 2.68c-1.06.56-2.29-.34-2.09-1.52l.98-5.68-4.13-4.02c-.85-.83-.38-2.28.8-2.45l5.7-.83 2.55-5.17c.25-.5.74-.81 1.29-.81Z" fill="#FFC83D" stroke="#D98A00" stroke-width=".6"/></svg></strong><span>≈ 107 ₽</span></button>
+          <button class="support-preset" type="button" data-support-amount="500"><strong>500 <svg class="telegram-stars-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 1.65c.55 0 1.04.31 1.29.81l2.55 5.17 5.7.83c1.18.17 1.65 1.62.8 2.45l-4.12 4.02.97 5.68c.2 1.18-1.03 2.08-2.08 1.52L12 19.45l-5.1 2.68c-1.06.56-2.29-.34-2.09-1.52l.98-5.68-4.13-4.02c-.85-.83-.38-2.28.8-2.45l5.7-.83 2.55-5.17c.25-.5.74-.81 1.29-.81Z" fill="#FFC83D" stroke="#D98A00" stroke-width=".6"/></svg></strong><span>≈ 534 ₽</span></button>
+          <button class="support-preset" type="button" data-support-amount="1000"><strong>1 000 <svg class="telegram-stars-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 1.65c.55 0 1.04.31 1.29.81l2.55 5.17 5.7.83c1.18.17 1.65 1.62.8 2.45l-4.12 4.02.97 5.68c.2 1.18-1.03 2.08-2.08 1.52L12 19.45l-5.1 2.68c-1.06.56-2.29-.34-2.09-1.52l.98-5.68-4.13-4.02c-.85-.83-.38-2.28.8-2.45l5.7-.83 2.55-5.17c.25-.5.74-.81 1.29-.81Z" fill="#FFC83D" stroke="#D98A00" stroke-width=".6"/></svg></strong><span>≈ 1 068 ₽</span></button>
         </div>
-        <label for="support-amount">Или укажи другую сумму в Stars<input id="support-amount" type="number" min="1" max="100000" step="1" inputmode="numeric" value="100"></label>
-        <button class="connect-button support-pay-button" id="support-pay-button" type="button">Оплатить Stars</button>
+        <label for="support-amount">Или введи свою сумму в Stars
+          <input id="support-amount" type="number" min="1" max="100000" step="1" inputmode="numeric" value="100">
+        </label>
+        <button class="connect-button support-pay-button" id="support-pay-button" type="button" hidden>Оплатить Stars</button>
         <p class="profile-form-status" id="support-dialog-status" role="status" aria-live="polite"></p>
       </form>
     </section>
 
     <section class="support-panel crypto-support" id="support-panel-crypto" role="tabpanel" aria-labelledby="support-tab-crypto" hidden>
-      <label for="crypto-support-amount">Сумма в USDT
-        <input id="crypto-support-amount" type="number" min="2.50" max="1000000" step="0.01" inputmode="decimal" value="2.50">
-      </label>
-      <p class="crypto-support-network">USDT · сеть TON</p>
-      <p class="crypto-support-address-label">Адрес для перевода</p>
-      <code class="crypto-support-address">UQBt5EVLJ5Q4lljC41RKTGMiXZBevXwRVXIES9Cgy_B9lLgo</code>
-      <div class="crypto-support-actions">
-        <button class="connect-button" id="crypto-copy-address" type="button">Скопировать адрес</button>
+      <div class="crypto-support-card">
+        <span class="crypto-support-kicker">КРИПТОВАЛЮТА</span>
+        <h2>USDT в сети TON</h2>
+        <p class="crypto-support-note">Переведи любую удобную сумму на адрес ниже. Перед отправкой проверь сеть TON.</p>
+        <div class="crypto-address-wrap">
+          <code class="crypto-support-address">UQBt5EVLJ5Q4lljC41RKTGMiXZBevXwRVXIES9Cgy_B9lLgo</code>
+          <span class="crypto-copy-symbol" aria-hidden="true">⧉</span>
+        </div>
+        <button class="connect-button" id="crypto-copy-address" type="button" hidden>Скопировать адрес</button>
+        <p class="profile-form-status" id="crypto-support-status" role="status" aria-live="polite"></p>
       </div>
-      <p class="profile-form-status" id="crypto-support-status" role="status" aria-live="polite"></p>
     </section>
   </section>
 

@@ -6,6 +6,36 @@ document.addEventListener("touchmove", event => {
 }, { passive: false, capture: true });
 const tg = window.Telegram?.WebApp;
 const ownerPromoNativeButton = tg?.BottomButton || tg?.MainButton || null;
+let nativeButtonMode = "hidden";
+function setNativeButton(mode) {
+  nativeButtonMode = mode;
+  if (!ownerPromoNativeButton) return;
+  const labels = {
+    "owner-promo": "Добавить сервис",
+    "support-stars": "Поддержать Stars",
+    "support-crypto": "Скопировать адрес"
+  };
+  if (!labels[mode]) {
+    ownerPromoNativeButton.hide();
+    return;
+  }
+  try {
+    ownerPromoNativeButton.setParams({
+      text: labels[mode],
+      color: tg?.themeParams?.button_color || "#3390EC",
+      text_color: tg?.themeParams?.button_text_color || "#FFFFFF",
+      has_shine_effect: true,
+      is_progress_visible: false,
+      is_active: true,
+      is_visible: true
+    });
+  } catch (_) {}
+}
+function handleNativeButtonClick() {
+  if (nativeButtonMode === "owner-promo") showScreen("owners", "owner-promo");
+  else if (nativeButtonMode === "support-stars") byId("support-pay-button")?.click();
+  else if (nativeButtonMode === "support-crypto") byId("crypto-copy-address")?.click();
+}
 if (ownerPromoNativeButton) {
   try {
     ownerPromoNativeButton.setParams({
@@ -17,7 +47,7 @@ if (ownerPromoNativeButton) {
       is_active: true,
       is_visible: false
     });
-    ownerPromoNativeButton.onClick(() => showScreen("owners", "owner-promo"));
+    ownerPromoNativeButton.onClick(handleNativeButtonClick);
   } catch (_) {}
 }
 if (tg) {
@@ -409,23 +439,14 @@ let moveIndicator = () => {};
 const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analytics", "support"]);
 let ownersBackScreen = "catalog";
 function showScreen(name, backScreen = null) {
+  const supportMethod = document.querySelector("[data-support-tab].is-active")?.dataset.supportTab || "stars";
   const useNativeOwnerPromoButton = name === "owner-promo" && !!ownerPromoNativeButton;
+  const useNativeSupportButton = name === "support" && !!ownerPromoNativeButton;
   document.body.classList.toggle("owner-promo-native-cta", useNativeOwnerPromoButton);
-  try {
-    if (useNativeOwnerPromoButton) {
-      ownerPromoNativeButton.setParams({
-        text: "Добавить сервис",
-        color: tg?.themeParams?.button_color || "#3390EC",
-        text_color: tg?.themeParams?.button_text_color || "#FFFFFF",
-        has_shine_effect: true,
-        is_progress_visible: false,
-        is_active: true,
-        is_visible: true
-      });
-    } else {
-      ownerPromoNativeButton?.hide();
-    }
-  } catch (_) {}
+  document.body.classList.toggle("support-native-cta", useNativeSupportButton);
+  if (useNativeOwnerPromoButton) setNativeButton("owner-promo");
+  else if (useNativeSupportButton) setNativeButton(supportMethod === "crypto" ? "support-crypto" : "support-stars");
+  else setNativeButton("hidden");
   if (name === "owners") {
     const currentScreen = document.querySelector(".screen.active")?.dataset.screen;
     ownersBackScreen = backScreen || (currentScreen && currentScreen !== "owners" ? currentScreen : ownersBackScreen) || "catalog";
@@ -786,6 +807,7 @@ document.querySelectorAll("[data-support-tab]").forEach(tab => {
     document.querySelectorAll(".support-panel").forEach(panel => {
       panel.hidden = panel.id !== (selected === "crypto" ? "support-panel-crypto" : "support-panel-stars");
     });
+    if (document.querySelector("#screen-support.active")) setNativeButton(selected === "crypto" ? "support-crypto" : "support-stars");
   });
 });
 

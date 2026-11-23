@@ -306,6 +306,7 @@
       bow.rotation.set(0,0,0);
       gift.position.y=.12;
       sparkles.visible=false;
+      stage.classList.remove("is-revealed");
     }
     function renderFrame(now){
       if(dead || !screen.classList.contains("active")){
@@ -332,6 +333,8 @@
         bow.position.z=.02+lift*.14;
         bow.rotation.x=tilt*.18;
         sparkles.visible=p>.25;
+        stage.classList.toggle("is-revealed", p > .72);
+        if (p >= 1 && now - openingAt > 3900) reset();
       }
       glow.material.opacity=.64+Math.sin(elapsed*1.15)*.08;
       sparkles.rotation.y=Math.sin(elapsed*.22)*.08;
@@ -368,7 +371,7 @@
     console.error("[VPN Finder] 3D gift scene could not start.",error);
     const image=document.createElement("img");
     image.className="gift-reference-image";
-    image.src="./assets/images/glossy-blue-gift-reference.png";
+    image.src="./assets/images/Glossy%20Blue%20Gift%20with%20Golden%20Bow.png";
     image.alt="";
     image.setAttribute("aria-hidden","true");
     host.replaceChildren(image);

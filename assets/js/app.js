@@ -369,7 +369,7 @@ function navHaptic() {
   } catch (_) {}
 }
 let moveIndicator = () => {};
-const BACK_SCREENS = new Set(["news", "contact", "owners", "analytics", "support"]);
+const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analytics", "support"]);
 let ownersBackScreen = "catalog";
 function showScreen(name, backScreen = null) {
   if (name === "owners") {
@@ -539,7 +539,7 @@ if (tg?.BackButton) {
       return;
     }
     const activeScreen = document.querySelector(".screen.active");
-    showScreen(activeScreen?.dataset.screen === "owners" ? ownersBackScreen : "profile");
+    showScreen(activeScreen?.dataset.screen === "owners" ? ownersBackScreen : activeScreen?.dataset.screen === "owner-promo" ? "catalog" : "profile");
   });
   try { tg.BackButton.hide(); } catch (_) {}
 }
@@ -574,7 +574,8 @@ document.addEventListener("touchend", event => {
   backSwipeStart = null;
   if (deltaX >= 90 && deltaY <= 70 && deltaX > deltaY * 1.25) {
     const activeScreen = document.querySelector(".screen.active");
-    if (BACK_SCREENS.has(activeScreen?.dataset.screen)) showScreen("profile");
+    if (activeScreen?.dataset.screen === "owner-promo") showScreen("catalog");
+    else if (BACK_SCREENS.has(activeScreen?.dataset.screen)) showScreen(activeScreen?.dataset.screen === "owners" ? ownersBackScreen : "profile");
   }
 }, { passive: true });
 document.addEventListener("touchcancel", () => { backSwipeStart = null; }, { passive: true });

@@ -73,26 +73,30 @@ if (tg) {
   // The static splash and first interface frame are already in the DOM.
   try { tg.ready(); } catch (_) {}
 }
+const startupSplashStartedAt = performance.now();
+let startupSplashFinished = false;
 const finishStartupSplash = () => {
+  if (startupSplashFinished) return;
+  startupSplashFinished = true;
   const splash = document.getElementById("startup-splash");
   document.body.classList.add("app-ready");
   if (!splash) return;
-  // Use Telegram's native haptics when available; fall back only where the browser supports vibration.
+  // One soft haptic when the first usable catalog screen is ready.
   try {
     if (tg?.HapticFeedback?.impactOccurred) tg.HapticFeedback.impactOccurred("soft");
     else if (typeof navigator.vibrate === "function") navigator.vibrate(12);
   } catch (_) {}
-  requestAnimationFrame(() => {
+  // Preserve the logo's entrance animation even if the catalog responds very quickly.
+  const entranceRemaining = Math.max(0, 560 - (performance.now() - startupSplashStartedAt));
+  window.setTimeout(() => {
     requestAnimationFrame(() => {
-      // Let the branded mark finish its short entrance; catalog data loads independently.
-      window.setTimeout(() => {
+      requestAnimationFrame(() => {
         splash.classList.add("is-leaving");
         window.setTimeout(() => splash.remove(), 380);
-      }, 420);
+      });
     });
-  });
+  }, entranceRemaining);
 };
-requestAnimationFrame(() => requestAnimationFrame(finishStartupSplash));
 
 const SUPABASE_URL = "https://januqesxribuqzmmmdun.supabase.co";
 const SUPABASE_KEY = "sb_publishable_BaYxtXvRZCmfEzMHJbSCog_ebs4k6oK";
@@ -1595,7 +1599,7 @@ document.addEventListener("click", event => {
 
 async function loadServices() {
   const list = byId("provider-list");
-  list.innerHTML = `<div class="loading-state"><svg class="loader-shield" viewBox="0 0 24 24" role="img" aria-label="${t("Загрузка")}"><path class="shield-outline" d="M12 2.8 20 6v5.2c0 5-3.2 8.2-8 10-4.8-1.8-8-5-8-10V6l8-3.2Z"></path><path class="shield-check" d="m8.5 11.8 2.3 2.3 4.8-4.8"></path></svg></div>`;
+  list.innerHTML = `<div class="loading-state" aria-hidden="true"></div>`;
   try {
     const url = SUPABASE_URL + "/rest/v1/vpn_services?select=id,slug,name,referral_url,logo_url,description,min_price_rub,min_price,price_currency,devices_limit,countries_count,trial_days,traffic_limit,platforms,plans,features,whitelist_support,status,sort_order&status=eq.active&order=sort_order.asc";
     const response = await fetch(url, { headers: { apikey: SUPABASE_KEY } });
@@ -1608,6 +1612,8 @@ async function loadServices() {
   } catch (_) {
     list.innerHTML = `<div class="empty-state"><h3>${t("Не удалось загрузить")}</h3><button class="primary-button" type="button" id="retry-load">${t("Повторить")}</button></div>`;
     byId("retry-load")?.addEventListener("click", loadServices);
+  } finally {
+    finishStartupSplash();
   }
 }
 

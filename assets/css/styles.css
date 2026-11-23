@@ -2562,8 +2562,8 @@ body.support-native-cta .bottom-nav-dock .profile-nav-button{display:none!import
   flex:0 1 auto;margin:0 auto 8px;display:grid;place-items:center;isolation:isolate;
 }
 #screen-support .support-orb{
-  position:relative;z-index:2;display:block;width:min(76%,260px);height:100%;
-  max-width:260px;max-height:300px;object-fit:contain;margin:0;
+  position:relative;z-index:2;display:block;width:min(76%,260px)!important;height:100%!important;
+  max-width:260px!important;max-height:300px!important;object-fit:contain;margin:0;
   filter:drop-shadow(0 18px 20px rgba(0,0,0,.28))!important;
   transform:translate3d(0,0,0);animation:owner-gift-float 5.2s cubic-bezier(.42,0,.58,1) infinite;
   will-change:transform,filter;
@@ -2598,7 +2598,7 @@ body.support-native-cta .bottom-nav-dock .profile-nav-button{display:none!import
 #screen-support .support-hero p{margin-top:5px!important;line-height:1.35!important}
 @media(max-height:700px){
   #screen-support .support-art{height:clamp(170px,30svh,220px);margin-bottom:4px}
-  #screen-support .support-orb{width:min(70%,210px);max-height:210px}
+  #screen-support .support-orb{width:min(70%,210px)!important;height:100%!important;max-height:210px!important}
   #screen-support .support-hero{padding-bottom:6px!important}
   #screen-support .support-hero h1{font-size:23px!important}
   #screen-support .support-hero p{font-size:11px!important}

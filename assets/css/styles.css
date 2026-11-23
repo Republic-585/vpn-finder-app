@@ -2324,3 +2324,33 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   .gift-stage.is-opening .gift-box{animation:none;transform:translateX(-50%) rotateY(-9deg)}
   .gift-stage.is-opening .gift-lid{animation:none;transform:translate3d(0,-22px,42px) rotateX(-132deg)}
 }
+
+
+/* Owner promo: layered vector gift model, replacing the former flat CSS box. */
+.gift-box-svg{width:320px!important;height:250px!important;transform:translateX(-50%)!important;filter:none!important;perspective:none}
+.gift-box-model{position:absolute;inset:0;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 18px 16px rgba(0,0,0,.34))}
+.gift-body-art{transform-origin:50% 50%}
+.gift-lid-art{transform-box:fill-box;transform-origin:50% 100%;transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.gift-stage.is-opening .gift-lid-art{animation:gift-svg-lid-open 1.12s .62s cubic-bezier(.16,.86,.22,1) forwards}
+@keyframes gift-svg-lid-open{
+  0%{transform:translateY(0) rotate(0)}
+  58%{transform:translate(9px,-40px) rotate(-15deg)}
+  78%{transform:translate(5px,-32px) rotate(-11deg)}
+  100%{transform:translate(7px,-36px) rotate(-13deg)}
+}
+.gift-box-svg .gift-token{z-index:5;top:24px;left:50%;transform:translate(-50%,18px) scale(.72);opacity:0}
+.gift-stage.is-opening .gift-box-svg .gift-token{animation:gift-token-rise 1s 1.02s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes gift-token-rise{
+  0%{transform:translate(-50%,20px) scale(.55) rotate(-12deg);opacity:0}
+  65%{transform:translate(-50%,-42px) scale(1.08) rotate(5deg);opacity:1}
+  100%{transform:translate(-50%,-30px) scale(1) rotate(0);opacity:1}
+}
+.gift-box-svg .gift-box-inside,.gift-box-svg .gift-box-side,.gift-box-svg .gift-box-top,.gift-box-svg .gift-box-base,.gift-box-svg .gift-lid{display:none!important}
+@media(max-width:380px){
+ .gift-box-svg{transform:translateX(-50%) scale(.88)!important;transform-origin:top center}
+}
+@media(prefers-reduced-motion:reduce){
+ .gift-stage.is-opening .gift-lid-art,.gift-stage.is-opening .gift-box-svg .gift-token{animation:none;opacity:1}
+ .gift-stage.is-opening .gift-lid-art{transform:translate(7px,-36px) rotate(-13deg)}
+ .gift-stage.is-opening .gift-box-svg .gift-token{transform:translate(-50%,-30px)}
+}

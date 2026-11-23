@@ -2685,3 +2685,44 @@ body.support-native-cta .bottom-nav-dock .profile-nav-button{display:none!import
   font-size:var(--type-caption)!important;line-height:1.4!important;
   font-weight:var(--weight-regular)!important;letter-spacing:0!important;
 }
+
+
+/* One continuous support-method surface: tabs and active payment panel share a single container. */
+#screen-support .support-method-container{
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:20px;
+  background:rgba(255,255,255,.055);
+}
+#screen-support .support-method-container .support-tabs{
+  margin:0!important;
+  padding:8px 8px 0!important;
+  gap:6px!important;
+  border:0!important;
+  border-bottom:1px solid rgba(255,255,255,.09)!important;
+  border-radius:0!important;
+  background:transparent!important;
+}
+#screen-support .support-method-container .support-tab{
+  min-height:38px!important;
+  margin:0 0 8px!important;
+  border-radius:12px!important;
+}
+#screen-support .support-method-container .support-panel{
+  margin:0!important;
+  padding:14px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+}
+#screen-support .support-method-container .crypto-support-card{
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+}
+#screen-support .support-method-container .support-section-title{margin-top:0!important}
+#screen-support .support-method-container .crypto-support-card h2{margin-top:0!important}
+@media(max-height:700px){
+  #screen-support .support-method-container .support-panel{padding:12px!important}
+}

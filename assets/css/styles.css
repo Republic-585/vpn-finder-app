@@ -2495,7 +2495,7 @@ button:not(.round-action):not(.clear-search):not(.catalog-promo-more-hit):not(.c
   height:100%;
   pointer-events:none;
   background:linear-gradient(120deg,transparent,rgba(255,255,255,.2),transparent);
-  animation:support-native-button-shine 5s ease-in-out infinite;
+  animation:support-native-button-shine 6s ease-in-out infinite;
 }
 @keyframes support-native-button-shine{
   0%{left:-100%}

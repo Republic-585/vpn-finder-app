@@ -330,5 +330,46 @@
     image.setAttribute("aria-hidden","true");
     host.replaceChildren(image);
     host.dataset.ready="fallback";
+    stage.classList.add("gift-fallback-ready");
+    let fallbackPointer=null;
+    let fallbackStart=0;
+    let fallbackMoved=false;
+    stage.addEventListener("pointerdown",event=>{
+      fallbackPointer=event.pointerId;
+      fallbackStart=performance.now();
+      fallbackMoved=false;
+      stage.dataset.giftX=String(event.clientX);
+      stage.dataset.giftY=String(event.clientY);
+      try{stage.setPointerCapture(event.pointerId)}catch(_){}
+    });
+    stage.addEventListener("pointermove",event=>{
+      if(fallbackPointer!==event.pointerId)return;
+      const dx=event.clientX-Number(stage.dataset.giftX||event.clientX);
+      const dy=event.clientY-Number(stage.dataset.giftY||event.clientY);
+      if(Math.abs(dx)+Math.abs(dy)>2)fallbackMoved=true;
+      stage.style.setProperty("--gift-tilt-y",`${clamp(dx*.12,-12,12)}deg`);
+      stage.style.setProperty("--gift-tilt-x",`${clamp(-dy*.1,-9,9)}deg`);
+    },{passive:true});
+    const fallbackRelease=event=>{
+      if(fallbackPointer!==event.pointerId)return;
+      fallbackPointer=null;
+      if(!fallbackMoved&&performance.now()-fallbackStart<420){
+        stage.classList.remove("gift-fallback-open");
+        void stage.offsetWidth;
+        stage.classList.add("gift-fallback-open");
+      }
+    };
+    stage.addEventListener("pointerup",fallbackRelease);
+    stage.addEventListener("pointercancel",()=>{fallbackPointer=null});
+    stage.addEventListener("pointerleave",()=>{if(fallbackPointer===null){stage.style.setProperty("--gift-tilt-y","0deg");stage.style.setProperty("--gift-tilt-x","0deg")}});
+    stage.addEventListener("pointermove",event=>{
+      if(fallbackPointer===null){
+        const rect=stage.getBoundingClientRect();
+        const dx=(event.clientX-(rect.left+rect.width/2))/rect.width;
+        const dy=(event.clientY-(rect.top+rect.height/2))/rect.height;
+        stage.style.setProperty("--gift-tilt-y",`${clamp(dx*12,-8,8)}deg`);
+        stage.style.setProperty("--gift-tilt-x",`${clamp(-dy*8,-6,6)}deg`);
+      }
+    },{passive:true});
   });
 })();

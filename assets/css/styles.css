@@ -2139,30 +2139,3 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   #screen-owner-promo .gift-stage.gift-fallback-ready .gift-reference-image{animation:none}
   #screen-owner-promo .gift-stage.gift-fallback-open .gift-reference-image{animation:none;transform:translate(-50%,-50%) scale(1.04)}
 }
-
-
-/* Gift reveal reward: shown only while the 3D lid is open. */
-#screen-owner-promo .gift-reward{
-  position:absolute;z-index:4;left:50%;top:18%;
-  width:clamp(78px,22vw,104px);height:clamp(78px,22vw,104px);
-  display:grid;place-items:center;border:1px solid rgba(255,239,176,.72);
-  border-radius:26px;background:linear-gradient(145deg,#fff2b5 0%,#f5c447 48%,#bd790b 100%);
-  box-shadow:0 15px 42px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.8);
-  color:#173d75;font-size:23px;font-weight:900;letter-spacing:-.06em;
-  opacity:0;pointer-events:none;transform:translate(-50%,18px) scale(.7);
-}
-#screen-owner-promo .gift-reward:before{
-  content:"";position:absolute;inset:7px;border:1px solid rgba(255,255,255,.72);border-radius:20px;
-}
-#screen-owner-promo .gift-stage.is-revealed .gift-reward{
-  animation:owner-gift-reward-pop 1s cubic-bezier(.16,.9,.24,1.2) forwards;
-}
-@keyframes owner-gift-reward-pop{
-  0%{opacity:0;transform:translate(-50%,24px) scale(.55) rotate(-9deg)}
-  65%{opacity:1;transform:translate(-50%,-15px) scale(1.08) rotate(3deg)}
-  100%{opacity:1;transform:translate(-50%,-25px) scale(1) rotate(0)}
-}
-@media(prefers-reduced-motion:reduce){
-  #screen-owner-promo .gift-reward{animation:none!important}
-  #screen-owner-promo .gift-stage.is-revealed .gift-reward{opacity:1;transform:translate(-50%,-25px)}
-}

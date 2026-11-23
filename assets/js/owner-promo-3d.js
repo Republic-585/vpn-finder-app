@@ -213,13 +213,13 @@
 
     // Wide tails fall from the knot and lie over the lid; open splines keep them ribbon-shaped.
     ribbonLoop([
-      [-.04,.025,.2],[-.16,-.13,.34],[-.27,-.30,.47],[-.38,-.46,.57],
-      [-.53,-.56,.63],[-.72,-.55,.64],[-.82,-.47,.62]
-    ], .39, goldLight, bow, false, {thickness:.024});
+      [-.04,.035,.2],[-.13,.025,.46],[-.24,.018,.76],[-.36,.012,1.05],
+      [-.46,-.025,1.36],[-.51,-.22,1.53],[-.56,-.46,1.55]
+    ], .42, goldLight, bow, false, {thickness:.025});
     ribbonLoop([
-      [.04,.025,.2],[.16,-.13,.34],[.27,-.30,.47],[.38,-.46,.57],
-      [.53,-.56,.63],[.72,-.55,.64],[.82,-.47,.62]
-    ], .39, goldLight, bow, false, {thickness:.024});
+      [.04,.035,.2],[.13,.025,.46],[.24,.018,.76],[.36,.012,1.05],
+      [.46,-.025,1.36],[.51,-.22,1.53],[.56,-.46,1.55]
+    ], .42, goldLight, bow, false, {thickness:.025});
 
     // Grounding shadow and restrained light pool.
     const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: .18 }));

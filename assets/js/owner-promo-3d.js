@@ -61,7 +61,7 @@
     blueSide.color.set(0x0872df);
     const gold = new THREE.MeshPhysicalMaterial({
       color: 0xf5bd35, metalness: .88, roughness: .2,
-      clearcoat: .85, clearcoatRoughness: .16, envMapIntensity: 1.6
+      clearcoat: .85, clearcoatRoughness: .16, envMapIntensity: 1.6, side: THREE.DoubleSide
     });
     const goldLight = gold.clone();
     goldLight.color.set(0xffd96a);
@@ -175,8 +175,8 @@
     bow.add(knot);
 
     // Two short satin tails drape over the lid.
-    ribbonLoop([[0,.02,.16],[.12,-.12,.32],[.17,-.3,.42],[.1,-.45,.48],[.02,-.51,.52]], .19, goldLight, bow);
-    ribbonLoop([[0,.02,.16],[-.12,-.12,.32],[-.17,-.3,.42],[-.1,-.45,.48],[-.02,-.51,.52]], .19, goldLight, bow);
+    ribbonLoop([[0,.02,.16],[.12,-.12,.32],[.17,-.3,.42],[.1,-.45,.48],[.02,-.51,.52]], .19, goldLight, bow, false);
+    ribbonLoop([[0,.02,.16],[-.12,-.12,.32],[-.17,-.3,.42],[-.1,-.45,.48],[-.02,-.51,.52]], .19, goldLight, bow, false);
 
     // Grounding shadow and restrained light pool.
     const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: .18 }));

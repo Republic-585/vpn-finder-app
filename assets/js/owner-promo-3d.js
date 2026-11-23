@@ -102,7 +102,7 @@ import { RoundedBoxGeometry } from "https://esm.sh/three@0.170.0/examples/jsm/ge
   shield.moveTo(0,.34); shield.quadraticCurveTo(.2,.25,.31,.2); shield.lineTo(.28,-.1);
   shield.quadraticCurveTo(.22,-.34,0,-.43); shield.quadraticCurveTo(-.22,-.34,-.28,-.1);
   shield.lineTo(-.31,.2); shield.quadraticCurveTo(-.2,.25,0,.34);
-  const shieldMesh=new THREE.Mesh(new ExtrudeGeometry(shield,{depth:.06,bevelEnabled:true,bevelSegments:4,steps:1,bevelSize:.025,bevelThickness:.025}),tokenInset);
+  const shieldMesh=new THREE.Mesh(new THREE.ExtrudeGeometry(shield,{depth:.06,bevelEnabled:true,bevelSegments:4,steps:1,bevelSize:.025,bevelThickness:.025}),tokenInset);
   shieldMesh.position.z=.112; shieldMesh.castShadow=true; token.add(shieldMesh);
   const glyphMat=new THREE.MeshPhysicalMaterial({color:0xffe28a,metalness:.72,roughness:.18});
   const slash1=rounded(token,.075,.37,.045,glyphMat,[-.095,-.015,.19],.025); slash1.rotation.z=-.48;

@@ -51,3 +51,5 @@ for name, shape in parts.items():
 scene.export(os.path.join(OUT, "VPN_Finder_Gift_Box.glb"))
 print("Built CAD gift model:", os.path.join(OUT, "VPN_Finder_Gift_Box.glb"))
 print("Named parts:", list(scene.graph.nodes_geometry))
+
+# Trigger CAD build after workflow installation.

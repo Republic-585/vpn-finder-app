@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f8ff">
+<title>VPN Finder — Gift Animation Lab</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#f5f8ff;color:#101827;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}
+body{min-height:100svh;display:grid;place-items:center;padding:20px}
+#screen-owner-promo{width:min(100%,520px);min-height:min(850px,calc(100svh - 40px));display:flex;align-items:center;justify-content:center;overflow:hidden}
+#screen-owner-promo .gift-stage{position:relative;width:100%;min-height:min(780px,calc(100svh - 40px));display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;isolation:isolate}
+.gift-scene{position:relative;width:min(100%,460px);height:clamp(360px,55svh,500px);display:grid;place-items:center;isolation:isolate;flex:0 0 auto}
+.gift-webgl-host{position:absolute;inset:0;z-index:2;width:100%;height:100%;overflow:visible;pointer-events:none}
+.gift-webgl-host canvas{display:block;width:100%;height:100%;outline:none;pointer-events:none}
+.gift-copy{position:relative;z-index:3;width:min(100%,390px);padding:0 18px;text-align:center}
+.gift-eyebrow{display:inline-block;margin-bottom:12px;color:#1764d8;font-size:10px;font-weight:800;letter-spacing:.16em}
+.gift-copy h1{margin:0;font-size:clamp(26px,7vw,34px);line-height:1.08;letter-spacing:-.055em;font-weight:800}
+.gift-copy p{max-width:330px;margin:12px auto 0;color:#65738a;font-size:14px;line-height:1.5}
+.gift-reward{position:absolute;z-index:5;left:50%;top:23%;transform:translate(-50%,18px) scale(.7);opacity:0;pointer-events:none;display:grid;place-items:center;width:112px;height:112px;border-radius:30px;background:linear-gradient(145deg,#fff4c5,#f3b92c 55%,#c9850b);box-shadow:0 18px 45px #b77b2538;color:#163f86;font-weight:900;letter-spacing:-.05em;font-size:25px}
+.gift-reward:before{content:"";position:absolute;inset:8px;border:1px solid #fff9;border-radius:24px}
+.gift-stage.is-revealed .gift-reward{animation:reward-pop 1s cubic-bezier(.16,.9,.24,1.2) forwards}
+@keyframes reward-pop{0%{opacity:0;transform:translate(-50%,28px) scale(.55) rotate(-9deg)}65%{opacity:1;transform:translate(-50%,-16px) scale(1.08) rotate(3deg)}100%{opacity:1;transform:translate(-50%,-30px) scale(1) rotate(0)}}
+.lab-hint{margin:16px 0 0;color:#778399;font-size:12px;text-align:center}
+@media(prefers-reduced-motion:reduce){.gift-reward{animation:none!important}.gift-stage.is-revealed .gift-reward{opacity:1;transform:translate(-50%,-30px)}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+</head>
+<body>
+<section class="screen active" id="screen-owner-promo">
+ <div class="gift-stage is-opening" id="owner-gift-stage">
+  <div class="gift-scene">
+   <div class="gift-webgl-host" id="owner-gift-canvas"></div>
+   <div class="gift-reward" aria-hidden="true">VPN</div>
+  </div>
+  <div class="gift-copy">
+   <span class="gift-eyebrow">VPN FINDER · GIFT LAB</span>
+   <h1>Подарок внутри</h1>
+   <p>Нажми на коробку, чтобы открыть. После появления награды она автоматически закроется.</p>
+   <div class="lab-hint">Нажатие по коробке · повторный запуск после сброса</div>
+  </div>
+ </div>
+</section>
+<script type="module" src="./gift-lab.js"></script>
+</body>
+</html>

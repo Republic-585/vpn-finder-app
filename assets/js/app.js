@@ -1,4 +1,9 @@
 (() => {
+document.addEventListener("gesturestart", event => event.preventDefault(), { passive: false });
+document.addEventListener("gesturechange", event => event.preventDefault(), { passive: false });
+document.addEventListener("touchmove", event => {
+  if (event.touches.length > 1) event.preventDefault();
+}, { passive: false, capture: true });
 const tg = window.Telegram?.WebApp;
 const ownerPromoNativeButton = tg?.BottomButton || tg?.MainButton || null;
 if (ownerPromoNativeButton) {

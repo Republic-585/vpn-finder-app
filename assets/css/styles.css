@@ -2508,3 +2508,36 @@ button:not(.round-action):not(.clear-search):not(.catalog-promo-more-hit):not(.c
   #screen-support #support-pay-button::after,
   #screen-support #crypto-copy-address::after{animation:none!important;display:none!important}
 }
+
+
+/* Support actions: match the native Telegram reference button's shared geometry and label styling. */
+#screen-support #support-pay-button,
+#screen-support #crypto-copy-address{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:48px!important;
+  height:48px!important;
+  margin:0!important;
+  padding:0 16px!important;
+  border:0!important;
+  border-radius:999px!important;
+  background:var(--tg-theme-button-color,var(--blue))!important;
+  color:var(--tg-theme-button-text-color,#fff)!important;
+  font-family:var(--font-family)!important;
+  font-size:14px!important;
+  font-weight:600!important;
+  line-height:1!important;
+  letter-spacing:normal!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  box-shadow:none!important;
+}
+#screen-support #support-pay-button:active,
+#screen-support #crypto-copy-address:active{
+  transform:scale(.98);
+  filter:brightness(1.06);
+}

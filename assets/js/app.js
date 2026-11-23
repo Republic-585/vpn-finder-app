@@ -73,27 +73,53 @@ if (tg) {
   // The static splash and first interface frame are already in the DOM.
   try { tg.ready(); } catch (_) {}
 }
+startStartupHaptics();
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible" && !startupSplashFinished && !startupHapticTimer) startStartupHaptics();
+  else if (document.visibilityState === "hidden") stopStartupHaptics();
+});
 const startupSplashStartedAt = performance.now();
 let startupSplashFinished = false;
+let startupHapticTimer = null;
+let startupHapticStage = 0;
+const startupHapticLevels = ["soft", "medium", "heavy", "rigid"];
+const pulseStartupHaptic = () => {
+  if (startupSplashFinished || document.visibilityState === "hidden") return;
+  try {
+    if (tg?.HapticFeedback?.impactOccurred) {
+      const level = startupHapticLevels[Math.min(startupHapticStage, startupHapticLevels.length - 1)];
+      tg.HapticFeedback.impactOccurred(level);
+    } else if (typeof navigator.vibrate === "function") {
+      const durations = [12, 22, 34, 48, 58];
+      navigator.vibrate(durations[Math.min(startupHapticStage, durations.length - 1)]);
+    }
+  } catch (_) {}
+  startupHapticStage = Math.min(startupHapticStage + 1, 4);
+  startupHapticTimer = window.setTimeout(pulseStartupHaptic, startupHapticStage < 4 ? 420 : 680);
+};
+const startStartupHaptics = () => {
+  if (startupHapticTimer || startupSplashFinished) return;
+  pulseStartupHaptic();
+};
+const stopStartupHaptics = () => {
+  if (startupHapticTimer) window.clearTimeout(startupHapticTimer);
+  startupHapticTimer = null;
+  try {
+    if (typeof navigator.vibrate === "function") navigator.vibrate(0);
+  } catch (_) {}
+};
 const finishStartupSplash = () => {
   if (startupSplashFinished) return;
   startupSplashFinished = true;
+  stopStartupHaptics();
   const splash = document.getElementById("startup-splash");
   document.body.classList.add("app-ready");
   if (!splash) return;
-  // A short rising haptic sequence when the first usable catalog screen is ready.
+  // A final strong impulse marks the moment the catalog is ready.
   try {
-    if (tg?.HapticFeedback?.impactOccurred) {
-      const haptic = tg.HapticFeedback;
-      haptic.impactOccurred("soft");
-      window.setTimeout(() => haptic.impactOccurred("medium"), 95);
-      window.setTimeout(() => haptic.impactOccurred("heavy"), 195);
-      window.setTimeout(() => haptic.impactOccurred("rigid"), 305);
-    } else if (typeof navigator.vibrate === "function") {
-      navigator.vibrate([14, 34, 22, 30, 32, 26, 48]);
-    }
+    if (tg?.HapticFeedback?.impactOccurred) tg.HapticFeedback.impactOccurred("rigid");
+    else if (typeof navigator.vibrate === "function") navigator.vibrate(58);
   } catch (_) {}
-  // Preserve the logo's entrance animation even if the catalog responds very quickly.
   const entranceRemaining = Math.max(0, 560 - (performance.now() - startupSplashStartedAt));
   window.setTimeout(() => {
     requestAnimationFrame(() => {

@@ -2854,7 +2854,7 @@ body:not(.app-ready) .app-shell{visibility:hidden}
 }
 
 
-/* Fullscreen-only vertical clearance: lower all screen content substantially in Telegram fullscreen. */
-body.telegram-fullscreen .main-content{padding-top:88px!important}
-body.telegram-fullscreen #screen-owner-promo.owner-promo-screen{padding-top:calc(env(safe-area-inset-top) + 96px)!important}
-body.telegram-fullscreen .catalog-promo-screen{padding-top:calc(96px + env(safe-area-inset-top))!important}
+/* Fullscreen-only vertical clearance: lower all screen content slightly further in Telegram fullscreen. */
+body.telegram-fullscreen .main-content{padding-top:100px!important}
+body.telegram-fullscreen #screen-owner-promo.owner-promo-screen{padding-top:calc(env(safe-area-inset-top) + 108px)!important}
+body.telegram-fullscreen .catalog-promo-screen{padding-top:calc(108px + env(safe-area-inset-top))!important}

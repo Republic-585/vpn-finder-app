@@ -390,6 +390,14 @@ function showScreen(name, backScreen = null) {
     navBar.classList.add("is-switching");
   }
   screens.forEach(screen => screen.classList.toggle("active", screen.dataset.screen === name));
+  if (name === "owner-promo") {
+    const giftStage = byId("owner-gift-stage");
+    if (giftStage) {
+      giftStage.classList.remove("is-opening");
+      void giftStage.offsetWidth;
+      requestAnimationFrame(() => giftStage.classList.add("is-opening"));
+    }
+  }
   nav.forEach(button => {
     const active = button.dataset.go === name;
     button.classList.toggle("active", active);

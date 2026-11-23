@@ -2726,3 +2726,31 @@ body.support-native-cta .bottom-nav-dock .profile-nav-button{display:none!import
 @media(max-height:700px){
   #screen-support .support-method-container .support-panel{padding:12px!important}
 }
+
+
+/* A warm moving glint travels along the elliptical orbit around both hero objects. */
+#screen-support .support-orbit-b::after,
+#screen-owner-promo .owner-promo-orbit-b::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,1) 0%,rgba(255,231,174,.98) 24%,rgba(255,190,83,.72) 48%,rgba(255,190,83,0) 76%);
+  box-shadow:0 0 5px 2px rgba(255,224,157,.72),0 0 13px 5px rgba(255,190,83,.38),0 0 25px 8px rgba(255,190,83,.16);
+  pointer-events:none;
+  offset-path:ellipse(50% 50% at 50% 50%);
+  offset-anchor:center;
+  offset-rotate:0deg;
+  animation:hero-orbit-glint 7s linear infinite;
+}
+@keyframes hero-orbit-glint{
+  from{offset-distance:0%}
+  to{offset-distance:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  #screen-support .support-orbit-b::after,
+  #screen-owner-promo .owner-promo-orbit-b::after{animation:none;opacity:.75}
+}

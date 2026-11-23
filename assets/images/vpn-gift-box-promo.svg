@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 300" fill="none">
+<defs>
+ <linearGradient id="boxFront" x1="75" y1="112" x2="220" y2="266" gradientUnits="userSpaceOnUse"><stop stop-color="#2F8FF2"/><stop offset=".42" stop-color="#1265C5"/><stop offset="1" stop-color="#073B88"/></linearGradient>
+ <linearGradient id="boxSide" x1="212" y1="112" x2="270" y2="248" gradientUnits="userSpaceOnUse"><stop stop-color="#1C70D2"/><stop offset="1" stop-color="#062F70"/></linearGradient>
+ <linearGradient id="boxTop" x1="68" y1="74" x2="250" y2="144" gradientUnits="userSpaceOnUse"><stop stop-color="#7CC4FF"/><stop offset=".45" stop-color="#267FD8"/><stop offset="1" stop-color="#0A4A9B"/></linearGradient>
+ <linearGradient id="gold" x1="118" y1="74" x2="207" y2="270" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF4B8"/><stop offset=".2" stop-color="#F8D66B"/><stop offset=".48" stop-color="#DDA52F"/><stop offset=".72" stop-color="#FFE99A"/><stop offset="1" stop-color="#B97817"/></linearGradient>
+ <linearGradient id="goldSide" x1="215" y1="125" x2="245" y2="238" gradientUnits="userSpaceOnUse"><stop stop-color="#FFEBA0"/><stop offset=".5" stop-color="#D99B2B"/><stop offset="1" stop-color="#A96A12"/></linearGradient>
+ <linearGradient id="shine" x1="95" y1="112" x2="172" y2="260" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF" stop-opacity=".48"/><stop offset=".5" stop-color="#FFF" stop-opacity=".08"/><stop offset="1" stop-color="#FFF" stop-opacity="0"/></linearGradient>
+ <filter id="shadow" x="18" y="18" width="284" height="280" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feGaussianBlur stdDeviation="11"/></filter>
+ <filter id="bowShadow" x="74" y="10" width="178" height="114" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feGaussianBlur stdDeviation="2.5"/></filter>
+</defs>
+<ellipse cx="164" cy="269" rx="103" ry="13" fill="#020B1B" opacity=".3" filter="url(#shadow)"/>
+<!-- box body -->
+<path d="m67 119 119-48 78 35-1 126-119 51-77-39V119Z" fill="url(#boxFront)"/>
+<path d="m186 71 78 35-1 126-77-37V71Z" fill="url(#boxSide)"/>
+<path d="m67 119 119-48 78 35-119 50-78-37Z" fill="url(#boxTop)"/>
+<path d="m67 119 119 37v127l-119-39V119Z" fill="url(#shine)"/>
+<path d="m67 119 119 37 78-50" stroke="#A9D9FF" stroke-opacity=".42" stroke-width="1.5"/>
+<!-- ribbon on lid and front -->
+<path d="m145 88 27-11 78 35-28 12-77-36Z" fill="url(#gold)"/>
+<path d="m171 78 1 176-27 11V89l26-11Z" fill="url(#gold)"/>
+<path d="m222 124 1 119-27-13V137l26-13Z" fill="url(#goldSide)"/>
+<path d="m171 78 27-11 78 35-28 12-77-36Z" fill="url(#gold)" opacity=".95"/>
+<path d="m171 78 27-11v11l-27 11V78Z" fill="#FFF0A4" opacity=".8"/>
+<path d="m145 89 27-11v176l-27 11V89Z" fill="url(#gold)"/>
+<path d="m171 78 1 176" stroke="#FFF7C7" stroke-opacity=".65" stroke-width="2"/>
+<!-- bow shadow -->
+<g opacity=".26" filter="url(#bowShadow)"><path d="M172 78c-35-40-77-41-79-15-2 24 34 31 79 15Z" fill="#000"/><path d="M174 78c34-42 78-42 79-15 1 24-34 31-79 15Z" fill="#000"/></g>
+<!-- bow loops -->
+<path d="M171 76C136 35 93 30 91 57c-2 24 36 34 80 23Z" fill="url(#gold)" stroke="#B77A1D" stroke-width="1.4"/>
+<path d="M174 76c35-41 79-42 81-16 4 24-35 35-81 20Z" fill="url(#gold)" stroke="#B77A1D" stroke-width="1.4"/>
+<path d="M166 73c-20-23-42-30-56-24 11 3 26 14 39 30" stroke="#FFF4BD" stroke-opacity=".8" stroke-width="3" stroke-linecap="round"/>
+<path d="M180 73c21-23 43-30 57-24-12 3-27 14-40 30" stroke="#FFF4BD" stroke-opacity=".7" stroke-width="3" stroke-linecap="round"/>
+<path d="M170 70c-13-18-15-35-4-39 12-4 21 13 12 43" fill="url(#gold)" stroke="#B77A1D" stroke-width="1.3"/>
+<path d="M176 71c7-20 20-31 29-23 9 9-2 23-24 31" fill="url(#gold)" stroke="#B77A1D" stroke-width="1.3"/>
+<path d="M171 72c-5-11-4-23 1-29" stroke="#FFF8D6" stroke-opacity=".9" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M181 74c9-12 16-17 22-18" stroke="#FFF8D6" stroke-opacity=".8" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M165 76c-7 8-13 20-11 30 11-2 19-11 24-26" fill="url(#gold)" stroke="#B77A1D" stroke-width="1.2"/>
+<path d="M180 77c9 8 16 18 14 28-11-1-20-9-25-24" fill="url(#gold)" stroke="#B77A1D" stroke-width="1.2"/>
+<path d="M166 76c6-7 14-8 20-2 5 7 0 17-8 20-8-3-14-11-12-18Z" fill="url(#gold)" stroke="#B77A1D" stroke-width="1.3"/>
+<path d="M171 77c3 5 6 10 7 17" stroke="#FFF4BD" stroke-opacity=".8" stroke-width="2" stroke-linecap="round"/>
+<!-- subtle glossy edges -->
+<path d="m75 123 105 33v112" stroke="#C7E7FF" stroke-opacity=".32" stroke-width="2"/>
+<path d="m194 84 59 27" stroke="#D5EDFF" stroke-opacity=".32" stroke-width="2"/>
+</svg>

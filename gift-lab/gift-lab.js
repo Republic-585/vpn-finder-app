@@ -371,7 +371,7 @@
     console.error("[VPN Finder] 3D gift scene could not start.",error);
     const image=document.createElement("img");
     image.className="gift-reference-image";
-    image.src="./assets/images/glossy-blue-gift-reference.png";
+    image.src="../assets/images/glossy-blue-gift-reference.png";
     image.alt="";
     image.setAttribute("aria-hidden","true");
     host.replaceChildren(image);

@@ -75,42 +75,16 @@ if (tg) {
 }
 const startupSplashStartedAt = performance.now();
 let startupSplashFinished = false;
+let startupCatalogReady = false;
 let startupHapticTimer = null;
 let startupHapticStage = 0;
 const startupHapticLevels = ["soft", "medium", "heavy"];
 const startupHapticDurations = [12, 22, 34];
-const pulseStartupHaptic = () => {
-  if (startupSplashFinished || document.visibilityState === "hidden" || startupHapticStage >= 3) {
-    startupHapticTimer = null;
-    return;
-  }
-  try {
-    if (tg?.HapticFeedback?.impactOccurred) {
-      tg.HapticFeedback.impactOccurred(startupHapticLevels[startupHapticStage]);
-    } else if (typeof navigator.vibrate === "function") {
-      navigator.vibrate(startupHapticDurations[startupHapticStage]);
-    }
-  } catch (_) {}
-  startupHapticStage += 1;
-  startupHapticTimer = startupHapticStage < 3
-    ? window.setTimeout(pulseStartupHaptic, 420)
-    : null;
-};
-const startStartupHaptics = () => {
-  if (startupHapticTimer || startupSplashFinished) return;
-  pulseStartupHaptic();
-};
-const stopStartupHaptics = () => {
-  if (startupHapticTimer) window.clearTimeout(startupHapticTimer);
-  startupHapticTimer = null;
-  try {
-    if (typeof navigator.vibrate === "function") navigator.vibrate(0);
-  } catch (_) {}
-};
-const finishStartupSplash = () => {
+const revealStartupApp = () => {
   if (startupSplashFinished) return;
   startupSplashFinished = true;
-  stopStartupHaptics();
+  if (startupHapticTimer) window.clearTimeout(startupHapticTimer);
+  startupHapticTimer = null;
   const splash = document.getElementById("startup-splash");
   document.body.classList.add("app-ready");
   if (!splash) return;
@@ -124,11 +98,44 @@ const finishStartupSplash = () => {
     });
   }, entranceRemaining);
 };
+const pulseStartupHaptic = () => {
+  if (startupSplashFinished || document.visibilityState === "hidden") return;
+  if (startupHapticStage >= 2 && !startupCatalogReady) {
+    startupHapticTimer = null;
+    return;
+  }
+  const level = startupHapticLevels[startupHapticStage];
+  try {
+    if (tg?.HapticFeedback?.impactOccurred) {
+      tg.HapticFeedback.impactOccurred(level);
+    } else if (typeof navigator.vibrate === "function") {
+      navigator.vibrate(startupHapticDurations[startupHapticStage]);
+    }
+  } catch (_) {}
+  startupHapticStage += 1;
+  if (startupHapticStage === 3) {
+    // The third, strongest pulse and the main-screen reveal happen together.
+    revealStartupApp();
+    return;
+  }
+  startupHapticTimer = window.setTimeout(pulseStartupHaptic, 420);
+};
+const startStartupHaptics = () => {
+  if (startupHapticTimer || startupSplashFinished || startupHapticStage >= 3) return;
+  pulseStartupHaptic();
+};
+const finishStartupSplash = () => {
+  startupCatalogReady = true;
+  if (startupHapticStage >= 2 && !startupHapticTimer) pulseStartupHaptic();
+};
 
 startStartupHaptics();
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible" && !startupSplashFinished && !startupHapticTimer) startStartupHaptics();
-  else if (document.visibilityState === "hidden") stopStartupHaptics();
+  else if (document.visibilityState === "hidden" && startupHapticTimer) {
+    window.clearTimeout(startupHapticTimer);
+    startupHapticTimer = null;
+  }
 });
 
 const SUPABASE_URL = "https://januqesxribuqzmmmdun.supabase.co";

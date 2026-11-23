@@ -54,17 +54,17 @@
     scene.add(rim);
 
     const blue = new THREE.MeshPhysicalMaterial({
-      color: 0x1687f5, metalness: .18, roughness: .22,
-      clearcoat: 1, clearcoatRoughness: .13, envMapIntensity: 1.25
+      color: 0x0758d8, metalness: .24, roughness: .16,
+      clearcoat: 1, clearcoatRoughness: .075, envMapIntensity: 1.8
     });
     const blueSide = blue.clone();
-    blueSide.color.set(0x0872df);
+    blueSide.color.set(0x064bc0);
     const gold = new THREE.MeshPhysicalMaterial({
-      color: 0xf5bd35, metalness: .88, roughness: .2,
-      clearcoat: .85, clearcoatRoughness: .16, envMapIntensity: 1.6, side: THREE.DoubleSide
+      color: 0xeeb52b, metalness: .82, roughness: .235,
+      clearcoat: 1, clearcoatRoughness: .11, envMapIntensity: 2.0, side: THREE.DoubleSide
     });
     const goldLight = gold.clone();
-    goldLight.color.set(0xffd96a);
+    goldLight.color.set(0xffd04b);
 
     const gift = new THREE.Group();
     gift.position.y = .12;
@@ -72,65 +72,69 @@
 
     const base = new THREE.Group();
     gift.add(base);
-    const body = new THREE.Mesh(new RoundedBoxGeometry(1.9, 1.48, 1.55, 8, .16), blue);
+    const body = new THREE.Mesh(new RoundedBoxGeometry(2.02, 1.48, 1.62, 10, .22), blue);
     body.position.y = .82;
     body.castShadow = true;
     body.receiveShadow = true;
     base.add(body);
 
     // Gold wrap: two continuous-looking bands across the front, sides and top.
-    const bandFront = new THREE.Mesh(new RoundedBoxGeometry(.25, 1.51, 1.585, 5, .035), gold);
+    const bandFront = new THREE.Mesh(new RoundedBoxGeometry(.34, 1.51, 1.655, 8, .055), gold);
     bandFront.position.set(0, .82, .005);
     bandFront.castShadow = true;
     base.add(bandFront);
-    const bandTop = new THREE.Mesh(new RoundedBoxGeometry(1.94, .075, .25, 5, .035), goldLight);
+    const bandTop = new THREE.Mesh(new RoundedBoxGeometry(2.045, .105, .34, 8, .045), goldLight);
     bandTop.position.set(0, 1.565, 0);
     base.add(bandTop);
-    const sideBandL = new THREE.Mesh(new RoundedBoxGeometry(.035, 1.5, 1.57, 4, .016), gold);
-    sideBandL.position.set(-.94, .82, 0);
+    const sideBandL = new THREE.Mesh(new RoundedBoxGeometry(.055, 1.5, 1.64, 6, .025), gold);
+    sideBandL.position.set(-1.0, .82, 0);
     base.add(sideBandL);
     const sideBandR = sideBandL.clone();
-    sideBandR.position.x = .94;
+    sideBandR.position.x = 1.0;
     base.add(sideBandR);
 
     // Lid has its own pivot so it can rise and rotate during the reveal.
     const lidPivot = new THREE.Group();
-    lidPivot.position.set(0, 1.56, -.74);
+    lidPivot.position.set(0, 1.56, -.78);
     gift.add(lidPivot);
-    const lid = new THREE.Mesh(new RoundedBoxGeometry(2.02, .43, 1.68, 8, .14), blue);
+    const lid = new THREE.Mesh(new RoundedBoxGeometry(2.16, .46, 1.78, 10, .19), blue);
     lid.position.set(0, .19, .74);
     lid.castShadow = true;
     lid.receiveShadow = true;
     lidPivot.add(lid);
-    const lidBand = new THREE.Mesh(new RoundedBoxGeometry(.265, .445, 1.71, 5, .035), gold);
+    const lidBand = new THREE.Mesh(new RoundedBoxGeometry(.35, .475, 1.81, 8, .05), gold);
     lidBand.position.set(0, .19, .74);
     lidPivot.add(lidBand);
-    const lidTopBand = new THREE.Mesh(new RoundedBoxGeometry(2.03, .055, .27, 5, .025), goldLight);
+    const lidTopBand = new THREE.Mesh(new RoundedBoxGeometry(2.17, .075, .36, 8, .035), goldLight);
     lidTopBand.position.set(0, .405, .74);
     lidPivot.add(lidTopBand);
 
     // Bow loops are volumetric satin ribbons, not flat image planes.
-    function ribbonLoop(points, width, material, parent) {
-      const curve = new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(...p)), true, "centripetal");
-      const divisions = 100;
+    // A true volumetric ribbon surface built along a 3D spline.
+    // The width follows the curve's Frenet frame, so loops and draped tails keep their form.
+    function ribbonLoop(points, width, material, parent, closed = true) {
+      const curve = new THREE.CatmullRomCurve3(
+        points.map(p => new THREE.Vector3(...p)), closed, "centripetal"
+      );
+      const divisions = Math.max(120, points.length * 24);
+      const frames = curve.computeFrenetFrames(divisions, closed);
       const vertices = [];
       const uvs = [];
       const indices = [];
       for (let i = 0; i <= divisions; i++) {
         const t = i / divisions;
         const point = curve.getPointAt(t);
-        const tangent = curve.getTangentAt(t).normalize();
-        let across = new THREE.Vector3(0, 0, 1).cross(tangent).normalize();
-        if (across.lengthSq() < .01) across.set(1, 0, 0);
-        const flutter = Math.sin(t * Math.PI * 8) * .018;
-        across.multiplyScalar(1 + flutter);
-        const half = width * .5;
-        const normal = new THREE.Vector3().crossVectors(tangent, across).normalize();
+        const normal = frames.normals[i];
+        const binormal = frames.binormals[i];
+        const taper = closed ? 1 : (t > .91 ? 1 - smooth((t - .91) / .09) * .12 : 1);
+        const half = width * taper * .5;
+        const camber = Math.sin(t * Math.PI * (closed ? 8 : 5)) * .012;
         for (let side = -1; side <= 1; side += 2) {
-          const p = point.clone().addScaledVector(across, half * side);
-          p.addScaledVector(normal, Math.sin(t * Math.PI * 4) * .012);
+          const p = point.clone()
+            .addScaledVector(normal, half * side)
+            .addScaledVector(binormal, camber);
           vertices.push(p.x, p.y, p.z);
-          uvs.push(side === -1 ? 0 : 1, t);
+          uvs.push(side < 0 ? 0 : 1, t);
         }
         if (i < divisions) {
           const a = i * 2, b = a + 1, c = a + 2, d = a + 3;
@@ -150,33 +154,39 @@
     }
 
     const bow = new THREE.Group();
-    bow.position.set(0, 1.91, .02);
+    bow.position.set(0, 1.94, .04);
     gift.add(bow);
+
+    // Two broad, inflated satin loops with a generous open centre.
     ribbonLoop([
-      [0,0,0],[.12,.2,.08],[.43,.34,.03],[.69,.27,-.04],
-      [.72,.1,-.08],[.48,-.02,-.12],[.19,.02,-.08],[-.02,.14,0]
-    ], .22, goldLight, bow);
+      [0,0,0],[.2,.22,.12],[.52,.39,.08],[.82,.38,-.015],
+      [.94,.2,-.09],[.82,.015,-.14],[.52,-.025,-.12],[.2,.075,-.035],[0,.12,.025]
+    ], .34, goldLight, bow);
     ribbonLoop([
-      [0,0,0],[-.13,.2,.08],[-.44,.35,.02],[-.7,.27,-.05],
-      [-.73,.1,-.09],[-.49,-.02,-.12],[-.2,.02,-.08],[-.02,.14,0]
-    ], .22, goldLight, bow);
-    ribbonLoop([
-      [0,0,.015],[.1,.17,.16],[.23,.29,.2],[.3,.22,.16],
-      [.27,.08,.12],[.12,.04,.08],[0,.1,.04]
-    ], .16, gold, bow);
-    ribbonLoop([
-      [0,0,.015],[-.1,.17,.16],[-.23,.29,.2],[-.3,.22,.16],
-      [-.27,.08,.12],[-.12,.04,.08],[0,.1,.04]
-    ], .16, gold, bow);
-    const knot = new THREE.Mesh(new RoundedBoxGeometry(.34, .24, .29, 6, .09), gold);
-    knot.position.set(0, .13, .16);
-    knot.rotation.z = -.12;
+      [0,0,0],[-.2,.22,.12],[-.52,.39,.08],[-.82,.38,-.015],
+      [-.94,.2,-.09],[-.82,.015,-.14],[-.52,-.025,-.12],[-.2,.075,-.035],[0,.12,.025]
+    ], .34, goldLight, bow);
+
+    // The central knot is rounded and visibly raised above the ribbon.
+    const knot = new THREE.Mesh(new RoundedBoxGeometry(.39, .29, .34, 8, .12), gold);
+    knot.position.set(0, .14, .19);
+    knot.rotation.z = -.08;
     knot.castShadow = true;
     bow.add(knot);
+    const knotWrap = new THREE.Mesh(new RoundedBoxGeometry(.13, .31, .355, 6, .055), goldLight);
+    knotWrap.position.set(0, .14, .205);
+    knotWrap.rotation.z = -.08;
+    bow.add(knotWrap);
 
-    // Two short satin tails drape over the lid.
-    ribbonLoop([[0,.02,.16],[.12,-.12,.32],[.17,-.3,.42],[.1,-.45,.48],[.02,-.51,.52]], .19, goldLight, bow, false);
-    ribbonLoop([[0,.02,.16],[-.12,-.12,.32],[-.17,-.3,.42],[-.1,-.45,.48],[-.02,-.51,.52]], .19, goldLight, bow, false);
+    // Wide tails fall from the knot and lie over the lid; open splines keep them ribbon-shaped.
+    ribbonLoop([
+      [-.04,.025,.2],[-.13,-.13,.32],[-.22,-.29,.43],[-.28,-.43,.52],
+      [-.34,-.52,.58],[-.48,-.57,.61],[-.57,-.53,.60]
+    ], .29, goldLight, bow, false);
+    ribbonLoop([
+      [.04,.025,.2],[.13,-.13,.32],[.22,-.29,.43],[.28,-.43,.52],
+      [.34,-.52,.58],[.48,-.57,.61],[.57,-.53,.60]
+    ], .29, goldLight, bow, false);
 
     // Grounding shadow and restrained light pool.
     const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: .18 }));

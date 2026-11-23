@@ -1,0 +1,25 @@
+name: Prepare gift source layers
+on:
+  push:
+    branches: [gift-source-prep]
+    paths:
+      - "gift-source/**"
+      - ".github/workflows/prepare-gift-source.yml"
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow numpy opencv-python-headless
+      - run: python gift-source/source/prepare_layers.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gift-source-first-pass
+          path: gift-source/
+          if-no-files-found: error
+          retention-days: 7

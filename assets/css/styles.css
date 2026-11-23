@@ -2363,3 +2363,58 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 #screen-owner-promo .gift-ground-glow{z-index:0;opacity:.8;filter:blur(22px)}
 #screen-owner-promo .gift-copy{position:relative;z-index:3}
 @media(max-width:380px){#screen-owner-promo .gift-scene{height:320px}}
+
+
+/* Catalog expanded rows: keep the rating star anchored to the avatar, independent of row expansion. */
+#screen-catalog .service-list-card > .service-mini-card > .service-avatar-rating{
+  position:relative!important;
+  display:block!important;
+  width:64px!important;
+  height:64px!important;
+  min-width:64px!important;
+  min-height:64px!important;
+  max-width:64px!important;
+  max-height:64px!important;
+  flex:0 0 64px!important;
+  align-self:center!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:visible!important;
+  transform:none!important;
+  translate:none!important;
+  animation:none!important;
+  transition:none!important;
+  will-change:auto!important;
+}
+#screen-catalog .service-list-card > .service-mini-card > .service-avatar-rating > .service-avatar{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:none!important;
+  max-height:none!important;
+  flex:none!important;
+}
+#screen-catalog .service-list-card > .service-mini-card > .service-avatar-rating > .service-rating{
+  position:absolute!important;
+  left:85.355%!important;
+  top:85.355%!important;
+  right:auto!important;
+  bottom:auto!important;
+  margin:0!important;
+  padding:0!important;
+  transform:none!important;
+  translate:-34% -31.8%!important;
+  animation:none!important;
+  transition:none!important;
+  will-change:auto!important;
+  z-index:8!important;
+}
+#screen-catalog .service-list-card > .service-mini-card > .service-avatar-rating > .service-rating > .service-rating-badge,
+#screen-catalog .service-list-card > .service-mini-card > .service-avatar-rating > .service-rating > .service-rating-badge svg{
+  animation:none!important;
+  transition:none!important;
+  will-change:auto!important;
+}

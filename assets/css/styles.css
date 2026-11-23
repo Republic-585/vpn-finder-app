@@ -2481,7 +2481,7 @@ button:not(.round-action):not(.clear-search):not(.catalog-promo-more-hit):not(.c
 /* VPN Finder support screen — restrained native Telegram layout. */
 #screen-support{padding-bottom:calc(28px + env(safe-area-inset-bottom))}
 #screen-support .support-hero{text-align:center;padding:8px 8px 22px}
-#screen-support .support-orb{display:block;width:min(62vw,238px);height:auto;max-height:238px;object-fit:contain;margin:0 auto 8px;animation:support-orb-float 6.5s ease-in-out infinite;filter:drop-shadow(0 12px 24px rgba(0,0,0,.2))}
+#screen-support .support-orb{display:block;width:220px;max-width:88%;height:208px;max-height:none;object-fit:contain;margin:0 auto 8px;animation:support-orb-float 5.8s ease-in-out infinite;filter:drop-shadow(0 15px 18px rgba(0,0,0,.22))}
 #screen-support .support-hero h1{margin:0;color:#fff;font-size:27px;line-height:1.12;letter-spacing:-.055em;font-weight:700}
 #screen-support .support-hero p{max-width:290px;margin:9px auto 0;color:rgba(255,255,255,.68);font-size:13px;line-height:1.5}
 @keyframes support-orb-float{0%,100%{transform:translate3d(0,0,0) rotate(-1deg)}50%{transform:translate3d(0,-8px,0) rotate(1deg)}}
@@ -2508,3 +2508,11 @@ button:not(.round-action):not(.clear-search):not(.catalog-promo-more-hit):not(.c
 #screen-support #support-pay-button[hidden],#screen-support #crypto-copy-address[hidden]{display:none!important}
 #screen-support .support-pay-button,#screen-support #crypto-copy-address{display:none!important}
 @media(prefers-reduced-motion:reduce){#screen-support .support-orb{animation:none}}
+
+/* Match the support orb to the owner-promo gift artwork and remove app navigation here. */
+body.support-native-cta .bottom-nav{display:none!important}
+body.support-native-cta .main-content{padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+@media(max-height:700px){
+  #screen-support .support-hero{padding-top:4px}
+  #screen-support .support-orb{width:190px;height:170px;margin-bottom:4px}
+}

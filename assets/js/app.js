@@ -61,7 +61,7 @@ const applyTelegramColors = () => {
   const themeMeta = document.querySelector('meta[name="theme-color"]');
   if (themeMeta) themeMeta.setAttribute("content", appBg);
   try {
-    tg?.setHeaderColor(appBg);
+    tg?.setHeaderColor("bg_color");
     tg?.setBackgroundColor(appBg);
   } catch (_) {}
 };

@@ -81,6 +81,19 @@ if (tg) {
   try { tg.expand(); } catch (_) {}
   // The static splash and first interface frame are already in the DOM.
   try { tg.ready(); } catch (_) {}
+  // Ask Telegram for immersive fullscreen when the client supports Bot API 8.0+.
+  try {
+    if (typeof tg.requestFullscreen === "function" &&
+        (typeof tg.isVersionAtLeast !== "function" || tg.isVersionAtLeast("8.0"))) {
+      tg.requestFullscreen();
+    }
+  } catch (_) {}
+  // Protect users from accidentally closing the Mini App.
+  try {
+    if (typeof tg.enableClosingConfirmation === "function") {
+      tg.enableClosingConfirmation();
+    }
+  } catch (_) {}
 }
 const startupSplashStartedAt = performance.now();
 let startupSplashFinished = false;

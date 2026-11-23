@@ -2346,3 +2346,20 @@ html,body,.app-shell{background-color:#202124!important}
 
 /* Use Telegram's native bottom action on the owner promo screen inside Mini Apps. */
 body.owner-promo-native-cta #screen-owner-promo .owner-promo-footer{display:none!important}
+
+
+/* Hide visual scrollbars throughout the Mini App without disabling scrolling. */
+html, body, .app-shell, .main-content, .screen, * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.app-shell::-webkit-scrollbar,
+.main-content::-webkit-scrollbar,
+.screen::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}

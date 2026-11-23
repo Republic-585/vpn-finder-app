@@ -2477,8 +2477,7 @@ button:not(.round-action):not(.clear-search):not(.catalog-promo-more-hit):not(.c
 .support-preset span{font-size:12px!important;font-weight:500!important;line-height:1.2!important}
 
 
-/* Support project: use the published third-party Telegram shine demo parameters
-   on the two payment actions only; these are not Telegram's private native values. */
+/* Support project: apply the native Telegram CTA shine only to the two payment actions. */
 #screen-support #support-pay-button,
 #screen-support #crypto-copy-address{
   position:relative!important;
@@ -2490,14 +2489,24 @@ button:not(.round-action):not(.clear-search):not(.catalog-promo-more-hit):not(.c
   content:"";
   position:absolute;
   z-index:2;
-  inset:-65% -45%;
+  top:-65%;
+  left:-86%;
+  width:82%;
+  height:230%;
   pointer-events:none;
-  background:linear-gradient(120deg,transparent,rgba(255,255,255,.2),transparent);
-  animation:support-native-button-shine 5s ease-in-out infinite;
+  border-radius:50%;
+  background:
+    radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.24) 0%,rgba(255,255,255,.17) 22%,rgba(255,255,255,.09) 46%,rgba(255,255,255,0) 76%);
+  filter:blur(13px);
+  box-shadow:0 0 24px rgba(255,255,255,.16),0 0 44px rgba(255,255,255,.09);
+  transform:none;
+  animation:support-native-button-shine 2.8s cubic-bezier(.35,0,.55,1) infinite;
 }
 @keyframes support-native-button-shine{
-  0%{transform:translateX(-100%)}
-  100%{transform:translateX(100%)}
+  0%,8%{left:-86%;opacity:0}
+  18%{opacity:.9}
+  62%{left:112%;opacity:.9}
+  72%,100%{left:112%;opacity:0}
 }
 @media(prefers-reduced-motion:reduce){
   #screen-support #support-pay-button::after,

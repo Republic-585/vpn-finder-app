@@ -7,10 +7,19 @@ if (tg) {
     const nativeBg = tg.themeParams?.bg_color || "#202124";
     document.documentElement.style.setProperty("--tg-native-bg", nativeBg);
     document.documentElement.style.colorScheme = tg.colorScheme || "dark";
-    try { tg.setHeaderColor(nativeBg); tg.setBackgroundColor(nativeBg); } catch (_) {}
+    document.documentElement.style.backgroundColor = nativeBg;
+    document.body.style.backgroundColor = nativeBg;
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeMeta) themeMeta.setAttribute("content", nativeBg);
+    try {
+      // Telegram draws its native top bar outside the web page; this colors that area.
+      tg.setHeaderColor(nativeBg);
+      tg.setBackgroundColor(nativeBg);
+    } catch (_) {}
   };
   applyTelegramColors();
   tg.onEvent?.("themeChanged", applyTelegramColors);
+  tg.onEvent?.("viewportChanged", applyTelegramColors);
 }
 
 const SUPABASE_URL = "https://januqesxribuqzmmmdun.supabase.co";

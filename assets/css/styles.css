@@ -2832,12 +2832,10 @@ body:not(.app-ready) .app-shell{visibility:hidden}
   animation:startup-content-in .55s cubic-bezier(.2,.7,.2,1) .06s forwards;
 }
 .startup-brand-mark{
-  width:76px;height:76px;display:grid;place-items:center;border-radius:23px;
-  background:linear-gradient(145deg,#34373d,#292b30);border:1px solid rgba(255,255,255,.09);
-  box-shadow:0 12px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.07);
+  width:88px;height:88px;display:grid;place-items:center;overflow:hidden;border-radius:20px;
+  background:transparent;border:0;box-shadow:none;
 }
-.startup-brand-mark svg{width:42px;height:42px;fill:none;stroke:#6AB2F2;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
-.startup-brand-mark svg path:last-child{stroke:#F1C75B;stroke-width:2}
+.startup-brand-mark img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
 .startup-brand-name{margin-top:20px;color:#F5F5F5;font-size:27px;line-height:1;font-weight:700;letter-spacing:-1.15px}
 .startup-brand-name span{color:#6AB2F2}
 .startup-tagline{margin-top:11px;color:#AEB1B8;font-size:13px;line-height:1.4;font-weight:400;letter-spacing:.01em}

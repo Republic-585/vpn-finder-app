@@ -2801,10 +2801,18 @@ body.support-native-cta .bottom-nav-dock .profile-nav-button{display:none!import
   #screen-owner-promo .owner-promo-orbit-front::after{animation:none!important;opacity:.42}
 }
 
-/* The orbit glint gradually dims as it travels away. */
+/* The glint starts and ends behind the lower edge of each object.
+   It brightens while crossing the visible front arc and fades before slipping behind. */
 @keyframes hero-orbit-glint{
-  0%{offset-distance:0%;opacity:1}
-  35%{opacity:.72}
-  70%{opacity:.34}
-  100%{offset-distance:100%;opacity:.12}
+  0%{offset-distance:50%;opacity:.08}
+  5%{opacity:.72}
+  10%{opacity:1}
+  18%{opacity:.9}
+  25%{opacity:.08}
+  50%{opacity:.08}
+  80%{opacity:.08}
+  85%{opacity:.72}
+  90%{opacity:1}
+  98%{opacity:.9}
+  100%{offset-distance:150%;opacity:.08}
 }

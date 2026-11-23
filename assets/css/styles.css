@@ -2328,7 +2328,7 @@ html,body,.app-shell{background-color:#202124!important}
 #screen-owner-promo .owner-promo-content{position:relative;top:-42px}
 #screen-owner-promo .owner-promo-art{transform:translateY(-52px);margin-bottom:clamp(8px,2svh,18px)}
 #screen-owner-promo .owner-promo-copy{transform:translateY(-22px)}
-#screen-owner-promo .owner-promo-footer{transform:translateY(-54px);padding-top:0}
+#screen-owner-promo .owner-promo-footer{transform:translateY(-74px);padding-top:0}
 @media(max-height:700px){
   #screen-owner-promo .owner-promo-content{top:-28px}
   #screen-owner-promo .owner-promo-art{transform:translateY(-38px);margin-bottom:4px}

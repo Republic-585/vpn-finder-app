@@ -2516,3 +2516,32 @@ body.support-native-cta .main-content{padding-bottom:calc(24px + env(safe-area-i
   #screen-support .support-hero{padding-top:4px}
   #screen-support .support-orb{width:190px;height:170px;margin-bottom:4px}
 }
+
+
+/* Support screen: remove the detached profile shortcut and fit payment panels in the viewport. */
+body.support-native-cta .bottom-nav-dock .profile-nav-button{display:none!important}
+#screen-support{min-height:0!important;padding-bottom:8px!important}
+#screen-support .support-hero{padding:0 8px 10px!important}
+#screen-support .support-tabs{margin-bottom:10px!important}
+#screen-support .support-tab{min-height:36px!important}
+#screen-support .support-section-title{margin-bottom:8px!important}
+#screen-support .support-presets{gap:6px!important;margin-bottom:10px!important}
+#screen-support .support-preset{min-height:58px!important;padding-top:8px!important;padding-bottom:8px!important}
+#screen-support .support-form input{min-height:42px!important;margin-top:5px!important}
+#screen-support .profile-form-status{min-height:0!important;margin-top:6px!important}
+#screen-support .crypto-support-card{padding:14px!important}
+#screen-support .crypto-support-card h2{margin:5px 0!important;font-size:18px!important}
+#screen-support .crypto-support-note{margin-bottom:10px!important;line-height:1.35!important}
+#screen-support .crypto-address-wrap{padding:9px 10px!important}
+#screen-support .crypto-support-address{font-size:10px!important;line-height:1.35!important}
+#screen-support .crypto-support-card .profile-form-status{margin-top:6px!important}
+@media(max-height:820px){
+  #screen-support .support-orb{width:170px!important;height:160px!important;margin-bottom:4px!important}
+  #screen-support .support-hero h1{font-size:24px!important}
+  #screen-support .support-hero p{margin-top:6px!important;font-size:12px!important}
+}
+@media(max-height:700px){
+  #screen-support .support-orb{width:138px!important;height:128px!important}
+  #screen-support .support-hero{padding-bottom:7px!important}
+  #screen-support .support-preset{min-height:52px!important}
+}

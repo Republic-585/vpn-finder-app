@@ -81,10 +81,17 @@ const finishStartupSplash = () => {
   const splash = document.getElementById("startup-splash");
   document.body.classList.add("app-ready");
   if (!splash) return;
-  // One soft haptic when the first usable catalog screen is ready.
+  // A short rising haptic sequence when the first usable catalog screen is ready.
   try {
-    if (tg?.HapticFeedback?.impactOccurred) tg.HapticFeedback.impactOccurred("soft");
-    else if (typeof navigator.vibrate === "function") navigator.vibrate(12);
+    if (tg?.HapticFeedback?.impactOccurred) {
+      const haptic = tg.HapticFeedback;
+      haptic.impactOccurred("soft");
+      window.setTimeout(() => haptic.impactOccurred("medium"), 95);
+      window.setTimeout(() => haptic.impactOccurred("heavy"), 195);
+      window.setTimeout(() => haptic.impactOccurred("rigid"), 305);
+    } else if (typeof navigator.vibrate === "function") {
+      navigator.vibrate([14, 34, 22, 30, 32, 26, 48]);
+    }
   } catch (_) {}
   // Preserve the logo's entrance animation even if the catalog responds very quickly.
   const entranceRemaining = Math.max(0, 560 - (performance.now() - startupSplashStartedAt));

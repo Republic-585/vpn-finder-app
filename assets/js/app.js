@@ -73,11 +73,6 @@ if (tg) {
   // The static splash and first interface frame are already in the DOM.
   try { tg.ready(); } catch (_) {}
 }
-startStartupHaptics();
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible" && !startupSplashFinished && !startupHapticTimer) startStartupHaptics();
-  else if (document.visibilityState === "hidden") stopStartupHaptics();
-});
 const startupSplashStartedAt = performance.now();
 let startupSplashFinished = false;
 let startupHapticTimer = null;
@@ -130,6 +125,12 @@ const finishStartupSplash = () => {
     });
   }, entranceRemaining);
 };
+
+startStartupHaptics();
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible" && !startupSplashFinished && !startupHapticTimer) startStartupHaptics();
+  else if (document.visibilityState === "hidden") stopStartupHaptics();
+});
 
 const SUPABASE_URL = "https://januqesxribuqzmmmdun.supabase.co";
 const SUPABASE_KEY = "sb_publishable_BaYxtXvRZCmfEzMHJbSCog_ebs4k6oK";

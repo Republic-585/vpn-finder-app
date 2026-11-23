@@ -8,6 +8,20 @@
 <title>VPN Finder</title>
 <link rel="stylesheet" href="./assets/css/styles.css?v=20261124-vpn-startup-splash-v5">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+(() => {
+  const color = "#202124";
+  const tg = window.Telegram?.WebApp;
+  document.documentElement.style.backgroundColor = color;
+  document.documentElement.style.colorScheme = "dark";
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", color);
+  try {
+    tg?.setHeaderColor(color);
+    tg?.setBackgroundColor(color);
+  } catch (_) {}
+})();
+</script>
 <script src="./assets/avatars/manifest.js?v=20261123-avatar-local-v2"></script>
 <script defer src="./assets/js/app.js?v=20261124-english-translation-v1"></script>
 </head>

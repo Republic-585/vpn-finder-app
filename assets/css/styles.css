@@ -2310,3 +2310,10 @@ html,body,.app-shell{background-color:#202124!important}
 }
 #screen-owner-promo .owner-promo-cta:active{transform:scale(.98);filter:brightness(1.08)}
 #screen-owner-promo .owner-promo-cta svg{width:18px;height:18px}
+
+
+/* Owner promo: remove the blue aura and align CTA typography with catalog actions. */
+#screen-owner-promo .owner-promo-art::before{display:none!important;content:none!important}
+#screen-owner-promo .owner-promo-art img{filter:drop-shadow(0 18px 20px rgba(0,0,0,.28))!important}
+#screen-owner-promo .owner-promo-orbit-a{display:none!important}
+#screen-owner-promo .owner-promo-cta{font-family:inherit;font-size:12px;font-weight:600;line-height:normal;letter-spacing:normal}

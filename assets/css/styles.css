@@ -2335,3 +2335,10 @@ html,body,.app-shell{background-color:#202124!important}
   #screen-owner-promo .owner-promo-copy{transform:translateY(-14px)}
   #screen-owner-promo .owner-promo-footer{transform:translateY(-58px)}
 }
+
+
+/* Owner promo: move the primary action noticeably higher. */
+#screen-owner-promo .owner-promo-footer{transform:translateY(-104px)!important}
+@media(max-height:700px){
+  #screen-owner-promo .owner-promo-footer{transform:translateY(-88px)!important}
+}

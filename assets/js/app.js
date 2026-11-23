@@ -50,28 +50,46 @@ if (ownerPromoNativeButton) {
     ownerPromoNativeButton.onClick(handleNativeButtonClick);
   } catch (_) {}
 }
+const applyTelegramColors = () => {
+  // Match Telegram's native chrome and the startup surface before hiding Telegram's loader.
+  const appBg = "#202124";
+  document.documentElement.style.setProperty("--bg", appBg);
+  document.documentElement.style.setProperty("--tg-native-bg", appBg);
+  document.documentElement.style.colorScheme = "dark";
+  document.documentElement.style.backgroundColor = appBg;
+  document.body.style.backgroundColor = appBg;
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  if (themeMeta) themeMeta.setAttribute("content", appBg);
+  try {
+    tg?.setHeaderColor(appBg);
+    tg?.setBackgroundColor(appBg);
+  } catch (_) {}
+};
+applyTelegramColors();
 if (tg) {
-  tg.ready();
-  tg.expand();
-  const applyTelegramColors = () => {
-    // Keep Telegram's native top bar and the full Mini App canvas on the same graphite.
-    const appBg = "#202124";
-    document.documentElement.style.setProperty("--bg", appBg);
-    document.documentElement.style.setProperty("--tg-native-bg", appBg);
-    document.documentElement.style.colorScheme = "dark";
-    document.documentElement.style.backgroundColor = appBg;
-    document.body.style.backgroundColor = appBg;
-    const themeMeta = document.querySelector('meta[name="theme-color"]');
-    if (themeMeta) themeMeta.setAttribute("content", appBg);
-    try {
-      tg.setHeaderColor(appBg);
-      tg.setBackgroundColor(appBg);
-    } catch (_) {}
-  };
-  applyTelegramColors();
   tg.onEvent?.("themeChanged", applyTelegramColors);
   tg.onEvent?.("viewportChanged", applyTelegramColors);
+  try { tg.expand(); } catch (_) {}
+  // The static splash and first interface frame are already in the DOM.
+  try { tg.ready(); } catch (_) {}
 }
+const finishStartupSplash = () => {
+  const splash = document.getElementById("startup-splash");
+  document.body.classList.add("app-ready");
+  if (!splash) return;
+  // Use Telegram's native haptics when available; fall back only where the browser supports vibration.
+  try {
+    if (tg?.HapticFeedback?.impactOccurred) tg.HapticFeedback.impactOccurred("soft");
+    else if (typeof navigator.vibrate === "function") navigator.vibrate(12);
+  } catch (_) {}
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      splash.classList.add("is-leaving");
+      window.setTimeout(() => splash.remove(), 380);
+    });
+  });
+};
+requestAnimationFrame(() => requestAnimationFrame(finishStartupSplash));
 
 const SUPABASE_URL = "https://januqesxribuqzmmmdun.supabase.co";
 const SUPABASE_KEY = "sb_publishable_BaYxtXvRZCmfEzMHJbSCog_ebs4k6oK";

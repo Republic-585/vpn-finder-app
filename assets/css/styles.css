@@ -2026,31 +2026,3 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   transition:none!important;
   animation:none!important;
 }
-
-
-/* Owner promotion screen: Telegram-native pacing, centered 3D artwork and clear conversion path. */
-.owner-promo-screen{position:relative;padding-bottom:calc(112px + env(safe-area-inset-bottom))!important}
-.owner-promo-back{height:40px;margin:8px 0 0;padding:0 4px;display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;color:var(--secondary);font:inherit;font-size:14px;font-weight:550;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.owner-promo-back svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.owner-promo-hero{height:clamp(218px,57vw,310px);margin:0 -18px 4px;display:grid;place-items:center;overflow:hidden;perspective:900px}
-.owner-promo-art{width:min(100%,440px);height:100%;display:grid;place-items:center;overflow:hidden;animation:owner-art-enter .72s cubic-bezier(.2,.8,.2,1) both}
-.owner-promo-art img{display:block;width:125%;height:115%;max-width:none;object-fit:contain;transform:scale(1.12);filter:drop-shadow(0 18px 24px rgba(0,0,0,.22));animation:owner-art-float 5.2s ease-in-out .7s infinite;will-change:transform}
-@keyframes owner-art-enter{from{opacity:0;transform:translateY(24px) scale(.88) rotateX(8deg)}to{opacity:1;transform:translateY(0) scale(1) rotateX(0)}}
-@keyframes owner-art-float{0%,100%{transform:translate3d(0,0,0) scale(1.12) rotate(-.5deg)}50%{transform:translate3d(0,-9px,0) scale(1.12) rotate(.5deg)}}
-.owner-promo-copy{padding:4px 2px 18px}
-.owner-promo-eyebrow{margin:0 0 10px;color:var(--bright);font-size:10px;font-weight:700;letter-spacing:.12em}
-.owner-promo-copy h1{max-width:520px;margin:0;color:var(--text);font-size:clamp(27px,7vw,34px);line-height:1.08;font-weight:750;letter-spacing:-.055em}
-.owner-promo-lead{max-width:470px;margin:12px 0 20px;color:var(--secondary);font-size:15px;line-height:1.5}
-.owner-promo-benefits{display:grid;gap:0;border-top:1px solid var(--line)}
-.owner-promo-benefit{min-height:76px;padding:14px 0;display:flex;align-items:center;gap:13px;border-bottom:1px solid var(--line)}
-.owner-promo-benefit-icon{width:40px;height:40px;flex:0 0 40px;display:grid;place-items:center;border-radius:13px;background:var(--raised);color:var(--bright)}
-.owner-promo-benefit-icon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.owner-promo-benefit>span:last-child{min-width:0;display:grid;gap:4px}
-.owner-promo-benefit strong{font-size:14px;line-height:1.25;font-weight:650;color:var(--text)}
-.owner-promo-benefit small{font-size:12px;line-height:1.4;color:var(--secondary)}
-.owner-promo-note{margin:15px 0 0;color:var(--muted);font-size:11px;line-height:1.45}
-.owner-promo-action{position:fixed;z-index:15;left:50%;bottom:calc(76px + env(safe-area-inset-bottom));width:min(100%,720px);padding:10px 18px 8px;display:grid;gap:8px;background:linear-gradient(180deg,rgba(32,33,36,0),rgba(32,33,36,.94) 22%,rgba(32,33,36,.98));transform:translateX(-50%)}
-.owner-promo-action .connect-button{width:100%;min-height:48px;border-radius:999px;font-size:15px;font-weight:650}
-.owner-promo-action>span{text-align:center;color:var(--muted);font-size:11px}
-@media(max-width:360px){.owner-promo-hero{height:218px}.owner-promo-copy h1{font-size:27px}.owner-promo-benefit{min-height:72px}}
-@media(prefers-reduced-motion:reduce){.owner-promo-art,.owner-promo-art img{animation:none!important}}

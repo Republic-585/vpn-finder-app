@@ -2756,10 +2756,11 @@ body.support-native-cta .bottom-nav-dock .profile-nav-button{display:none!import
 }
 
 
-/* Subtle, slow orbit glint; the orbit itself passes in front of the artwork. */
+/* Depth effect: the full orbit and its glint pass behind the artwork;
+   only the lower/front arc is duplicated above the sphere and gift. */
 #screen-support .support-orbit-b,
 #screen-owner-promo .owner-promo-orbit-b{
-  z-index:3!important;
+  z-index:0!important;
   border-color:rgba(255,220,151,.075)!important;
 }
 #screen-support .support-orb,
@@ -2767,8 +2768,24 @@ body.support-native-cta .bottom-nav-dock .profile-nav-button{display:none!import
   position:relative;
   z-index:2!important;
 }
+#screen-support .support-orbit-front,
+#screen-owner-promo .owner-promo-orbit-front{
+  position:absolute;
+  z-index:3;
+  left:50%;
+  top:50%;
+  width:100%;
+  height:54%;
+  border:1px solid rgba(255,220,151,.075);
+  border-radius:50%;
+  transform:translate(-50%,-50%) rotate(24deg);
+  clip-path:inset(50% -8% -8% -8%);
+  pointer-events:none;
+}
 #screen-support .support-orbit-b::after,
-#screen-owner-promo .owner-promo-orbit-b::after{
+#screen-owner-promo .owner-promo-orbit-b::after,
+#screen-support .support-orbit-front::after,
+#screen-owner-promo .owner-promo-orbit-front::after{
   z-index:4;
   width:5px;
   height:5px;
@@ -2779,5 +2796,7 @@ body.support-native-cta .bottom-nav-dock .profile-nav-button{display:none!import
 }
 @media(prefers-reduced-motion:reduce){
   #screen-support .support-orbit-b::after,
-  #screen-owner-promo .owner-promo-orbit-b::after{animation:none!important;opacity:.42}
+  #screen-owner-promo .owner-promo-orbit-b::after,
+  #screen-support .support-orbit-front::after,
+  #screen-owner-promo .owner-promo-orbit-front::after{animation:none!important;opacity:.42}
 }

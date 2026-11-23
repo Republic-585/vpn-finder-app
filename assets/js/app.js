@@ -1,5 +1,18 @@
 (() => {
 const tg = window.Telegram?.WebApp;
+const ownerPromoNativeButton = tg?.MainButton || tg?.BottomButton || null;
+if (ownerPromoNativeButton) {
+  try {
+    ownerPromoNativeButton.setParams({
+      text: "Добавить сервис",
+      color: tg?.themeParams?.button_color || "#3390EC",
+      text_color: tg?.themeParams?.button_text_color || "#FFFFFF",
+      is_active: true,
+      is_visible: false
+    });
+    ownerPromoNativeButton.onClick(() => showScreen("owners", "owner-promo"));
+  } catch (_) {}
+}
 if (tg) {
   tg.ready();
   tg.expand();
@@ -389,6 +402,21 @@ let moveIndicator = () => {};
 const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analytics", "support"]);
 let ownersBackScreen = "catalog";
 function showScreen(name, backScreen = null) {
+  const useNativeOwnerPromoButton = name === "owner-promo" && !!ownerPromoNativeButton;
+  document.body.classList.toggle("owner-promo-native-cta", useNativeOwnerPromoButton);
+  try {
+    if (useNativeOwnerPromoButton) {
+      ownerPromoNativeButton.setParams({
+        text: "Добавить сервис",
+        color: tg?.themeParams?.button_color || "#3390EC",
+        text_color: tg?.themeParams?.button_text_color || "#FFFFFF",
+        is_active: true,
+        is_visible: true
+      });
+    } else {
+      ownerPromoNativeButton?.hide();
+    }
+  } catch (_) {}
   if (name === "owners") {
     const currentScreen = document.querySelector(".screen.active")?.dataset.screen;
     ownersBackScreen = backScreen || (currentScreen && currentScreen !== "owners" ? currentScreen : ownersBackScreen) || "catalog";

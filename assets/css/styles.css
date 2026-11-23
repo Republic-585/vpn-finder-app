@@ -2190,8 +2190,3 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
   #screen-owner-promo .owner-promo-spark{animation:none!important}
 }
 
-/* Owner promo: render the original layered Lottie gift, not the legacy static SVG. */
-#screen-owner-promo .owner-promo-art{width:min(100%,320px);height:270px;margin:0 auto 8px;display:block;position:relative}
-#screen-owner-promo #owner-promo-lottie{width:100%;height:100%;display:block}
-#screen-owner-promo #owner-promo-lottie svg{width:100%;height:100%;display:block;overflow:visible}
-@media(max-height:700px){#screen-owner-promo .owner-promo-art{height:220px;width:min(100%,270px)}}

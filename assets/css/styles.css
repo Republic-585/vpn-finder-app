@@ -2832,16 +2832,18 @@ body:not(.app-ready) .app-shell{visibility:hidden}
   animation:startup-content-in .55s cubic-bezier(.2,.7,.2,1) .06s forwards;
 }
 .startup-brand-mark{
-  width:88px;height:88px;display:grid;place-items:center;overflow:hidden;border-radius:20px;
-  background:transparent;border:0;box-shadow:none;
+  width:132px;height:132px;display:grid;place-items:center;
+  background:transparent;border:0;border-radius:0;box-shadow:none;
 }
-.startup-brand-mark img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
-.startup-brand-name{margin-top:20px;color:#F5F5F5;font-size:27px;line-height:1;font-weight:700;letter-spacing:-1.15px}
-.startup-brand-name span{color:#6AB2F2}
-.startup-tagline{margin-top:11px;color:#AEB1B8;font-size:13px;line-height:1.4;font-weight:400;letter-spacing:.01em}
-.startup-loading{width:112px;height:3px;margin-top:42px;overflow:hidden;border-radius:99px;background:#414349}
-.startup-loading span{display:block;width:42%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#5288C1,#7CC4FF);animation:startup-progress 1.25s ease-in-out infinite}
-.startup-status{margin-top:13px;color:#858A93;font-size:11px;letter-spacing:.015em}
+.startup-brand-mark svg{
+  display:block;width:100%;height:100%;overflow:visible;
+  fill:none;stroke:#FFFFFF;stroke-width:34;stroke-linecap:round;stroke-linejoin:round;
+}
+.startup-brand-mark svg path:last-child{stroke-width:36}
+.startup-brand-name{margin-top:25px;color:#FFFFFF;font-size:27px;line-height:1;font-weight:700;letter-spacing:-1.15px}
+.startup-brand-name span{color:#FFFFFF}
+.startup-loading{width:116px;height:3px;margin-top:46px;overflow:hidden;border-radius:99px;background:rgba(255,255,255,.18)}
+.startup-loading span{display:block;width:38%;height:100%;border-radius:inherit;background:#FFFFFF;animation:startup-progress 1.35s ease-in-out infinite}
 .startup-splash.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
 @keyframes startup-content-in{to{transform:translateY(0);opacity:1}}
 @keyframes startup-progress{0%{transform:translateX(-115%)}100%{transform:translateX(270%)}}

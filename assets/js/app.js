@@ -67,7 +67,16 @@ const applyTelegramColors = () => {
 };
 applyTelegramColors();
 if (tg) {
-  tg.onEvent?.("themeChanged", applyTelegramColors);
+  // Telegram may repaint its native header after a theme transition.
+  // Reapply our fixed graphite color after the client finishes that update.
+  const reapplyTelegramColors = () => {
+    applyTelegramColors();
+    window.requestAnimationFrame(() => {
+      applyTelegramColors();
+      window.setTimeout(applyTelegramColors, 100);
+    });
+  };
+  tg.onEvent?.("themeChanged", reapplyTelegramColors);
   tg.onEvent?.("viewportChanged", applyTelegramColors);
   try { tg.expand(); } catch (_) {}
   // The static splash and first interface frame are already in the DOM.

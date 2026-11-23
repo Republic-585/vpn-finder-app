@@ -2828,7 +2828,7 @@ body:not(.app-ready) .app-shell{visibility:hidden}
 }
 .startup-splash-content{
   width:min(100%,320px);display:flex;flex-direction:column;align-items:center;
-  transform:translateY(8px);opacity:0;
+  transform:translateY(-32px);opacity:0;
   animation:startup-content-in .55s cubic-bezier(.2,.7,.2,1) .06s forwards;
 }
 .startup-brand-mark{
@@ -2845,10 +2845,10 @@ body:not(.app-ready) .app-shell{visibility:hidden}
 .startup-loading{width:116px;height:3px;margin-top:46px;overflow:hidden;border-radius:99px;background:rgba(255,255,255,.18)}
 .startup-loading span{display:block;width:38%;height:100%;border-radius:inherit;background:#FFFFFF;animation:startup-progress 1.35s ease-in-out infinite}
 .startup-splash.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
-@keyframes startup-content-in{to{transform:translateY(0);opacity:1}}
+@keyframes startup-content-in{to{transform:translateY(-40px);opacity:1}}
 @keyframes startup-progress{0%{transform:translateX(-115%)}100%{transform:translateX(270%)}}
 @media(prefers-reduced-motion:reduce){
   .startup-splash,.startup-content-in{animation:none!important;transition:none!important}
-  .startup-splash-content{transform:none;opacity:1}
+  .startup-splash-content{transform:translateY(-40px);opacity:1}
   .startup-loading span{animation:none!important;width:65%}
 }

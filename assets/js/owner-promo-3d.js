@@ -260,6 +260,7 @@
       lidPivot.rotation.set(0,0,0);
       lidPivot.position.set(0,1.56,-.74);
       bow.position.set(0,1.91,.02);
+      bow.rotation.set(0,0,0);
       gift.position.y=.12;
       sparkles.visible=false;
     }
@@ -322,6 +323,12 @@
     host.dataset.ready="1";
   }).catch(error=>{
     console.error("[VPN Finder] 3D gift scene could not start.",error);
-    host.dataset.ready="error";
+    const image=document.createElement("img");
+    image.className="gift-reference-image";
+    image.src="./assets/images/glossy-blue-gift-reference.png";
+    image.alt="";
+    image.setAttribute("aria-hidden","true");
+    host.replaceChildren(image);
+    host.dataset.ready="fallback";
   });
 })();

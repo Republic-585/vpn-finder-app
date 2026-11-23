@@ -2816,3 +2816,39 @@ body.support-native-cta .bottom-nav-dock .profile-nav-button{display:none!import
   98%{opacity:.9}
   100%{offset-distance:150%;opacity:.08}
 }
+
+
+/* VPN Finder startup splash */
+body:not(.app-ready) .app-shell{visibility:hidden}
+.startup-splash{
+  position:fixed;inset:0;z-index:10000;display:grid;place-items:center;
+  min-height:100vh;min-height:100svh;padding:calc(28px + env(safe-area-inset-top)) 24px calc(28px + env(safe-area-inset-bottom));
+  overflow:hidden;background:#202124;opacity:1;visibility:visible;
+  transition:opacity .32s ease,visibility .32s ease;
+}
+.startup-splash-content{
+  width:min(100%,320px);display:flex;flex-direction:column;align-items:center;
+  transform:translateY(8px);opacity:0;
+  animation:startup-content-in .55s cubic-bezier(.2,.7,.2,1) .06s forwards;
+}
+.startup-brand-mark{
+  width:76px;height:76px;display:grid;place-items:center;border-radius:23px;
+  background:linear-gradient(145deg,#34373d,#292b30);border:1px solid rgba(255,255,255,.09);
+  box-shadow:0 12px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.07);
+}
+.startup-brand-mark svg{width:42px;height:42px;fill:none;stroke:#6AB2F2;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+.startup-brand-mark svg path:last-child{stroke:#F1C75B;stroke-width:2}
+.startup-brand-name{margin-top:20px;color:#F5F5F5;font-size:27px;line-height:1;font-weight:700;letter-spacing:-1.15px}
+.startup-brand-name span{color:#6AB2F2}
+.startup-tagline{margin-top:11px;color:#AEB1B8;font-size:13px;line-height:1.4;font-weight:400;letter-spacing:.01em}
+.startup-loading{width:112px;height:3px;margin-top:42px;overflow:hidden;border-radius:99px;background:#414349}
+.startup-loading span{display:block;width:42%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#5288C1,#7CC4FF);animation:startup-progress 1.25s ease-in-out infinite}
+.startup-status{margin-top:13px;color:#858A93;font-size:11px;letter-spacing:.015em}
+.startup-splash.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+@keyframes startup-content-in{to{transform:translateY(0);opacity:1}}
+@keyframes startup-progress{0%{transform:translateX(-115%)}100%{transform:translateX(270%)}}
+@media(prefers-reduced-motion:reduce){
+  .startup-splash,.startup-content-in{animation:none!important;transition:none!important}
+  .startup-splash-content{transform:none;opacity:1}
+  .startup-loading span{animation:none!important;width:65%}
+}

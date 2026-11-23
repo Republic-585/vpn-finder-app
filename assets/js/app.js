@@ -333,7 +333,16 @@ const translations = {
     "Перед отправкой проверь сеть: нужен именно USDT в TON. Криптоперевод не подтверждается автоматически и не выдаёт значок Stars-поддержки.":"Before sending, check the network: only USDT on TON is accepted. Crypto transfers are not verified automatically and do not grant the Stars supporter badge.",
     "Не удалось скопировать. Выдели значение и скопируй вручную.":"Could not copy. Select the value and copy it manually.",
     "Минимальная сумма — 2,50 USDT.":"Minimum amount is 2.50 USDT.",
-    "Сумма скопирована.":"Amount copied.","Адрес скопирован.":"Address copied."
+    "Сумма скопирована.":"Amount copied.","Адрес скопирован.":"Address copied.",
+    "Каталог Finder":"Finder directory","Добавить в каталог":"Add to directory","Друг VPN Finder":"VPN Finder Friend",
+    "Поддержать VPN Finder":"Support VPN Finder","Помоги проекту развиваться и делать поиск VPN удобнее.":"Help the project grow and make finding a VPN easier.",
+    "Выбери сумму поддержки":"Choose an amount to support the project","Или введи свою сумму в Stars":"Or enter your own amount in Stars","Оплатить Stars":"Pay with Stars",
+    "КРИПТОВАЛЮТА":"CRYPTOCURRENCY","USDT в сети TON":"USDT on TON network","Переведи любую удобную сумму на адрес ниже. Перед отправкой проверь сеть TON.":"Send any amount to the address below. Make sure you select the TON network before sending.",
+    "Больше внимания вашему VPN":"Get more attention for your VPN","Добавьте сервис в каталог Finder и станьте заметнее для новых пользователей.":"Add your service to the Finder directory and reach more users.",
+    "Оф сайт или ссылка ТГ":"Website or Telegram link","Сайт или ссылка на Telegram":"Website or Telegram link","@username, email или другой контакт":"@username, email, or another contact",
+    "Топ":"Top","VPN Finder загружается":"VPN Finder is loading","Подробнее о размещении VPN-сервиса":"Learn more about listing your VPN","Закрыть баннер":"Close banner",
+    "Разделы профиля":"Profile sections","Способ поддержки":"Support method","Варианты поддержки":"Support options","Основная навигация":"Main navigation",
+    "Рейтинг ":"Rating "," из 5":" out of 5","Рейтинг пока не сформирован":"No rating yet","Поддержать Stars":"Support with Stars"
   }
 };
 let appLanguage = (() => {
@@ -343,19 +352,26 @@ let appLanguage = (() => {
   } catch (_) { return "ru"; }
 })();
 const t = value => translations[appLanguage]?.[value] || value;
+const originalTextNodes = new WeakMap();
+const originalAttributes = new WeakMap();
 function translateStaticContent() {
   document.documentElement.lang = appLanguage;
   const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
   let node;
   while ((node = walker.nextNode())) {
-    const raw = node.nodeValue;
-    const trimmed = raw.trim();
-    if (translations.en[trimmed]) node.nodeValue = raw.replace(trimmed, t(trimmed));
+    if (!originalTextNodes.has(node)) originalTextNodes.set(node, node.nodeValue);
+    const original = originalTextNodes.get(node);
+    const trimmed = original.trim();
+    if (translations.en[trimmed]) node.nodeValue = original.replace(trimmed, t(trimmed));
   }
   document.querySelectorAll("[placeholder],[aria-label],[title]").forEach(el => {
     ["placeholder","aria-label","title"].forEach(attr => {
       const value = el.getAttribute(attr);
-      if (value && translations.en[value]) el.setAttribute(attr, t(value));
+      if (!value) return;
+      let originals = originalAttributes.get(el);
+      if (!originals) { originals = {}; originalAttributes.set(el, originals); }
+      if (!(attr in originals)) originals[attr] = value;
+      if (translations.en[originals[attr]]) el.setAttribute(attr, t(originals[attr]));
     });
   });
   updateLanguageLabel();

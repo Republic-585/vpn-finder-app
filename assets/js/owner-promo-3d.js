@@ -1,10 +1,10 @@
-import * as THREE from "https://esm.sh/three@0.170.0";
-import { RoundedBoxGeometry } from "https://esm.sh/three@0.170.0/examples/jsm/geometries/RoundedBoxGeometry.js";
-
-(() => {
+(async () => {
   const screen = document.getElementById("screen-owner-promo");
   const host = document.getElementById("owner-gift-canvas");
   if (!screen || !host || host.dataset.ready === "1") return;
+  try {
+  const THREE = await import("https://esm.sh/three@0.170.0");
+  const { RoundedBoxGeometry } = await import("https://esm.sh/three@0.170.0/examples/jsm/geometries/RoundedBoxGeometry.js");
   host.dataset.ready = "1";
 
   const scene = new THREE.Scene();
@@ -178,4 +178,14 @@ import { RoundedBoxGeometry } from "https://esm.sh/three@0.170.0/examples/jsm/ge
     else if(screen.classList.contains("active")) start();
   });
   resize(); renderer.render(scene,camera);
+  } catch (error) {
+    console.error("[VPN Finder] Promo gift 3D failed:", error);
+    host.dataset.ready = "fallback";
+    const fallback = document.createElement("img");
+    fallback.src = "./assets/images/VPN%20Finder%20Gift%20Box%20Promotion.png";
+    fallback.alt = "";
+    fallback.decoding = "async";
+    fallback.style.cssText = "display:block;width:100%;height:100%;object-fit:contain;object-position:center";
+    host.replaceChildren(fallback);
+  }
 })();

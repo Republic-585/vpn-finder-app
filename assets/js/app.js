@@ -11,9 +11,9 @@ function setNativeButton(mode) {
   nativeButtonMode = mode;
   if (!ownerPromoNativeButton) return;
   const labels = {
-    "owner-promo": "Добавить сервис",
-    "support-stars": "Поддержать Stars",
-    "support-crypto": "Скопировать адрес"
+    "owner-promo": t("Добавить сервис"),
+    "support-stars": t("Поддержать Stars"),
+    "support-crypto": t("Скопировать адрес")
   };
   if (!labels[mode]) {
     ownerPromoNativeButton.hide();

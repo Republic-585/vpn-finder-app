@@ -2363,3 +2363,82 @@ body::-webkit-scrollbar,
   height: 0 !important;
   display: none !important;
 }
+
+
+/* Shared action-button standard: match the Telegram native owner CTA.
+   Shine remains disabled on custom HTML buttons unless explicitly requested. */
+:root{
+  --action-button-bg:var(--tg-theme-button-color,#5288C1);
+  --action-button-text:var(--tg-theme-button-text-color,#FFFFFF);
+  --action-button-radius:999px;
+  --action-button-height:40px;
+}
+.connect-button,
+.primary-button,
+.catalog-promo-submit,
+#screen-owner-promo .owner-promo-cta{
+  min-height:var(--action-button-height)!important;
+  padding:0 16px!important;
+  border:0!important;
+  border-radius:var(--action-button-radius)!important;
+  background:var(--action-button-bg)!important;
+  color:var(--action-button-text)!important;
+  box-shadow:none!important;
+  font-family:inherit!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  line-height:1!important;
+  letter-spacing:normal!important;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .18s ease,filter .18s ease,opacity .18s ease;
+}
+.connect-button:active,
+.primary-button:active,
+.catalog-promo-submit:active,
+#screen-owner-promo .owner-promo-cta:active{
+  transform:scale(.98);
+  filter:brightness(1.06);
+}
+.connect-button:disabled,
+.primary-button:disabled,
+.catalog-promo-submit:disabled,
+#screen-owner-promo .owner-promo-cta:disabled{
+  opacity:.55;
+  cursor:default;
+  transform:none;
+  filter:none;
+}
+/* Compact and secondary controls keep their role, but share the reference geometry. */
+.remove-button{
+  min-height:var(--action-button-height)!important;
+  padding:0 16px!important;
+  border:1px solid var(--line)!important;
+  border-radius:var(--action-button-radius)!important;
+  background:transparent!important;
+  color:var(--secondary)!important;
+  font-family:inherit!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  line-height:1!important;
+  box-shadow:none!important;
+  -webkit-tap-highlight-color:transparent;
+}
+#screen-catalog .catalog-add-button{
+  min-height:36px!important;
+  padding:0 13px!important;
+  border:0!important;
+  border-radius:var(--action-button-radius)!important;
+  background:var(--action-button-bg)!important;
+  color:var(--action-button-text)!important;
+  font-family:inherit!important;
+  font-size:12px!important;
+  font-weight:600!important;
+  box-shadow:none!important;
+}
+#screen-catalog .catalog-add-button:active,
+.remove-button:active{transform:scale(.98);filter:brightness(1.06)}
+@media(prefers-reduced-motion:reduce){
+  .connect-button,.primary-button,.catalog-promo-submit,
+  #screen-owner-promo .owner-promo-cta,.remove-button,
+  #screen-catalog .catalog-add-button{transition:none!important}
+}

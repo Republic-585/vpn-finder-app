@@ -27,20 +27,20 @@ import { RoundedBoxGeometry } from "https://esm.sh/three@0.170.0/examples/jsm/ge
   key.castShadow = true;
   key.shadow.mapSize.set(1024, 1024);
   scene.add(key);
-  const rim = new THREE.PointLight(0xa77aff, 34, 12, 2);
+  const rim = new THREE.PointLight(0x62b8ff, 28, 12, 2);
   rim.position.set(3.5, 3.4, -2.8);
   scene.add(rim);
   const warm = new THREE.PointLight(0xffc65a, 0, 7, 2);
   warm.position.set(0, 2.2, 1.5);
   scene.add(warm);
 
-  const purple = new THREE.MeshPhysicalMaterial({ color: 0x5424a5, metalness: 0.22, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.12 });
-  const purpleLight = new THREE.MeshPhysicalMaterial({ color: 0x7944d4, metalness: 0.18, roughness: 0.18, clearcoat: 1 });
-  const purpleDark = new THREE.MeshPhysicalMaterial({ color: 0x32136f, metalness: 0.28, roughness: 0.25, clearcoat: 0.9 });
-  const inner = new THREE.MeshPhysicalMaterial({ color: 0x241044, metalness: 0.12, roughness: 0.32, clearcoat: 0.5 });
+  const blue = new THREE.MeshPhysicalMaterial({ color: 0x0878ed, metalness: 0.2, roughness: 0.19, clearcoat: 1, clearcoatRoughness: 0.08 });
+  const blueLight = new THREE.MeshPhysicalMaterial({ color: 0x258ff5, metalness: 0.16, roughness: 0.16, clearcoat: 1, clearcoatRoughness: 0.07 });
+  const blueDark = new THREE.MeshPhysicalMaterial({ color: 0x0648bd, metalness: 0.28, roughness: 0.22, clearcoat: 1 });
+  const inner = new THREE.MeshPhysicalMaterial({ color: 0x063a92, metalness: 0.12, roughness: 0.3, clearcoat: 0.6 });
   const gold = new THREE.MeshPhysicalMaterial({ color: 0xf5b82e, metalness: 0.92, roughness: 0.19, clearcoat: 1 });
   const goldHi = new THREE.MeshPhysicalMaterial({ color: 0xffdf79, metalness: 0.84, roughness: 0.15, clearcoat: 1 });
-  const emblem = new THREE.MeshPhysicalMaterial({ color: 0x1c78e8, metalness: 0.38, roughness: 0.2, clearcoat: 1 });
+  const emblem = new THREE.MeshPhysicalMaterial({ color: 0x0878ed, metalness: 0.38, roughness: 0.2, clearcoat: 1 });
   const white = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0.12, roughness: 0.22, clearcoat: 1 });
 
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.ShadowMaterial({ opacity: 0.2 }));
@@ -63,30 +63,18 @@ import { RoundedBoxGeometry } from "https://esm.sh/three@0.170.0/examples/jsm/ge
     return mesh;
   };
 
-  // Open, hollow gift body: the interior floor and four thick walls remain visible.
-  addBoxPart(2.62, 0.2, 1.92, purpleDark, 0, 0.12, 0, 0.07);
-  addBoxPart(2.62, 1.58, 0.18, purple, 0, 0.94, 0.88, 0.07);
-  addBoxPart(2.62, 1.58, 0.18, purpleDark, 0, 0.94, -0.88, 0.07);
-  addBoxPart(0.18, 1.58, 1.58, purpleLight, -1.22, 0.94, 0, 0.07);
-  addBoxPart(0.18, 1.58, 1.58, purple, 1.22, 0.94, 0, 0.07);
-  addBoxPart(2.38, 0.045, 1.66, inner, 0, 0.245, 0, 0.025);
-
-  // Gold piping around the open rim.
-  const rimFront = addBoxPart(2.58, 0.055, 0.055, goldHi, 0, 1.75, 0.89, 0.02);
-  const rimBack = addBoxPart(2.58, 0.055, 0.055, gold, 0, 1.75, -0.89, 0.02);
-  addBoxPart(0.055, 0.055, 1.72, goldHi, -1.24, 1.75, 0, 0.02);
-  addBoxPart(0.055, 0.055, 1.72, gold, 1.24, 1.75, 0, 0.02);
-
-  // Broad satin ribbons run down the outer front and side faces.
-  addBoxPart(0.34, 1.58, 0.045, gold, 0, 0.94, 0.985, 0.018);
-  addBoxPart(0.045, 1.58, 0.34, goldHi, 1.325, 0.94, 0, 0.018);
-  addBoxPart(0.34, 0.045, 1.88, goldHi, 0, 1.77, 0, 0.018);
+  // Solid glossy cobalt-blue gift body with broad metallic-gold wrapping.
+  addBoxPart(2.62, 1.58, 1.92, blue, 0, 0.91, 0, 0.12);
+  addBoxPart(0.36, 1.58, 0.055, goldHi, 0, 0.91, 0.985, 0.025);
+  addBoxPart(0.055, 1.58, 0.36, gold, 1.325, 0.91, 0, 0.025);
+  addBoxPart(2.62, 0.07, 0.055, blueDark, 0, 0.12, 0.985, 0.025);
+  addBoxPart(2.62, 0.07, 0.055, blueDark, 0, 1.70, 0.985, 0.025);
 
   // Hinged lid opens backward, exposing the box cavity.
   const hinge = new THREE.Group();
   hinge.position.set(0, 1.78, -0.86);
   gift.add(hinge);
-  const lid = new THREE.Mesh(new RoundedBoxGeometry(2.82, 0.27, 2.05, 7, 0.1), purpleLight);
+  const lid = new THREE.Mesh(new RoundedBoxGeometry(2.82, 0.27, 2.05, 7, 0.1), blueLight);
   lid.position.set(0, 0.13, 0.96);
   lid.castShadow = true;
   lid.receiveShadow = true;
@@ -153,7 +141,7 @@ import { RoundedBoxGeometry } from "https://esm.sh/three@0.170.0/examples/jsm/ge
   const glyph = new THREE.Group();
   glyph.position.set(0, -0.015, 0.17);
   token.add(glyph);
-  const strokeMat = new THREE.MeshPhysicalMaterial({ color: 0x5424a5, metalness: 0.28, roughness: 0.2, clearcoat: 1 });
+  const strokeMat = new THREE.MeshPhysicalMaterial({ color: 0x0754bd, metalness: 0.28, roughness: 0.2, clearcoat: 1 });
   const bar1 = new THREE.Mesh(new RoundedBoxGeometry(0.075, 0.36, 0.035, 5, 0.03), strokeMat);
   bar1.position.set(-0.095, 0, 0);
   bar1.rotation.z = -0.48;

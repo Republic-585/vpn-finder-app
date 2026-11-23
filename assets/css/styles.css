@@ -2300,3 +2300,13 @@ body.catalog-promo-open{overflow:hidden;overscroll-behavior:none}
 
 /* Graphite canvas is continuous on every Mini App screen, including safe-area edges. */
 html,body,.app-shell{background-color:#202124!important}
+
+
+/* Owner promo CTA matches the catalog's connect button. */
+#screen-owner-promo .owner-promo-cta{
+  width:100%;min-height:40px;padding:0 16px;border:0;border-radius:999px;
+  background:var(--blue);color:#fff;box-shadow:none;
+  font:inherit;font-size:12px;font-weight:600;letter-spacing:normal;
+}
+#screen-owner-promo .owner-promo-cta:active{transform:scale(.98);filter:brightness(1.08)}
+#screen-owner-promo .owner-promo-cta svg{width:18px;height:18px}

@@ -246,7 +246,7 @@
     const release=e=>{
       if(!drag)return;
       drag=false;
-      if(!moved && performance.now()-pointerDownAt<380) beginOpen();
+      if(!moved && performance.now()-pointerDownAt<380){\n        if(openRequested && openProgress >= .98) reset();\n        beginOpen();\n      }
     };
     stage.addEventListener("pointerup",release);
     stage.addEventListener("pointercancel",()=>{drag=false});

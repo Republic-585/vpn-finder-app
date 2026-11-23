@@ -84,8 +84,11 @@ const finishStartupSplash = () => {
   } catch (_) {}
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      splash.classList.add("is-leaving");
-      window.setTimeout(() => splash.remove(), 380);
+      // Let the branded mark finish its short entrance; catalog data loads independently.
+      window.setTimeout(() => {
+        splash.classList.add("is-leaving");
+        window.setTimeout(() => splash.remove(), 380);
+      }, 420);
     });
   });
 };

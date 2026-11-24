@@ -3201,3 +3201,87 @@ html.support-inbox-screen-active #screen-support-inbox .support-chat-compose{
   min-height:64px!important;
   margin:0!important;
 }
+
+
+/* Inbox layout: explicit list and conversation states share the viewport
+   without translating content outside the visible area. */
+html.support-inbox-screen-active .app-shell{
+  display:flex!important;
+  flex-direction:column!important;
+  height:100dvh!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+html.support-inbox-screen-active .main-content{
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0 18px env(safe-area-inset-bottom)!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+html.support-inbox-screen-active #screen-support-inbox.active{
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  animation:none!important;
+  transform:none!important;
+}
+html.support-inbox-list-mode #screen-support-inbox .support-inbox-list{
+  display:grid!important;
+  flex:1 1 auto!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-auto-rows:max-content!important;
+  align-content:start!important;
+  justify-content:stretch!important;
+  gap:8px!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:calc(16px + env(safe-area-inset-top)) 0 20px!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+html.support-inbox-list-mode #screen-support-inbox .support-thread-row{
+  align-self:start!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+}
+html.support-inbox-chat-mode #screen-support-inbox .support-inbox-conversation:not([hidden]){
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:calc(12px + env(safe-area-inset-top)) 0 0!important;
+  overflow:hidden!important;
+}
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-messages{
+  display:flex!important;
+  flex:1 1 0!important;
+  min-height:0!important;
+  height:auto!important;
+  overflow-y:auto!important;
+}
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose{
+  display:flex!important;
+  flex:0 0 64px!important;
+  min-height:64px!important;
+  margin:0 0 8px!important;
+}

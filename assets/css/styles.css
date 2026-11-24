@@ -3330,3 +3330,11 @@ html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-userna
   max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--secondary);font-size:12px;line-height:1.2;font-weight:400;
 }
 html.support-inbox-chat-mode #screen-support-inbox .support-message-time{margin-top:3px;font-size:10px;white-space:nowrap;letter-spacing:0;}
+
+/* User support chat identity header */
+#screen-contact .contact-intro#contact-intro{display:flex!important;flex:0 0 auto;flex-direction:column;align-items:center;justify-content:center;gap:7px;margin:0 0 10px;padding:12px 8px 14px;border:0;border-radius:0;background:transparent;text-align:center}
+#screen-contact .contact-support-avatar{display:grid;width:64px;height:64px;place-items:center;overflow:hidden;border-radius:50%;background:var(--panel);color:var(--bright)}
+#screen-contact .contact-support-avatar svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:17;stroke-linecap:round;stroke-linejoin:round}
+#screen-contact .contact-intro-copy{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;text-align:center}
+#screen-contact .contact-intro-copy h2{margin:0;color:var(--text);font-size:15px;line-height:1.25;font-weight:650;letter-spacing:-.02em}
+#screen-contact .contact-intro-copy p{margin:0;color:var(--secondary);font-size:12px;line-height:1.25}

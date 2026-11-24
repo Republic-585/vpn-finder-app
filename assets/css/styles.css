@@ -2600,3 +2600,41 @@ html.contact-screen-active #screen-contact.active,body.contact-screen-active #sc
 #screen-contact .support-message{max-width:88%;padding:11px 14px;border-radius:18px;font-size:13px;line-height:1.45}
 #screen-contact .support-message-user{border-bottom-right-radius:6px}
 #screen-contact .support-message-admin{border-bottom-left-radius:6px}
+
+
+/* Contact composer layout: use the full viewport because the top bar is hidden. */
+html.contact-screen-active,html.contact-screen-active body{height:100%;min-height:0;overflow:hidden!important}
+html.contact-screen-active .app-shell{height:100dvh!important;min-height:0!important;overflow:hidden}
+html.contact-screen-active .main-content{
+  display:flex!important;flex-direction:column!important;
+  height:100dvh!important;min-height:0!important;
+  padding-top:0!important;
+  padding-bottom:calc(10px + env(safe-area-inset-bottom))!important;
+  overflow:hidden!important;box-sizing:border-box
+}
+html.contact-screen-active #screen-contact.active{
+  display:flex!important;flex:1 1 auto!important;
+  width:100%;height:auto!important;min-height:0!important;
+  flex-direction:column;overflow:hidden!important;padding-bottom:0!important
+}
+#screen-contact .page-heading{flex:0 0 auto}
+#screen-contact .contact-intro{flex:0 0 auto}
+#screen-contact .support-chat{
+  display:flex;flex:1 1 auto!important;min-height:0!important;
+  flex-direction:column;gap:8px!important
+}
+#screen-contact .support-chat-messages{
+  flex:1 1 auto!important;min-height:0!important;
+  overflow-y:auto;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch
+}
+#screen-contact .support-chat-compose{
+  box-sizing:border-box;flex:0 0 auto!important;
+  min-height:60px!important;align-items:center!important
+}
+#screen-contact .support-chat-compose textarea{
+  box-sizing:border-box;min-height:42px!important;
+  max-height:112px!important;padding:8px 0!important;
+  line-height:1.35!important;align-self:center
+}
+#screen-contact .contact-compose-note{flex:0 0 auto}

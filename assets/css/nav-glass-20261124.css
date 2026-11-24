@@ -64,3 +64,9 @@
 @media(prefers-reduced-motion:reduce){
   .bottom-nav-dock .nav-indicator{transition:none!important}
 }
+
+/* 2px graphite separator between the profile photo and its animated gradient ring. */
+.bottom-nav-dock .profile-nav-button,
+.bottom-nav-dock .profile-nav-button.is-current{
+  border:2px solid #292B2F!important;
+}

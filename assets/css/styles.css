@@ -2533,3 +2533,7 @@ html.contact-screen-active #screen-contact.active{height:calc(100dvh - 112px - e
 .support-inbox-back{align-self:flex-start;padding:4px 0;border:0;background:none;color:var(--muted);font:inherit;font-size:12px}
 #support-thread-title{margin:0;color:var(--text);font-size:15px;font-weight:600}
 #screen-support-inbox .support-chat-messages{min-height:220px}
+
+#support-inbox-menu-row .support-inbox-menu-label{font-size:13px!important;font-weight:500!important;line-height:1.35}
+#screen-support-inbox .support-inbox-conversation{height:calc(100dvh - 245px)}
+.support-chat-compose textarea{overflow-y:auto}

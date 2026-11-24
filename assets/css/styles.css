@@ -3086,3 +3086,82 @@ html.support-inbox-screen-active #screen-support-inbox .support-chat-compose{
   margin-top:auto!important;
   margin-bottom:0!important;
 }
+
+/* Final management inbox layout: the top bar is hidden on this screen,
+   so the content area must use the full viewport rather than subtracting 58px. */
+html.support-inbox-screen-active,
+html.support-inbox-screen-active body{
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  overscroll-behavior:none!important;
+}
+html.support-inbox-screen-active .app-shell{
+  height:100dvh!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+html.support-inbox-screen-active .main-content{
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  width:100%!important;
+  height:100dvh!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0 18px env(safe-area-inset-bottom)!important;
+  overflow:hidden!important;
+}
+html.support-inbox-screen-active #screen-support-inbox.active{
+  display:flex!important;
+  flex:1 1 0%!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  flex-direction:column!important;
+  animation:none!important;
+}
+html.support-inbox-screen-active #screen-support-inbox .support-inbox-list{
+  flex:1 1 0%!important;
+  min-height:0!important;
+  height:auto!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch;
+}
+html.support-inbox-screen-active #screen-support-inbox .support-inbox-conversation{
+  display:flex!important;
+  flex:1 1 0%!important;
+  flex-direction:column!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  gap:8px!important;
+  overflow:hidden!important;
+}
+html.support-inbox-screen-active #screen-support-inbox .support-inbox-conversation[hidden]{
+  display:none!important;
+}
+html.support-inbox-screen-active #screen-support-inbox #support-thread-title{
+  flex:0 0 auto!important;
+}
+html.support-inbox-screen-active #screen-support-inbox .support-chat-messages{
+  flex:1 1 0%!important;
+  min-height:0!important;
+  height:auto!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+html.support-inbox-screen-active #screen-support-inbox .support-chat-compose{
+  position:relative!important;
+  flex:0 0 64px!important;
+  width:100%!important;
+  margin:0!important;
+  align-self:stretch!important;
+}

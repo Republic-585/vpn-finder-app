@@ -406,7 +406,7 @@ const translations = {
     "Каталог VPN-сервисов постоянно расширяется.":"The VPN directory is constantly expanding.",
     "Мы открыты к сотрудничеству с владельцами и командами VPN-проектов.":"We welcome partnerships with VPN providers and teams.",
     "Скоро состоится запуск VPN Finder. Следите за обновлениями!":"VPN Finder will be launching soon. Stay tuned!",
-    "Хотите добавить свой сервис или обсудить сотрудничество? Напишите нам через разделом ":"Want to add your service or discuss a partnership? Contact us through ",
+    "Хотите добавить свой сервис или обсудить сотрудничество? Напишите нам через разделом":"Want to add your service or discuss a partnership? Contact us through",
     "«Владельцам VPN»":"“For VPN providers”","Метка о новых публикациях в меню профиля":"A badge for new posts in the profile menu",
     "Новости стали удобнее":"News just got better","В меню профиля появляется метка «Новое».":"A “NEW” badge appears in the profile menu.",
     "Откройте новости, чтобы прочитать публикацию.":"Open News to read a post.","После просмотра метка исчезает.":"The badge disappears after you view the post.",

@@ -15,6 +15,7 @@
     0 12px 34px rgba(0,0,0,.38),
     0 3px 9px rgba(0,0,0,.2)!important;
 }
+/* No white sheen: keep only a barely visible neutral depth gradient. */
 .bottom-nav-dock .bottom-nav::before{
   content:""!important;
   position:absolute!important;
@@ -24,9 +25,7 @@
   border-radius:inherit!important;
   pointer-events:none!important;
   opacity:1!important;
-  background:
-    radial-gradient(ellipse 74% 100% at 50% -38%,rgba(255,255,255,.20),transparent 72%),
-    linear-gradient(180deg,rgba(255,255,255,.075) 0%,rgba(255,255,255,.018) 42%,rgba(0,0,0,.055) 100%)!important;
+  background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.025) 58%,rgba(0,0,0,.055) 100%)!important;
   animation:none!important;
 }
 .bottom-nav-dock .bottom-nav::after{

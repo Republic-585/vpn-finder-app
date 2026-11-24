@@ -638,6 +638,8 @@ function showScreen(name, backScreen = null) {
   document.body.classList.toggle("contact-no-bottom-navigation", name === "contact");
   document.documentElement.classList.toggle("support-inbox-screen-active", name === "support-inbox");
   document.body.classList.toggle("support-inbox-screen-active", name === "support-inbox");
+  document.documentElement.classList.toggle("support-inbox-list-mode", name === "support-inbox");
+  document.documentElement.classList.remove("support-inbox-chat-mode");
   document.documentElement.classList.toggle("support-screen-active", name === "support");
   document.body.classList.toggle("support-screen-active", name === "support");
   const supportMethod = document.querySelector("[data-support-tab].is-active")?.dataset.supportTab || "stars";
@@ -1944,6 +1946,8 @@ async function loadSupportInbox() {
   const conversation = byId("support-inbox-conversation");
   if (conversation) conversation.hidden = true;
   if (list) list.hidden = false;
+  document.documentElement.classList.add("support-inbox-list-mode");
+  document.documentElement.classList.remove("support-inbox-chat-mode");
   activeSupportThreadId = null;
   try {
     const result = await supportRequest("list");
@@ -1963,6 +1967,8 @@ async function openSupportThread(threadId, name) {
     activeSupportThreadId = threadId;
     byId("support-inbox-list").hidden = true;
     byId("support-inbox-conversation").hidden = false;
+    document.documentElement.classList.remove("support-inbox-list-mode");
+    document.documentElement.classList.add("support-inbox-chat-mode");
     byId("support-thread-title").textContent = name || "";
     renderSupportMessages(byId("support-inbox-messages"), result.messages);
     loadSupportUnreadBadge();

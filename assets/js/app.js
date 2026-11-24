@@ -390,7 +390,7 @@ const translations = {
     "Оф сайт или ссылка ТГ":"Website or Telegram link","Сайт или ссылка на Telegram":"Website or Telegram link","@username, email или другой контакт":"@username, email, or another contact",
     "Топ":"Top","VPN Finder загружается":"VPN Finder is loading","Подробнее о размещении VPN-сервиса":"Learn more about listing your VPN","Закрыть баннер":"Close banner",
     "Разделы профиля":"Profile sections","Способ поддержки":"Support method","Варианты поддержки":"Support options","Основная навигация":"Main navigation",
-    "Рейтинг ":"Rating "," из 5":" out of 5",t(t("Рейтинг пока не сформирован")):"No rating yet","Поддержать Stars":"Support with Stars",
+    "Рейтинг ":"Rating "," из 5":" out of 5","Рейтинг пока не сформирован":"No rating yet","Поддержать Stars":"Support with Stars",
     "Управление":"Management","Сообщения":"Messages","НОВОЕ":"NEW","Топ":"Top",
     "Сообщение":"Message","Отправить":"Send","Чем можем помочь?":"How can we help?",
     "Задайте вопрос, поделитесь идеей или расскажите о проблеме. Мы прочитаем сообщение и ответим здесь же.":"Ask a question, share an idea, or tell us about a problem. We’ll read your message and reply right here.",

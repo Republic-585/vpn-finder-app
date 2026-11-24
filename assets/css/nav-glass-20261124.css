@@ -41,7 +41,7 @@
   border:0!important;
   border-radius:999px!important;
   background:rgba(91,93,99,.72)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 2px 7px rgba(0,0,0,.12)!important;
+  box-shadow:none!important;
   transition:transform .2s cubic-bezier(.2,.8,.2,1),width .2s cubic-bezier(.2,.8,.2,1)!important;
 }
 .bottom-nav-dock .bottom-nav .nav-item{

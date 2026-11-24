@@ -1843,7 +1843,7 @@ function formatSupportTime(value, withDate = false) {
   if (!value) return "";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
-  const time = date.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
+  const time = date.toLocaleTimeString(appLanguage === "en" ? "en-GB" : "ru-RU", { hour: "2-digit", minute: "2-digit" });
   if (!withDate) return time;
   const now = new Date();
   if (date.toDateString() === now.toDateString()) return time;

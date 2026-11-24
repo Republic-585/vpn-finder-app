@@ -549,6 +549,51 @@ function navHaptic() {
     else feedback?.selectionChanged?.();
   } catch (_) {}
 }
+
+function burstOwnerGift(art) {
+  if (!art) return;
+  art.classList.remove("is-pressed", "is-bursting");
+  art.querySelectorAll(".owner-promo-burst-particle").forEach(particle => particle.remove());
+  void art.offsetWidth;
+  art.classList.add("is-bursting");
+  art.setAttribute("aria-pressed", "true");
+  const glyphs = ["✦", "✧", "✦", "·", "✧", "✦", "✧", "•", "✦", "✧", "✦", "·", "✦", "✧"];
+  glyphs.forEach((glyph, index) => {
+    const particle = document.createElement("span");
+    const angle = (Math.PI * 2 * index / glyphs.length) + (Math.random() - 0.5) * 0.28;
+    const distance = 72 + Math.random() * 58;
+    particle.className = "owner-promo-burst-particle";
+    particle.textContent = glyph;
+    particle.style.setProperty("--burst-x", `${Math.cos(angle) * distance}px`);
+    particle.style.setProperty("--burst-y", `${Math.sin(angle) * distance}px`);
+    particle.style.setProperty("--burst-rotate", `${Math.round(Math.random() * 100 - 50)}deg`);
+    particle.style.setProperty("--burst-delay", `${Math.random() * 65}ms`);
+    particle.style.setProperty("--burst-size", `${12 + Math.random() * 15}px`);
+    art.appendChild(particle);
+    particle.addEventListener("animationend", () => particle.remove(), { once: true });
+  });
+  try {
+    if (typeof tg?.HapticFeedback?.impactOccurred === "function") tg.HapticFeedback.impactOccurred("medium");
+    else navigator.vibrate?.(18);
+  } catch (_) {}
+  window.setTimeout(() => {
+    art.classList.remove("is-bursting");
+    art.setAttribute("aria-pressed", "false");
+  }, 980);
+}
+const ownerPromoGift = document.getElementById("owner-promo-gift");
+if (ownerPromoGift) {
+  ownerPromoGift.addEventListener("pointerdown", () => ownerPromoGift.classList.add("is-pressed"));
+  ["pointerup", "pointercancel", "pointerleave"].forEach(type => {
+    ownerPromoGift.addEventListener(type, () => ownerPromoGift.classList.remove("is-pressed"));
+  });
+  ownerPromoGift.addEventListener("click", () => burstOwnerGift(ownerPromoGift));
+  ownerPromoGift.addEventListener("keydown", event => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    burstOwnerGift(ownerPromoGift);
+  });
+}
 let moveIndicator = () => {};
 const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analytics", "support"]);
 let ownersBackScreen = "catalog";

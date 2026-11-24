@@ -221,8 +221,10 @@ async function trackEvent(eventName, eventData = {}, serviceId = null) {
 async function loadAnalyticsDashboard() {
   const root = byId("analytics-dashboard");
   const menuRow = byId("analytics-menu-row");
+  const inboxMenuRow = byId("support-inbox-menu-row");
   const currentTelegramId = Number(tg?.initDataUnsafe?.user?.id || 0);
   if (menuRow) menuRow.hidden = currentTelegramId !== ANALYTICS_OWNER_TELEGRAM_ID;
+  if (inboxMenuRow) inboxMenuRow.hidden = currentTelegramId !== ANALYTICS_OWNER_TELEGRAM_ID;
   if (currentTelegramId !== ANALYTICS_OWNER_TELEGRAM_ID) {
     if (root) root.textContent = t("Нет доступа к аналитике.");
     return;
@@ -566,7 +568,7 @@ function navHaptic() {
   } catch (_) {}
 }
 let moveIndicator = () => {};
-const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analytics", "support"]);
+const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analytics", "support", "support-inbox"]);
 let ownersBackScreen = "catalog";
 
 // Update this version whenever a new news publication is added.
@@ -617,7 +619,7 @@ function showScreen(name, backScreen = null) {
     promoScreen.hidden = true;
     document.body.classList.remove("catalog-promo-open");
   }
-  if (name === "analytics" && Number(tg?.initDataUnsafe?.user?.id || 0) !== ANALYTICS_OWNER_TELEGRAM_ID) return;
+  if ((name === "analytics" || name === "support-inbox") && Number(tg?.initDataUnsafe?.user?.id || 0) !== ANALYTICS_OWNER_TELEGRAM_ID) return;
   const previousScreenName = document.querySelector(".screen.active")?.dataset.screen;
   const animateFromProfileMenu = previousScreenName === "profile" && BACK_SCREENS.has(name) && previousScreenName !== name;
   const alreadyActive = screens.some(screen => screen.dataset.screen === name && screen.classList.contains("active"));
@@ -643,6 +645,8 @@ function showScreen(name, backScreen = null) {
   moveIndicator();
   if (!alreadyActive) navHaptic();
   if (name === "analytics") loadAnalyticsDashboard();
+  if (name === "contact") loadContactConversation();
+  if (name === "support-inbox") loadSupportInbox();
   window.scrollTo({ top: 0, behavior: "smooth" });
   if (name === "favorites") renderFavorites();
   if (name === "compare") renderCompare();
@@ -1782,9 +1786,111 @@ async function sendProfileInbox(kind, form, statusId) {
     button.disabled = false;
   }
 }
-byId("contact-form")?.addEventListener("submit", event => {
+async function supportRequest(action, values = {}) {
+  if (!tg?.initData) throw new Error("Telegram authorization required");
+  const response = await fetch(SUPABASE_URL + "/functions/v1/miniapp-inbox", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ initData: tg.initData, action, ...values })
+  });
+  const result = await response.json().catch(() => null);
+  if (!response.ok || !result?.ok) throw new Error(result?.error || "Inbox request failed");
+  return result;
+}
+function renderSupportMessages(root, messages) {
+  if (!root) return;
+  root.innerHTML = (messages || []).map(message =>
+    '<div class="support-message ' + (message.sender === "admin" ? "support-message-admin" : "support-message-user") + '">' +
+    esc(message.body) + '</div>'
+  ).join("");
+  root.scrollTop = root.scrollHeight;
+}
+async function loadContactConversation() {
+  const root = byId("contact-messages");
+  if (!root || !tg?.initData) return;
+  try {
+    const result = await supportRequest("get");
+    renderSupportMessages(root, result.messages);
+  } catch (_) {}
+}
+byId("contact-form")?.addEventListener("submit", async event => {
   event.preventDefault();
-  sendProfileInbox("contact", event.currentTarget, "contact-status");
+  const form = event.currentTarget;
+  const button = form.querySelector('button[type="submit"]');
+  const field = form.elements.message;
+  const message = String(field?.value || "").trim();
+  if (!message || button.disabled) return;
+  button.disabled = true;
+  try {
+    await supportRequest("send", { message });
+    form.reset();
+    await loadContactConversation();
+  } catch (_) {
+    // Keep the draft in the input so the user can retry.
+  } finally {
+    button.disabled = false;
+  }
+});
+let activeSupportThreadId = null;
+function renderSupportThreadList(threads) {
+  const root = byId("support-inbox-list");
+  if (!root) return;
+  root.innerHTML = (threads || []).map(thread => {
+    const name = [thread.first_name, thread.last_name].filter(Boolean).join(" ") ||
+      (thread.username ? "@" + thread.username : String(thread.telegram_id));
+    const preview = thread.last_message?.body || "";
+    return '<button type="button" class="support-thread-row' + (thread.admin_unread ? ' is-unread' : '') +
+      '" data-support-thread="' + esc(thread.id) + '" data-support-name="' + esc(name) + '">' +
+      '<span class="support-thread-name">' + esc(name) + '</span>' +
+      '<span class="support-thread-preview">' + esc(preview) + '</span></button>';
+  }).join("");
+}
+async function loadSupportInbox() {
+  const row = byId("support-inbox-menu-row");
+  const isOwner = Number(tg?.initDataUnsafe?.user?.id || 0) === ANALYTICS_OWNER_TELEGRAM_ID;
+  if (row) row.hidden = !isOwner;
+  if (!isOwner) return;
+  const list = byId("support-inbox-list");
+  const conversation = byId("support-inbox-conversation");
+  if (conversation) conversation.hidden = true;
+  if (list) list.hidden = false;
+  activeSupportThreadId = null;
+  try {
+    const result = await supportRequest("list");
+    renderSupportThreadList(result.threads);
+  } catch (_) {}
+}
+async function openSupportThread(threadId, name) {
+  try {
+    const result = await supportRequest("get", { thread_id: threadId });
+    activeSupportThreadId = threadId;
+    byId("support-inbox-list").hidden = true;
+    byId("support-inbox-conversation").hidden = false;
+    byId("support-thread-title").textContent = name || "";
+    renderSupportMessages(byId("support-inbox-messages"), result.messages);
+  } catch (_) {}
+}
+byId("support-inbox-list")?.addEventListener("click", event => {
+  const item = event.target.closest("[data-support-thread]");
+  if (item) openSupportThread(item.dataset.supportThread, item.dataset.supportName);
+});
+byId("support-inbox-back")?.addEventListener("click", () => loadSupportInbox());
+byId("support-reply-form")?.addEventListener("submit", async event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const button = form.querySelector('button[type="submit"]');
+  const message = String(form.elements.message?.value || "").trim();
+  if (!activeSupportThreadId || !message || button.disabled) return;
+  button.disabled = true;
+  try {
+    await supportRequest("reply", { thread_id: activeSupportThreadId, message });
+    form.reset();
+    const result = await supportRequest("get", { thread_id: activeSupportThreadId });
+    renderSupportMessages(byId("support-inbox-messages"), result.messages);
+  } catch (_) {
+  } finally {
+    button.disabled = false;
+  }
 });
 byId("provider-form")?.addEventListener("submit", event => {
   event.preventDefault();

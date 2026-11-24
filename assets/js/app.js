@@ -279,7 +279,7 @@ async function loadAnalyticsDashboard() {
     const formatAnalyticsDateTime = value => {
       const date = new Date(value);
       if (!Number.isFinite(date.getTime())) return { time: "-", date: "-" };
-      const time = new Intl.DateTimeFormat("ru-RU", {
+      const time = new Intl.DateTimeFormat(appLanguage === "en" ? "en-GB" : "ru-RU", {
         timeZone: "Europe/Moscow", hour: "2-digit", minute: "2-digit", hourCycle: "h23"
       }).format(date);
       const day = new Intl.DateTimeFormat("ru-RU", {
@@ -390,7 +390,7 @@ const translations = {
     "Оф сайт или ссылка ТГ":"Website or Telegram link","Сайт или ссылка на Telegram":"Website or Telegram link","@username, email или другой контакт":"@username, email, or another contact",
     "Топ":"Top","VPN Finder загружается":"VPN Finder is loading","Подробнее о размещении VPN-сервиса":"Learn more about listing your VPN","Закрыть баннер":"Close banner",
     "Разделы профиля":"Profile sections","Способ поддержки":"Support method","Варианты поддержки":"Support options","Основная навигация":"Main navigation",
-    "Рейтинг ":"Rating "," из 5":" out of 5",t("Рейтинг пока не сформирован"):"No rating yet","Поддержать Stars":"Support with Stars",
+    "Рейтинг ":"Rating "," из 5":" out of 5",t(t("Рейтинг пока не сформирован")):"No rating yet","Поддержать Stars":"Support with Stars",
     "Управление":"Management","Сообщения":"Messages","НОВОЕ":"NEW","Топ":"Top",
     "Сообщение":"Message","Отправить":"Send","Чем можем помочь?":"How can we help?",
     "Задайте вопрос, поделитесь идеей или расскажите о проблеме. Мы прочитаем сообщение и ответим здесь же.":"Ask a question, share an idea, or tell us about a problem. We’ll read your message and reply right here.",
@@ -1360,7 +1360,7 @@ function ratingMarkup(serviceId, interactive = false) {
     ? `type="button" data-action="toggle-rating-menu" data-id="${esc(serviceId)}" aria-label="${t("Оценить сервис")}" aria-expanded="false" ${disabled ? "disabled" : ""}`
     : 'aria-hidden="true"';
   const starPath = "M12 1.65c.55 0 1.04.31 1.29.81l2.55 5.17 5.7.83c1.18.17 1.65 1.62.8 2.45l-4.12 4.02.97 5.68c.2 1.18-1.03 2.08-2.08 1.52L12 19.45l-5.1 2.68c-1.06.56-2.29-.34-2.09-1.52l.98-5.68-4.13-4.02c-.85-.83-.38-2.28.8-2.45l5.7-.83 2.55-5.17c.25-.5.74-.81 1.29-.81Z";
-  return `<div class="service-rating ${interactive ? "is-interactive" : "is-static"}" role="${interactive ? "group" : "img"}" aria-label="${hasRatings ? t("Рейтинг ") + shown + t(" из 5") : "Рейтинг пока не сформирован"}">
+  return `<div class="service-rating ${interactive ? "is-interactive" : "is-static"}" role="${interactive ? "group" : "img"}" aria-label="${hasRatings ? t("Рейтинг ") + shown + t(" из 5") : t("Рейтинг пока не сформирован")}">
     <${tag} class="service-rating-badge ${personal ? "has-vote" : ""} ${interactive ? "is-interactive" : "is-static"}" ${actionAttrs}>
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <defs>
@@ -1398,10 +1398,10 @@ function refreshRatingBadgesInPlace() {
     if (number) number.textContent = shown;
     if (badge) {
       badge.classList.toggle("has-vote", Boolean(personal));
-      badge.setAttribute("aria-label", hasRatings ? "Рейтинг " + shown + " из 5" : "Рейтинг пока не сформирован");
+      badge.setAttribute("aria-label", hasRatings ? t("Рейтинг ") + shown + t(" из 5") : t("Рейтинг пока не сформирован"));
       if (badge.tagName === "BUTTON") badge.disabled = state.ratingPending.has(serviceId);
     }
-    current.setAttribute("aria-label", hasRatings ? "Рейтинг " + shown + " из 5" : "Рейтинг пока не сформирован");
+    current.setAttribute("aria-label", hasRatings ? t("Рейтинг ") + shown + t(" из 5") : t("Рейтинг пока не сформирован"));
     current.querySelectorAll(".service-rating-choice").forEach(choice => {
       choice.classList.toggle("is-selected", Number(choice.dataset.rating) === personal);
       choice.disabled = state.ratingPending.has(serviceId);
@@ -1483,7 +1483,7 @@ function serviceCard(service, context = "catalog") {
   const favorite = state.favorites.has(service.id);
   const compared = state.compare.has(service.id);
   const formattedPrice = servicePriceText(service);
-  const price = formattedPrice == null ? t("Тарифы в боте") : "от " + formattedPrice;
+  const price = formattedPrice == null ? t("Тарифы в боте") : t("от ") + formattedPrice;
   const details = [];
   if (service.devices_limit) details.push(service.devices_limit + t(" устр."));
   if (service.countries_count) details.push(service.countries_count + t(" стран"));

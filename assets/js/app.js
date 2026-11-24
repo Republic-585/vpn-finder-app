@@ -12,6 +12,7 @@ function setNativeButton(mode) {
   if (!ownerPromoNativeButton) return;
   const labels = {
     "owner-promo": t("Добавить сервис"),
+    "provider-submit": t("Отправить заявку"),
     "support-stars": t("Поддержать Stars"),
     "support-crypto": t("Скопировать адрес")
   };
@@ -33,6 +34,11 @@ function setNativeButton(mode) {
 }
 function handleNativeButtonClick() {
   if (nativeButtonMode === "owner-promo") showScreen("owners", "owner-promo");
+  else if (nativeButtonMode === "provider-submit") {
+    const form = byId("provider-form");
+    if (typeof form?.requestSubmit === "function") form.requestSubmit();
+    else form?.querySelector('button[type="submit"]')?.click();
+  }
   else if (nativeButtonMode === "support-stars") byId("support-pay-button")?.click();
   else if (nativeButtonMode === "support-crypto") byId("crypto-copy-address")?.click();
 }
@@ -549,10 +555,13 @@ let ownersBackScreen = "catalog";
 function showScreen(name, backScreen = null) {
   const supportMethod = document.querySelector("[data-support-tab].is-active")?.dataset.supportTab || "stars";
   const useNativeOwnerPromoButton = name === "owner-promo" && !!ownerPromoNativeButton;
+  const useNativeProviderSubmitButton = name === "owners" && !!ownerPromoNativeButton;
   const useNativeSupportButton = name === "support" && !!ownerPromoNativeButton;
   document.body.classList.toggle("owner-promo-native-cta", useNativeOwnerPromoButton);
+  document.body.classList.toggle("owners-native-cta", useNativeProviderSubmitButton);
   document.body.classList.toggle("support-native-cta", useNativeSupportButton);
   if (useNativeOwnerPromoButton) setNativeButton("owner-promo");
+  else if (useNativeProviderSubmitButton) setNativeButton("provider-submit");
   else if (useNativeSupportButton) setNativeButton(supportMethod === "crypto" ? "support-crypto" : "support-stars");
   else setNativeButton("hidden");
   if (name === "owners") {

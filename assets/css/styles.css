@@ -2834,29 +2834,50 @@ html.support-inbox-screen-active #screen-support-inbox.active{
   overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:4px 0 12px;
 }
 #screen-support-inbox .support-chat-compose{
-  flex:0 0 auto;margin:0;padding:9px;border:1px solid var(--line);
-  border-radius:16px;background:var(--panel);
+  display:flex;align-items:center;gap:10px;box-sizing:border-box;
+  flex:0 0 64px;margin:0;padding:7px 8px 7px 20px;
+  min-height:64px;border:1px solid var(--line);
+  border-radius:999px;background:var(--panel);
+  box-shadow:0 3px 14px rgba(0,0,0,.045);
 }
 #screen-support-inbox .support-chat-compose textarea{
-  min-height:40px;max-height:112px;padding:10px;font-size:13px;
-  line-height:1.35;text-align:left;
+  flex:1 1 auto;width:100%;min-width:0;height:48px;
+  min-height:48px;max-height:48px;box-sizing:border-box;
+  padding:13px 0;font-family:inherit;font-size:var(--type-card-title);
+  line-height:22px;font-weight:var(--weight-regular);
+  text-align:left;align-self:center;resize:none;
 }
-#screen-support-inbox .support-chat-compose textarea::placeholder{text-align:left}
+#screen-support-inbox .support-chat-compose textarea::placeholder{
+  color:var(--muted);opacity:1;text-align:left;
+}
 #screen-support-inbox .support-chat-compose .contact-send-button{
   position:relative;isolation:isolate;overflow:visible;
-  width:48px!important;height:48px!important;min-width:48px!important;
-  min-height:48px!important;flex:0 0 48px!important;padding:0!important;
-  border:0!important;border-radius:50%!important;background:#3390ec!important;
-  color:#fff!important;box-shadow:0 3px 9px rgba(51,144,236,.24);
-  display:grid;place-items:center;transition:transform .18s ease,background .18s ease;
+  display:grid;place-items:center;box-sizing:border-box;
+  width:48px;height:48px;min-width:48px;min-height:48px;
+  flex:0 0 48px;padding:0;border:0;border-radius:50%;
+  background:#3390ec;color:#fff;
+  box-shadow:0 3px 9px rgba(51,144,236,.24);
+  transition:transform .18s ease,background .18s ease;
+  -webkit-tap-highlight-color:transparent;
 }
 #screen-support-inbox .contact-send-button:active{transform:scale(.94)}
 #screen-support-inbox .contact-send-button::after{
   content:"";position:absolute;z-index:-1;inset:-3px;
-  border:2px solid rgba(51,144,236,.45);border-radius:50%;opacity:0;pointer-events:none;
+  border:2px solid rgba(51,144,236,.45);border-radius:50%;
+  opacity:0;pointer-events:none;
 }
 #screen-support-inbox .contact-send-plane{
-  width:23px;height:23px;display:block;fill:currentColor;stroke:none;transform-origin:50% 50%;
+  width:23px;height:23px;display:block;fill:none;stroke:#fff;
+  stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;
+  transform-origin:50% 50%;
+}
+#screen-support-inbox .contact-send-plane .paper-plane-outline{
+  fill:none;stroke:currentColor;stroke-width:1.75;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+#screen-support-inbox .contact-send-plane .paper-plane-fold{
+  fill:none;stroke:currentColor;stroke-width:1.55;
+  stroke-linecap:round;stroke-linejoin:round;opacity:.9;
 }
 #screen-support-inbox .contact-send-button.is-sending::after{animation:contact-send-ripple .52s ease-out both}
 #screen-support-inbox .contact-send-button.is-sending .contact-send-plane{

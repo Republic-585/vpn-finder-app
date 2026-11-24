@@ -2948,3 +2948,31 @@ body.owners-no-bottom-navigation .bottom-nav-dock{display:none!important}
 @media(prefers-reduced-motion:reduce){
   .bottom-nav-dock .bottom-nav::before{animation:none!important}
 }
+
+/* Telegram-native capsule material: softly tinted graphite glass, edge light and top sheen. */
+.bottom-nav-dock .bottom-nav{
+  overflow:hidden!important;
+  background:linear-gradient(180deg,rgba(91,92,97,.78) 0%,rgba(65,66,71,.82) 48%,rgba(52,53,58,.86) 100%)!important;
+  border:1px solid rgba(255,255,255,.19)!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  box-shadow:
+    0 8px 24px rgba(0,0,0,.34),
+    0 1px 1px rgba(255,255,255,.08),
+    inset 0 1px 0 rgba(255,255,255,.23),
+    inset 0 -1px 0 rgba(0,0,0,.22)!important;
+}
+.bottom-nav-dock .bottom-nav::before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  inset:1px;
+  border-radius:inherit;
+  pointer-events:none;
+  opacity:1!important;
+  background:
+    radial-gradient(ellipse 78% 85% at 50% -24%,rgba(255,255,255,.19),transparent 72%),
+    linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.012) 52%,rgba(0,0,0,.055));
+  animation:none!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item{z-index:1}

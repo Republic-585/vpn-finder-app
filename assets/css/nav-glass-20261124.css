@@ -190,3 +190,43 @@
   filter:none!important;
   transition:none!important;
 }
+
+/* Keep navigation labels optically stationary; only the active capsule may travel. */
+.bottom-nav-dock .bottom-nav .nav-item,
+.bottom-nav-dock .bottom-nav .nav-item:active,
+.bottom-nav-dock .bottom-nav .nav-item.active,
+.bottom-nav-dock .bottom-nav .nav-item.is-tapping{
+  transition:none!important;
+  animation:none!important;
+  filter:none!important;
+  font-size:10px!important;
+  font-weight:600!important;
+  letter-spacing:normal!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item span,
+.bottom-nav-dock .bottom-nav .nav-item.active span{
+  position:static!important;
+  flex:0 0 12px!important;
+  height:12px!important;
+  line-height:12px!important;
+  font-size:10px!important;
+  font-weight:600!important;
+  letter-spacing:normal!important;
+  font-variant-numeric:normal!important;
+  transform:none!important;
+  translate:none!important;
+  animation:none!important;
+  transition:none!important;
+  filter:none!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item svg,
+.bottom-nav-dock .bottom-nav .nav-item.active svg{
+  flex:0 0 22px!important;
+  width:22px!important;
+  height:22px!important;
+  transform:none!important;
+  translate:none!important;
+  animation:none!important;
+  transition:none!important;
+  filter:none!important;
+}

@@ -2792,3 +2792,70 @@ html.contact-screen-active #screen-contact.active{
   align-self:flex-end;margin-top:2px;opacity:.68;
   font-size:10px;line-height:1.1;font-weight:500
 }
+
+
+/* Management inbox: immersive chat layout with scrolling limited to the message history. */
+html.support-inbox-screen-active,
+html.support-inbox-screen-active body{
+  width:100%;height:100%;overflow:hidden!important;overscroll-behavior:none;
+}
+html.support-inbox-screen-active .app-shell{
+  height:100dvh;min-height:0;overflow:hidden;
+}
+html.support-inbox-screen-active .main-content{
+  height:calc(100dvh - 58px);min-height:0;overflow:hidden;
+  padding-bottom:calc(12px + env(safe-area-inset-bottom))!important;
+}
+body.support-inbox-screen-active .bottom-nav-dock{display:none!important}
+html.support-inbox-screen-active #screen-support-inbox.active{
+  display:flex;height:100%;min-height:0;overflow:hidden;flex-direction:column;
+}
+#screen-support-inbox .support-inbox-list{
+  width:100%;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;padding:8px 0;
+}
+#screen-support-inbox .support-thread-row{border:0!important;box-shadow:none!important}
+#screen-support-inbox .support-inbox-conversation{
+  width:100%;height:100%;min-height:0;overflow:hidden;gap:8px;
+}
+#screen-support-inbox .support-inbox-conversation[hidden]{display:none!important}
+#screen-support-inbox #support-thread-title{
+  flex:0 0 auto;margin:0;padding:4px 2px 8px;font-size:15px;
+}
+#screen-support-inbox .support-chat-messages{
+  flex:1 1 auto;min-height:0;height:auto;overflow-y:auto;
+  overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:4px 0 12px;
+}
+#screen-support-inbox .support-chat-compose{
+  flex:0 0 auto;margin:0;padding:9px;border:1px solid var(--line);
+  border-radius:16px;background:var(--panel);
+}
+#screen-support-inbox .support-chat-compose textarea{
+  min-height:40px;max-height:112px;padding:10px;font-size:13px;
+  line-height:1.35;text-align:left;
+}
+#screen-support-inbox .support-chat-compose textarea::placeholder{text-align:left}
+#screen-support-inbox .support-chat-compose .contact-send-button{
+  position:relative;isolation:isolate;overflow:visible;
+  width:48px!important;height:48px!important;min-width:48px!important;
+  min-height:48px!important;flex:0 0 48px!important;padding:0!important;
+  border:0!important;border-radius:50%!important;background:#3390ec!important;
+  color:#fff!important;box-shadow:0 3px 9px rgba(51,144,236,.24);
+  display:grid;place-items:center;transition:transform .18s ease,background .18s ease;
+}
+#screen-support-inbox .contact-send-button:active{transform:scale(.94)}
+#screen-support-inbox .contact-send-button::after{
+  content:"";position:absolute;z-index:-1;inset:-3px;
+  border:2px solid rgba(51,144,236,.45);border-radius:50%;opacity:0;pointer-events:none;
+}
+#screen-support-inbox .contact-send-plane{
+  width:23px;height:23px;display:block;fill:currentColor;stroke:none;transform-origin:50% 50%;
+}
+#screen-support-inbox .contact-send-button.is-sending::after{animation:contact-send-ripple .52s ease-out both}
+#screen-support-inbox .contact-send-button.is-sending .contact-send-plane{
+  animation:contact-plane-launch .52s cubic-bezier(.2,.75,.25,1) both;
+}
+@media(prefers-reduced-motion:reduce){
+  #screen-support-inbox .contact-send-button.is-sending .contact-send-plane,
+  #screen-support-inbox .contact-send-button.is-sending::after{animation:none!important}
+}

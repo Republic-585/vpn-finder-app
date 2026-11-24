@@ -8,7 +8,7 @@
   border:0!important;
   outline:0!important;
   border-radius:999px!important;
-  background:rgba(37,40,47,.22)!important;
+  background:#202124!important;
   -webkit-backdrop-filter:blur(28px) saturate(180%)!important;
   backdrop-filter:blur(28px) saturate(180%)!important;
   box-shadow:
@@ -25,7 +25,7 @@
   border-radius:inherit!important;
   pointer-events:none!important;
   opacity:1!important;
-  background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.025) 58%,rgba(0,0,0,.055) 100%)!important;
+  background:transparent!important;
   animation:none!important;
 }
 .bottom-nav-dock .bottom-nav::after{

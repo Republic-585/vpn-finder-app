@@ -3115,3 +3115,20 @@ body.owners-no-bottom-navigation .bottom-nav-dock{display:none!important}
 @media(prefers-reduced-motion:reduce){
   .bottom-nav-dock .nav-indicator{transition:none!important}
 }
+
+
+/* Final navigation tuning: no panel outline; restore the light-graphite active capsule. */
+.bottom-nav-dock .bottom-nav{
+  border:0!important;
+  outline:0!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.38),0 2px 8px rgba(0,0,0,.18)!important;
+}
+.bottom-nav-dock .bottom-nav::after{
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+}
+.bottom-nav-dock .nav-indicator{
+  background:rgba(91,93,99,.72)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 2px 7px rgba(0,0,0,.12)!important;
+}

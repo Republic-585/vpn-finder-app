@@ -229,7 +229,22 @@ async function loadAnalyticsDashboard() {
   }
   if (!root || analyticsDashboardLoading || !tg?.initData) return;
   analyticsDashboardLoading = true;
-  root.textContent = t("Загрузка аналитики…");
+  const loadingOverlay = document.createElement("div");
+  loadingOverlay.className = "analytics-loading-overlay";
+  loadingOverlay.setAttribute("role", "status");
+  loadingOverlay.setAttribute("aria-label", "VPN Finder");
+  loadingOverlay.innerHTML =
+    '<div class="startup-splash-content">' +
+      '<div class="startup-brand-mark" aria-hidden="true">' +
+        '<svg viewBox="0 0 512 512" role="presentation" focusable="false">' +
+          '<path d="M256 106 C278 116 329 139 378 151 C394 155 402 168 402 185 C402 292 365 362 273 399 C262 404 250 404 239 399 C147 362 110 292 110 185 C110 168 118 155 134 151 C183 139 234 116 256 106 Z"/>' +
+          '<path d="M198 255 L247 304 L316 225"/>' +
+        '</svg>' +
+      '</div>' +
+      '<div class="startup-brand-name">VPN Finder</div>' +
+      '<div class="startup-loading" aria-hidden="true"><span></span></div>' +
+    '</div>';
+  document.body.appendChild(loadingOverlay);
   try {
     const response = await fetch(SUPABASE_URL + "/functions/v1/analytics-admin", {
       method: "POST",
@@ -301,6 +316,7 @@ async function loadAnalyticsDashboard() {
   } catch (_) {
     root.textContent = t("Не удалось загрузить аналитику.");
   } finally {
+    loadingOverlay.remove();
     analyticsDashboardLoading = false;
   }
 }

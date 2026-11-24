@@ -2436,7 +2436,7 @@ html.profile-screen-active #screen-profile .profile-view{padding-top:calc(8px + 
 /* Profile menu spacing and Telegram-style right-to-left page entrance. */
 #screen-profile .profile-menu{margin-top:42px}
 .screen.active.profile-menu-slide-in{
-  animation:profile-menu-page-in .34s cubic-bezier(.22,.72,.18,1) both!important;
+  animation:profile-menu-page-in .55s cubic-bezier(.22,.72,.18,1) both!important;
   will-change:transform,opacity;
 }
 @keyframes profile-menu-page-in{

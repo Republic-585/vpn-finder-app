@@ -2537,3 +2537,17 @@ html.contact-screen-active #screen-contact.active{height:calc(100dvh - 112px - e
 #support-inbox-menu-row .support-inbox-menu-label{font-size:13px!important;font-weight:500!important;line-height:1.35}
 #screen-support-inbox .support-inbox-conversation{height:calc(100dvh - 245px)}
 .support-chat-compose textarea{overflow-y:auto}
+
+
+/* Telegram-inspired saturated menu icon tiles and a separate owner controls group. */
+#screen-profile .language-tile{background:#2481F3!important}
+#screen-profile .news-tile{background:#22A6E8!important}
+#screen-profile .contact-tile{background:#27B85A!important}
+#screen-profile .owners-tile{background:#9B59D0!important}
+#screen-profile .support-tile{background:#F0A323!important}
+#screen-profile .analytics-tile{background:#E85D75!important}
+#screen-profile .messages-tile{background:#20B8A6!important}
+#screen-profile .profile-management-group{margin-top:24px}
+#screen-profile .profile-management-group[hidden]{display:none!important}
+#screen-profile .profile-management-title{margin:0 0 10px 5px;color:var(--muted);font-size:var(--type-caption);line-height:1.3;font-weight:var(--weight-semibold);letter-spacing:.02em}
+#screen-profile .profile-management-menu{margin-top:0!important}

@@ -606,10 +606,12 @@ function showScreen(name, backScreen = null) {
 }
 const navBar = document.querySelector(".bottom-nav");
 if (navBar) {
+  const dock = navBar.closest(".bottom-nav-dock");
+  const profileButton = byId("profile-nav-button");
   const indicator = document.createElement("span");
   indicator.className = "nav-indicator";
   indicator.setAttribute("aria-hidden", "true");
-  navBar.prepend(indicator);
+  (dock || navBar).prepend(indicator);
   navBar.addEventListener("animationend", event => {
     if (event.target === navBar && event.animationName === "nav-panel-switch") {
       navBar.classList.remove("is-switching");
@@ -621,24 +623,35 @@ if (navBar) {
   let startX = 0;
   let suppressNavClickUntil = 0;
 
+  const dockRect = () => (dock || navBar).getBoundingClientRect();
   const setIndicator = (left, width) => {
     indicator.style.width = width + "px";
     indicator.style.transform = `translateX(${left}px)`;
+  };
+  const setIndicatorForElement = (element, circular = false) => {
+    const rect = element.getBoundingClientRect();
+    const base = dockRect();
+    const width = circular ? Math.min(54, rect.width) : rect.width;
+    setIndicator(rect.left - base.left + (rect.width - width) / 2, width);
   };
   moveIndicator = () => {
     const active = nav.find(button => button.classList.contains("active"));
     if (active) {
       indicator.hidden = false;
-      setIndicator(active.offsetLeft, active.offsetWidth);
+      setIndicatorForElement(active);
+    } else if (profileButton?.classList.contains("is-current")) {
+      indicator.hidden = false;
+      setIndicatorForElement(profileButton, true);
     } else {
       indicator.hidden = true;
     }
   };
   const slideIndicatorToFinger = clientX => {
     const navRect = navBar.getBoundingClientRect();
+    const base = dockRect();
     const points = nav.map(item => {
       const rect = item.getBoundingClientRect();
-      return { left: item.offsetLeft, width: item.offsetWidth, center: rect.left + rect.width / 2 - navRect.left };
+      return { left: rect.left - base.left, width: rect.width, center: rect.left + rect.width / 2 - navRect.left };
     });
     if (!points.length) return;
     const x = Math.max(points[0].center, Math.min(clientX - navRect.left, points[points.length - 1].center));

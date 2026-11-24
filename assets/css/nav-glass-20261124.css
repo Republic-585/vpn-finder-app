@@ -8,8 +8,8 @@
   border:0!important;
   outline:0!important;
   border-radius:999px!important;
-  background:#202124!important;
-  -webkit-backdrop-filter:blur(28px) saturate(180%)!important;
+  background:rgba(32,33,36,.76)!important;
+  -webkit-backdrop-filter:blur(32px) saturate(165%)!important;
   backdrop-filter:blur(28px) saturate(180%)!important;
   box-shadow:
     0 10px 30px rgba(0,0,0,.20),

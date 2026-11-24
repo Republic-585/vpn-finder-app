@@ -2899,3 +2899,23 @@ body.owners-no-bottom-navigation .bottom-nav-dock{display:none!important}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
   .bottom-nav-dock .bottom-nav{background:rgba(35,37,42,.94)!important}
 }
+
+
+/* Dynamic Glass visibility pass: make the mesh perceptible on OLED screens. */
+.bottom-nav-dock .bottom-nav{
+  background:rgba(31,34,41,.32)!important;
+  border-color:rgba(255,255,255,.16)!important;
+  backdrop-filter:blur(24px) saturate(165%)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(165%)!important;
+  box-shadow:0 12px 36px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.13),inset 0 -1px 0 rgba(0,0,0,.2)!important;
+}
+.bottom-nav-dock .bottom-nav::before{
+  opacity:.88!important;
+  background:
+    radial-gradient(ellipse 68% 145% at 8% 112%,rgba(55,166,211,.34),transparent 68%),
+    radial-gradient(ellipse 62% 135% at 94% -18%,rgba(119,119,218,.30),transparent 70%),
+    radial-gradient(ellipse 58% 130% at 52% 125%,rgba(47,190,169,.25),transparent 72%),
+    linear-gradient(155deg,rgba(255,255,255,.095),rgba(255,255,255,.012) 48%,rgba(255,255,255,.045));
+  background-size:150% 165%,160% 160%,170% 170%,100% 100%;
+  animation:finder-nav-mesh-drift 15s ease-in-out infinite alternate!important;
+}

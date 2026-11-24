@@ -45,7 +45,7 @@ function handleNativeButtonClick() {
 if (ownerPromoNativeButton) {
   try {
     ownerPromoNativeButton.setParams({
-      text: "Добавить сервис",
+      text: t("Добавить сервис"),
       color: tg?.themeParams?.button_color || "#3390EC",
       text_color: tg?.themeParams?.button_text_color || "#FFFFFF",
       has_shine_effect: true,
@@ -390,7 +390,38 @@ const translations = {
     "Оф сайт или ссылка ТГ":"Website or Telegram link","Сайт или ссылка на Telegram":"Website or Telegram link","@username, email или другой контакт":"@username, email, or another contact",
     "Топ":"Top","VPN Finder загружается":"VPN Finder is loading","Подробнее о размещении VPN-сервиса":"Learn more about listing your VPN","Закрыть баннер":"Close banner",
     "Разделы профиля":"Profile sections","Способ поддержки":"Support method","Варианты поддержки":"Support options","Основная навигация":"Main navigation",
-    "Рейтинг ":"Rating "," из 5":" out of 5","Рейтинг пока не сформирован":"No rating yet","Поддержать Stars":"Support with Stars"
+    "Рейтинг ":"Rating "," из 5":" out of 5",t("Рейтинг пока не сформирован"):"No rating yet","Поддержать Stars":"Support with Stars",
+    "Управление":"Management","Сообщения":"Messages","НОВОЕ":"NEW","Топ":"Top",
+    "Сообщение":"Message","Отправить":"Send","Чем можем помочь?":"How can we help?",
+    "Задайте вопрос, поделитесь идеей или расскажите о проблеме. Мы прочитаем сообщение и ответим здесь же.":"Ask a question, share an idea, or tell us about a problem. We’ll read your message and reply right here.",
+    "Новости. Есть новое обновление":"News. There is a new update",
+    "Откройте приложение в Telegram, чтобы посмотреть аналитику.":"Open the app in Telegram to view analytics.",
+    "Оплата прошла! Значок появится в профиле.":"Payment successful! Your badge will appear in your profile.",
+    "Оценить сервис":"Rate this service","Поставить оценку":"Submit rating",
+    "Не удалось сохранить оценку. Попробуйте ещё раз.":"Could not save your rating. Please try again.",
+    "Сообщения. Новых сообщений: ":"Messages. Unread messages: ","Вы: ":"You: ","Вчера":"Yesterday",
+    "Развиваем платформу и расширяем каталог VPN-сервисов":"We're improving the platform and expanding the VPN directory",
+    "24 ноября 2026":"November 24, 2026","VPN Finder готовится к запуску":"VPN Finder is getting ready to launch",
+    "Проект активно развивается: мы совершенствуем платформу и постепенно добавляем новые VPN-сервисы, чтобы выбирать подходящее решение было ещё удобнее.":"The project is growing: we're improving the platform and gradually adding new VPN services to make it easier to find the right option.",
+    "Каталог VPN-сервисов постоянно расширяется.":"The VPN directory is constantly expanding.",
+    "Мы открыты к сотрудничеству с владельцами и командами VPN-проектов.":"We welcome partnerships with VPN providers and teams.",
+    "Скоро состоится запуск VPN Finder. Следите за обновлениями!":"VPN Finder will be launching soon. Stay tuned!",
+    "Хотите добавить свой сервис или обсудить сотрудничество? Напишите нам через разделом ":"Want to add your service or discuss a partnership? Contact us through ",
+    "«Владельцам VPN»":"“For VPN providers”","Метка о новых публикациях в меню профиля":"A badge for new posts in the profile menu",
+    "Новости стали удобнее":"News just got better","В меню профиля появляется метка «Новое».":"A “NEW” badge appears in the profile menu.",
+    "Откройте новости, чтобы прочитать публикацию.":"Open News to read a post.","После просмотра метка исчезает.":"The badge disappears after you view the post.",
+    "Помоги проекту развиваться и делать поиск VPN удобнее.":"Help the project grow and make finding a VPN easier.",
+    "Выбери сумму поддержки":"Choose an amount to contribute","КРИПТОВАЛЮТА":"CRYPTOCURRENCY",
+    "USDT в сети TON":"USDT on TON","Переведи любую удобную сумму на адрес ниже. Перед отправкой проверь сеть TON.":"Send any amount to the address below. Make sure you select the TON network before sending.",
+    "Больше внимания вашему VPN":"Get more visibility for your VPN","Добавьте сервис в каталог Finder и станьте заметнее для новых пользователей.":"Add your service to the Finder directory and get discovered by more users.",
+    "VPN FINDER · ДЛЯ ВЛАДЕЛЬЦЕВ":"VPN FINDER · FOR PROVIDERS","Владельцам VPN":"For VPN providers",
+    "Добавьте свой сервис в каталог VPN Finder.":"Add your service to the VPN Finder directory.",
+    "Название сервиса":"Service name","Название VPN":"VPN name","Оф сайт или ссылка ТГ":"Website or Telegram link",
+    "Сайт или ссылка на Telegram":"Website or Telegram link","Расскажите о сервисе":"Tell us about your service",
+    "Контакт для связи":"Contact details","@username или email":"@username or email",
+    "@username, email или другой контакт":"@username, email, or another contact","Отправить заявку":"Submit application",
+    "Для владельцев VPN":"For VPN providers","Голубая стеклянная сфера с золотой звездой":"Blue glass sphere with a golden star",
+    "Глянцевая голубая подарочная коробка с золотым бантом":"Glossy blue gift box with a golden bow"
   }
 };
 let appLanguage = (() => {
@@ -412,8 +443,8 @@ function translateStaticContent() {
     const trimmed = original.trim();
     if (translations.en[trimmed]) node.nodeValue = original.replace(trimmed, t(trimmed));
   }
-  document.querySelectorAll("[placeholder],[aria-label],[title]").forEach(el => {
-    ["placeholder","aria-label","title"].forEach(attr => {
+  document.querySelectorAll("[placeholder],[aria-label],[title],[alt]").forEach(el => {
+    ["placeholder","aria-label","title","alt"].forEach(attr => {
       const value = el.getAttribute(attr);
       if (!value) return;
       let originals = originalAttributes.get(el);
@@ -590,7 +621,7 @@ function updateNewsBadge() {
   let isUnread = true;
   try { isUnread = localStorage.getItem(newsSeenStorageKey()) !== NEWS_LATEST_ID; } catch (_) {}
   badge.hidden = !isUnread;
-  row.setAttribute("aria-label", isUnread ? "Новости. Есть новое обновление" : "Новости");
+  row.setAttribute("aria-label", isUnread ? t("Новости. Есть новое обновление") : t("Новости"));
 }
 function markNewsAsRead() {
   try { localStorage.setItem(newsSeenStorageKey(), NEWS_LATEST_ID); } catch (_) {}
@@ -1326,10 +1357,10 @@ function ratingMarkup(serviceId, interactive = false) {
   const gradientId = "rating-gold-" + String(serviceId).replace(/[^a-zA-Z0-9_-]/g, "") + "-" + Math.random().toString(36).slice(2, 8);
   const tag = interactive ? "button" : "span";
   const actionAttrs = interactive
-    ? `type="button" data-action="toggle-rating-menu" data-id="${esc(serviceId)}" aria-label="Оценить сервис" aria-expanded="false" ${disabled ? "disabled" : ""}`
+    ? `type="button" data-action="toggle-rating-menu" data-id="${esc(serviceId)}" aria-label="${t("Оценить сервис")}" aria-expanded="false" ${disabled ? "disabled" : ""}`
     : 'aria-hidden="true"';
   const starPath = "M12 1.65c.55 0 1.04.31 1.29.81l2.55 5.17 5.7.83c1.18.17 1.65 1.62.8 2.45l-4.12 4.02.97 5.68c.2 1.18-1.03 2.08-2.08 1.52L12 19.45l-5.1 2.68c-1.06.56-2.29-.34-2.09-1.52l.98-5.68-4.13-4.02c-.85-.83-.38-2.28.8-2.45l5.7-.83 2.55-5.17c.25-.5.74-.81 1.29-.81Z";
-  return `<div class="service-rating ${interactive ? "is-interactive" : "is-static"}" role="${interactive ? "group" : "img"}" aria-label="${hasRatings ? "Рейтинг " + shown + " из 5" : "Рейтинг пока не сформирован"}">
+  return `<div class="service-rating ${interactive ? "is-interactive" : "is-static"}" role="${interactive ? "group" : "img"}" aria-label="${hasRatings ? t("Рейтинг ") + shown + t(" из 5") : "Рейтинг пока не сформирован"}">
     <${tag} class="service-rating-badge ${personal ? "has-vote" : ""} ${interactive ? "is-interactive" : "is-static"}" ${actionAttrs}>
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <defs>
@@ -1347,7 +1378,7 @@ function ratingMarkup(serviceId, interactive = false) {
       </svg>
       <span>${shown}</span>
     </${tag}>
-    ${interactive ? `<div class="service-rating-choices" hidden>${[1,2,3,4,5].map(value => `<button class="service-rating-choice ${personal === value ? "is-selected" : ""}" type="button" data-action="rate" data-id="${esc(serviceId)}" data-rating="${value}" aria-label="Поставить оценку ${value}" ${disabled ? "disabled" : ""}>${value}</button>`).join("")}</div>` : ""}
+    ${interactive ? `<div class="service-rating-choices" hidden>${[1,2,3,4,5].map(value => `<button class="service-rating-choice ${personal === value ? "is-selected" : ""}" type="button" data-action="rate" data-id="${esc(serviceId)}" data-rating="${value}" aria-label="${t("Поставить оценку")} ${value}" ${disabled ? "disabled" : ""}>${value}</button>`).join("")}</div>` : ""}
   </div>`;
 }
 function refreshRatingBadgesInPlace() {
@@ -1413,7 +1444,7 @@ async function saveServiceRating(serviceId, value) {
     await loadServiceRatings();
     haptic();
   } catch (_) {
-    try { tg?.showAlert?.("Не удалось сохранить оценку. Попробуйте ещё раз."); } catch (_) {}
+    try { tg?.showAlert?.(t("Не удалось сохранить оценку. Попробуйте ещё раз.")); } catch (_) {}
   } finally {
     state.ratingPending.delete(serviceId);
     renderCatalog();
@@ -1818,7 +1849,7 @@ function formatSupportTime(value, withDate = false) {
   if (date.toDateString() === now.toDateString()) return time;
   const yesterday = new Date(now);
   yesterday.setDate(yesterday.getDate() - 1);
-  if (date.toDateString() === yesterday.toDateString()) return "Вчера";
+  if (date.toDateString() === yesterday.toDateString()) return t("Вчера");
   return date.toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit" }) + " " + time;
 }
 function renderSupportMessages(root, messages) {
@@ -1875,7 +1906,7 @@ function renderSupportUnreadBadge(count) {
   const value = Math.max(0, Number(count) || 0);
   badge.textContent = value > 99 ? "99+" : String(value);
   badge.hidden = value === 0;
-  row.setAttribute("aria-label", value ? "Сообщения. Новых сообщений: " + value : "Сообщения");
+  row.setAttribute("aria-label", value ? t("Сообщения. Новых сообщений: ") + value : t("Сообщения"));
 }
 async function loadSupportUnreadBadge() {
   const isOwner = Number(tg?.initDataUnsafe?.user?.id || 0) === ANALYTICS_OWNER_TELEGRAM_ID;
@@ -1892,7 +1923,7 @@ function renderSupportThreadList(threads) {
   root.innerHTML = (threads || []).map(thread => {
     const name = [thread.first_name, thread.last_name].filter(Boolean).join(" ") ||
       (thread.username ? "@" + thread.username : String(thread.telegram_id));
-    const preview = (thread.last_message?.sender === "admin" ? "Вы: " : "") + (thread.last_message?.body || "");
+    const preview = (thread.last_message?.sender === "admin" ? t("Вы: ") : "") + (thread.last_message?.body || "");
     const timestamp = thread.last_message?.created_at || thread.last_message_at;
     const unread = Math.max(0, Number(thread.admin_unread_count) || 0);
     return '<button type="button" class="support-thread-row' + (unread > 0 || thread.admin_unread ? ' is-unread' : '') +

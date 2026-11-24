@@ -2750,7 +2750,14 @@ html.contact-screen-active #screen-contact.active{
   text-align:center!important
 }
 #screen-contact .contact-send-plane{
-  fill:#fff!important;stroke:none!important
+  fill:none!important;stroke:#fff!important;stroke-width:1.65!important;
+  stroke-linecap:round!important;stroke-linejoin:round!important;
+}
+#screen-contact .contact-send-plane .paper-plane-outline{
+  fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round
+}
+#screen-contact .contact-send-plane .paper-plane-fold{
+  fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round;opacity:.9
 }
 
 

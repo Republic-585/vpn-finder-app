@@ -42,7 +42,7 @@
   height:54px!important;
   border:0!important;
   border-radius:999px!important;
-  background:rgba(91,93,99,.72)!important;
+  background:rgb(91,93,99)!important;
   box-shadow:none!important;
   transition:transform .2s cubic-bezier(.2,.8,.2,1),width .2s cubic-bezier(.2,.8,.2,1)!important;
 }

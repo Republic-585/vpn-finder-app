@@ -3338,3 +3338,47 @@ html.support-inbox-chat-mode #screen-support-inbox .support-message-time{margin-
 #screen-contact .contact-intro-copy{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;text-align:center}
 #screen-contact .contact-intro-copy h2{margin:0;color:var(--text);font-size:15px;line-height:1.25;font-weight:650;letter-spacing:-.02em}
 #screen-contact .contact-intro-copy p{margin:0;color:var(--secondary);font-size:12px;line-height:1.25}
+
+
+/* User contact header mirrors the management chat identity layout. */
+#screen-contact .contact-intro#contact-intro{
+  display:flex!important;flex:0 0 124px!important;flex-direction:column!important;
+  align-items:center!important;justify-content:center!important;gap:5px!important;
+  min-height:124px!important;margin:0!important;padding:10px 12px 12px!important;
+  border:0!important;border-radius:0!important;background:transparent!important;text-align:center!important;
+}
+#screen-contact .contact-support-avatar{
+  display:grid!important;width:64px!important;height:64px!important;flex:0 0 64px!important;
+  place-items:center!important;overflow:hidden;border-radius:50%!important;
+  background:var(--raised)!important;color:#fff!important;
+}
+#screen-contact .contact-support-avatar svg{
+  display:block;width:100%;height:100%;fill:none;stroke:#fff;stroke-width:17;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+#screen-contact .contact-intro-copy{
+  display:flex;min-width:0;max-width:100%;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;text-align:center;
+}
+#screen-contact .contact-intro-copy h2{
+  max-width:100%;margin:0;color:var(--text);font-size:15px;
+  line-height:1.2;font-weight:600;letter-spacing:0;
+}
+#screen-contact .contact-intro-copy p{
+  max-width:100%;margin:0;color:var(--secondary);font-size:12px;
+  line-height:1.2;font-weight:400;
+}
+#screen-contact .support-chat-messages{
+  display:flex!important;flex-direction:column!important;
+}
+#screen-contact .contact-empty-state{
+  display:flex;flex:1 1 auto;min-height:100%;width:100%;
+  flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;padding:0 24px;text-align:center;
+}
+#screen-contact .contact-empty-state strong{
+  color:var(--text);font-size:16px;line-height:1.3;font-weight:600;
+}
+#screen-contact .contact-empty-state span{
+  max-width:300px;color:var(--secondary);font-size:13px;line-height:1.5;font-weight:400;
+}

@@ -570,7 +570,7 @@ const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analy
 let ownersBackScreen = "catalog";
 
 // Update this version whenever a new news publication is added.
-const NEWS_LATEST_ID = "2026-11-24-news-system-v1";
+const NEWS_LATEST_ID = "2026-11-24-project-growth-v1";
 function newsSeenStorageKey() {
   const telegramId = Number(tg?.initDataUnsafe?.user?.id || 0);
   return "vpn-finder-news-seen:" + (telegramId || "guest");

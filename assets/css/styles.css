@@ -2436,12 +2436,12 @@ html.profile-screen-active #screen-profile .profile-view{padding-top:calc(8px + 
 /* Profile menu spacing and Telegram-style right-to-left page entrance. */
 #screen-profile .profile-menu{margin-top:42px}
 .screen.active.profile-menu-slide-in{
-  animation:profile-menu-page-in .55s cubic-bezier(.22,.72,.18,1) both!important;
-  will-change:transform,opacity;
+  animation:profile-menu-page-in .42s cubic-bezier(.22,.61,.36,1) both!important;
+  will-change:transform;
 }
 @keyframes profile-menu-page-in{
-  from{opacity:.72;transform:translate3d(34px,0,0)}
-  to{opacity:1;transform:translate3d(0,0,0)}
+  from{transform:translate3d(100%,0,0)}
+  to{transform:translate3d(0,0,0)}
 }
 @media(prefers-reduced-motion:reduce){
   .screen.active.profile-menu-slide-in{animation:none!important;will-change:auto}

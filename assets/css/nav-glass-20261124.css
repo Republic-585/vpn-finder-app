@@ -86,3 +86,23 @@
 .bottom-nav-dock .bottom-nav:has(.nav-item:active){
   transform:translateX(-50%)!important;
 }
+
+/* Navigation press state: keep dock, tabs and glyphs geometrically fixed. */
+.bottom-nav-dock .bottom-nav:has(.nav-item:active){
+  transform:none!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item,
+.bottom-nav-dock .bottom-nav .nav-item:active,
+.bottom-nav-dock .bottom-nav .nav-item.is-tapping{
+  transform:none!important;
+  filter:none!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item svg,
+.bottom-nav-dock .bottom-nav .nav-item.is-tapping svg{
+  transform:none!important;
+  animation:none!important;
+  filter:none!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item span{
+  transform:none!important;
+}

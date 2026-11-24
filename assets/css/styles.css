@@ -2865,3 +2865,37 @@ body.owners-native-cta #provider-form > button[type="submit"]{display:none!impor
 
 /* Hide the complete navigation dock only while the VPN owner application form is open. */
 body.owners-no-bottom-navigation .bottom-nav-dock{display:none!important}
+
+
+/* VPN Finder navigation: restrained Dynamic Glass mesh, isolated to the bottom nav panel. */
+.bottom-nav-dock .bottom-nav{
+  overflow:hidden;
+  background:rgba(35,37,42,.48)!important;
+  border-color:rgba(255,255,255,.105)!important;
+  backdrop-filter:blur(18px) saturate(145%)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(145%)!important;
+}
+.bottom-nav-dock .bottom-nav::before{
+  z-index:0;
+  opacity:.52;
+  background:
+    radial-gradient(ellipse 62% 125% at 12% 115%,rgba(72,151,190,.19),transparent 68%),
+    radial-gradient(ellipse 58% 120% at 88% -15%,rgba(103,111,190,.17),transparent 70%),
+    radial-gradient(ellipse 55% 110% at 54% 120%,rgba(65,166,151,.12),transparent 72%),
+    linear-gradient(155deg,rgba(255,255,255,.065),rgba(255,255,255,.008) 48%,rgba(255,255,255,.025));
+  background-size:145% 155%,155% 150%,160% 160%,100% 100%;
+  background-position:0% 100%,100% 0%,50% 100%,0 0;
+  animation:finder-nav-mesh-drift 19s ease-in-out infinite alternate;
+}
+.bottom-nav-dock .bottom-nav .nav-item{z-index:1}
+@keyframes finder-nav-mesh-drift{
+  0%{background-position:0% 100%,100% 0%,50% 100%,0 0}
+  50%{background-position:38% 48%,62% 58%,75% 35%,0 0}
+  100%{background-position:100% 0%,0% 100%,15% 0%,0 0}
+}
+@media(prefers-reduced-motion:reduce){
+  .bottom-nav-dock .bottom-nav::before{animation:none!important}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .bottom-nav-dock .bottom-nav{background:rgba(35,37,42,.94)!important}
+}

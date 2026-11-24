@@ -282,7 +282,7 @@ async function loadAnalyticsDashboard() {
       const time = new Intl.DateTimeFormat(appLanguage === "en" ? "en-GB" : "ru-RU", {
         timeZone: "Europe/Moscow", hour: "2-digit", minute: "2-digit", hourCycle: "h23"
       }).format(date);
-      const day = new Intl.DateTimeFormat("ru-RU", {
+      const day = new Intl.DateTimeFormat(appLanguage === "en" ? "en-GB" : "ru-RU", {
         timeZone: "Europe/Moscow", day: "2-digit", month: "2-digit", year: "numeric"
       }).format(date);
       return { time, date: day };
@@ -1850,7 +1850,7 @@ function formatSupportTime(value, withDate = false) {
   const yesterday = new Date(now);
   yesterday.setDate(yesterday.getDate() - 1);
   if (date.toDateString() === yesterday.toDateString()) return t("Вчера");
-  return date.toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit" }) + " " + time;
+  return date.toLocaleDateString(appLanguage === "en" ? "en-GB" : "ru-RU", { day: "2-digit", month: "2-digit" }) + " " + time;
 }
 function renderSupportMessages(root, messages) {
   if (!root) return;

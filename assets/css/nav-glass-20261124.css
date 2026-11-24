@@ -12,8 +12,8 @@
   -webkit-backdrop-filter:blur(28px) saturate(180%)!important;
   backdrop-filter:blur(28px) saturate(180%)!important;
   box-shadow:
-    0 12px 34px rgba(0,0,0,.38),
-    0 3px 9px rgba(0,0,0,.2)!important;
+    0 10px 30px rgba(0,0,0,.20),
+    0 2px 8px rgba(0,0,0,.10)!important;
 }
 /* No white sheen: keep only a barely visible neutral depth gradient. */
 .bottom-nav-dock .bottom-nav::before{

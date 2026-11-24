@@ -944,21 +944,21 @@ body{font-size:var(--type-body);line-height:1.45}
   animation:telegram-heart-pulse 540ms ease-out both!important;
 }
 @keyframes telegram-shield-pulse{
-  0%,100%{stroke-width:1.75;filter:brightness(1)}
-  35%{stroke-width:2.35;filter:brightness(1.22)}
-  65%{stroke-width:1.9;filter:brightness(1.08)}
+  0%,100%{filter:brightness(1)}
+  35%{filter:brightness(1.16)}
+  65%{filter:brightness(1.06)}
 }
 @keyframes telegram-spark-flash{
-  0%,100%{stroke-width:1.75;opacity:1}
-  25%{stroke-width:2.35;opacity:.78}
-  55%{stroke-width:2;opacity:1}
-  75%{stroke-width:2.2;opacity:.88}
+  0%,100%{filter:brightness(1)}
+  25%{filter:brightness(1.14)}
+  55%{filter:brightness(1.04)}
+  75%{filter:brightness(1.10)}
 }
 @keyframes telegram-heart-pulse{
-  0%,100%{stroke-width:1.75;filter:brightness(1)}
-  30%{stroke-width:2.45;filter:brightness(1.25)}
-  52%{stroke-width:1.85;filter:brightness(1)}
-  72%{stroke-width:2.15;filter:brightness(1.12)}
+  0%,100%{filter:brightness(1)}
+  30%{filter:brightness(1.18)}
+  52%{filter:brightness(1)}
+  72%{filter:brightness(1.10)}
 }
 @media(prefers-reduced-motion:reduce){
   .bottom-nav-dock .nav-item.is-tapping svg{animation:none!important}

@@ -1854,13 +1854,22 @@ function formatSupportTime(value, withDate = false) {
   if (date.toDateString() === yesterday.toDateString()) return t("Вчера");
   return date.toLocaleDateString(appLanguage === "en" ? "en-GB" : "ru-RU", { day: "2-digit", month: "2-digit" }) + " " + time;
 }
-function renderSupportMessages(root, messages) {
+function formatSupportMessageDateTime(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const locale = appLanguage === "en" ? "en-GB" : "ru-RU";
+  const day = date.toLocaleDateString(locale, { day: "numeric", month: "short" });
+  const time = date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
+  return day + " · " + time;
+}
+function renderSupportMessages(root, messages, includeDate = false) {
   if (!root) return;
   const items = messages || [];
   const intro = byId("contact-intro");
   if (intro) intro.hidden = items.length > 0;
   root.innerHTML = items.map(message => {
-    const time = formatSupportTime(message.created_at);
+    const time = includeDate ? formatSupportMessageDateTime(message.created_at) : formatSupportTime(message.created_at);
     return '<div class="support-message ' + (message.sender === "admin" ? "support-message-admin" : "support-message-user") + '">' +
       '<span class="support-message-body">' + esc(message.body) + '</span>' +
       (time ? '<time class="support-message-time" datetime="' + esc(message.created_at) + '">' + esc(time) + '</time>' : '') +
@@ -1969,8 +1978,25 @@ async function openSupportThread(threadId, name) {
     byId("support-inbox-conversation").hidden = false;
     document.documentElement.classList.remove("support-inbox-list-mode");
     document.documentElement.classList.add("support-inbox-chat-mode");
-    byId("support-thread-title").textContent = name || "";
-    renderSupportMessages(byId("support-inbox-messages"), result.messages);
+    const threadProfile = result.thread?.profile || {};
+    const fullName = [threadProfile.first_name || result.thread?.first_name, threadProfile.last_name || result.thread?.last_name].filter(Boolean).join(" ") || name || "";
+    const username = String(threadProfile.username || result.thread?.username || "").replace(/^@/, "");
+    const avatarUrl = String(threadProfile.photo_url || "");
+    const initial = (fullName || username || "П").slice(0, 1).toLocaleUpperCase(appLanguage === "en" ? "en-GB" : "ru-RU");
+    const title = byId("support-thread-title");
+    title.innerHTML =
+      '<span class="support-thread-header-copy"><strong class="support-thread-header-name">' + esc(fullName) + '</strong>' +
+      (username ? '<span class="support-thread-header-username">@' + esc(username) + '</span>' : '') + '</span>' +
+      '<span class="support-thread-header-avatar">' +
+      (avatarUrl ? '<img src="' + esc(avatarUrl) + '" alt="" referrerpolicy="no-referrer">' : '<span>' + esc(initial) + '</span>') +
+      '</span>';
+    const threadAvatar = title.querySelector(".support-thread-header-avatar img");
+    if (threadAvatar) threadAvatar.addEventListener("error", () => {
+      const fallback = document.createElement("span");
+      fallback.textContent = initial;
+      threadAvatar.replaceWith(fallback);
+    }, { once: true });
+    renderSupportMessages(byId("support-inbox-messages"), result.messages, true);
     loadSupportUnreadBadge();
   } catch (_) {}
 }
@@ -1997,7 +2023,7 @@ byId("support-reply-form")?.addEventListener("submit", async event => {
     await supportRequest("reply", { thread_id: activeSupportThreadId, message });
     form.reset();
     const result = await supportRequest("get", { thread_id: activeSupportThreadId });
-    renderSupportMessages(byId("support-inbox-messages"), result.messages);
+    renderSupportMessages(byId("support-inbox-messages"), result.messages, true);
   } catch (_) {
   } finally {
     button.disabled = false;

@@ -824,9 +824,7 @@ document.addEventListener("touchend", event => {
 }, { passive: true });
 document.addEventListener("touchcancel", () => { tabSwipeStart = null; }, { passive: true });
 
-document.querySelectorAll("[data-go]").forEach(button => {
-  button.addEventListener("click", () => showScreen(button.dataset.go, button.dataset.backScreen || null));
-});
+// Navigation is handled once by the delegated document click listener below.
 
 // Explicit press state for iOS Safari, where :active can be unreliable in embedded apps.
 const profileNavButton = byId("profile-nav-button");

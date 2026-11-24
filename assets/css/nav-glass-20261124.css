@@ -23,10 +23,15 @@
   padding:1px!important;
   pointer-events:none!important;
   background:
+    linear-gradient(90deg,transparent 0%,rgba(145,148,156,.16) 16%,rgba(145,148,156,.16) 84%,transparent 100%),
+    linear-gradient(90deg,transparent 0%,rgba(145,148,156,.16) 16%,rgba(145,148,156,.16) 84%,transparent 100%),
     radial-gradient(ellipse 34% 100% at 0% 0%,rgba(145,148,156,.48) 0%,rgba(145,148,156,.16) 38%,transparent 78%),
     radial-gradient(ellipse 34% 100% at 100% 0%,rgba(145,148,156,.48) 0%,rgba(145,148,156,.16) 38%,transparent 78%),
     radial-gradient(ellipse 34% 100% at 0% 100%,rgba(145,148,156,.48) 0%,rgba(145,148,156,.16) 38%,transparent 78%),
     radial-gradient(ellipse 34% 100% at 100% 100%,rgba(145,148,156,.48) 0%,rgba(145,148,156,.16) 38%,transparent 78%)!important;
+  background-size:100% 1px,100% 1px,auto,auto,auto,auto!important;
+  background-position:top,bottom,center,center,center,center!important;
+  background-repeat:no-repeat!important;
   -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0)!important;
   -webkit-mask-composite:xor!important;
   mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0)!important;

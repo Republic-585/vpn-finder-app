@@ -2948,3 +2948,39 @@ html.contact-screen-active #screen-contact .support-chat-compose textarea{
 html.contact-screen-active #screen-contact .support-chat-compose textarea::placeholder{
   text-align:left!important;
 }
+
+/* Contact screen: center the empty-state message in the space above the composer. */
+html.contact-screen-active #screen-contact .contact-intro{
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  align-items:center!important;
+  width:100%;
+  min-height:0;
+  margin:0!important;
+  padding:0 20px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  text-align:center!important;
+}
+html.contact-screen-active #screen-contact .contact-intro-icon{
+  margin:0 auto 16px!important;
+}
+html.contact-screen-active #screen-contact .contact-intro-copy{
+  width:100%;
+  max-width:320px;
+  align-self:center!important;
+  text-align:center!important;
+}
+html.contact-screen-active #screen-contact .contact-intro-copy h2,
+html.contact-screen-active #screen-contact .contact-intro-copy p{
+  text-align:center!important;
+}
+html.contact-screen-active #screen-contact .support-chat{
+  flex:0 0 auto!important;
+}
+html.contact-screen-active #screen-contact.active:has(.contact-intro[hidden]) .support-chat{
+  flex:1 1 auto!important;
+}

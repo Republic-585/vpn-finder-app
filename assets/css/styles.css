@@ -2638,3 +2638,80 @@ html.contact-screen-active #screen-contact.active{
   line-height:1.35!important;align-self:center
 }
 #screen-contact .contact-compose-note{flex:0 0 auto}
+
+
+/* Contact screen typography and Telegram-style send interaction. */
+#screen-contact .contact-intro{
+  grid-template-columns:44px minmax(0,1fr);
+  gap:12px;margin:0 0 16px;padding:16px 2px;
+  border:0!important;border-radius:0;background:transparent
+}
+#screen-contact .contact-intro-icon{
+  width:44px;height:44px;border-radius:15px
+}
+#screen-contact .contact-intro-copy h2{
+  margin:0 0 6px;font-size:var(--type-section);
+  line-height:1.25;font-weight:var(--weight-semibold);letter-spacing:-.025em
+}
+#screen-contact .contact-intro-copy p{
+  margin:0;color:var(--secondary);font-size:var(--type-body);
+  line-height:1.5;font-weight:var(--weight-regular)
+}
+#screen-contact .contact-next-step,
+#screen-contact .contact-compose-note{display:none!important}
+#screen-contact .support-chat{gap:10px!important}
+#screen-contact .support-message{
+  font-size:var(--type-body)!important;line-height:1.5!important
+}
+#screen-contact .support-chat-compose{
+  min-height:64px!important;gap:10px!important;
+  padding:7px 8px 7px 20px!important;
+  align-items:center!important;box-sizing:border-box
+}
+#screen-contact .support-chat-compose textarea{
+  min-height:46px!important;max-height:112px!important;
+  padding:0!important;display:block;align-self:center;
+  font-family:inherit!important;font-size:var(--type-card-title)!important;
+  line-height:1.35!important;font-weight:var(--weight-regular)!important;
+  text-align:left;vertical-align:middle
+}
+#screen-contact .support-chat-compose textarea::placeholder{
+  color:var(--muted);opacity:1
+}
+#screen-contact .support-chat-compose .contact-send-button{
+  position:relative;isolation:isolate;overflow:visible;
+  width:48px!important;height:48px!important;
+  min-width:48px!important;min-height:48px!important;flex:0 0 48px!important;
+  border-radius:50%!important;background:#3390ec!important;
+  color:#fff!important;box-shadow:0 3px 9px rgba(51,144,236,.24);
+  transition:transform .18s ease,background .18s ease
+}
+#screen-contact .contact-send-button:active{transform:scale(.94)}
+#screen-contact .contact-send-button::after{
+  content:"";position:absolute;z-index:-1;inset:-3px;
+  border:2px solid rgba(51,144,236,.45);border-radius:50%;
+  opacity:0;pointer-events:none
+}
+#screen-contact .contact-send-plane{
+  width:23px;height:23px;display:block;fill:currentColor;
+  stroke:none;transform-origin:50% 50%
+}
+#screen-contact .contact-send-button.is-sending::after{
+  animation:contact-send-ripple .52s ease-out both
+}
+#screen-contact .contact-send-button.is-sending .contact-send-plane{
+  animation:contact-plane-launch .52s cubic-bezier(.2,.75,.25,1) both
+}
+@keyframes contact-plane-launch{
+  0%{transform:translate(0,0) rotate(0) scale(1);opacity:1}
+  35%{transform:translate(4px,-4px) rotate(5deg) scale(1.04);opacity:1}
+  100%{transform:translate(22px,-22px) rotate(14deg) scale(.72);opacity:0}
+}
+@keyframes contact-send-ripple{
+  0%{transform:scale(.86);opacity:.7}
+  100%{transform:scale(1.45);opacity:0}
+}
+@media(prefers-reduced-motion:reduce){
+  #screen-contact .contact-send-button.is-sending .contact-send-plane,
+  #screen-contact .contact-send-button.is-sending::after{animation:none!important}
+}

@@ -2996,3 +2996,48 @@ body.owners-no-bottom-navigation .bottom-nav-dock{display:none!important}
   background-position:0 0!important;
   animation:none!important;
 }
+
+
+/* Premium Liquid Glass: stronger optical depth with a stable, non-animated finish. */
+.bottom-nav-dock .bottom-nav{
+  overflow:hidden!important;
+  isolation:isolate;
+  background:rgba(39,42,49,.38)!important;
+  border:0!important;
+  -webkit-backdrop-filter:blur(24px) saturate(158%) contrast(1.06)!important;
+  backdrop-filter:blur(24px) saturate(158%) contrast(1.06)!important;
+  box-shadow:
+    0 12px 34px rgba(0,0,0,.34),
+    0 2px 8px rgba(0,0,0,.16),
+    inset 0 1px 0 rgba(255,255,255,.20),
+    inset 0 -1px 0 rgba(0,0,0,.16)!important;
+}
+.bottom-nav-dock .bottom-nav::before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  opacity:1!important;
+  background:
+    radial-gradient(ellipse 82% 100% at 50% -42%,rgba(255,255,255,.19),transparent 72%),
+    linear-gradient(180deg,rgba(255,255,255,.105) 0%,rgba(255,255,255,.035) 24%,rgba(255,255,255,.008) 58%,rgba(0,0,0,.075) 100%)!important;
+  background-size:100% 100%!important;
+  background-position:0 0!important;
+  animation:none!important;
+}
+.bottom-nav-dock .bottom-nav::after{
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:1px;
+  border-radius:inherit;
+  pointer-events:none;
+  background:
+    linear-gradient(115deg,rgba(255,255,255,.16),transparent 23%,transparent 76%,rgba(255,255,255,.055)),
+    linear-gradient(180deg,rgba(255,255,255,.075),transparent 34%);
+  opacity:.72;
+  mix-blend-mode:screen;
+}
+.bottom-nav-dock .bottom-nav .nav-item{position:relative;z-index:2}

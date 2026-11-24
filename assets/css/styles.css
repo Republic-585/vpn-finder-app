@@ -2891,3 +2891,15 @@ html.support-screen-active #screen-support .support-method-container .support-st
 html.support-screen-active #screen-support .support-method-container .crypto-support-card{
   height:100%;box-sizing:border-box;display:flex;flex-direction:column;
 }
+
+
+/* Support screen: remove the tab divider and lift the Stars form content. */
+#screen-support .support-method-container .support-tabs{
+  border-bottom:0!important;
+}
+#screen-support .support-method-container .support-panel{
+  padding-top:6px!important;
+}
+#screen-support .support-method-container .support-stars-panel .support-form{
+  padding-top:8px!important;
+}

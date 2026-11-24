@@ -12,12 +12,12 @@
 .bottom-nav-dock .bottom-nav .nav-item:active{color:#fff;background:transparent;filter:none}
 
 /* Profile ring is independent from the tab indicator; graphite separates it from the avatar. */
-.bottom-nav-dock .profile-nav-button{position:relative;flex:0 0 62px;width:62px;height:62px;min-width:62px;padding:0;display:grid;place-items:center;overflow:visible;isolation:isolate;border:2px solid #292B2F;border-radius:50%;outline:0;background:transparent;color:#fff;box-shadow:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:none;transform:none!important;filter:none!important}
+.bottom-nav-dock .profile-nav-button{position:relative;box-sizing:border-box;flex:0 0 56px;width:56px;height:56px;min-width:56px;padding:0;display:grid;place-items:center;overflow:visible;isolation:isolate;border:2px solid #292B2F;border-radius:50%;outline:0;background:transparent;color:#fff;box-shadow:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:none;transform:none!important;filter:none!important}
 .bottom-nav-dock .profile-nav-button::before{content:none;display:none}
-.bottom-nav-dock .profile-nav-button::after{content:"";position:absolute;inset:-3px;z-index:2;padding:3px;border-radius:50%;pointer-events:none;background:conic-gradient(from 0deg,#48E6D0 0%,#6DE7A7 22%,#20C9B5 46%,#55DDBF 68%,#32DCC8 84%,#48E6D0 100%);opacity:0;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;transition:opacity .25s ease}
+.bottom-nav-dock .profile-nav-button::after{content:"";position:absolute;inset:-4px;z-index:3;padding:3px;border-radius:50%;pointer-events:none;background:conic-gradient(from 0deg,#48E6D0 0%,#6DE7A7 22%,#20C9B5 46%,#55DDBF 68%,#32DCC8 84%,#48E6D0 100%);opacity:0;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;transition:opacity .25s ease}
 .bottom-nav-dock .profile-nav-button.is-current::after{opacity:1;animation:profile-ring-flow 5.5s linear infinite,profile-ring-breathe 3.2s ease-in-out infinite}
 .bottom-nav-dock .profile-nav-button.is-pressed{filter:brightness(1.04)!important}
-.bottom-nav-dock .profile-nav-button img,.bottom-nav-dock .profile-nav-button span{width:100%;height:100%;border:0;outline:0;border-radius:50%;box-shadow:none;filter:none}
+.bottom-nav-dock .profile-nav-button img,.bottom-nav-dock .profile-nav-button span{position:relative;z-index:1;box-sizing:border-box;width:100%;height:100%;border:0;outline:0;border-radius:50%;box-shadow:none;filter:none}
 .bottom-nav-dock .profile-nav-button img{display:block;object-fit:cover}
 .bottom-nav-dock .profile-nav-button span{display:grid;place-items:center;background:var(--raised);color:#fff;font-family:inherit;font-size:22px;line-height:1;font-weight:650;letter-spacing:-.04em}
 .bottom-nav-dock .profile-nav-button img[hidden],.bottom-nav-dock .profile-nav-button span[hidden]{display:none}

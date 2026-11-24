@@ -628,11 +628,18 @@ if (navBar) {
     indicator.style.width = Math.max(0, width - inset * 2) + "px";
     indicator.style.transform = `translateX(${left + inset}px)`;
   };
+  const getNavItemBounds = item => {
+    const navRect = navBar.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+    return { left: itemRect.left - navRect.left, width: itemRect.width, center: itemRect.left + itemRect.width / 2 - navRect.left };
+  };
   moveIndicator = () => {
     const active = nav.find(button => button.classList.contains("active"));
     if (active) {
+      const bounds = getNavItemBounds(active);
+      if (!bounds.width || !navBar.getBoundingClientRect().width) return;
       indicator.hidden = false;
-      setIndicator(active.offsetLeft, active.offsetWidth);
+      setIndicator(bounds.left, bounds.width);
     } else {
       indicator.hidden = true;
     }
@@ -640,8 +647,8 @@ if (navBar) {
   const slideIndicatorToFinger = clientX => {
     const navRect = navBar.getBoundingClientRect();
     const points = nav.map(item => {
-      const rect = item.getBoundingClientRect();
-      return { left: item.offsetLeft, width: item.offsetWidth, center: rect.left + rect.width / 2 - navRect.left };
+      const bounds = getNavItemBounds(item);
+      return { left: bounds.left, width: bounds.width, center: bounds.center };
     });
     if (!points.length) return;
     const x = Math.max(points[0].center, Math.min(clientX - navRect.left, points[points.length - 1].center));
@@ -665,8 +672,18 @@ if (navBar) {
     }, null)?.item;
   };
 
-  moveIndicator();
-  window.addEventListener("resize", moveIndicator);
+  const scheduleIndicatorLayout = () => {
+    window.requestAnimationFrame(() => window.requestAnimationFrame(moveIndicator));
+  };
+  scheduleIndicatorLayout();
+  window.addEventListener("resize", scheduleIndicatorLayout);
+  window.addEventListener("orientationchange", scheduleIndicatorLayout);
+  tg?.onEvent?.("viewportChanged", scheduleIndicatorLayout);
+  if (typeof ResizeObserver !== "undefined") {
+    const navResizeObserver = new ResizeObserver(scheduleIndicatorLayout);
+    navResizeObserver.observe(navBar);
+    nav.forEach(item => navResizeObserver.observe(item));
+  }
   navBar.addEventListener("pointerdown", event => {
     const item = event.target.closest(".nav-item");
     if (!item || !item.classList.contains("active") || event.pointerType === "mouse") return;

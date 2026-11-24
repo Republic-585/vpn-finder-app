@@ -343,11 +343,11 @@ const translations = {
     "Отправляем…":"Sending…","Сообщение отправлено.":"Message sent.","Не удалось отправить. Попробуйте ещё раз.":"Could not send. Please try again.",
     "Поддержать проект":"Support the project","Сумма в Stars":"Amount in Stars","Оплатить ⭐ Stars":"Pay ⭐ Stars",
     "Или укажи другую сумму в Stars":"Or enter another amount in Stars","Ориентир вознаграждения владельцу по ставке Telegram $0,013 за 1 Star; рублёвый пересчёт по курсу ЦБ на 21.11.2026. Это не цена покупки Stars.":"Estimated owner reward at Telegram's rate of $0.013 per Star; RUB conversion uses the Central Bank rate on Nov 21, 2026. This is not the purchase price of Stars.",
-    "Укажи любую сумму в Telegram Stars. После оплаты ты получишь значок «Друг VPN Finder».":"Choose any amount in Telegram Stars. After payment, you will receive the “VPN Finder Friend” badge.",
-    "Друг VPN Finder":"VPN Finder Friend","Спасибо за поддержку VPN Finder!":"Thank you for supporting VPN Finder!",
+    "Укажи любую сумму в Telegram Stars.":"Choose any amount in Telegram Stars.",
+    "Спасибо за поддержку VPN Finder!":"Thank you for supporting VPN Finder!",
     "Введите целое число от 1 до 100 000 Stars.":"Enter a whole number from 1 to 100,000 Stars.",
     "Создаём счёт…":"Creating invoice…","Ожидаем подтверждение оплаты…":"Waiting for payment confirmation…",
-    "Оплата прошла! Значок появится в профиле.":"Payment complete! Your badge will appear in your profile.",
+    "Оплата прошла! Спасибо за поддержку VPN Finder.":"Payment complete! Thank you for supporting VPN Finder.",
     "Оплата отменена.":"Payment cancelled.","Не удалось открыть оплату. Попробуйте ещё раз.":"Could not open payment. Please try again.",
     "Откройте VPN Finder через Telegram, чтобы оплатить Stars.":"Open VPN Finder through Telegram to pay with Stars.",
     "Угостить чашкой кофе":"Buy the project a coffee",
@@ -358,7 +358,7 @@ const translations = {
     "Не удалось скопировать. Выдели значение и скопируй вручную.":"Could not copy. Select the value and copy it manually.",
     "Минимальная сумма — 2,50 USDT.":"Minimum amount is 2.50 USDT.",
     "Сумма скопирована.":"Amount copied.","Адрес скопирован.":"Address copied.",
-    "Каталог Finder":"Finder directory","Добавить в каталог":"Add to directory","Друг VPN Finder":"VPN Finder Friend",
+    "Каталог Finder":"Finder directory","Добавить в каталог":"Add to directory",
     "Поддержать VPN Finder":"Support VPN Finder","Помоги проекту развиваться и делать поиск VPN удобнее.":"Help the project grow and make finding a VPN easier.",
     "Выбери сумму поддержки":"Choose an amount to support the project","Или введи свою сумму в Stars":"Or enter your own amount in Stars","Оплатить Stars":"Pay with Stars",
     "КРИПТОВАЛЮТА":"CRYPTOCURRENCY","USDT в сети TON":"USDT on TON network","Переведи любую удобную сумму на адрес ниже. Перед отправкой проверь сеть TON.":"Send any amount to the address below. Make sure you select the TON network before sending.",
@@ -553,6 +553,8 @@ let moveIndicator = () => {};
 const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analytics", "support"]);
 let ownersBackScreen = "catalog";
 function showScreen(name, backScreen = null) {
+  document.documentElement.classList.toggle("profile-screen-active", name === "profile");
+  document.body.classList.toggle("profile-screen-active", name === "profile");
   const supportMethod = document.querySelector("[data-support-tab].is-active")?.dataset.supportTab || "stars";
   const useNativeOwnerPromoButton = name === "owner-promo" && !!ownerPromoNativeButton;
   const useNativeProviderSubmitButton = name === "owners" && !!ownerPromoNativeButton;
@@ -812,14 +814,18 @@ let profileReady = false;
 let profileSyncPromise = null;
 
 function renderTelegramProfile(profile) {
-  const supporterBadge = byId("profile-supporter-badge");
-  if (supporterBadge) supporterBadge.hidden = profile.is_supporter !== true;
   const name = byId("profile-name");
+  const username = byId("profile-username");
   const photo = byId("profile-photo");
   const fallback = byId("profile-avatar-fallback");
   const navPhoto = byId("profile-nav-photo");
   const navFallback = byId("profile-nav-fallback");
   name.textContent = profile.display_name || t("Пользователь");
+  const telegramUsername = String(profile.username || "").replace(/^@/, "");
+  if (username) {
+    username.textContent = telegramUsername ? "@" + telegramUsername : "";
+    username.hidden = !telegramUsername;
+  }
   const initial = (profile.first_name || "V").slice(0, 1).toLocaleUpperCase("ru-RU");
   fallback.textContent = initial;
   if (navFallback) navFallback.textContent = initial;

@@ -1830,6 +1830,13 @@ byId("contact-form")?.addEventListener("submit", async event => {
   const field = form.elements.message;
   const message = String(field?.value || "").trim();
   if (!message || button.disabled) return;
+  button.classList.remove("is-sending");
+  const plane = button.querySelector(".contact-send-plane");
+  if (plane) {
+    plane.addEventListener("animationend", () => button.classList.remove("is-sending"), { once: true });
+    void button.offsetWidth;
+    button.classList.add("is-sending");
+  }
   button.disabled = true;
   try {
     await supportRequest("send", { message });

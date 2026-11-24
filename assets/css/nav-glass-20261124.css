@@ -159,3 +159,34 @@
   white-space:nowrap!important;
   text-align:center!important;
 }
+
+/* Lock Favorites glyph and caption in place during pointer/touch press. */
+.bottom-nav-dock .bottom-nav .nav-item[data-go="favorites"],
+.bottom-nav-dock .bottom-nav .nav-item[data-go="favorites"]:active,
+.bottom-nav-dock .bottom-nav .nav-item[data-go="favorites"]:focus,
+.bottom-nav-dock .bottom-nav .nav-item[data-go="favorites"]:focus-visible,
+.bottom-nav-dock .bottom-nav .nav-item[data-go="favorites"].is-tapping{
+  transform:none!important;
+  translate:none!important;
+  rotate:none!important;
+  scale:none!important;
+  filter:none!important;
+  transition-property:color,background-color!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item[data-go="favorites"] svg,
+.bottom-nav-dock .bottom-nav .nav-item[data-go="favorites"]:active svg,
+.bottom-nav-dock .bottom-nav .nav-item[data-go="favorites"].is-tapping svg,
+.bottom-nav-dock .bottom-nav .nav-item[data-go="favorites"] span,
+.bottom-nav-dock .bottom-nav .nav-item[data-go="favorites"]:active span,
+.bottom-nav-dock .bottom-nav .nav-item[data-go="favorites"].is-tapping span{
+  position:relative!important;
+  left:0!important;
+  top:0!important;
+  transform:none!important;
+  translate:none!important;
+  rotate:none!important;
+  scale:none!important;
+  animation:none!important;
+  filter:none!important;
+  transition:none!important;
+}

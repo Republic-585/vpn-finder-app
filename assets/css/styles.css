@@ -3132,3 +3132,61 @@ body.owners-no-bottom-navigation .bottom-nav-dock{display:none!important}
   background:rgba(91,93,99,.72)!important;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 2px 7px rgba(0,0,0,.12)!important;
 }
+
+/* YouTube-inspired floating glass capsule: static optical layers, live page backdrop. */
+.bottom-nav-dock .bottom-nav{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  min-height:62px!important;
+  border:0!important;
+  outline:0!important;
+  border-radius:999px!important;
+  background:rgba(40,42,48,.16)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(140%)!important;
+  backdrop-filter:blur(20px) saturate(140%)!important;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.32),
+    0 3px 8px rgba(0,0,0,.18),
+    0 1px 2px rgba(0,0,0,.10)!important;
+}
+.bottom-nav-dock .bottom-nav::before{
+  content:""!important;
+  position:absolute!important;
+  z-index:0!important;
+  inset:0!important;
+  border:0!important;
+  border-radius:inherit!important;
+  pointer-events:none!important;
+  opacity:1!important;
+  background:
+    radial-gradient(ellipse 76% 90% at 50% -32%,rgba(255,255,255,.105),transparent 74%),
+    linear-gradient(180deg,rgba(255,255,255,.045) 0%,rgba(255,255,255,.012) 38%,rgba(0,0,0,.035) 100%)!important;
+  animation:none!important;
+}
+.bottom-nav-dock .bottom-nav::after{
+  content:none!important;
+  display:none!important;
+}
+.bottom-nav-dock .nav-indicator{
+  top:3px!important;
+  height:54px!important;
+  border:0!important;
+  border-radius:999px!important;
+  background:rgba(91,93,99,.72)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 2px 7px rgba(0,0,0,.12)!important;
+  transition:transform .2s cubic-bezier(.2,.8,.2,1),width .2s cubic-bezier(.2,.8,.2,1)!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item{
+  position:relative!important;
+  z-index:2!important;
+  background:transparent!important;
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .bottom-nav-dock .bottom-nav{
+    background:rgba(39,41,47,.88)!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .bottom-nav-dock .nav-indicator{transition:none!important}
+}

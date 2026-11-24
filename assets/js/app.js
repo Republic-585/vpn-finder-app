@@ -610,8 +610,9 @@ if (navBar) {
   let suppressNavClickUntil = 0;
 
   const setIndicator = (left, width) => {
-    indicator.style.width = width + "px";
-    indicator.style.transform = `translateX(${left}px)`;
+    const inset = 5;
+    indicator.style.width = Math.max(0, width - inset * 2) + "px";
+    indicator.style.transform = `translateX(${left + inset}px)`;
   };
   moveIndicator = () => {
     const active = nav.find(button => button.classList.contains("active"));

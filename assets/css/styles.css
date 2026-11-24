@@ -2573,3 +2573,30 @@ html.contact-screen-active #screen-contact.active{height:calc(100dvh - 58px - 11
 /* Center every menu icon optically inside its colored tile and increase its size slightly. */
 #screen-profile .profile-icon-tile{display:flex;align-items:center;justify-content:center;text-align:center}
 #screen-profile .profile-icon-tile svg{display:block;width:25px;height:25px;flex:0 0 25px;margin:0;align-self:center;transform:none}
+
+/* Contact screen: focused messenger layout without the app navigation dock. */
+body.contact-no-bottom-navigation .bottom-nav-dock{display:none!important}
+html.contact-screen-active .main-content,body.contact-screen-active .main-content{padding-bottom:calc(12px + env(safe-area-inset-bottom))!important}
+html.contact-screen-active #screen-contact.active,body.contact-screen-active #screen-contact.active{height:calc(100dvh - env(safe-area-inset-top) - 58px - env(safe-area-inset-bottom))!important;min-height:0!important;padding-bottom:0!important}
+#screen-contact .page-heading{padding:calc(18px + env(safe-area-inset-top)) 2px 14px!important}
+#screen-contact .contact-intro{display:grid;grid-template-columns:42px minmax(0,1fr);gap:11px;margin:0 0 14px;padding:15px;border:1px solid var(--line);border-radius:20px;background:var(--panel)}
+#screen-contact .contact-intro[hidden]{display:none!important}
+#screen-contact .contact-intro-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:rgba(51,144,236,.13);color:#3390ec}
+#screen-contact .contact-intro-icon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#screen-contact .contact-intro-copy{min-width:0;align-self:center}
+#screen-contact .contact-intro-copy h2{margin:0 0 5px;font-size:15px;line-height:1.25;font-weight:650;letter-spacing:-.02em}
+#screen-contact .contact-intro-copy p{margin:0;color:var(--secondary);font-size:12px;line-height:1.45}
+#screen-contact .contact-next-step{grid-column:1/-1;display:flex;align-items:flex-start;gap:8px;margin-top:2px;padding-top:11px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;line-height:1.4}
+#screen-contact .contact-next-step-dot{width:7px;height:7px;flex:0 0 7px;margin-top:4px;border-radius:50%;background:#31b65c}
+#screen-contact .support-chat{gap:8px!important}
+#screen-contact .support-chat-messages{padding:4px 1px 12px!important}
+#screen-contact .support-chat-compose{align-items:center!important;gap:9px!important;min-height:58px;padding:7px 8px 7px 18px!important;border:1px solid var(--line)!important;border-radius:999px!important;background:var(--panel)!important;box-shadow:0 3px 14px rgba(0,0,0,.045)}
+#screen-contact .support-chat-compose textarea{min-height:42px!important;max-height:112px!important;padding:11px 0!important;font-size:14px!important;line-height:1.4!important}
+#screen-contact .support-chat-compose textarea::placeholder{color:var(--muted);opacity:.9}
+#screen-contact .support-chat-compose button{width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;flex:0 0 44px!important;display:grid!important;place-items:center!important;padding:0!important;border:0!important;border-radius:50%!important;background:#3390ec!important;color:#fff!important;box-shadow:0 2px 6px rgba(51,144,236,.22);-webkit-tap-highlight-color:transparent}
+#screen-contact .support-chat-compose button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transform:translate(-1px,1px)}
+#screen-contact .support-chat-compose button:disabled{opacity:.5}
+#screen-contact .contact-compose-note{margin:0 8px 2px;color:var(--muted);font-size:10px;line-height:1.35;text-align:center}
+#screen-contact .support-message{max-width:88%;padding:11px 14px;border-radius:18px;font-size:13px;line-height:1.45}
+#screen-contact .support-message-user{border-bottom-right-radius:6px}
+#screen-contact .support-message-admin{border-bottom-left-radius:6px}

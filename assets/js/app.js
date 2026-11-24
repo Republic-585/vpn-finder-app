@@ -227,7 +227,7 @@ async function loadAnalyticsDashboard() {
   if (menuRow) menuRow.hidden = !isOwner;
   if (inboxMenuRow) inboxMenuRow.hidden = !isOwner;
   if (managementGroup) managementGroup.hidden = !isOwner;
-  if (currentTelegramId !== ANALYTICS_OWNER_TELEGRAM_ID) {
+  if (!isOwner) {
     if (root) root.textContent = t("Нет доступа к аналитике.");
     return;
   }

@@ -3033,3 +3033,17 @@ html.contact-screen-active #screen-contact.active:has(.contact-intro[hidden]) .s
   margin-top:auto!important;margin-bottom:0!important;
   flex:0 0 64px!important;
 }
+
+
+/* Shared send icon: optical centering inside both circular send buttons. */
+#screen-contact .support-chat-compose .contact-send-button,
+#screen-support-inbox .support-chat-compose .contact-send-button{
+  display:grid!important;
+  place-items:center!important;
+}
+#screen-contact .contact-send-plane,
+#screen-support-inbox .contact-send-plane{
+  width:24px!important;height:24px!important;
+  margin:0!important;
+  transform:translate(.15px,.6px);
+}

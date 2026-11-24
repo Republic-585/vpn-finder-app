@@ -222,9 +222,11 @@ async function loadAnalyticsDashboard() {
   const root = byId("analytics-dashboard");
   const menuRow = byId("analytics-menu-row");
   const inboxMenuRow = byId("support-inbox-menu-row");
-  const currentTelegramId = Number(tg?.initDataUnsafe?.user?.id || 0);
-  if (menuRow) menuRow.hidden = currentTelegramId !== ANALYTICS_OWNER_TELEGRAM_ID;
-  if (inboxMenuRow) inboxMenuRow.hidden = currentTelegramId !== ANALYTICS_OWNER_TELEGRAM_ID;
+  const managementGroup = byId("profile-management-group");
+  const isOwner = Number(tg?.initDataUnsafe?.user?.id || 0) === ANALYTICS_OWNER_TELEGRAM_ID;
+  if (menuRow) menuRow.hidden = !isOwner;
+  if (inboxMenuRow) inboxMenuRow.hidden = !isOwner;
+  if (managementGroup) managementGroup.hidden = !isOwner;
   if (currentTelegramId !== ANALYTICS_OWNER_TELEGRAM_ID) {
     if (root) root.textContent = t("Нет доступа к аналитике.");
     return;

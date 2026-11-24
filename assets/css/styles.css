@@ -2715,3 +2715,40 @@ html.contact-screen-active #screen-contact.active{
   #screen-contact .contact-send-button.is-sending .contact-send-plane,
   #screen-contact .contact-send-button.is-sending::after{animation:none!important}
 }
+
+
+/* Contact screen: center the message composition group in the viewport. */
+html.contact-screen-active #screen-contact.active{
+  justify-content:center!important;
+  align-items:stretch!important;
+}
+#screen-contact .contact-intro{
+  width:100%;display:flex!important;flex-direction:column!important;
+  align-items:center!important;justify-content:center!important;
+  gap:14px!important;margin:0 0 18px!important;padding:0 12px!important;
+  text-align:center!important;
+}
+#screen-contact .contact-intro-icon{margin:0 auto!important}
+#screen-contact .contact-intro-copy{
+  width:100%;min-width:0;text-align:center!important
+}
+#screen-contact .contact-intro-copy h2,
+#screen-contact .contact-intro-copy p{text-align:center!important}
+#screen-contact .support-chat{
+  flex:0 0 auto!important;width:100%;min-height:0!important;
+  gap:0!important
+}
+#screen-contact .support-chat-messages{
+  flex:0 1 auto!important;max-height:28dvh!important;
+  padding:0 1px 10px!important
+}
+#screen-contact .support-chat-compose textarea{
+  text-align:center!important;font-size:18px!important;
+  line-height:1.35!important;font-weight:var(--weight-regular)!important
+}
+#screen-contact .support-chat-compose textarea::placeholder{
+  text-align:center!important
+}
+#screen-contact .contact-send-plane{
+  fill:#fff!important;stroke:none!important
+}

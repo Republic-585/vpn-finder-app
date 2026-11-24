@@ -594,6 +594,8 @@ function showScreen(name, backScreen = null) {
   if (name === "news") markNewsAsRead();
   document.documentElement.classList.toggle("profile-screen-active", name === "profile");
   document.body.classList.toggle("profile-screen-active", name === "profile");
+  document.documentElement.classList.toggle("contact-screen-active", name === "contact");
+  document.body.classList.toggle("contact-screen-active", name === "contact");
   const supportMethod = document.querySelector("[data-support-tab].is-active")?.dataset.supportTab || "stars";
   const useNativeOwnerPromoButton = name === "owner-promo" && !!ownerPromoNativeButton;
   const useNativeProviderSubmitButton = name === "owners" && !!ownerPromoNativeButton;

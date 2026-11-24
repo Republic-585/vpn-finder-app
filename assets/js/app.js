@@ -588,7 +588,7 @@ function showScreen(name, backScreen = null) {
     const destinationScreen = screens.find(screen => screen.dataset.screen === name);
     if (destinationScreen) {
       destinationScreen.classList.add("profile-menu-slide-in");
-      destinationScreen.addEventListener("animationend", () => destinationScreen.classList.remove("profile-menu-slide-in"), { once: true });
+      // Keep the completed animation class until the next screen change to avoid replaying screen-in.
     }
   }
   nav.forEach(button => {

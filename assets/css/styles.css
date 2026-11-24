@@ -3165,3 +3165,39 @@ html.support-inbox-screen-active #screen-support-inbox .support-chat-compose{
   margin:0!important;
   align-self:stretch!important;
 }
+
+
+/* Inbox correction: keep thread rows at their natural height; only the message
+   history expands in an opened conversation, with the reply composer below it. */
+html.support-inbox-screen-active #screen-support-inbox .support-inbox-list{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-auto-rows:max-content!important;
+  align-content:start!important;
+  justify-content:stretch!important;
+  flex:1 1 0!important;
+  min-height:0!important;
+  height:auto!important;
+  overflow-y:auto!important;
+}
+html.support-inbox-screen-active #screen-support-inbox .support-inbox-conversation:not([hidden]){
+  display:flex!important;
+  flex:1 1 0!important;
+  flex-direction:column!important;
+  min-height:0!important;
+  height:auto!important;
+  overflow:hidden!important;
+}
+html.support-inbox-screen-active #screen-support-inbox .support-chat-messages{
+  display:flex!important;
+  flex:1 1 0!important;
+  min-height:0!important;
+  height:auto!important;
+  overflow-y:auto!important;
+}
+html.support-inbox-screen-active #screen-support-inbox .support-chat-compose{
+  display:flex!important;
+  flex:0 0 64px!important;
+  min-height:64px!important;
+  margin:0!important;
+}

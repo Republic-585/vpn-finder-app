@@ -2446,3 +2446,25 @@ html.profile-screen-active #screen-profile .profile-view{padding-top:calc(8px + 
 @media(prefers-reduced-motion:reduce){
   .screen.active.profile-menu-slide-in{animation:none!important;will-change:auto}
 }
+
+
+/* Reuse the exact VPN Finder startup splash while the analytics request is pending. */
+.analytics-loading-overlay{
+  position:fixed;
+  inset:0;
+  z-index:10001;
+  display:grid;
+  place-items:center;
+  min-height:100vh;
+  min-height:100svh;
+  padding:calc(28px + env(safe-area-inset-top)) 24px calc(28px + env(safe-area-inset-bottom));
+  overflow:hidden;
+  background:#202124;
+}
+.analytics-loading-overlay .startup-splash-content{
+  animation:startup-content-in .55s cubic-bezier(.2,.7,.2,1) .06s both;
+}
+@media(prefers-reduced-motion:reduce){
+  .analytics-loading-overlay .startup-splash-content{animation:none!important;transform:translateY(-40px);opacity:1}
+  .analytics-loading-overlay .startup-loading span{animation:none!important;width:65%}
+}

@@ -106,3 +106,22 @@
 .bottom-nav-dock .bottom-nav .nav-item span{
   transform:none!important;
 }
+
+/* Match the navigation panel to the full 68px profile-ring envelope. */
+.bottom-nav-dock{
+  align-items:center!important;
+}
+.bottom-nav-dock .bottom-nav{
+  box-sizing:border-box!important;
+  height:68px!important;
+  min-height:68px!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.10fr)!important;
+}
+.bottom-nav-dock .nav-indicator{
+  top:4px!important;
+  height:60px!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item{
+  min-width:0!important;
+  white-space:nowrap!important;
+}

@@ -575,13 +575,7 @@ function showScreen(name, backScreen = null) {
     document.body.classList.remove("catalog-promo-open");
   }
   if (name === "analytics" && Number(tg?.initDataUnsafe?.user?.id || 0) !== ANALYTICS_OWNER_TELEGRAM_ID) return;
-  const navBar = document.querySelector(".bottom-nav");
   const alreadyActive = screens.some(screen => screen.dataset.screen === name && screen.classList.contains("active"));
-  if (!alreadyActive && navBar) {
-    navBar.classList.remove("is-switching");
-    void navBar.offsetWidth;
-    navBar.classList.add("is-switching");
-  }
   screens.forEach(screen => screen.classList.toggle("active", screen.dataset.screen === name));
   nav.forEach(button => {
     const active = button.dataset.go === name;
@@ -610,12 +604,6 @@ if (navBar) {
   indicator.className = "nav-indicator";
   indicator.setAttribute("aria-hidden", "true");
   navBar.prepend(indicator);
-  navBar.addEventListener("animationend", event => {
-    if (event.target === navBar && event.animationName === "nav-panel-switch") {
-      navBar.classList.remove("is-switching");
-    }
-  });
-
   let draggingNav = false;
   let dragMoved = false;
   let startX = 0;
@@ -707,20 +695,6 @@ if (navBar) {
       event.stopImmediatePropagation();
     }
   }, true);
-  navBar.addEventListener("click", event => {
-    const item = event.target.closest(".nav-item");
-    if (!item || !navBar.contains(item)) return;
-    item.classList.remove("is-tapping");
-    void item.offsetWidth;
-    item.classList.add("is-tapping");
-  });
-  navBar.addEventListener("animationend", event => {
-    const item = event.target.closest?.(".nav-item.is-tapping");
-    if (item && event.target.matches("svg") &&
-        ["telegram-shield-pulse", "telegram-spark-flash", "telegram-heart-pulse"].includes(event.animationName)) {
-      item.classList.remove("is-tapping");
-    }
-  });
 }
 if (tg?.BackButton) {
   tg.BackButton.onClick(() => {
@@ -825,11 +799,7 @@ document.querySelectorAll("[data-go]").forEach(button => {
 // Explicit press state for iOS Safari, where :active can be unreliable in embedded apps.
 const profileNavButton = byId("profile-nav-button");
 if (profileNavButton) {
-  const dock = profileNavButton.closest(".bottom-nav-dock");
-  const setProfilePressed = pressed => {
-    profileNavButton.classList.toggle("is-pressed", pressed);
-    dock?.classList.toggle("profile-press-active", pressed);
-  };
+  const setProfilePressed = pressed => profileNavButton.classList.toggle("is-pressed", pressed);
   profileNavButton.addEventListener("pointerdown", () => setProfilePressed(true));
   ["pointerup", "pointercancel", "pointerleave", "blur"].forEach(type => {
     profileNavButton.addEventListener(type, () => setProfilePressed(false));

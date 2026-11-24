@@ -2859,3 +2859,35 @@ html.support-inbox-screen-active #screen-support-inbox.active{
   #screen-support-inbox .contact-send-button.is-sending .contact-send-plane,
   #screen-support-inbox .contact-send-button.is-sending::after{animation:none!important}
 }
+
+
+/* Support screen: equal-height payment panels and a fixed, non-scrollable viewport. */
+html.support-screen-active,
+html.support-screen-active body{
+  height:100%;min-height:0;overflow:hidden!important;overscroll-behavior:none;
+}
+html.support-screen-active .app-shell{
+  height:100dvh;min-height:0;overflow:hidden;
+}
+html.support-screen-active .main-content{
+  height:100dvh;min-height:0;overflow:hidden;
+  padding-bottom:calc(24px + env(safe-area-inset-bottom))!important;
+}
+html.support-screen-active #screen-support.active{
+  display:flex;flex-direction:column;height:100%;min-height:0;
+  overflow:hidden;padding-bottom:0!important;
+}
+html.support-screen-active #screen-support .support-hero{flex:0 0 auto}
+html.support-screen-active #screen-support .support-method-container{
+  flex:1 1 auto;min-height:0;overflow:hidden;
+}
+html.support-screen-active #screen-support .support-method-container .support-panel{
+  height:226px;min-height:226px;max-height:226px;
+  box-sizing:border-box;overflow:hidden;
+}
+html.support-screen-active #screen-support .support-method-container .support-stars-panel .support-form{
+  height:100%;display:flex;flex-direction:column;justify-content:flex-start;
+}
+html.support-screen-active #screen-support .support-method-container .crypto-support-card{
+  height:100%;box-sizing:border-box;display:flex;flex-direction:column;
+}

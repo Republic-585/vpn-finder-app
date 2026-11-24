@@ -657,7 +657,7 @@ function showScreen(name, backScreen = null) {
   window.scrollTo({ top: 0, behavior: "smooth" });
   if (name === "favorites") renderFavorites();
   if (name === "compare") renderCompare();
-  if (name === "profile") { syncTelegramProfile(); if (!analyticsAccessChecked) loadAnalyticsDashboard(); }
+  if (name === "profile") { syncTelegramProfile(); if (!analyticsAccessChecked) loadAnalyticsDashboard(); loadSupportUnreadBadge(); }
   const isProfileSubscreen = BACK_SCREENS.has(name);
   try {
     if (isProfileSubscreen) tg?.BackButton?.show();
@@ -1804,15 +1804,31 @@ async function supportRequest(action, values = {}) {
   if (!response.ok || !result?.ok) throw new Error(result?.error || "Inbox request failed");
   return result;
 }
+function formatSupportTime(value, withDate = false) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const time = date.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
+  if (!withDate) return time;
+  const now = new Date();
+  if (date.toDateString() === now.toDateString()) return time;
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (date.toDateString() === yesterday.toDateString()) return "Вчера";
+  return date.toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit" }) + " " + time;
+}
 function renderSupportMessages(root, messages) {
   if (!root) return;
   const items = messages || [];
   const intro = byId("contact-intro");
   if (intro) intro.hidden = items.length > 0;
-  root.innerHTML = items.map(message =>
-    '<div class="support-message ' + (message.sender === "admin" ? "support-message-admin" : "support-message-user") + '">' +
-    esc(message.body) + '</div>'
-  ).join("");
+  root.innerHTML = items.map(message => {
+    const time = formatSupportTime(message.created_at);
+    return '<div class="support-message ' + (message.sender === "admin" ? "support-message-admin" : "support-message-user") + '">' +
+      '<span class="support-message-body">' + esc(message.body) + '</span>' +
+      (time ? '<time class="support-message-time" datetime="' + esc(message.created_at) + '">' + esc(time) + '</time>' : '') +
+      '</div>';
+  }).join("");
   root.scrollTop = root.scrollHeight;
 }
 async function loadContactConversation() {
@@ -1848,6 +1864,23 @@ byId("contact-form")?.addEventListener("submit", async event => {
     button.disabled = false;
   }
 });
+function renderSupportUnreadBadge(count) {
+  const row = byId("support-inbox-menu-row");
+  const badge = row?.querySelector(".support-unread-badge");
+  if (!row || !badge) return;
+  const value = Math.max(0, Number(count) || 0);
+  badge.textContent = value > 99 ? "99+" : String(value);
+  badge.hidden = value === 0;
+  row.setAttribute("aria-label", value ? "Сообщения. Новых сообщений: " + value : "Сообщения");
+}
+async function loadSupportUnreadBadge() {
+  const isOwner = Number(tg?.initDataUnsafe?.user?.id || 0) === ANALYTICS_OWNER_TELEGRAM_ID;
+  if (!isOwner || !tg?.initData) return;
+  try {
+    const result = await supportRequest("unread_count");
+    renderSupportUnreadBadge(result.count);
+  } catch (_) {}
+}
 let activeSupportThreadId = null;
 function renderSupportThreadList(threads) {
   const root = byId("support-inbox-list");
@@ -1855,11 +1888,16 @@ function renderSupportThreadList(threads) {
   root.innerHTML = (threads || []).map(thread => {
     const name = [thread.first_name, thread.last_name].filter(Boolean).join(" ") ||
       (thread.username ? "@" + thread.username : String(thread.telegram_id));
-    const preview = thread.last_message?.body || "";
-    return '<button type="button" class="support-thread-row' + (thread.admin_unread ? ' is-unread' : '') +
+    const preview = (thread.last_message?.sender === "admin" ? "Вы: " : "") + (thread.last_message?.body || "");
+    const timestamp = thread.last_message?.created_at || thread.last_message_at;
+    const unread = Math.max(0, Number(thread.admin_unread_count) || 0);
+    return '<button type="button" class="support-thread-row' + (unread > 0 || thread.admin_unread ? ' is-unread' : '') +
       '" data-support-thread="' + esc(thread.id) + '" data-support-name="' + esc(name) + '">' +
-      '<span class="support-thread-name">' + esc(name) + '</span>' +
-      '<span class="support-thread-preview">' + esc(preview) + '</span></button>';
+      '<span class="support-thread-top"><span class="support-thread-name">' + esc(name) + '</span>' +
+      '<time class="support-thread-time">' + esc(formatSupportTime(timestamp, true)) + '</time></span>' +
+      '<span class="support-thread-bottom"><span class="support-thread-preview">' + esc(preview) + '</span>' +
+      (unread ? '<span class="support-thread-unread">' + (unread > 99 ? "99+" : unread) + '</span>' : '') +
+      '</span></button>';
   }).join("");
 }
 async function loadSupportInbox() {
@@ -1875,8 +1913,15 @@ async function loadSupportInbox() {
   try {
     const result = await supportRequest("list");
     renderSupportThreadList(result.threads);
+    renderSupportUnreadBadge((result.threads || []).reduce((sum, thread) => sum + (Number(thread.admin_unread_count) || 0), 0));
   } catch (_) {}
 }
+setInterval(() => {
+  if (document.visibilityState === "visible") loadSupportUnreadBadge();
+}, 30000);
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") loadSupportUnreadBadge();
+});
 async function openSupportThread(threadId, name) {
   try {
     const result = await supportRequest("get", { thread_id: threadId });
@@ -1885,6 +1930,7 @@ async function openSupportThread(threadId, name) {
     byId("support-inbox-conversation").hidden = false;
     byId("support-thread-title").textContent = name || "";
     renderSupportMessages(byId("support-inbox-messages"), result.messages);
+    loadSupportUnreadBadge();
   } catch (_) {}
 }
 byId("support-inbox-list")?.addEventListener("click", event => {

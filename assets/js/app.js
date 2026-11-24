@@ -607,6 +607,8 @@ function showScreen(name, backScreen = null) {
   document.body.classList.toggle("contact-no-bottom-navigation", name === "contact");
   document.documentElement.classList.toggle("support-inbox-screen-active", name === "support-inbox");
   document.body.classList.toggle("support-inbox-screen-active", name === "support-inbox");
+  document.documentElement.classList.toggle("support-screen-active", name === "support");
+  document.body.classList.toggle("support-screen-active", name === "support");
   const supportMethod = document.querySelector("[data-support-tab].is-active")?.dataset.supportTab || "stars";
   const useNativeOwnerPromoButton = name === "owner-promo" && !!ownerPromoNativeButton;
   const useNativeProviderSubmitButton = name === "owners" && !!ownerPromoNativeButton;

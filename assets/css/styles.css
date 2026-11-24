@@ -2431,3 +2431,18 @@ html.profile-screen-active #screen-profile .profile-view{padding-top:calc(8px + 
 #screen-profile .contact-tile{background:#31B65C}
 #screen-profile .owners-tile{background:#8B70D6}
 #screen-profile .support-tile{background:#E5A12B}
+
+
+/* Profile menu spacing and Telegram-style right-to-left page entrance. */
+#screen-profile .profile-menu{margin-top:42px}
+.screen.active.profile-menu-slide-in{
+  animation:profile-menu-page-in .34s cubic-bezier(.22,.72,.18,1) both!important;
+  will-change:transform,opacity;
+}
+@keyframes profile-menu-page-in{
+  from{opacity:.72;transform:translate3d(34px,0,0)}
+  to{opacity:1;transform:translate3d(0,0,0)}
+}
+@media(prefers-reduced-motion:reduce){
+  .screen.active.profile-menu-slide-in{animation:none!important;will-change:auto}
+}

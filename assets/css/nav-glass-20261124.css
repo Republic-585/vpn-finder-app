@@ -81,3 +81,8 @@
 .bottom-nav-dock .nav-item.active{
   text-shadow:none!important;
 }
+
+/* Prevent the whole navigation dock from scaling on tab press. */
+.bottom-nav-dock .bottom-nav:has(.nav-item:active){
+  transform:translateX(-50%)!important;
+}

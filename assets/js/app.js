@@ -605,6 +605,8 @@ function showScreen(name, backScreen = null) {
   document.documentElement.classList.toggle("contact-screen-active", name === "contact");
   document.body.classList.toggle("contact-screen-active", name === "contact");
   document.body.classList.toggle("contact-no-bottom-navigation", name === "contact");
+  document.documentElement.classList.toggle("support-inbox-screen-active", name === "support-inbox");
+  document.body.classList.toggle("support-inbox-screen-active", name === "support-inbox");
   const supportMethod = document.querySelector("[data-support-tab].is-active")?.dataset.supportTab || "stars";
   const useNativeOwnerPromoButton = name === "owner-promo" && !!ownerPromoNativeButton;
   const useNativeProviderSubmitButton = name === "owners" && !!ownerPromoNativeButton;
@@ -1944,6 +1946,13 @@ byId("support-reply-form")?.addEventListener("submit", async event => {
   const button = form.querySelector('button[type="submit"]');
   const message = String(form.elements.message?.value || "").trim();
   if (!activeSupportThreadId || !message || button.disabled) return;
+  button.classList.remove("is-sending");
+  const plane = button.querySelector(".contact-send-plane");
+  if (plane) {
+    plane.addEventListener("animationend", () => button.classList.remove("is-sending"), { once: true });
+    void button.offsetWidth;
+    button.classList.add("is-sending");
+  }
   button.disabled = true;
   try {
     await supportRequest("reply", { thread_id: activeSupportThreadId, message });

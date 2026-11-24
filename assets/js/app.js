@@ -231,7 +231,11 @@ async function loadAnalyticsDashboard() {
     if (root) root.textContent = t("Нет доступа к аналитике.");
     return;
   }
-  if (!root || analyticsDashboardLoading || !tg?.initData) return;
+  if (!root || analyticsDashboardLoading) return;
+  if (!tg?.initData) {
+    root.textContent = t("Откройте приложение в Telegram, чтобы посмотреть аналитику.");
+    return;
+  }
   analyticsDashboardLoading = true;
   const loadingOverlay = document.createElement("div");
   loadingOverlay.className = "analytics-loading-overlay";
@@ -600,6 +604,7 @@ function showScreen(name, backScreen = null) {
   document.body.classList.toggle("profile-screen-active", name === "profile");
   document.documentElement.classList.toggle("contact-screen-active", name === "contact");
   document.body.classList.toggle("contact-screen-active", name === "contact");
+  document.body.classList.toggle("contact-no-bottom-navigation", name === "contact");
   const supportMethod = document.querySelector("[data-support-tab].is-active")?.dataset.supportTab || "stars";
   const useNativeOwnerPromoButton = name === "owner-promo" && !!ownerPromoNativeButton;
   const useNativeProviderSubmitButton = name === "owners" && !!ownerPromoNativeButton;
@@ -1801,7 +1806,10 @@ async function supportRequest(action, values = {}) {
 }
 function renderSupportMessages(root, messages) {
   if (!root) return;
-  root.innerHTML = (messages || []).map(message =>
+  const items = messages || [];
+  const intro = byId("contact-intro");
+  if (intro) intro.hidden = items.length > 0;
+  root.innerHTML = items.map(message =>
     '<div class="support-message ' + (message.sender === "admin" ? "support-message-admin" : "support-message-user") + '">' +
     esc(message.body) + '</div>'
   ).join("");

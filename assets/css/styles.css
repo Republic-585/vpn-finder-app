@@ -3249,7 +3249,7 @@ html.support-inbox-list-mode #screen-support-inbox .support-inbox-list{
   height:auto!important;
   min-height:0!important;
   margin:0!important;
-  padding:calc(16px + env(safe-area-inset-top)) 0 20px!important;
+  padding:calc(108px + env(safe-area-inset-top)) 0 20px!important;
   overflow-x:hidden!important;
   overflow-y:auto!important;
   overscroll-behavior:contain!important;

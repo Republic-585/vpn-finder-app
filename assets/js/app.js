@@ -568,7 +568,30 @@ function navHaptic() {
 let moveIndicator = () => {};
 const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analytics", "support"]);
 let ownersBackScreen = "catalog";
+
+// Update this version whenever a new news publication is added.
+const NEWS_LATEST_ID = "2026-11-24-news-system-v1";
+function newsSeenStorageKey() {
+  const telegramId = Number(tg?.initDataUnsafe?.user?.id || 0);
+  return "vpn-finder-news-seen:" + (telegramId || "guest");
+}
+function updateNewsBadge() {
+  const row = document.querySelector('.profile-menu-row[data-go="news"]');
+  const badge = row?.querySelector(".news-unread-badge");
+  if (!row || !badge) return;
+  let isUnread = true;
+  try { isUnread = localStorage.getItem(newsSeenStorageKey()) !== NEWS_LATEST_ID; } catch (_) {}
+  badge.hidden = !isUnread;
+  row.setAttribute("aria-label", isUnread ? "Новости. Есть новое обновление" : "Новости");
+}
+function markNewsAsRead() {
+  try { localStorage.setItem(newsSeenStorageKey(), NEWS_LATEST_ID); } catch (_) {}
+  updateNewsBadge();
+}
+updateNewsBadge();
+
 function showScreen(name, backScreen = null) {
+  if (name === "news") markNewsAsRead();
   document.documentElement.classList.toggle("profile-screen-active", name === "profile");
   document.body.classList.toggle("profile-screen-active", name === "profile");
   const supportMethod = document.querySelector("[data-support-tab].is-active")?.dataset.supportTab || "stars";

@@ -3285,3 +3285,25 @@ html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose{
   min-height:64px!important;
   margin:0 0 8px!important;
 }
+
+
+/* Open inbox thread: hide the thread list, center the recipient title,
+   and keep short conversations close to the reply composer. */
+html.support-inbox-screen-active #screen-support-inbox .support-inbox-list[hidden]{
+  display:none!important;
+}
+html.support-inbox-chat-mode #screen-support-inbox #support-thread-title{
+  display:block!important;
+  align-self:stretch!important;
+  width:100%!important;
+  margin:0!important;
+  padding:8px 0 12px!important;
+  text-align:center!important;
+  font-size:15px!important;
+  line-height:1.3!important;
+}
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-messages{
+  justify-content:safe flex-end!important;
+  padding-top:8px!important;
+  padding-bottom:12px!important;
+}

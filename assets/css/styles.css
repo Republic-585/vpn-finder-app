@@ -2498,3 +2498,6 @@ html.profile-screen-active #screen-profile .profile-view{padding-top:calc(8px + 
 #screen-news .news-post-list{gap:9px;margin-top:14px}
 #screen-news .news-post-list li{color:var(--text);font-size:var(--type-secondary);font-weight:var(--weight-regular);line-height:1.45}
 #screen-news .news-post-list li:before{background:#fff}
+
+#screen-news .news-inline-link{display:inline;padding:0;border:0;background:none;color:#fff;font:inherit;font-weight:600;text-decoration:underline;text-decoration-color:rgba(255,255,255,.65);text-underline-offset:3px;cursor:pointer}
+#screen-news .news-inline-link:focus-visible{outline:2px solid #7cc4ff;outline-offset:3px;border-radius:2px}

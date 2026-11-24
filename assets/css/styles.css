@@ -2484,7 +2484,7 @@ html.profile-screen-active #screen-profile .profile-view{padding-top:calc(8px + 
 #screen-news .news-post-list li:before{content:"";position:absolute;left:1px;top:.56em;width:6px;height:6px;border-radius:50%;background:#62b5ff}
 #screen-news .news-post .news-post-note{margin-top:16px;padding-top:13px;border-top:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:11px;line-height:1.45}
 .profile-menu-trailing{display:inline-flex;align-items:center;gap:9px;flex:0 0 auto}
-.news-unread-badge{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:21px;min-width:48px;padding:0;border-radius:999px;background:#3390ec;color:#fff;font-size:9px;font-weight:700;letter-spacing:.035em;line-height:21px;text-align:center;vertical-align:middle}
+.news-unread-badge{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:21px;min-width:48px;padding:2px 0 0;border-radius:999px;background:#3390ec;color:#fff;font-size:9px;font-weight:700;letter-spacing:.035em;line-height:normal;text-align:center;vertical-align:middle}
 .news-unread-badge[hidden]{display:none}
 
 

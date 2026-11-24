@@ -3041,3 +3041,77 @@ body.owners-no-bottom-navigation .bottom-nav-dock{display:none!important}
   mix-blend-mode:screen;
 }
 .bottom-nav-dock .bottom-nav .nav-item{position:relative;z-index:2}
+
+/* Telegram-inspired optical glass for the bottom navigation.
+   Static highlights keep the surface calm while scrolling over high-contrast content. */
+.bottom-nav-dock .bottom-nav{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  border:1px solid rgba(255,255,255,.14)!important;
+  background:rgba(29,30,34,.48)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(165%) contrast(1.06)!important;
+  backdrop-filter:blur(28px) saturate(165%) contrast(1.06)!important;
+  box-shadow:
+    0 12px 34px rgba(0,0,0,.38),
+    0 2px 8px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.19),
+    inset 0 -1px 0 rgba(0,0,0,.24)!important;
+}
+.bottom-nav-dock .bottom-nav::before{
+  content:""!important;
+  position:absolute!important;
+  z-index:0!important;
+  inset:1px!important;
+  border-radius:inherit!important;
+  pointer-events:none!important;
+  opacity:1!important;
+  background:
+    radial-gradient(ellipse 72% 88% at 50% -30%,rgba(255,255,255,.17),transparent 74%),
+    linear-gradient(180deg,rgba(255,255,255,.075) 0%,rgba(255,255,255,.018) 38%,rgba(0,0,0,.075) 100%)!important;
+  animation:none!important;
+}
+.bottom-nav-dock .bottom-nav::after{
+  content:""!important;
+  position:absolute!important;
+  z-index:3!important;
+  inset:1px!important;
+  padding:0!important;
+  border-radius:inherit!important;
+  pointer-events:none!important;
+  background:
+    radial-gradient(ellipse 34% 100% at 0% 48%,rgba(255,255,255,.17),transparent 78%),
+    radial-gradient(ellipse 34% 100% at 100% 52%,rgba(255,255,255,.17),transparent 78%),
+    linear-gradient(112deg,rgba(255,255,255,.055),transparent 24%,transparent 76%,rgba(255,255,255,.045))!important;
+  -webkit-mask:none!important;
+  mask:none!important;
+  -webkit-mask-composite:source-over!important;
+  mask-composite:add!important;
+  opacity:.82!important;
+  mix-blend-mode:screen!important;
+  animation:none!important;
+}
+.bottom-nav-dock .nav-indicator{
+  z-index:1!important;
+  top:3px!important;
+  height:54px!important;
+  border-radius:999px!important;
+  background:rgba(0,0,0,.58)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.075),
+    inset 0 -1px 0 rgba(0,0,0,.2),
+    0 2px 9px rgba(0,0,0,.2)!important;
+  transition:transform .36s cubic-bezier(.2,.8,.2,1),width .36s cubic-bezier(.2,.8,.2,1)!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item{
+  z-index:2!important;
+  background:transparent!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item.active{
+  color:#fff!important;
+  background:transparent!important;
+  text-shadow:0 1px 8px rgba(255,255,255,.12);
+}
+@media(prefers-reduced-motion:reduce){
+  .bottom-nav-dock .nav-indicator{transition:none!important}
+}

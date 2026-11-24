@@ -559,6 +559,7 @@ function showScreen(name, backScreen = null) {
   const useNativeSupportButton = name === "support" && !!ownerPromoNativeButton;
   document.body.classList.toggle("owner-promo-native-cta", useNativeOwnerPromoButton);
   document.body.classList.toggle("owners-native-cta", useNativeProviderSubmitButton);
+  document.body.classList.toggle("owners-no-bottom-navigation", name === "owners");
   document.body.classList.toggle("support-native-cta", useNativeSupportButton);
   if (useNativeOwnerPromoButton) setNativeButton("owner-promo");
   else if (useNativeProviderSubmitButton) setNativeButton("provider-submit");

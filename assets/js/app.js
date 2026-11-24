@@ -1866,8 +1866,6 @@ function formatSupportMessageDateTime(value) {
 function renderSupportMessages(root, messages, includeDate = false) {
   if (!root) return;
   const items = messages || [];
-  const intro = byId("contact-intro");
-  if (intro) intro.hidden = items.length > 0;
   root.innerHTML = items.map(message => {
     const time = includeDate ? formatSupportMessageDateTime(message.created_at) : formatSupportTime(message.created_at);
     return '<div class="support-message ' + (message.sender === "admin" ? "support-message-admin" : "support-message-user") + '">' +

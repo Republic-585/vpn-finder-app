@@ -1866,6 +1866,10 @@ function formatSupportMessageDateTime(value) {
 function renderSupportMessages(root, messages, includeDate = false) {
   if (!root) return;
   const items = messages || [];
+  if (!items.length && !includeDate) {
+    root.innerHTML = '<div class="contact-empty-state"><strong>Чем можем помочь?</strong><span>Задайте вопрос, поделитесь идеей или расскажите о проблеме…</span></div>';
+    return;
+  }
   root.innerHTML = items.map(message => {
     const time = includeDate ? formatSupportMessageDateTime(message.created_at) : formatSupportTime(message.created_at);
     return '<div class="support-message ' + (message.sender === "admin" ? "support-message-admin" : "support-message-user") + '">' +

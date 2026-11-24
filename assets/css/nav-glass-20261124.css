@@ -48,6 +48,11 @@
   position:relative!important;
   z-index:2!important;
   background:transparent!important;
+  text-shadow:none!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item.active{
+  text-shadow:none!important;
+  box-shadow:none!important;
 }
 @media(prefers-reduced-motion:reduce){
   .bottom-nav-dock .nav-indicator{transition:none!important}

@@ -2858,3 +2858,6 @@ body:not(.app-ready) .app-shell{visibility:hidden}
 body.telegram-fullscreen .main-content{padding-top:100px!important}
 body.telegram-fullscreen #screen-owner-promo.owner-promo-screen{padding-top:calc(env(safe-area-inset-top) + 108px)!important}
 body.telegram-fullscreen .catalog-promo-screen{padding-top:calc(108px + env(safe-area-inset-top))!important}
+
+/* Use Telegram's native shining bottom button on the VPN provider application screen. */
+body.owners-native-cta #provider-form > button[type="submit"]{display:none!important}

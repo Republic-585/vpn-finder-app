@@ -577,8 +577,20 @@ function showScreen(name, backScreen = null) {
     document.body.classList.remove("catalog-promo-open");
   }
   if (name === "analytics" && Number(tg?.initDataUnsafe?.user?.id || 0) !== ANALYTICS_OWNER_TELEGRAM_ID) return;
+  const previousScreenName = document.querySelector(".screen.active")?.dataset.screen;
+  const animateFromProfileMenu = previousScreenName === "profile" && BACK_SCREENS.has(name) && previousScreenName !== name;
   const alreadyActive = screens.some(screen => screen.dataset.screen === name && screen.classList.contains("active"));
-  screens.forEach(screen => screen.classList.toggle("active", screen.dataset.screen === name));
+  screens.forEach(screen => {
+    screen.classList.remove("profile-menu-slide-in");
+    screen.classList.toggle("active", screen.dataset.screen === name);
+  });
+  if (animateFromProfileMenu) {
+    const destinationScreen = screens.find(screen => screen.dataset.screen === name);
+    if (destinationScreen) {
+      destinationScreen.classList.add("profile-menu-slide-in");
+      destinationScreen.addEventListener("animationend", () => destinationScreen.classList.remove("profile-menu-slide-in"), { once: true });
+    }
+  }
   nav.forEach(button => {
     const active = button.dataset.go === name;
     button.classList.toggle("active", active);

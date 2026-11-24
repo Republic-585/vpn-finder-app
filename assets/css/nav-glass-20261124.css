@@ -70,3 +70,14 @@
 .bottom-nav-dock .profile-nav-button.is-current{
   border:2px solid #292B2F!important;
 }
+
+
+/* Keep icon geometry stable while the active capsule travels between tabs. */
+.bottom-nav-dock .nav-item svg,
+.bottom-nav-dock .nav-item.active svg{
+  stroke-width:1.85!important;
+  opacity:1!important;
+}
+.bottom-nav-dock .nav-item.active{
+  text-shadow:none!important;
+}

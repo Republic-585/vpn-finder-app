@@ -1,32 +1,34 @@
-/* Dedicated YouTube-inspired floating glass navigation layer.
-   Loaded after styles.css so this layer wins the cascade and can be cache-busted independently. */
+/* Dedicated floating glass navigation layer. */
 .bottom-nav-dock .bottom-nav{
   position:relative!important;
   isolation:isolate!important;
   overflow:hidden!important;
   min-height:62px!important;
-  border:0!important;
+  border:1px solid transparent!important;
   outline:0!important;
   border-radius:999px!important;
-  background:rgba(32,33,36,.76)!important;
-  -webkit-backdrop-filter:blur(32px) saturate(165%)!important;
-  backdrop-filter:blur(28px) saturate(180%)!important;
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.20),
-    0 2px 8px rgba(0,0,0,.10)!important;
+  background:
+    linear-gradient(rgba(32,33,36,.76),rgba(32,33,36,.76)) padding-box,
+    conic-gradient(from -45deg,
+      rgba(145,148,156,.58) 0deg,
+      rgba(145,148,156,.20) 24deg,
+      rgba(145,148,156,.035) 66deg,
+      rgba(145,148,156,.035) 114deg,
+      rgba(145,148,156,.20) 156deg,
+      rgba(145,148,156,.58) 180deg,
+      rgba(145,148,156,.20) 204deg,
+      rgba(145,148,156,.035) 246deg,
+      rgba(145,148,156,.035) 294deg,
+      rgba(145,148,156,.20) 336deg,
+      rgba(145,148,156,.58) 360deg) border-box!important;
+  -webkit-backdrop-filter:blur(7px) saturate(200%)!important;
+  backdrop-filter:blur(7px) saturate(200%)!important;
+  box-shadow:none!important;
 }
-/* No white sheen: keep only a barely visible neutral depth gradient. */
+/* The corner-weighted graphite contour is rendered by the layered background above. */
 .bottom-nav-dock .bottom-nav::before{
-  content:""!important;
-  position:absolute!important;
-  z-index:0!important;
-  inset:0!important;
-  border:0!important;
-  border-radius:inherit!important;
-  pointer-events:none!important;
-  opacity:1!important;
-  background:transparent!important;
-  animation:none!important;
+  content:none!important;
+  display:none!important;
 }
 .bottom-nav-dock .bottom-nav::after{
   content:none!important;

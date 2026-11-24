@@ -1,3 +1,8 @@
+/* Layer the travelling active capsule between the navigation glass and profile photo. */
+.bottom-nav-dock .bottom-nav{z-index:0!important}
+.bottom-nav-dock .nav-indicator{z-index:1!important}
+.bottom-nav-dock .profile-nav-button{z-index:2!important}
+
 /* Dedicated floating glass navigation layer. */
 .bottom-nav-dock .bottom-nav{
   position:relative!important;

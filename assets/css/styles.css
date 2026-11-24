@@ -2954,8 +2954,8 @@ body.owners-no-bottom-navigation .bottom-nav-dock{display:none!important}
   overflow:hidden!important;
   isolation:isolate;
   background:rgba(54,57,64,.20)!important;
-  border:1px solid rgba(255,255,255,.12)!important;
-  -webkit-backdrop-filter:blur(26px) saturate(185%) brightness(1.10)!important;
+  border:0!important;
+  -webkit-backdrop-filter:blur(14px) saturate(175%) brightness(1.08)!important;
   backdrop-filter:blur(26px) saturate(185%) brightness(1.10)!important;
   box-shadow:
     0 9px 28px rgba(0,0,0,.27),
@@ -2974,22 +2974,6 @@ body.owners-no-bottom-navigation .bottom-nav-dock{display:none!important}
     radial-gradient(ellipse 72% 115% at 50% -35%,rgba(255,255,255,.17),transparent 72%),
     linear-gradient(180deg,rgba(255,255,255,.075) 0%,rgba(255,255,255,.018) 34%,transparent 68%,rgba(0,0,0,.055) 100%);
   animation:none!important;
-}
-.bottom-nav-dock .bottom-nav::after{
-  content:"";
-  position:absolute;
-  z-index:2;
-  inset:0;
-  padding:1px;
-  border-radius:inherit;
-  pointer-events:none;
-  background:
-    linear-gradient(115deg,rgba(255,255,255,.24) 0%,rgba(255,255,255,.09) 23%,rgba(255,255,255,.025) 55%,rgba(255,255,255,.12) 100%);
-  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor;
-  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-  mask-composite:exclude;
-  opacity:.72;
 }
 .bottom-nav-dock .bottom-nav .nav-item{z-index:1}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){

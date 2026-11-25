@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-22T22:43:51.844Z",
+  "generatedAt": "2026-11-25T00:44:33.731Z",
   "count": 35,
   "avatars": [
     {
@@ -15,8 +15,8 @@
       "id": "VPN-002",
       "name": "EtherVPN",
       "file": "VPN-002.jpg",
-      "bytes": 11164,
-      "sha256": "c3d181ede0e33eacf11e5c1e1494f53cc5d7091eeb020ad7540fd6b5b0b80293",
+      "bytes": 12510,
+      "sha256": "8857542d99ded93154994ba1f83dc37061c8408f51341efc8fc19cda95f32717",
       "sourceHost": "cdn4.telesco.pe",
       "finalHost": "cdn4.telesco.pe"
     },
@@ -123,8 +123,8 @@
       "id": "VPN-014",
       "name": "Horizon VPN",
       "file": "VPN-014.jpg",
-      "bytes": 12335,
-      "sha256": "5fc8bd4bc88a4e92241368d4405e6fa7774b405af19ea1c7da5d805aefd0e26b",
+      "bytes": 15074,
+      "sha256": "140fc78cbed6b11a2852827b74f55db7f61a13e55970a0fedaddffbe891e02e8",
       "sourceHost": "cdn4.telesco.pe",
       "finalHost": "cdn4.telesco.pe"
     },

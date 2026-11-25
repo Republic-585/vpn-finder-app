@@ -39,7 +39,7 @@ function handleNativeButtonClick() {
     if (typeof form?.requestSubmit === "function") form.requestSubmit();
     else form?.querySelector('button[type="submit"]')?.click();
   }
-  else if (nativeButtonMode === "support-stars") byId("support-pay-button")?.click();
+  else if (nativeButtonMode === "support-stars") startStarsPayment();
   else if (nativeButtonMode === "support-crypto") byId("crypto-copy-address")?.click();
 }
 if (ownerPromoNativeButton) {
@@ -1025,7 +1025,6 @@ document.querySelectorAll("[data-support-tab]").forEach(tab => {
 
 // Stars support screen. Invoice creation and payment verification stay server-side.
 const supportAmount = byId("support-amount");
-const supportPayButton = byId("support-pay-button");
 const supportStatus = byId("support-dialog-status");
 document.querySelectorAll("[data-support-amount]").forEach(option => {
   option.addEventListener("click", () => {
@@ -1036,7 +1035,7 @@ document.querySelectorAll("[data-support-amount]").forEach(option => {
 supportAmount?.addEventListener("input", () => {
   document.querySelectorAll("[data-support-amount]").forEach(item => item.classList.toggle("is-selected", Number(item.dataset.supportAmount) === Number(supportAmount.value)));
 });
-supportPayButton?.addEventListener("click", async () => {
+async function startStarsPayment() {
   const amount = Number(supportAmount?.value);
   if (!Number.isSafeInteger(amount) || amount < 1 || amount > 100000) {
     if (supportStatus) supportStatus.textContent = t("Введите целое число от 1 до 100 000 Stars.");
@@ -1046,7 +1045,7 @@ supportPayButton?.addEventListener("click", async () => {
     if (supportStatus) supportStatus.textContent = t("Откройте VPN Finder через Telegram, чтобы оплатить Stars.");
     return;
   }
-  supportPayButton.disabled = true;
+  try { ownerPromoNativeButton?.setParams({ is_progress_visible: true, is_active: false }); } catch (_) {}
   if (supportStatus) supportStatus.textContent = t("Создаём счёт…");
   try {
     await syncTelegramProfile();
@@ -1074,9 +1073,9 @@ supportPayButton?.addEventListener("click", async () => {
     console.error("[VPN Finder] Stars payment error:", error);
     if (supportStatus) supportStatus.textContent = t("Не удалось создать счёт Stars. Проверьте соединение и попробуйте ещё раз.");
   } finally {
-    supportPayButton.disabled = false;
+    try { ownerPromoNativeButton?.setParams({ is_progress_visible: false, is_active: true }); } catch (_) {}
   }
-});
+}
 
 
 // Manual USDT support. This does not create invoices or verify blockchain payments.

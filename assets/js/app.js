@@ -248,7 +248,6 @@ async function trackEvent(eventName, eventData = {}, serviceId = null) {
 let analyticsPeriod = "30d";
 let analyticsTab = "overview";
 const analyticsCache = new Map();
-let analyticsDashboardLoading = false;
 function renderStatisticsDashboard(result) {
   const root = byId("analytics-dashboard");
   if (!root) return;

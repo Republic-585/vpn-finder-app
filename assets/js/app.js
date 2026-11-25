@@ -665,6 +665,7 @@ function markNewsAsRead() {
 updateNewsBadge();
 
 function showScreen(name, backScreen = null) {
+  if (tg?.initData && name !== "analytics") trackEvent("screen_view", { screen: name });
   if (name === "profile") loadContactUnreadBadge();
   if (name === "news") markNewsAsRead();
   document.documentElement.classList.toggle("profile-screen-active", name === "profile");
@@ -1242,11 +1243,21 @@ function renderSearchSuggestions() {
   ).join("");
   searchSuggestions.hidden = false;
 }
+let analyticsSearchTimer = null;
+let lastTrackedSearch = "";
 search?.addEventListener("input", () => {
   state.query = search.value.trim().toLowerCase();
   clearSearch.hidden = !search.value;
   renderCatalog();
   renderSearchSuggestions();
+  if (analyticsSearchTimer) window.clearTimeout(analyticsSearchTimer);
+  if (state.query.length >= 2 && state.query !== lastTrackedSearch) {
+    const queryLength = state.query.length;
+    analyticsSearchTimer = window.setTimeout(() => {
+      lastTrackedSearch = state.query;
+      trackEvent("search", { query_length: queryLength });
+    }, 650);
+  }
 });
 search?.addEventListener("focus", renderSearchSuggestions);
 search?.addEventListener("blur", () => setTimeout(() => {
@@ -1273,6 +1284,7 @@ clearSearch?.addEventListener("click", () => {
 document.querySelectorAll(".filter-chip").forEach(chip => {
   chip.addEventListener("click", () => {
     state.filter = chip.dataset.filter;
+    trackEvent("filter_change", { filter: state.filter });
     document.querySelectorAll(".filter-chip").forEach(item => item.classList.toggle("active", item === chip));
     haptic();
     renderCatalog();
@@ -1827,11 +1839,13 @@ document.addEventListener("click", event => {
   if (action === "favorite") {
     const removing = state.favorites.has(service.id);
     toggleSet(state.favorites, "vpn-finder-favorites", service.id);
+    trackEvent(removing ? "favorite_remove" : "favorite_add", {}, service.id);
     renderCatalog(); renderFavorites();
   }
   if (action === "compare") {
     const removing = state.compare.has(service.id);
     toggleSet(state.compare, "vpn-finder-compare", service.id);
+    trackEvent(removing ? "compare_remove" : "compare_add", {}, service.id);
     renderCatalog(); renderCompare();
   }
   if (action === "remove-favorites") {

@@ -1988,7 +1988,7 @@ async function openSupportThread(threadId, name) {
     const title = byId("support-thread-title");
     title.innerHTML =
       '<span class="support-thread-header-copy"><strong class="support-thread-header-name">' + esc(fullName) + '</strong>' +
-      (username ? '<span class="support-thread-header-username">@' + esc(username) + '</span>' : '') + '</span>' +
+      (username ? '<a class="support-thread-header-username" href="https://t.me/' + encodeURIComponent(username) + '" target="_blank" rel="noopener noreferrer">@' + esc(username) + '</a>' : '') + '</span>' +
       '<span class="support-thread-header-avatar">' +
       (avatarUrl ? '<img src="' + esc(avatarUrl) + '" alt="" referrerpolicy="no-referrer">' : '<span>' + esc(initial) + '</span>') +
       '</span>';

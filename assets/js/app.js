@@ -345,10 +345,12 @@ async function loadStatisticsDashboard(force = false) {
   const root=byId("analytics-dashboard");
   const menuRow=byId("analytics-menu-row");
   const inboxMenuRow=byId("support-inbox-menu-row");
+  const monitoringMenuRow=byId("monitoring-menu-row");
   const managementGroup=byId("profile-management-group");
   const isOwner=Number(tg?.initDataUnsafe?.user?.id||0)===ANALYTICS_OWNER_TELEGRAM_ID;
   if(menuRow)menuRow.hidden=!isOwner;
   if(inboxMenuRow)inboxMenuRow.hidden=!isOwner;
+  if(monitoringMenuRow)monitoringMenuRow.hidden=!isOwner;
   if(managementGroup)managementGroup.hidden=!isOwner;
   if(!isOwner){if(root)root.textContent=t("Нет доступа к статистике.");return;}
   if(!root||analyticsDashboardLoading)return;
@@ -371,6 +373,133 @@ async function loadStatisticsDashboard(force = false) {
   }catch(_){root.textContent=t("Не удалось загрузить статистику.");}
   finally{root.classList.remove("is-loading");analyticsDashboardLoading=false;}
 }
+
+function monitoringDate(value) {
+  if (!value) return "Пока нет данных";
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "—";
+  return new Intl.DateTimeFormat(appLanguage === "en" ? "en-GB" : "ru-RU", {
+    timeZone: "Europe/Moscow", day: "2-digit", month: "2-digit",
+    hour: "2-digit", minute: "2-digit", hourCycle: "h23"
+  }).format(date);
+}
+function renderMonitoringDashboard(data) {
+  const root = byId("monitoring-dashboard");
+  if (!root) return;
+  const snapshot = data.snapshot || {};
+  const settings = data.settings || {};
+  const incidents = Array.isArray(data.incidents) ? data.incidents : [];
+  const runs = Array.isArray(data.runs) ? data.runs : [];
+  const active = incidents.filter(item => item.status === "active");
+  const critical = active.some(item => item.severity === "critical");
+  const stateLabel = critical ? "Критическая проблема" : active.length ? "Есть предупреждения" : "Серьёзных отклонений нет";
+  const stateClass = critical ? "is-critical" : active.length ? "is-warning" : "is-ok";
+  const lastRun = runs[0];
+  const fmt = new Intl.NumberFormat(appLanguage === "en" ? "en-US" : "ru-RU");
+  const incidentRows = incidents.length ? incidents.map(item => {
+    const level = item.severity === "critical" ? "Критично" : item.severity === "warning" ? "Внимание" : "Информация";
+    return '<article class="monitoring-incident ' + (item.status === "resolved" ? "is-resolved" : "") + '"><div class="monitoring-incident-top"><strong>' + esc(item.title) + '</strong><span class="monitoring-severity ' + esc(item.severity) + '">' + level + '</span></div><p>' + esc(item.description) + '</p><div class="monitoring-incident-meta"><span>' + (item.status === "active" ? "Активно" : "Устранено") + '</span><time>' + monitoringDate(item.last_seen_at) + '</time><span>Повторений: ' + fmt.format(item.occurrences || 1) + '</span></div></article>';
+  }).join("") : '<p class="monitoring-empty">Инцидентов пока нет. Система будет сохранять здесь обнаруженные отклонения.</p>';
+  const settingRows = [
+    ["technical_enabled", "Техническое состояние", "Доступность приёма событий, ошибки и скорость загрузки"],
+    ["business_enabled", "Партнёрские переходы", "Падение общего числа переходов и переходов по отдельным VPN"],
+    ["audience_enabled", "Активность аудитории", "Существенное снижение числа активных пользователей"],
+    ["quality_enabled", "Качество данных", "События без Telegram ID и некорректные данные"]
+  ];
+  const settingsHtml = settingRows.map(([key, label, description]) =>
+    '<label class="monitoring-setting"><span><strong>' + label + '</strong><small>' + description + '</small></span><input type="checkbox" data-monitoring-setting="' + key + '" ' + (settings[key] !== false ? "checked" : "") + '></label>'
+  ).join("");
+  const p95 = snapshot.p95_load_ms_24h == null ? "—" : fmt.format(Math.round(Number(snapshot.p95_load_ms_24h))) + " мс";
+  root.innerHTML =
+    '<div class="monitoring-toolbar"><span class="monitoring-status ' + stateClass + '"><i></i>' + stateLabel + '</span><button type="button" class="monitoring-action" data-monitoring-action="refresh">Обновить</button></div>' +
+    '<div class="monitoring-summary">' +
+      '<article><span>Активные проблемы</span><strong>' + fmt.format(active.length) + '</strong></article>' +
+      '<article><span>События за час</span><strong>' + fmt.format(snapshot.events_1h || 0) + '</strong></article>' +
+      '<article><span>Ошибки за час</span><strong>' + fmt.format(snapshot.errors_1h || 0) + '</strong></article>' +
+      '<article><span>Переходы за 24 часа</span><strong>' + fmt.format(snapshot.clicks_24h || 0) + '</strong></article>' +
+    '</div>' +
+    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Состояние системы</h2><span>Автоматические проверки</span></div>' +
+      '<div class="monitoring-metric"><span>Приём аналитических событий</span><strong>' + (lastRun?.status === "ok" ? "Проверка пройдена" : "Ожидает первой проверки") + '</strong></div>' +
+      '<div class="monitoring-metric"><span>Последнее событие</span><strong>' + monitoringDate(snapshot.last_event_at) + '</strong></div>' +
+      '<div class="monitoring-metric"><span>Последняя успешная запись</span><strong>' + monitoringDate(snapshot.last_ingest_success_at) + '</strong></div>' +
+      '<div class="monitoring-metric"><span>p95 загрузки приложения</span><strong>' + p95 + '</strong></div>' +
+      '<div class="monitoring-metric"><span>Последняя проверка</span><strong>' + monitoringDate(lastRun?.finished_at || lastRun?.started_at) + '</strong></div>' +
+      '<p class="monitoring-note">Отсутствие новых событий само по себе не считается сбоем: при низкой посещаемости это нормально. Доступность функции приёма событий проверяется отдельно.</p>' +
+    '</section>' +
+    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Автоматические уведомления</h2><span>Telegram владельцу</span></div>' + settingsHtml +
+      '<div class="monitoring-schedule"><span>Технические проверки</span><strong>Каждые 5 минут</strong></div><div class="monitoring-schedule"><span>Бизнес-показатели</span><strong>Каждый час</strong></div>' +
+      '<button type="button" class="monitoring-primary-action" data-monitoring-action="test" ' + (data.telegram_configured ? "" : "disabled") + '>Отправить тестовое уведомление</button>' +
+      '<p class="monitoring-note">Повторные сообщения не отправляются, пока инцидент остаётся активным. После восстановления приходит отдельное уведомление.</p>' +
+    '</section>' +
+    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>История инцидентов</h2><span>' + fmt.format(incidents.length) + '</span></div><div class="monitoring-incident-list">' + incidentRows + '</div></section>' +
+    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>История проверок</h2><span>Последние 20</span></div>' +
+      (runs.length ? runs.map(item => '<div class="monitoring-run"><span>' + (item.check_type === "technical" ? "Техническая" : "Бизнес") + '</span><strong class="' + (item.status === "ok" ? "is-ok" : "is-warning") + '">' + (item.status === "ok" ? "Успешно" : "Ошибка") + '</strong><time>' + monitoringDate(item.finished_at || item.started_at) + '</time></div>').join("") : '<p class="monitoring-empty">Проверки ещё не запускались.</p>') +
+    '</section>';
+  if (!root.dataset.monitoringBound) {
+    root.dataset.monitoringBound = "true";
+    root.addEventListener("click", async event => {
+      const button = event.target.closest("[data-monitoring-action]");
+      if (!button) return;
+      const action = button.dataset.monitoringAction;
+      if (action === "refresh") { await loadMonitoringDashboard(true); return; }
+      if (action === "test") {
+        button.disabled = true;
+        button.textContent = "Отправляем…";
+        try {
+          const response = await fetch(SUPABASE_URL + "/functions/v1/monitoring-admin", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ mode: "test", initData: tg?.initData || "" })
+          });
+          const result = await response.json().catch(() => null);
+          button.textContent = response.ok && result?.ok ? "Тест отправлен" : "Не удалось отправить";
+        } catch (_) { button.textContent = "Не удалось отправить"; }
+        window.setTimeout(() => { button.disabled = false; button.textContent = "Отправить тестовое уведомление"; }, 2400);
+      }
+    });
+    root.addEventListener("change", async event => {
+      const input = event.target.closest("[data-monitoring-setting]");
+      if (!input) return;
+      const key = input.dataset.monitoringSetting;
+      input.disabled = true;
+      try {
+        const response = await fetch(SUPABASE_URL + "/functions/v1/monitoring-admin", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mode: "update_settings", initData: tg?.initData || "", [key]: input.checked })
+        });
+        const result = await response.json().catch(() => null);
+        if (!response.ok || !result?.ok) throw new Error("Settings update failed");
+      } catch (_) { input.checked = !input.checked; }
+      finally { input.disabled = false; }
+    });
+  }
+}
+async function loadMonitoringDashboard(force = false) {
+  const root = byId("monitoring-dashboard");
+  if (!root) return;
+  const isOwner = Number(tg?.initDataUnsafe?.user?.id || 0) === ANALYTICS_OWNER_TELEGRAM_ID;
+  if (!isOwner) { root.textContent = t("Нет доступа к мониторингу."); return; }
+  if (!tg?.initData) { root.textContent = t("Откройте приложение в Telegram, чтобы посмотреть мониторинг."); return; }
+  if (root.dataset.loading === "true") return;
+  root.dataset.loading = "true";
+  root.classList.add("is-loading");
+  if (force || !root.dataset.loaded) root.innerHTML = '<div class="monitoring-loading">Загружаем состояние системы…</div>';
+  try {
+    const response = await fetch(SUPABASE_URL + "/functions/v1/monitoring-admin", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mode: "dashboard", initData: tg.initData })
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || !result?.ok) throw new Error("Monitoring dashboard request failed");
+    renderMonitoringDashboard(result);
+    root.dataset.loaded = "true";
+  } catch (_) {
+    root.innerHTML = '<div class="monitoring-empty">Не удалось загрузить мониторинг. Попробуйте обновить экран.</div><button type="button" class="monitoring-action" data-monitoring-action="refresh">Повторить</button>';
+  } finally {
+    root.classList.remove("is-loading");
+    root.dataset.loading = "false";
+  }
+}
+
 window.setInterval(()=>{
   if(document.visibilityState==="visible"&&byId("screen-analytics")?.classList.contains("active"))loadStatisticsDashboard(true);
 },60*60*1000);
@@ -506,6 +635,25 @@ let appLanguage = (() => {
     return saved === "en" || saved === "ru" ? saved : (tg?.initDataUnsafe?.user?.language_code?.toLowerCase().startsWith("en") ? "en" : "ru");
   } catch (_) { return "ru"; }
 })();
+Object.assign(translations.en, {
+  "Мониторинг":"Monitoring","Обновить":"Refresh","Критическая проблема":"Critical issue","Есть предупреждения":"Warnings present","Серьёзных отклонений нет":"No significant issues",
+  "Активные проблемы":"Active issues","События за час":"Events in the last hour","Ошибки за час":"Errors in the last hour","Переходы за 24 часа":"Clicks in 24 hours",
+  "Состояние системы":"System status","Автоматические проверки":"Automated checks","Приём аналитических событий":"Analytics event intake","Проверка пройдена":"Check passed",
+  "Последнее событие":"Last event","Последняя успешная запись":"Last successful write","p95 загрузки приложения":"App load p95","Последняя проверка":"Last check",
+  "Пока нет данных":"No data yet","Отсутствие новых событий само по себе не считается сбоем: при низкой посещаемости это нормально. Доступность функции приёма событий проверяется отдельно.":"No new events do not automatically mean an outage; this is normal with low traffic. The event intake endpoint is checked separately.",
+  "Автоматические уведомления":"Automatic alerts","Telegram владельцу":"Telegram to owner","Техническое состояние":"Technical health","Доступность приёма событий, ошибки и скорость загрузки":"Event intake, errors and load speed",
+  "Партнёрские переходы":"Partner clicks","Падение общего числа переходов и переходов по отдельным VPN":"Drops in total clicks and individual VPN providers",
+  "Активность аудитории":"Audience activity","Существенное снижение числа активных пользователей":"Significant decline in active users",
+  "Качество данных":"Data quality","События без Telegram ID и некорректные данные":"Events without Telegram ID and invalid data",
+  "Технические проверки":"Technical checks","Бизнес-показатели":"Business metrics","Каждые 5 минут":"Every 5 minutes","Каждый час":"Every hour",
+  "Отправить тестовое уведомление":"Send test notification","Отправляем…":"Sending…","Тест отправлен":"Test sent","Не удалось отправить":"Could not send",
+  "История инцидентов":"Incident history","Инцидентов пока нет. Система будет сохранять здесь обнаруженные отклонения.":"No incidents yet. Detected issues will appear here.",
+  "Критично":"Critical","Внимание":"Warning","Информация":"Info","Активно":"Active","Устранено":"Resolved","Повторений: ":"Occurrences: ",
+  "История проверок":"Check history","Последние 20":"Last 20","Техническая":"Technical","Бизнес":"Business","Успешно":"Success","Ошибка":"Error",
+  "Проверки ещё не запускались.":"No checks have run yet.","Загружаем состояние системы…":"Loading system status…",
+  "Не удалось загрузить мониторинг. Попробуйте обновить экран.":"Could not load monitoring. Try refreshing the screen.",
+  "Нет доступа к мониторингу.":"Monitoring access denied.","Откройте приложение в Telegram, чтобы посмотреть мониторинг.":"Open the app in Telegram to view monitoring."
+});
 const t = value => translations[appLanguage]?.[value] || value;
 const originalTextNodes = new WeakMap();
 const originalAttributes = new WeakMap();
@@ -681,7 +829,7 @@ function navHaptic() {
   } catch (_) {}
 }
 let moveIndicator = () => {};
-const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analytics", "support", "support-inbox"]);
+const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analytics", "monitoring", "support", "support-inbox"]);
 let ownersBackScreen = "catalog";
 
 // Update this version whenever a new news publication is added.
@@ -741,7 +889,7 @@ function showScreen(name, backScreen = null) {
     promoScreen.hidden = true;
     document.body.classList.remove("catalog-promo-open");
   }
-  if ((name === "analytics" || name === "support-inbox") && Number(tg?.initDataUnsafe?.user?.id || 0) !== ANALYTICS_OWNER_TELEGRAM_ID) return;
+  if ((name === "analytics" || name === "support-inbox" || name === "monitoring") && Number(tg?.initDataUnsafe?.user?.id || 0) !== ANALYTICS_OWNER_TELEGRAM_ID) return;
   const previousScreenName = document.querySelector(".screen.active")?.dataset.screen;
   const animateFromProfileMenu = previousScreenName === "profile" && BACK_SCREENS.has(name) && previousScreenName !== name;
   const alreadyActive = screens.some(screen => screen.dataset.screen === name && screen.classList.contains("active"));
@@ -767,6 +915,7 @@ function showScreen(name, backScreen = null) {
   moveIndicator();
   if (!alreadyActive) navHaptic();
   if (name === "analytics") loadStatisticsDashboard();
+  if (name === "monitoring") loadMonitoringDashboard();
   if (name === "contact") loadContactConversation();
   if (name === "support-inbox") loadSupportInbox();
   window.scrollTo({ top: 0, behavior: "smooth" });

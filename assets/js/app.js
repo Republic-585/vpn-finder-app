@@ -653,7 +653,7 @@ function showScreen(name, backScreen = null) {
   document.body.classList.toggle("support-native-cta", useNativeSupportButton);
   if (useNativeOwnerPromoButton) setNativeButton("owner-promo");
   else if (useNativeProviderSubmitButton) setNativeButton("provider-submit");
-  else if (useNativeSupportButton) setNativeButton(supportMethod === "crypto" ? "support-crypto" : "hidden");
+  else if (useNativeSupportButton) setNativeButton(supportMethod === "crypto" ? "support-crypto" : "support-stars");
   else setNativeButton("hidden");
   if (name === "owners") {
     const currentScreen = document.querySelector(".screen.active")?.dataset.screen;
@@ -1019,7 +1019,7 @@ document.querySelectorAll("[data-support-tab]").forEach(tab => {
     document.querySelectorAll(".support-panel").forEach(panel => {
       panel.hidden = panel.id !== (selected === "crypto" ? "support-panel-crypto" : "support-panel-stars");
     });
-    if (document.querySelector("#screen-support.active")) setNativeButton(selected === "crypto" ? "support-crypto" : "hidden");
+    if (document.querySelector("#screen-support.active")) setNativeButton(selected === "crypto" ? "support-crypto" : "support-stars");
   });
 });
 

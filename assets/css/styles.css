@@ -3485,4 +3485,28 @@ html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-userna
   outline:2px solid var(--bright);outline-offset:3px;border-radius:3px
 }
 
-
+/* Telegram Stars: compact the form and keep the amount field clear of the panel edge. */
+#screen-support .support-method-container .support-stars-panel .support-form{
+  box-sizing:border-box!important;
+  gap:8px!important;
+  padding:4px 10px 12px!important;
+}
+#screen-support .support-method-container .support-stars-panel .support-section-title{
+  margin-bottom:6px!important;
+}
+#screen-support .support-method-container .support-stars-panel .support-presets{
+  gap:6px!important;
+  margin-bottom:6px!important;
+}
+#screen-support .support-method-container .support-stars-panel .support-preset{
+  min-height:52px!important;
+  padding-top:6px!important;
+  padding-bottom:6px!important;
+}
+#screen-support .support-method-container .support-stars-panel .support-form input{
+  min-height:38px!important;
+  margin-top:4px!important;
+}
+#screen-support .support-method-container .support-stars-panel .profile-form-status{
+  margin-top:2px!important;
+}

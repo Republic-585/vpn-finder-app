@@ -1070,8 +1070,9 @@ supportPayButton?.addEventListener("click", async () => {
         if (supportStatus) supportStatus.textContent = t("Ожидаем подтверждение оплаты…");
       }
     });
-  } catch (_) {
-    if (supportStatus) supportStatus.textContent = t("Не удалось открыть оплату. Попробуйте ещё раз.");
+  } catch (error) {
+    console.error("[VPN Finder] Stars payment error:", error);
+    if (supportStatus) supportStatus.textContent = t("Не удалось создать счёт Stars. Проверьте соединение и попробуйте ещё раз.");
   } finally {
     supportPayButton.disabled = false;
   }

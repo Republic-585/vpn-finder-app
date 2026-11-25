@@ -3510,3 +3510,7 @@ html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-userna
 #screen-support .support-method-container .support-stars-panel .profile-form-status{
   margin-top:2px!important;
 }
+
+
+/* Statistics dashboard: keep all metric cards in the same compact grid. */
+.analytics-summary article:last-child{grid-column:auto}

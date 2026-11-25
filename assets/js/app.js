@@ -245,125 +245,123 @@ async function trackEvent(eventName, eventData = {}, serviceId = null) {
     });
   } catch (_) { /* Statistics must never interrupt the Mini App. */ }
 }
-async function loadStatisticsDashboard() {
+let analyticsPeriod = "30d";
+let analyticsTab = "overview";
+const analyticsCache = new Map();
+let analyticsDashboardLoading = false;
+function renderStatisticsDashboard(result) {
   const root = byId("analytics-dashboard");
-  const menuRow = byId("analytics-menu-row");
-  const inboxMenuRow = byId("support-inbox-menu-row");
-  const managementGroup = byId("profile-management-group");
-  const isOwner = Number(tg?.initDataUnsafe?.user?.id || 0) === ANALYTICS_OWNER_TELEGRAM_ID;
-  if (menuRow) menuRow.hidden = !isOwner;
-  if (inboxMenuRow) inboxMenuRow.hidden = !isOwner;
-  if (managementGroup) managementGroup.hidden = !isOwner;
-  if (!isOwner) {
-    if (root) root.textContent = t("Нет доступа к статистике.");
-    return;
-  }
-  if (!root || analyticsDashboardLoading) return;
-  if (!tg?.initData) {
-    root.textContent = t("Откройте приложение в Telegram, чтобы посмотреть статистику.");
-    return;
-  }
-  analyticsDashboardLoading = true;
-  const loadingOverlay = document.createElement("div");
-  loadingOverlay.className = "analytics-loading-overlay";
-  loadingOverlay.setAttribute("role", "status");
-  loadingOverlay.setAttribute("aria-label", "VPN Finder");
-  loadingOverlay.innerHTML =
-    '<div class="startup-splash-content">' +
-      '<div class="startup-brand-mark" aria-hidden="true">' +
-        '<svg viewBox="0 0 512 512" role="presentation" focusable="false">' +
-          '<path d="M256 106 C278 116 329 139 378 151 C394 155 402 168 402 185 C402 292 365 362 273 399 C262 404 250 404 239 399 C147 362 110 292 110 185 C110 168 118 155 134 151 C183 139 234 116 256 106 Z"/>' +
-          '<path d="M198 255 L247 304 L316 225"/>' +
-        '</svg>' +
-      '</div>' +
-      '<div class="startup-brand-name">VPN Finder</div>' +
-      '<div class="startup-loading" aria-hidden="true"><span></span></div>' +
-    '</div>';
-  document.body.appendChild(loadingOverlay);
-  try {
-    const response = await fetch(SUPABASE_URL + "/functions/v1/analytics-admin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ initData: tg.initData })
+  if (!root) return;
+  const summary = result.summary || {};
+  const fmt = new Intl.NumberFormat(appLanguage === "en" ? "en-US" : "ru-RU");
+  const dateTime = value => {
+    const date = new Date(value);
+    if (!Number.isFinite(date.getTime())) return {time:"-",date:"-"};
+    return {
+      time:new Intl.DateTimeFormat(appLanguage === "en" ? "en-GB" : "ru-RU",{timeZone:"Europe/Moscow",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).format(date),
+      date:new Intl.DateTimeFormat(appLanguage === "en" ? "en-GB" : "ru-RU",{timeZone:"Europe/Moscow",day:"2-digit",month:"2-digit",year:"numeric"}).format(date)
+    };
+  };
+  const percent = (part,total) => total ? Math.round(part/total*100) + "%" : "—";
+  const periodOptions = [["today","Сегодня"],["7d","7 дней"],["30d","30 дней"],["all","Всё время"]];
+  const tabs = [["overview","Обзор"],["audience","Аудитория"],["funnel","Воронка"],["services","VPN-сервисы"],["finance","Финансы"],["sources","Источники"],["geo","География"],["technical","Техника"]];
+  const cards = [
+    ["Всего пользователей",summary.total_users],
+    ["Новые за период",summary.new_users],
+    ["Активные за период",summary.active_users],
+    ["Вернувшиеся",summary.returning_users],
+    ["Активные за 24 часа",summary.active_24h],
+    ["Активные за 7 дней",summary.active_7d],
+    ["Активные за 30 дней",summary.active_30d],
+    ["Партнёрские переходы",summary.clicks]
+  ];
+  const userRows = (result.users||[]).slice(0,30).map(item=>{
+    const profile=item.profile||{};
+    const name=[profile.first_name,profile.last_name].filter(Boolean).join(" ")||"—";
+    const stamp=dateTime(item.last_seen_at);
+    return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>'+esc(name)+'</strong><span>'+esc(profile.username?"@"+profile.username:String(item.telegram_id||"—"))+'</span></div><div class="analytics-list-meta"><span>'+t("Источник")+": "+esc(item.source||"—")+'</span><time><span>'+stamp.time+'</span><span>'+stamp.date+'</span></time></div></article>';
+  }).join("");
+  const clickRows=(result.clicks||[]).slice(0,30).map(item=>{
+    const stamp=dateTime(item.clicked_at);
+    const service=(result.services||[]).find(s=>s.id===item.service_id);
+    return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>'+esc(service?.name||item.service_id||"—")+'</strong><span>'+esc(String(item.telegram_id||"—"))+'</span></div><time class="analytics-list-time"><span>'+stamp.time+'</span><span>'+stamp.date+'</span></time></article>';
+  }).join("");
+  const eventRows=(result.events||[]).slice(0,35).map(item=>{
+    const stamp=dateTime(item.occurred_at);
+    const service=(result.services||[]).find(s=>s.id===item.service_id);
+    const labels={app_open:"Открытие приложения",screen_view:"Просмотр экрана",search:"Поиск",filter_change:"Изменение фильтра",service_view:"Просмотр VPN",favorite_add:"Добавление в избранное",favorite_remove:"Удаление из избранного",compare_add:"Добавление к сравнению",compare_remove:"Удаление из сравнения",connect_click:"Переход к провайдеру",language_change:"Смена языка",contact_submit:"Сообщение отправлено",provider_submit:"Заявка отправлена"};
+    return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>'+t(labels[item.event_name]||item.event_name)+'</strong><span>'+esc(String(item.telegram_id||"—"))+(service?" · "+esc(service.name):"")+'</span></div><time class="analytics-list-time"><span>'+stamp.time+'</span><span>'+stamp.date+'</span></time></article>';
+  }).join("");
+  const funnel=summary.funnel||{};
+  const funnelRows=[["Открыли приложение",funnel.opened||0],["Посмотрели VPN",funnel.viewed||0],["Перешли к провайдеру",funnel.clicked||0]];
+  const maxFunnel=Math.max(1,...funnelRows.map(row=>row[1]));
+  const serviceRows=(result.services||[]).map(item=>'<article class="analytics-list-item"><div class="analytics-list-main"><strong>'+esc(item.name)+'</strong><span>'+t("Просмотры")+": "+fmt.format(item.views||0)+" · "+t("Пользователи")+": "+fmt.format(item.active_users||0)+'</span></div><strong class="analytics-list-metric">'+fmt.format(item.clicks||0)+'</strong></article>').join("");
+  const sourceRows=(result.sources||[]).map(item=>'<article class="analytics-list-item"><div class="analytics-list-main"><strong>'+esc(item.source||"unknown")+'</strong><span>'+t("Сессии")+'</span></div><strong class="analytics-list-metric">'+fmt.format(item.sessions||0)+'</strong></article>').join("");
+  const growth=(result.growth||[]);
+  const maxGrowth=Math.max(1,...growth.map(item=>item.count||0));
+  const growthBars=growth.length?growth.map(item=>'<div class="analytics-growth-row"><time>'+esc(item.date.slice(5))+'</time><span><i style="width:'+Math.max(2,(item.count/maxGrowth)*100)+'%"></i></span><b>'+fmt.format(item.count)+'</b></div>').join(""):'<p class="analytics-empty">Пока нет данных о новых регистрациях за 30 дней</p>';
+  root.innerHTML =
+    '<div class="analytics-controls"><div class="analytics-periods">'+periodOptions.map(([key,label])=>'<button type="button" data-analytics-period="'+key+'" class="'+(analyticsPeriod===key?'is-active':'')+'">'+t(label)+'</button>').join("")+'</div>'+
+    '<div class="analytics-tabs">'+tabs.map(([key,label])=>'<button type="button" data-analytics-tab="'+key+'" class="'+(analyticsTab===key?'is-active':'')+'">'+t(label)+'</button>').join("")+'</div></div>'+
+    '<section class="analytics-panel" data-analytics-panel="overview" '+(analyticsTab!=="overview"?"hidden":"")+'><div class="analytics-summary">'+cards.map(([label,value])=>'<article><strong>'+fmt.format(Number(value||0))+'</strong><span>'+t(label)+'</span></article>').join("")+'</div><div class="analytics-section"><h2>'+t("Рост аудитории за 30 дней")+'</h2><div class="analytics-growth">'+growthBars+'</div></div><div class="analytics-section"><h2>'+t("Последние партнёрские переходы")+'</h2><div class="analytics-list">'+(clickRows||'<p class="analytics-empty">—</p>')+'</div></div></section>'+
+    '<section class="analytics-panel" data-analytics-panel="audience" '+(analyticsTab!=="audience"?"hidden":"")+'><div class="analytics-summary">'+[["Всего пользователей",summary.total_users],["Новые за период",summary.new_users],["Активные за период",summary.active_users],["Вернувшиеся",summary.returning_users],["Активные 24 часа",summary.active_24h],["Активные 7 дней",summary.active_7d],["Активные 30 дней",summary.active_30d]].map(([label,value])=>'<article><strong>'+fmt.format(Number(value||0))+'</strong><span>'+t(label)+'</span></article>').join("")+'</div><div class="analytics-section"><h2>'+t("Последние пользователи")+'</h2><div class="analytics-list">'+(userRows||'<p class="analytics-empty">—</p>')+'</div></div></section>'+
+    '<section class="analytics-panel" data-analytics-panel="funnel" '+(analyticsTab!=="funnel"?"hidden":"")+'><div class="analytics-section"><h2>'+t("Путь пользователя")+'</h2><div class="analytics-funnel">'+funnelRows.map((row,index)=>'<article><div><span>'+(index+1)+'. '+t(row[0])+'</span><strong>'+fmt.format(row[1])+'</strong></div><i><b style="width:'+((row[1]/maxFunnel)*100)+'%"></b></i><small>'+(index===0?"100%":percent(row[1],funnelRows[0][1]))+'</small></article>').join("")+'</div><p class="analytics-note">'+t("Переход к VPN-провайдеру не означает подтверждённое подключение или покупку.")+'</p></div></section>'+
+    '<section class="analytics-panel" data-analytics-panel="services" '+(analyticsTab!=="services"?"hidden":"")+'><div class="analytics-section"><h2>'+t("Эффективность VPN-сервисов")+'</h2><div class="analytics-list">'+(serviceRows||'<p class="analytics-empty">—</p>')+'</div></div></section>'+
+    '<section class="analytics-panel" data-analytics-panel="finance" '+(analyticsTab!=="finance"?"hidden":"")+'><div class="analytics-placeholder"><strong>'+t("Финансовая аналитика")+'</strong><p>'+t("Раздел будет активирован после подключения подтверждённых партнёрских конверсий и данных о выплатах. Переходы по ссылкам не считаются доходом.")+'</p></div></section>'+
+    '<section class="analytics-panel" data-analytics-panel="sources" '+(analyticsTab!=="sources"?"hidden":"")+'><div class="analytics-section"><h2>'+t("Источники трафика по сессиям")+'</h2><div class="analytics-list">'+(sourceRows||'<p class="analytics-empty">—</p>')+'</div><p class="analytics-note">'+t("Для точной атрибуции используйте UTM-метки в ссылках запуска.")+'</p></div></section>'+
+    '<section class="analytics-panel" data-analytics-panel="geo" '+(analyticsTab!=="geo"?"hidden":"")+'><div class="analytics-placeholder"><strong>'+t("География пока не собирается")+'</strong><p>'+t("В текущих данных нет подтверждённой страны пользователя. Язык Telegram не используется как географический признак.")+'</p></div></section>'+
+    '<section class="analytics-panel" data-analytics-panel="technical" '+(analyticsTab!=="technical"?"hidden":"")+'><div class="analytics-summary"><article><strong>'+fmt.format(summary.events||0)+'</strong><span>'+t("События за период")+'</span></article><article><strong>'+fmt.format(summary.sessions||0)+'</strong><span>'+t("Сессии за период")+'</span></article></div><div class="analytics-placeholder"><strong>'+t("Мониторинг ошибок и скорости")+'</strong><p>'+t("Сейчас собираются продуктовые события. Отдельный сбор ошибок JavaScript, времени загрузки и отказов запросов ещё не подключён, поэтому показатели не имитируются.")+'</p></div><div class="analytics-section"><h2>'+t("Последние события")+'</h2><div class="analytics-list">'+(eventRows||'<p class="analytics-empty">—</p>')+'</div></div></section>'+
+    '<div class="analytics-updated">'+t("Обновлено")+": "+dateTime(new Date().toISOString()).time+" · "+t("Автообновление раз в час")+'</div>';
+  if (!root.dataset.analyticsBound) {
+    root.dataset.analyticsBound="true";
+    root.addEventListener("click",event=>{
+      const periodButton=event.target.closest("[data-analytics-period]");
+      if(periodButton){analyticsPeriod=periodButton.dataset.analyticsPeriod;loadStatisticsDashboard(true);return;}
+      const tabButton=event.target.closest("[data-analytics-tab]");
+      if(tabButton){analyticsTab=tabButton.dataset.analyticsTab;root.querySelectorAll("[data-analytics-tab]").forEach(button=>button.classList.toggle("is-active",button===tabButton));root.querySelectorAll("[data-analytics-panel]").forEach(panel=>panel.hidden=panel.dataset.analyticsPanel!==analyticsTab);}
     });
-    const result = await response.json().catch(() => null);
-    if (!response.ok || !result?.ok) {
-      byId("analytics-menu-row").hidden = true;
-      root.textContent = t("Нет доступа к статистике.");
-      return;
-    }
-    analyticsAccessChecked = true;
-    byId("analytics-menu-row").hidden = false;
-    const summary = result.summary || {};
-    const services = new Map((result.services || []).map(item => [item.id, item.name]));
-    const keyEventNames = {
-      app_open: "Открытие приложения",
-      service_view: "Просмотр сервиса",
-      connect_click: "Переход по ссылке",
-      contact_submit: "Сообщение отправлено",
-      provider_submit: "Заявка отправлена"
-    };
-    const formatStatisticsDateTime = value => {
-      const date = new Date(value);
-      if (!Number.isFinite(date.getTime())) return { time: "-", date: "-" };
-      const time = new Intl.DateTimeFormat(appLanguage === "en" ? "en-GB" : "ru-RU", {
-        timeZone: "Europe/Moscow", hour: "2-digit", minute: "2-digit", hourCycle: "h23"
-      }).format(date);
-      const day = new Intl.DateTimeFormat(appLanguage === "en" ? "en-GB" : "ru-RU", {
-        timeZone: "Europe/Moscow", day: "2-digit", month: "2-digit", year: "numeric"
-      }).format(date);
-      return { time, date: day };
-    };
-    const eventItems = (result.events || []).filter(item => keyEventNames[item.event_name]).slice(0, 20);
-    const clickItems = (result.clicks || []).slice(0, 25);
-    const userItems = (result.users || []).slice(0, 25);
-    const usersByTelegramId = new Map(userItems.map(item => [String(item.telegram_id), item]));
-    const userRows = userItems.map(item => {
-      const profile = item.profile || {};
-      const display = [profile.first_name, profile.last_name].filter(Boolean).join(" ") || "-";
-      const stamp = formatStatisticsDateTime(item.last_seen_at);
-      return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + esc(display) + '</strong><span>' + esc(profile.username ? "@" + profile.username : String(item.telegram_id || "-")) + '</span></div><div class="analytics-list-meta"><span>' + t("Источник") + ': ' + esc(item.source || "-") + '</span><time><span>' + stamp.time + '</span><span>' + stamp.date + '</span></time></div></article>';
-    }).join("");
-    const clickRows = clickItems.map(item => {
-      const user = usersByTelegramId.get(String(item.telegram_id)) || {};
-      const profile = user.profile || item.profile || {};
-      const display = [profile.first_name, profile.last_name].filter(Boolean).join(" ") || item.user_name || "-";
-      const username = String(profile.username || item.username || "").replace(/^@/, "");
-      const userLink = username
-        ? '<a class="analytics-user-link" href="https://t.me/' + encodeURIComponent(username) + '" target="_blank" rel="noopener noreferrer">@' + esc(username) + '</a>'
-        : '<span class="analytics-user-link-muted">-</span>';
-      const stamp = formatStatisticsDateTime(item.clicked_at);
-      return '<article class="analytics-list-item analytics-click-item"><div class="analytics-list-main"><strong>' + esc(services.get(item.service_id) || item.service_name || item.service_id || "-") + '</strong><span>' + esc(display) + '</span><span>' + userLink + '</span></div><time class="analytics-list-time"><span>' + stamp.time + '</span><span>' + stamp.date + '</span></time></article>';
-    }).join("");
-    const eventRows = eventItems.map(item => {
-      const stamp = formatStatisticsDateTime(item.occurred_at);
-      return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + t(keyEventNames[item.event_name]) + '</strong><span>' + esc(String(item.telegram_id || "-")) + (item.service_id ? ' · ' + esc(services.get(item.service_id) || item.service_id) : '') + '</span></div><time class="analytics-list-time"><span>' + stamp.time + '</span><span>' + stamp.date + '</span></time></article>';
-    }).join("");
-    const statCards = [
-      ["Всего пользователей", summary.total_users],
-      ["Новые за 24 часа", summary.new_users_24h],
-      ["Активные за 24 часа", summary.active_24h],
-      ["Активные за 7 дней", summary.active_7d],
-      ["Активные за 30 дней", summary.active_30d],
-      ["Сессии", summary.sessions],
-      ["Всего событий", summary.events],
-      ["Партнёрские переходы", summary.clicks]
-    ];
-    const numberFormat = new Intl.NumberFormat(appLanguage === "en" ? "en-US" : "ru-RU");
-    root.innerHTML =
-      '<div class="analytics-summary">' +
-      statCards.map(([label,value]) => '<article><strong>' + numberFormat.format(Number(value || 0)) + '</strong><span>' + t(label) + '</span></article>').join("") +
-      '</div>' +
-      '<details class="analytics-disclosure"><summary><span>' + t("Последние пользователи") + '</span><span class="analytics-disclosure-count">' + userItems.length + '</span></summary><div class="analytics-list">' + (userRows || '<p class="analytics-empty">-</p>') + '</div></details>' +
-      '<section class="analytics-section"><h2>' + t("Партнёрские переходы") + '</h2><div class="analytics-list analytics-clicks">' + (clickRows || '<p class="analytics-empty">-</p>') + '</div></section>' +
-      '<details class="analytics-disclosure"><summary><span>' + t("Ключевые события") + '</span><span class="analytics-disclosure-count">' + eventItems.length + '</span></summary><div class="analytics-list">' + (eventRows || '<p class="analytics-empty">-</p>') + '</div></details>';
-  } catch (_) {
-    root.textContent = t("Не удалось загрузить статистику.");
-  } finally {
-    loadingOverlay.remove();
-    analyticsDashboardLoading = false;
   }
 }
+async function loadStatisticsDashboard(force = false) {
+  const root=byId("analytics-dashboard");
+  const menuRow=byId("analytics-menu-row");
+  const inboxMenuRow=byId("support-inbox-menu-row");
+  const managementGroup=byId("profile-management-group");
+  const isOwner=Number(tg?.initDataUnsafe?.user?.id||0)===ANALYTICS_OWNER_TELEGRAM_ID;
+  if(menuRow)menuRow.hidden=!isOwner;
+  if(inboxMenuRow)inboxMenuRow.hidden=!isOwner;
+  if(managementGroup)managementGroup.hidden=!isOwner;
+  if(!isOwner){if(root)root.textContent=t("Нет доступа к статистике.");return;}
+  if(!root||analyticsDashboardLoading)return;
+  if(!tg?.initData){root.textContent=t("Откройте приложение в Telegram, чтобы посмотреть статистику.");return;}
+  const cached=analyticsCache.get(analyticsPeriod);
+  if(!force&&cached&&Date.now()-cached.loadedAt<60*60*1000){renderStatisticsDashboard(cached.data);return;}
+  analyticsDashboardLoading=true;
+  root.classList.add("is-loading");
+  try{
+    const response=await fetch(SUPABASE_URL+"/functions/v1/analytics-admin",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({initData:tg.initData,period:analyticsPeriod})
+    });
+    const result=await response.json().catch(()=>null);
+    if(!response.ok||!result?.ok){if(menuRow)menuRow.hidden=true;root.textContent=t("Нет доступа к статистике.");return;}
+    analyticsAccessChecked=true;
+    if(menuRow)menuRow.hidden=false;
+    analyticsCache.set(analyticsPeriod,{data:result,loadedAt:Date.now()});
+    renderStatisticsDashboard(result);
+  }catch(_){root.textContent=t("Не удалось загрузить статистику.");}
+  finally{root.classList.remove("is-loading");analyticsDashboardLoading=false;}
+}
+window.setInterval(()=>{
+  if(document.visibilityState==="visible"&&byId("screen-analytics")?.classList.contains("active"))loadStatisticsDashboard(true);
+},60*60*1000);
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible"&&byId("screen-analytics")?.classList.contains("active")){
+    const cached=analyticsCache.get(analyticsPeriod);
+    if(!cached||Date.now()-cached.loadedAt>=60*60*1000)loadStatisticsDashboard(true);
+  }
+});
+
 const byId = id => document.getElementById(id);
 const LANGUAGE_KEY = "vpn-finder-language";
 const translations = {

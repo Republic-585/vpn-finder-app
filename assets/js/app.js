@@ -630,6 +630,7 @@ function markNewsAsRead() {
 updateNewsBadge();
 
 function showScreen(name, backScreen = null) {
+  if (name === "profile") loadContactUnreadBadge();
   if (name === "news") markNewsAsRead();
   document.documentElement.classList.toggle("profile-screen-active", name === "profile");
   document.body.classList.toggle("profile-screen-active", name === "profile");
@@ -1879,6 +1880,28 @@ function renderSupportMessages(root, messages, includeDate = false) {
   }).join("");
   root.scrollTop = root.scrollHeight;
 }
+byId("contact-bot-link")?.addEventListener("click", event => {
+  if (typeof tg?.openTelegramLink === "function") {
+    event.preventDefault();
+    tg.openTelegramLink("https://t.me/vpn_view_bot");
+  }
+});
+function renderContactUnreadBadge(count) {
+  const row = byId("contact-unread-badge");
+  if (!row) return;
+  const value = Math.max(0, Number(count) || 0);
+  row.textContent = value > 99 ? "99+" : String(value);
+  row.hidden = value === 0;
+  const menuRow = row.closest(".profile-menu-row");
+  if (menuRow) menuRow.setAttribute("aria-label", value ? t("Связаться. Новых сообщений: ") + value : t("Связаться"));
+}
+async function loadContactUnreadBadge() {
+  if (!tg?.initData || Number(tg?.initDataUnsafe?.user?.id || 0) === ANALYTICS_OWNER_TELEGRAM_ID) return;
+  try {
+    const result = await supportRequest("unread_count");
+    renderContactUnreadBadge(result.count);
+  } catch (_) {}
+}
 async function loadContactConversation() {
   const root = byId("contact-messages");
   if (!root || !tg?.initData) return;
@@ -1966,11 +1989,23 @@ async function loadSupportInbox() {
     renderSupportUnreadBadge((result.threads || []).reduce((sum, thread) => sum + (Number(thread.admin_unread_count) || 0), 0));
   } catch (_) {}
 }
+loadSupportUnreadBadge();
+loadContactUnreadBadge();
 setInterval(() => {
-  if (document.visibilityState === "visible") loadSupportUnreadBadge();
-}, 30000);
+  if (document.visibilityState !== "visible") return;
+  loadSupportUnreadBadge();
+  if (byId("screen-contact")?.classList.contains("active")) {
+    loadContactConversation();
+  } else {
+    loadContactUnreadBadge();
+  }
+}, 15000);
 document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible") loadSupportUnreadBadge();
+  if (document.visibilityState === "visible") {
+    loadSupportUnreadBadge();
+    loadContactUnreadBadge();
+    if (byId("screen-contact")?.classList.contains("active")) loadContactConversation();
+  }
 });
 async function openSupportThread(threadId, name) {
   try {

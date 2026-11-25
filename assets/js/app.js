@@ -1908,6 +1908,7 @@ async function loadContactConversation() {
   try {
     const result = await supportRequest("get");
     renderSupportMessages(root, result.messages);
+    renderContactUnreadBadge(0);
   } catch (_) {}
 }
 byId("contact-form")?.addEventListener("submit", async event => {

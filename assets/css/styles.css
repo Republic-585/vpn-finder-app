@@ -3353,9 +3353,10 @@ html.support-inbox-chat-mode #screen-support-inbox .support-message-time{margin-
   background:var(--raised)!important;color:#fff!important;
 }
 #screen-contact .contact-support-avatar svg{
-  display:block;width:100%;height:100%;fill:none;stroke:#fff;stroke-width:17;
+  display:block;width:100%;height:100%;fill:none;stroke:#fff;stroke-width:34;
   stroke-linecap:round;stroke-linejoin:round;
 }
+#screen-contact .contact-support-avatar svg path:last-child{stroke-width:36}
 #screen-contact .contact-intro-copy{
   display:flex;min-width:0;max-width:100%;flex-direction:column;
   align-items:center;justify-content:center;gap:3px;text-align:center;

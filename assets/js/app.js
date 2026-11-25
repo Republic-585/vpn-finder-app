@@ -7,6 +7,21 @@ document.addEventListener("touchmove", event => {
 const tg = window.Telegram?.WebApp;
 const ownerPromoNativeButton = tg?.BottomButton || tg?.MainButton || null;
 let nativeButtonMode = "hidden";
+function applyNativeButtonParams(params) {
+  if (!ownerPromoNativeButton) return;
+  if (typeof ownerPromoNativeButton.setParams === "function") {
+    ownerPromoNativeButton.setParams(params);
+    return;
+  }
+  // Backward compatibility with Telegram clients exposing the legacy MainButton API.
+  if (typeof params.text === "string") ownerPromoNativeButton.setText?.(params.text);
+  if (params.color) ownerPromoNativeButton.setColor?.(params.color);
+  if (params.text_color) ownerPromoNativeButton.setTextColor?.(params.text_color);
+  if (params.is_active === true) ownerPromoNativeButton.enable?.();
+  else if (params.is_active === false) ownerPromoNativeButton.disable?.();
+  if (params.is_visible === true) ownerPromoNativeButton.show?.();
+  else if (params.is_visible === false) ownerPromoNativeButton.hide?.();
+}
 function setNativeButton(mode) {
   nativeButtonMode = mode;
   if (!ownerPromoNativeButton) return;
@@ -17,19 +32,27 @@ function setNativeButton(mode) {
     "support-crypto": t("Скопировать адрес")
   };
   if (!labels[mode]) {
-    ownerPromoNativeButton.hide();
+    ownerPromoNativeButton.hide?.();
     return;
   }
   try {
-    ownerPromoNativeButton.setParams({
+    applyNativeButtonParams({
       text: labels[mode],
       color: tg?.themeParams?.button_color || "#3390EC",
       text_color: tg?.themeParams?.button_text_color || "#FFFFFF",
       has_shine_effect: true,
-      is_progress_visible: false,
       is_active: true,
       is_visible: true
     });
+  } catch (error) {
+    console.error("[VPN Finder] Native button setup error:", error);
+  }
+}
+function setNativeButtonProgress(isVisible) {
+  if (!ownerPromoNativeButton) return;
+  try {
+    if (isVisible) ownerPromoNativeButton.showProgress?.(false);
+    else ownerPromoNativeButton.hideProgress?.();
   } catch (_) {}
 }
 function handleNativeButtonClick() {
@@ -38,23 +61,34 @@ function handleNativeButtonClick() {
     const form = byId("provider-form");
     if (typeof form?.requestSubmit === "function") form.requestSubmit();
     else form?.querySelector('button[type="submit"]')?.click();
+  } else if (nativeButtonMode === "support-stars") {
+    startStarsPayment();
+  } else if (nativeButtonMode === "support-crypto") {
+    copySupportValue(cryptoAddress, "Адрес скопирован.");
   }
-  else if (nativeButtonMode === "support-stars") startStarsPayment();
-  else if (nativeButtonMode === "support-crypto") byId("crypto-copy-address")?.click();
 }
 if (ownerPromoNativeButton) {
   try {
-    ownerPromoNativeButton.setParams({
+    applyNativeButtonParams({
       text: t("Добавить сервис"),
       color: tg?.themeParams?.button_color || "#3390EC",
       text_color: tg?.themeParams?.button_text_color || "#FFFFFF",
       has_shine_effect: true,
-      is_progress_visible: false,
       is_active: true,
       is_visible: false
     });
-    ownerPromoNativeButton.onClick(handleNativeButtonClick);
-  } catch (_) {}
+  } catch (error) {
+    console.error("[VPN Finder] Native button initialization error:", error);
+  }
+  try {
+    if (typeof ownerPromoNativeButton.onClick === "function") {
+      ownerPromoNativeButton.onClick(handleNativeButtonClick);
+    } else {
+      tg?.onEvent?.("mainButtonClicked", handleNativeButtonClick);
+    }
+  } catch (error) {
+    console.error("[VPN Finder] Native button click registration error:", error);
+  }
 }
 const applyTelegramColors = () => {
   // Match Telegram's native chrome and the startup surface before hiding Telegram's loader.
@@ -1045,7 +1079,7 @@ async function startStarsPayment() {
     if (supportStatus) supportStatus.textContent = t("Откройте VPN Finder через Telegram, чтобы оплатить Stars.");
     return;
   }
-  try { ownerPromoNativeButton?.setParams({ is_progress_visible: true, is_active: false }); } catch (_) {}
+  setNativeButtonProgress(true);
   if (supportStatus) supportStatus.textContent = t("Создаём счёт…");
   try {
     await syncTelegramProfile();
@@ -1073,7 +1107,7 @@ async function startStarsPayment() {
     console.error("[VPN Finder] Stars payment error:", error);
     if (supportStatus) supportStatus.textContent = t("Не удалось создать счёт Stars. Проверьте соединение и попробуйте ещё раз.");
   } finally {
-    try { ownerPromoNativeButton?.setParams({ is_progress_visible: false, is_active: true }); } catch (_) {}
+    setNativeButtonProgress(false);
   }
 }
 

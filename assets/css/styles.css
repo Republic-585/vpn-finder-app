@@ -3514,3 +3514,35 @@ html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-userna
 
 /* Statistics dashboard: keep all metric cards in the same compact grid. */
 .analytics-summary article:last-child{grid-column:auto}
+
+
+/* Owner analytics dashboard */
+.analytics-controls{display:grid;gap:10px;margin:0 0 14px}
+.analytics-periods,.analytics-tabs{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:1px 0}
+.analytics-periods::-webkit-scrollbar,.analytics-tabs::-webkit-scrollbar{display:none}
+.analytics-periods button,.analytics-tabs button{flex:0 0 auto;min-height:34px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--muted);font:inherit;font-size:11px;font-weight:600;white-space:nowrap}
+.analytics-periods button.is-active,.analytics-tabs button.is-active{background:var(--text);border-color:var(--text);color:var(--bg)}
+.analytics-tabs button{min-height:31px;padding:0 10px;font-size:10px}
+.analytics-panel[hidden]{display:none!important}
+.analytics-panel{display:grid;gap:15px}
+.analytics-summary article:last-child{grid-column:auto}
+.analytics-list-metric{flex:0 0 auto;font-size:13px;font-variant-numeric:tabular-nums}
+.analytics-funnel{display:grid;gap:12px}
+.analytics-funnel article{display:grid;gap:7px}
+.analytics-funnel article>div{display:flex;justify-content:space-between;gap:12px;font-size:12px}
+.analytics-funnel article>div strong{font-variant-numeric:tabular-nums}
+.analytics-funnel article>i{height:7px;display:block;overflow:hidden;border-radius:99px;background:var(--line)}
+.analytics-funnel article>i b{height:100%;display:block;border-radius:99px;background:var(--bright)}
+.analytics-funnel article small{color:var(--muted);font-size:10px;text-align:right}
+.analytics-note{margin:0;color:var(--muted);font-size:10px;line-height:1.45}
+.analytics-placeholder{padding:17px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+.analytics-placeholder strong{display:block;font-size:13px}
+.analytics-placeholder p{margin:7px 0 0;color:var(--muted);font-size:11px;line-height:1.5}
+.analytics-growth{display:grid;gap:7px}
+.analytics-growth-row{display:grid;grid-template-columns:38px minmax(0,1fr) 25px;align-items:center;gap:8px}
+.analytics-growth-row time,.analytics-growth-row b{color:var(--muted);font-size:9px;font-variant-numeric:tabular-nums}
+.analytics-growth-row b{text-align:right}
+.analytics-growth-row>span{height:6px;overflow:hidden;border-radius:99px;background:var(--line)}
+.analytics-growth-row i{height:100%;display:block;border-radius:99px;background:var(--bright)}
+.analytics-updated{padding:2px 0 12px;color:var(--muted);font-size:10px;text-align:center}
+.analytics-dashboard.is-loading{opacity:.72;pointer-events:none}

@@ -3419,3 +3419,41 @@ html.contact-screen-active #screen-contact .support-chat-compose{
   margin:0!important;
   margin-top:auto!important;
 }
+
+
+/* Reuse the animated profile ring on both support-chat identity avatars. */
+#screen-contact .contact-support-avatar,
+html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-avatar{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:visible!important;
+}
+#screen-contact .contact-support-avatar::after,
+html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-avatar::after{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  z-index:3;
+  padding:3px;
+  border-radius:50%;
+  pointer-events:none;
+  background:conic-gradient(from 0deg,#48E6D0 0%,#6DE7A7 22%,#20C9B5 46%,#55DDBF 68%,#32DCC8 84%,#48E6D0 100%);
+  opacity:1;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  animation:profile-ring-flow 5.5s linear infinite,profile-ring-breathe 3.2s ease-in-out infinite;
+}
+#screen-contact .contact-support-avatar svg,
+html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-avatar img,
+html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-avatar span{
+  position:relative;
+  z-index:1;
+}
+@media(prefers-reduced-motion:reduce){
+  #screen-contact .contact-support-avatar::after,
+  html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-avatar::after{
+    animation:none;
+  }
+}

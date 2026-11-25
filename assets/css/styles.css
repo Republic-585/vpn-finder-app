@@ -3470,3 +3470,17 @@ html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-userna
 html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-username{
   text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent;
 }
+
+/* User-side support unread counter mirrors the admin inbox badge. */
+#screen-profile #contact-unread-badge{
+  min-width:24px!important;padding:2px 8px!important;
+  font-size:10px!important;letter-spacing:0!important
+}
+#screen-contact .contact-intro-username{
+  display:inline-block;max-width:100%;color:var(--secondary);font-size:12px;
+  line-height:1.2;font-weight:400;text-decoration:none;cursor:pointer;
+  -webkit-tap-highlight-color:transparent
+}
+#screen-contact .contact-intro-username:focus-visible{
+  outline:2px solid var(--bright);outline-offset:3px;border-radius:3px
+}

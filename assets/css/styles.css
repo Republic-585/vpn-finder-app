@@ -3350,7 +3350,7 @@ html.support-inbox-chat-mode #screen-support-inbox .support-message-time{margin-
 #screen-contact .contact-support-avatar{
   display:grid!important;width:64px!important;height:64px!important;flex:0 0 64px!important;
   place-items:center!important;overflow:hidden;border-radius:50%!important;
-  background:var(--raised)!important;color:#fff!important;
+  background:#55585E!important;color:#fff!important;
 }
 #screen-contact .contact-support-avatar svg{
   display:block;width:100%;height:100%;fill:none;stroke:#fff;stroke-width:34;

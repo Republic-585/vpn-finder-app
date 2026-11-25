@@ -3458,3 +3458,15 @@ html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-avatar
     animation:none;
   }
 }
+
+#screen-contact .contact-intro-username{
+  max-width:100%;color:var(--secondary);font-size:12px;line-height:1.2;
+  font-weight:400;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent;
+}
+#screen-contact .contact-intro-username:focus-visible,
+html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-username:focus-visible{
+  outline:2px solid var(--bright);outline-offset:3px;border-radius:3px;
+}
+html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-username{
+  text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent;
+}

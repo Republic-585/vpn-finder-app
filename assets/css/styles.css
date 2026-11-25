@@ -3488,3 +3488,19 @@ html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-userna
 
 /* Stars support uses an in-screen CTA so payment does not depend on Telegram's native bottom button. */
 #screen-support .support-pay-button{display:flex!important;width:100%;min-height:44px;align-items:center;justify-content:center;margin-top:10px!important}
+
+
+/* Keep the Stars panel fully visible; the previous fixed-height clipping hid its payment CTA. */
+#screen-support .support-method-container .support-stars-panel{
+  height:auto!important;min-height:0!important;max-height:none!important;
+  overflow:visible!important;
+}
+#screen-support .support-stars-panel .support-form{
+  height:auto!important;min-height:0!important;max-height:none!important;
+  overflow:visible!important;display:flex!important;flex-direction:column!important;
+}
+#screen-support .support-stars-panel .support-pay-button{
+  display:flex!important;visibility:visible!important;position:relative!important;
+  width:100%!important;min-height:46px!important;flex:0 0 auto!important;
+  margin:10px 0 0!important;opacity:1!important;pointer-events:auto!important;
+}

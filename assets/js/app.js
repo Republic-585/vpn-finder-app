@@ -245,6 +245,26 @@ async function trackEvent(eventName, eventData = {}, serviceId = null) {
     });
   } catch (_) { /* Statistics must never interrupt the Mini App. */ }
 }
+let analyticsRuntimeErrorCount = 0;
+window.addEventListener("error", () => {
+  if (analyticsRuntimeErrorCount >= 5) return;
+  analyticsRuntimeErrorCount += 1;
+  trackEvent("client_error", { kind: "window_error" });
+});
+window.addEventListener("unhandledrejection", () => {
+  if (analyticsRuntimeErrorCount >= 5) return;
+  analyticsRuntimeErrorCount += 1;
+  trackEvent("client_error", { kind: "unhandled_rejection" });
+});
+window.addEventListener("load", () => {
+  const navigation = performance.getEntriesByType("navigation")[0];
+  if (!navigation) return;
+  const loadMs = Math.round(navigation.loadEventEnd || navigation.domContentLoadedEventEnd || 0);
+  if (loadMs > 0) trackEvent("app_performance", {
+    load_ms: loadMs,
+    dom_ms: Math.round(navigation.domContentLoadedEventEnd || 0)
+  });
+}, { once: true });
 let analyticsPeriod = "30d";
 let analyticsTab = "overview";
 const analyticsCache = new Map();
@@ -288,7 +308,7 @@ function renderStatisticsDashboard(result) {
   const eventRows=(result.events||[]).slice(0,35).map(item=>{
     const stamp=dateTime(item.occurred_at);
     const service=(result.services||[]).find(s=>s.id===item.service_id);
-    const labels={app_open:"Открытие приложения",screen_view:"Просмотр экрана",search:"Поиск",filter_change:"Изменение фильтра",service_view:"Просмотр VPN",favorite_add:"Добавление в избранное",favorite_remove:"Удаление из избранного",compare_add:"Добавление к сравнению",compare_remove:"Удаление из сравнения",connect_click:"Переход к провайдеру",language_change:"Смена языка",contact_submit:"Сообщение отправлено",provider_submit:"Заявка отправлена"};
+    const labels={app_open:"Открытие приложения",screen_view:"Просмотр экрана",search:"Поиск",filter_change:"Изменение фильтра",service_view:"Просмотр VPN",favorite_add:"Добавление в избранное",favorite_remove:"Удаление из избранного",compare_add:"Добавление к сравнению",compare_remove:"Удаление из сравнения",connect_click:"Переход к провайдеру",language_change:"Смена языка",contact_submit:"Сообщение отправлено",provider_submit:"Заявка отправлена",client_error:"Ошибка JavaScript",app_performance:"Время загрузки"};
     return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>'+t(labels[item.event_name]||item.event_name)+'</strong><span>'+esc(String(item.telegram_id||"—"))+(service?" · "+esc(service.name):"")+'</span></div><time class="analytics-list-time"><span>'+stamp.time+'</span><span>'+stamp.date+'</span></time></article>';
   }).join("");
   const funnel=summary.funnel||{};
@@ -309,7 +329,7 @@ function renderStatisticsDashboard(result) {
     '<section class="analytics-panel" data-analytics-panel="finance" '+(analyticsTab!=="finance"?"hidden":"")+'><div class="analytics-placeholder"><strong>'+t("Финансовая аналитика")+'</strong><p>'+t("Раздел будет активирован после подключения подтверждённых партнёрских конверсий и данных о выплатах. Переходы по ссылкам не считаются доходом.")+'</p></div></section>'+
     '<section class="analytics-panel" data-analytics-panel="sources" '+(analyticsTab!=="sources"?"hidden":"")+'><div class="analytics-section"><h2>'+t("Источники трафика по сессиям")+'</h2><div class="analytics-list">'+(sourceRows||'<p class="analytics-empty">—</p>')+'</div><p class="analytics-note">'+t("Для точной атрибуции используйте UTM-метки в ссылках запуска.")+'</p></div></section>'+
     '<section class="analytics-panel" data-analytics-panel="geo" '+(analyticsTab!=="geo"?"hidden":"")+'><div class="analytics-placeholder"><strong>'+t("География пока не собирается")+'</strong><p>'+t("В текущих данных нет подтверждённой страны пользователя. Язык Telegram не используется как географический признак.")+'</p></div></section>'+
-    '<section class="analytics-panel" data-analytics-panel="technical" '+(analyticsTab!=="technical"?"hidden":"")+'><div class="analytics-summary"><article><strong>'+fmt.format(summary.events||0)+'</strong><span>'+t("События за период")+'</span></article><article><strong>'+fmt.format(summary.sessions||0)+'</strong><span>'+t("Сессии за период")+'</span></article></div><div class="analytics-placeholder"><strong>'+t("Мониторинг ошибок и скорости")+'</strong><p>'+t("Сейчас собираются продуктовые события. Отдельный сбор ошибок JavaScript, времени загрузки и отказов запросов ещё не подключён, поэтому показатели не имитируются.")+'</p></div><div class="analytics-section"><h2>'+t("Последние события")+'</h2><div class="analytics-list">'+(eventRows||'<p class="analytics-empty">—</p>')+'</div></div></section>'+
+    '<section class="analytics-panel" data-analytics-panel="technical" '+(analyticsTab!=="technical"?"hidden":"")+'><div class="analytics-summary"><article><strong>'+fmt.format(summary.events||0)+'</strong><span>'+t("События за период")+'</span></article><article><strong>'+fmt.format(summary.sessions||0)+'</strong><span>'+t("Сессии за период")+'</span></article><article><strong>'+fmt.format(summary.errors||0)+'</strong><span>'+t("Ошибки JavaScript")+'</span></article><article><strong>'+(summary.avg_load_ms==null?"—":fmt.format(summary.avg_load_ms)+" ms")+'</strong><span>'+t("Среднее время загрузки")+'</span></article></div><p class="analytics-note">'+t("Ошибки браузера ограничены пятью событиями на одну сессию. Время загрузки измеряется по Navigation Timing API.")+'</p><div class="analytics-section"><h2>'+t("Последние события")+'</h2><div class="analytics-list">'+(eventRows||'<p class="analytics-empty">—</p>')+'</div></div></section>'+
     '<div class="analytics-updated">'+t("Обновлено")+": "+dateTime(new Date().toISOString()).time+" · "+t("Автообновление раз в час")+'</div>';
   if (!root.dataset.analyticsBound) {
     root.dataset.analyticsBound="true";

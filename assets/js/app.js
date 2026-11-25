@@ -81,10 +81,10 @@ if (ownerPromoNativeButton) {
     console.error("[VPN Finder] Native button initialization error:", error);
   }
   try {
-    if (typeof ownerPromoNativeButton.onClick === "function") {
-      ownerPromoNativeButton.onClick(handleNativeButtonClick);
+    if (typeof tg?.onEvent === "function") {
+      tg.onEvent("mainButtonClicked", handleNativeButtonClick);
     } else {
-      tg?.onEvent?.("mainButtonClicked", handleNativeButtonClick);
+      ownerPromoNativeButton.onClick?.(handleNativeButtonClick);
     }
   } catch (error) {
     console.error("[VPN Finder] Native button click registration error:", error);
@@ -1115,14 +1115,41 @@ async function startStarsPayment() {
 // Manual USDT support. This does not create invoices or verify blockchain payments.
 const cryptoStatus = byId("crypto-support-status");
 const cryptoAddress = "UQBt5EVLJ5Q4lljC41RKTGMiXZBevXwRVXIES9Cgy_B9lLgo";
-async function copySupportValue(value, successMessage) {
+function copySupportValue(value, successMessage) {
+  // Try the synchronous WebView-compatible clipboard path while the native
+  // button's user gesture is still active (important on iOS Telegram).
+  let copied = false;
+  let field = null;
   try {
-    if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
-    await navigator.clipboard.writeText(value);
-    if (cryptoStatus) cryptoStatus.textContent = t(successMessage);
+    field = document.createElement("textarea");
+    field.value = value;
+    field.setAttribute("readonly", "");
+    field.style.position = "fixed";
+    field.style.opacity = "0";
+    field.style.pointerEvents = "none";
+    document.body.appendChild(field);
+    field.focus();
+    field.select();
+    field.setSelectionRange(0, field.value.length);
+    copied = document.execCommand("copy");
   } catch (_) {
-    if (cryptoStatus) cryptoStatus.textContent = t("Не удалось скопировать. Выдели значение и скопируй вручную.");
+    copied = false;
+  } finally {
+    field?.remove();
   }
+  if (copied) {
+    if (cryptoStatus) cryptoStatus.textContent = t(successMessage);
+    return;
+  }
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(value).then(() => {
+      if (cryptoStatus) cryptoStatus.textContent = t(successMessage);
+    }).catch(() => {
+      if (cryptoStatus) cryptoStatus.textContent = t("Не удалось скопировать. Выдели значение и скопируй вручную.");
+    });
+    return;
+  }
+  if (cryptoStatus) cryptoStatus.textContent = t("Не удалось скопировать. Выдели значение и скопируй вручную.");
 }
 byId("crypto-copy-address")?.addEventListener("click", () => copySupportValue(cryptoAddress, "Адрес скопирован."));
 

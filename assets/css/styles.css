@@ -3392,6 +3392,7 @@ html.contact-screen-active #screen-contact .contact-intro#contact-intro{
   height:124px!important;
   min-height:124px!important;
   max-height:124px!important;
+  margin-top:calc(12px + env(safe-area-inset-top))!important;
 }
 html.contact-screen-active #screen-contact .support-chat{
   display:flex!important;

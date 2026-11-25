@@ -26,3 +26,52 @@
 @media(min-width:700px){.bottom-nav-dock{bottom:24px;width:min(calc(100% - 56px),520px)}}
 @media(prefers-reduced-motion:reduce){.bottom-nav-dock .nav-indicator{transition:none}.bottom-nav-dock .profile-nav-button.is-current::after{animation:none}}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.bottom-nav-dock .bottom-nav{background:rgba(39,41,47,.88)}}
+
+
+/* Liquid Glass refinement for the existing three-tab VPN Finder navigation. */
+.bottom-nav-dock .bottom-nav{
+  border:1px solid rgba(255,255,255,.17);
+  background:linear-gradient(180deg,rgba(66,69,76,.78) 0%,rgba(42,44,50,.78) 100%);
+  -webkit-backdrop-filter:blur(24px) saturate(185%);
+  backdrop-filter:blur(24px) saturate(185%);
+  box-shadow:0 12px 34px rgba(0,0,0,.28),0 3px 9px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.19),inset 0 -1px 0 rgba(255,255,255,.035);
+}
+.bottom-nav-dock .bottom-nav::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  display:block;
+  border-radius:inherit;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.075),transparent 38%);
+  -webkit-mask:none;
+  mask:none;
+}
+.bottom-nav-dock .nav-indicator{
+  top:5px;
+  bottom:5px;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:999px;
+  background:linear-gradient(180deg,rgba(112,177,230,.25),rgba(83,137,190,.17));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(255,255,255,.035),0 3px 12px rgba(0,0,0,.16);
+  transition:transform .38s cubic-bezier(.22,1,.36,1),width .38s cubic-bezier(.22,1,.36,1);
+}
+.bottom-nav-dock .bottom-nav .nav-item,
+.bottom-nav-dock .bottom-nav .nav-item:active,
+.bottom-nav-dock .bottom-nav .nav-item:focus,
+.bottom-nav-dock .bottom-nav .nav-item:focus-visible{
+  color:rgba(255,255,255,.68);
+  transition:color .22s ease!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item.active,
+.bottom-nav-dock .bottom-nav .nav-item.active:active{
+  color:#A9D8FF;
+}
+@media(prefers-reduced-motion:reduce){
+  .bottom-nav-dock .nav-indicator{transition:none!important}
+  .bottom-nav-dock .bottom-nav .nav-item{transition:none!important}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .bottom-nav-dock .bottom-nav{background:rgba(48,51,58,.96)}
+}

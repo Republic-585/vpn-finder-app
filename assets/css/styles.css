@@ -3484,3 +3484,7 @@ html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-userna
 #screen-contact .contact-intro-username:focus-visible{
   outline:2px solid var(--bright);outline-offset:3px;border-radius:3px
 }
+
+
+/* Stars support uses an in-screen CTA so payment does not depend on Telegram's native bottom button. */
+#screen-support .support-pay-button{display:flex!important;width:100%;min-height:44px;align-items:center;justify-content:center;margin-top:10px!important}

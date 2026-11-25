@@ -48,13 +48,6 @@ function setNativeButton(mode) {
     console.error("[VPN Finder] Native button setup error:", error);
   }
 }
-function setNativeButtonProgress(isVisible) {
-  if (!ownerPromoNativeButton) return;
-  try {
-    if (isVisible) ownerPromoNativeButton.showProgress?.(false);
-    else ownerPromoNativeButton.hideProgress?.();
-  } catch (_) {}
-}
 function handleNativeButtonClick() {
   if (nativeButtonMode === "owner-promo") showScreen("owners", "owner-promo");
   else if (nativeButtonMode === "provider-submit") {
@@ -1079,7 +1072,6 @@ async function startStarsPayment() {
     if (supportStatus) supportStatus.textContent = t("Откройте VPN Finder через Telegram, чтобы оплатить Stars.");
     return;
   }
-  setNativeButtonProgress(true);
   if (supportStatus) supportStatus.textContent = t("Создаём счёт…");
   try {
     await syncTelegramProfile();
@@ -1107,7 +1099,6 @@ async function startStarsPayment() {
     console.error("[VPN Finder] Stars payment error:", error);
     if (supportStatus) supportStatus.textContent = t("Не удалось создать счёт Stars. Проверьте соединение и попробуйте ещё раз.");
   } finally {
-    setNativeButtonProgress(false);
   }
 }
 

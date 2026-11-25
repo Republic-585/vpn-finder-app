@@ -1850,10 +1850,12 @@ document.addEventListener("click", event => {
   }
   if (action === "remove-favorites") {
     toggleSet(state.favorites, "vpn-finder-favorites", service.id);
+    trackEvent("favorite_remove", {}, service.id);
     renderFavorites(); renderCatalog();
   }
   if (action === "remove-compare") {
     toggleSet(state.compare, "vpn-finder-compare", service.id);
+    trackEvent("compare_remove", {}, service.id);
     renderCompare(); renderCatalog();
   }
 });

@@ -243,9 +243,9 @@ async function trackEvent(eventName, eventData = {}, serviceId = null) {
         referrer_host: (() => { try { return document.referrer ? new URL(document.referrer).hostname : ""; } catch (_) { return ""; } })()
       })
     });
-  } catch (_) { /* Analytics must never interrupt the Mini App. */ }
+  } catch (_) { /* Statistics must never interrupt the Mini App. */ }
 }
-async function loadAnalyticsDashboard() {
+async function loadStatisticsDashboard() {
   const root = byId("analytics-dashboard");
   const menuRow = byId("analytics-menu-row");
   const inboxMenuRow = byId("support-inbox-menu-row");
@@ -255,12 +255,12 @@ async function loadAnalyticsDashboard() {
   if (inboxMenuRow) inboxMenuRow.hidden = !isOwner;
   if (managementGroup) managementGroup.hidden = !isOwner;
   if (!isOwner) {
-    if (root) root.textContent = t("Нет доступа к аналитике.");
+    if (root) root.textContent = t("Нет доступа к статистике.");
     return;
   }
   if (!root || analyticsDashboardLoading) return;
   if (!tg?.initData) {
-    root.textContent = t("Откройте приложение в Telegram, чтобы посмотреть аналитику.");
+    root.textContent = t("Откройте приложение в Telegram, чтобы посмотреть статистику.");
     return;
   }
   analyticsDashboardLoading = true;
@@ -289,7 +289,7 @@ async function loadAnalyticsDashboard() {
     const result = await response.json().catch(() => null);
     if (!response.ok || !result?.ok) {
       byId("analytics-menu-row").hidden = true;
-      root.textContent = t("Нет доступа к аналитике.");
+      root.textContent = t("Нет доступа к статистике.");
       return;
     }
     analyticsAccessChecked = true;
@@ -303,7 +303,7 @@ async function loadAnalyticsDashboard() {
       contact_submit: "Сообщение отправлено",
       provider_submit: "Заявка отправлена"
     };
-    const formatAnalyticsDateTime = value => {
+    const formatStatisticsDateTime = value => {
       const date = new Date(value);
       if (!Number.isFinite(date.getTime())) return { time: "-", date: "-" };
       const time = new Intl.DateTimeFormat(appLanguage === "en" ? "en-GB" : "ru-RU", {
@@ -321,7 +321,7 @@ async function loadAnalyticsDashboard() {
     const userRows = userItems.map(item => {
       const profile = item.profile || {};
       const display = [profile.first_name, profile.last_name].filter(Boolean).join(" ") || "-";
-      const stamp = formatAnalyticsDateTime(item.last_seen_at);
+      const stamp = formatStatisticsDateTime(item.last_seen_at);
       return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + esc(display) + '</strong><span>' + esc(profile.username ? "@" + profile.username : String(item.telegram_id || "-")) + '</span></div><div class="analytics-list-meta"><span>' + t("Источник") + ': ' + esc(item.source || "-") + '</span><time><span>' + stamp.time + '</span><span>' + stamp.date + '</span></time></div></article>';
     }).join("");
     const clickRows = clickItems.map(item => {
@@ -332,24 +332,33 @@ async function loadAnalyticsDashboard() {
       const userLink = username
         ? '<a class="analytics-user-link" href="https://t.me/' + encodeURIComponent(username) + '" target="_blank" rel="noopener noreferrer">@' + esc(username) + '</a>'
         : '<span class="analytics-user-link-muted">-</span>';
-      const stamp = formatAnalyticsDateTime(item.clicked_at);
+      const stamp = formatStatisticsDateTime(item.clicked_at);
       return '<article class="analytics-list-item analytics-click-item"><div class="analytics-list-main"><strong>' + esc(services.get(item.service_id) || item.service_name || item.service_id || "-") + '</strong><span>' + esc(display) + '</span><span>' + userLink + '</span></div><time class="analytics-list-time"><span>' + stamp.time + '</span><span>' + stamp.date + '</span></time></article>';
     }).join("");
     const eventRows = eventItems.map(item => {
-      const stamp = formatAnalyticsDateTime(item.occurred_at);
+      const stamp = formatStatisticsDateTime(item.occurred_at);
       return '<article class="analytics-list-item"><div class="analytics-list-main"><strong>' + t(keyEventNames[item.event_name]) + '</strong><span>' + esc(String(item.telegram_id || "-")) + (item.service_id ? ' · ' + esc(services.get(item.service_id) || item.service_id) : '') + '</span></div><time class="analytics-list-time"><span>' + stamp.time + '</span><span>' + stamp.date + '</span></time></article>';
     }).join("");
+    const statCards = [
+      ["Всего пользователей", summary.total_users],
+      ["Новые за 24 часа", summary.new_users_24h],
+      ["Активные за 24 часа", summary.active_24h],
+      ["Активные за 7 дней", summary.active_7d],
+      ["Активные за 30 дней", summary.active_30d],
+      ["Сессии", summary.sessions],
+      ["Всего событий", summary.events],
+      ["Партнёрские переходы", summary.clicks]
+    ];
+    const numberFormat = new Intl.NumberFormat(appLanguage === "en" ? "en-US" : "ru-RU");
     root.innerHTML =
       '<div class="analytics-summary">' +
-      '<article><strong>' + userItems.length + '</strong><span>' + t("Пользователи") + '</span></article>' +
-      '<article><strong>' + Number(summary.sessions || 0) + '</strong><span>' + t("Сессии") + '</span></article>' +
-      '<article><strong>' + Number(summary.clicks || 0) + '</strong><span>' + t("Партнёрские переходы") + '</span></article>' +
+      statCards.map(([label,value]) => '<article><strong>' + numberFormat.format(Number(value || 0)) + '</strong><span>' + t(label) + '</span></article>').join("") +
       '</div>' +
-      '<details class="analytics-disclosure"><summary><span>' + t("Пользователи") + '</span><span class="analytics-disclosure-count">' + userItems.length + '</span></summary><div class="analytics-list">' + (userRows || '<p class="analytics-empty">-</p>') + '</div></details>' +
+      '<details class="analytics-disclosure"><summary><span>' + t("Последние пользователи") + '</span><span class="analytics-disclosure-count">' + userItems.length + '</span></summary><div class="analytics-list">' + (userRows || '<p class="analytics-empty">-</p>') + '</div></details>' +
       '<section class="analytics-section"><h2>' + t("Партнёрские переходы") + '</h2><div class="analytics-list analytics-clicks">' + (clickRows || '<p class="analytics-empty">-</p>') + '</div></section>' +
       '<details class="analytics-disclosure"><summary><span>' + t("Ключевые события") + '</span><span class="analytics-disclosure-count">' + eventItems.length + '</span></summary><div class="analytics-list">' + (eventRows || '<p class="analytics-empty">-</p>') + '</div></details>';
   } catch (_) {
-    root.textContent = t("Не удалось загрузить аналитику.");
+    root.textContent = t("Не удалось загрузить статистику.");
   } finally {
     loadingOverlay.remove();
     analyticsDashboardLoading = false;
@@ -362,11 +371,12 @@ const translations = {
   en: {
     "Язык":"Language","Русский":"Russian","English":"English","Выберите язык приложения":"Choose the app language",
     "Откройте приложение в Telegram, чтобы сменить язык.":"Open the app in Telegram to change the language.",
-    "Загрузка аналитики…":"Loading analytics…","Нет доступа к аналитике.":"No access to analytics.",
-    "Не удалось загрузить аналитику.":"Could not load analytics.","Сессии":"Sessions","События":"Events",
+    "Загрузка статистики…":"Loading statistics…","Нет доступа к статистике.":"No access to statistics.",
+    "Не удалось загрузить статистику.":"Could not load statistics.","Сессии":"Sessions","События":"Events",
     "Переходы":"Clicks","Последние события":"Recent events","Пользователи":"Users","Источники":"Sources","Ключевые события":"Key events","Открытие приложения":"App opened","Просмотр сервиса":"Service viewed","Переход по ссылке":"Affiliate link opened","Сообщение отправлено":"Message sent","Заявка отправлена":"Provider request sent",
     "Партнёрские переходы":"Affiliate clicks","Событие":"Event","Сервис":"Service","Время":"Time",
-    "Аналитика":"Analytics","Пользователи и сессии":"Users and sessions","Пользователь":"User","Источник":"Source","Активность":"Activity","Источники трафика":"Traffic sources","Тип":"Type","Статус":"Status","Сумма":"Amount","Комиссия":"Commission","Не удалось открыть партнёрскую ссылку. Попробуйте ещё раз.":"Could not open the partner link. Please try again.",
+    "Статистика":"Statistics","Пользователи и сессии":"Users and sessions","Пользователь":"User","Источник":"Source","Активность":"Activity","Источники трафика":"Traffic sources","Тип":"Type","Статус":"Status","Сумма":"Amount","Комиссия":"Commission","Не удалось открыть партнёрскую ссылку. Попробуйте ещё раз.":"Could not open the partner link. Please try again.",
+    "Всего пользователей":"Total users","Новые за 24 часа":"New in 24 hours","Активные за 24 часа":"Active in 24 hours","Активные за 7 дней":"Active in 7 days","Активные за 30 дней":"Active in 30 days","Всего событий":"Total events","Последние пользователи":"Recent users",
     "Поиск":"Search","Очистить поиск":"Clear search","Популярный выбор":"Popular services","Добавьте VPN сервис":"Add your VPN service","в каталог":"to the directory","Подробнее":"Learn more","Добавьте ваш сервис":"Add your service","Расскажите о своём VPN — мы рассмотрим заявку для каталога Finder.":"Tell us about your VPN. We’ll review it for the Finder directory.","Добавить сервис":"Add service","Посмотреть все":"View all","Свернуть":"Show less",
     "Фильтры":"Filters","Все":"All","Бесплатно":"Free","Сравнение":"Compare","Избранное":"Favorites","Профиль":"Profile",
     "Загрузка профиля…":"Loading profile…","Не удалось загрузить профиль":"Could not load profile","Пользователь":"User","Откройте приложение через Telegram":"Open the app through Telegram",
@@ -422,7 +432,7 @@ const translations = {
     "Сообщение":"Message","Отправить":"Send","Чем можем помочь?":"How can we help?",
     "Задайте вопрос, поделитесь идеей или расскажите о проблеме. Мы прочитаем сообщение и ответим здесь же.":"Ask a question, share an idea, or tell us about a problem. We’ll read your message and reply right here.",
     "Новости. Есть новое обновление":"News. There is a new update",
-    "Откройте приложение в Telegram, чтобы посмотреть аналитику.":"Open the app in Telegram to view analytics.",
+    "Откройте приложение в Telegram, чтобы посмотреть статистику.":"Open the app in Telegram to view statistics.",
     "Оплата прошла! Значок появится в профиле.":"Payment successful! Your badge will appear in your profile.",
     "Оценить сервис":"Rate this service","Поставить оценку":"Submit rating",
     "Не удалось сохранить оценку. Попробуйте ещё раз.":"Could not save your rating. Please try again.",
@@ -716,13 +726,13 @@ function showScreen(name, backScreen = null) {
   byId("profile-nav-button")?.classList.toggle("is-current", name === "profile");
   moveIndicator();
   if (!alreadyActive) navHaptic();
-  if (name === "analytics") loadAnalyticsDashboard();
+  if (name === "analytics") loadStatisticsDashboard();
   if (name === "contact") loadContactConversation();
   if (name === "support-inbox") loadSupportInbox();
   window.scrollTo({ top: 0, behavior: "smooth" });
   if (name === "favorites") renderFavorites();
   if (name === "compare") renderCompare();
-  if (name === "profile") { syncTelegramProfile(); if (!analyticsAccessChecked) loadAnalyticsDashboard(); loadSupportUnreadBadge(); }
+  if (name === "profile") { syncTelegramProfile(); if (!analyticsAccessChecked) loadStatisticsDashboard(); loadSupportUnreadBadge(); }
   const isProfileSubscreen = BACK_SCREENS.has(name);
   try {
     if (isProfileSubscreen) tg?.BackButton?.show();

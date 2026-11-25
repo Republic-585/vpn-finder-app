@@ -3382,3 +3382,39 @@ html.support-inbox-chat-mode #screen-support-inbox .support-message-time{margin-
 #screen-contact .contact-empty-state span{
   max-width:300px;color:var(--secondary);font-size:13px;line-height:1.5;font-weight:400;
 }
+
+
+/* Final contact screen sizing: fixed identity header, flexible message area,
+   and composer anchored at the bottom. Overrides the earlier empty-intro flex rule. */
+html.contact-screen-active #screen-contact .contact-intro#contact-intro{
+  display:flex!important;
+  flex:0 0 124px!important;
+  height:124px!important;
+  min-height:124px!important;
+  max-height:124px!important;
+}
+html.contact-screen-active #screen-contact .support-chat{
+  display:flex!important;
+  flex:1 1 0!important;
+  min-height:0!important;
+  height:auto!important;
+}
+html.contact-screen-active #screen-contact .support-chat-messages{
+  display:flex!important;
+  flex:1 1 0!important;
+  min-height:0!important;
+  height:auto!important;
+  justify-content:flex-start!important;
+  overflow-y:auto!important;
+}
+html.contact-screen-active #screen-contact .contact-empty-state{
+  flex:1 1 0!important;
+  min-height:0!important;
+  height:100%!important;
+  justify-content:center!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose{
+  flex:0 0 64px!important;
+  margin:0!important;
+  margin-top:auto!important;
+}

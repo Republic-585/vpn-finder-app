@@ -2168,18 +2168,24 @@ function formatSupportMessageDateTime(value) {
   const time = date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
   return day + " · " + time;
 }
-function renderSupportMessages(root, messages, includeDate = false) {
+function renderSupportMessages(root, messages, includeDate = false, adminLastReadAt = null) {
   if (!root) return;
   const items = messages || [];
   if (!items.length && !includeDate) {
     root.innerHTML = '<div class="contact-empty-state"><strong>Чем можем помочь?</strong><span>Задайте вопрос, поделитесь идеей или расскажите о проблеме…</span></div>';
     return;
   }
+  const readAt = adminLastReadAt ? Date.parse(adminLastReadAt) : NaN;
   root.innerHTML = items.map(message => {
     const time = includeDate ? formatSupportMessageDateTime(message.created_at) : formatSupportTime(message.created_at);
+    const isOutgoing = !includeDate && message.sender !== "admin";
+    const isRead = isOutgoing && Number.isFinite(readAt) && Date.parse(message.created_at) <= readAt;
+    const status = isOutgoing
+      ? '<span class="support-message-status' + (isRead ? ' is-read' : '') + '" aria-label="' + (isRead ? 'Прочитано администратором' : 'Отправлено') + '" title="' + (isRead ? 'Прочитано администратором' : 'Отправлено') + '">' + (isRead ? '✓✓' : '✓') + '</span>'
+      : '';
     return '<div class="support-message ' + (message.sender === "admin" ? "support-message-admin" : "support-message-user") + '">' +
       '<span class="support-message-body">' + esc(message.body) + '</span>' +
-      (time ? '<time class="support-message-time" datetime="' + esc(message.created_at) + '">' + esc(time) + '</time>' : '') +
+      (time ? '<time class="support-message-time" datetime="' + esc(message.created_at) + '">' + esc(time) + status + '</time>' : '') +
       '</div>';
   }).join("");
   root.scrollTop = root.scrollHeight;
@@ -2249,7 +2255,7 @@ async function loadContactConversation() {
   if (!root || !tg?.initData) return;
   try {
     const result = await supportRequest("get");
-    renderSupportMessages(root, result.messages);
+    renderSupportMessages(root, result.messages, false, result.thread?.admin_last_read_at);
     renderContactUnreadBadge(0);
   } catch (_) {}
 }

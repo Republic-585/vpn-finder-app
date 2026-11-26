@@ -2238,50 +2238,6 @@ html.contact-screen-active #screen-contact.active{
 }
 
 
-/* Contact screen: center the message composition group in the viewport. */
-html.contact-screen-active #screen-contact.active{
-  justify-content:center!important;
-  align-items:stretch!important;
-}
-#screen-contact .contact-intro{
-  width:100%;display:flex!important;flex-direction:column!important;
-  align-items:center!important;justify-content:center!important;
-  gap:14px!important;margin:0 0 18px!important;padding:0 12px!important;
-  text-align:center!important;
-}
-#screen-contact .contact-intro-icon{margin:0 auto!important}
-#screen-contact .contact-intro-copy{
-  width:100%;min-width:0;text-align:center!important
-}
-#screen-contact .contact-intro-copy h2,
-#screen-contact .contact-intro-copy p{text-align:center!important}
-#screen-contact .support-chat{
-  flex:0 0 auto!important;width:100%;min-height:0!important;
-  gap:0!important
-}
-#screen-contact .support-chat-messages{
-  flex:0 1 auto!important;max-height:28dvh!important;
-  padding:0 1px 10px!important
-}
-#screen-contact .support-chat-compose textarea{
-  text-align:center!important;font-size:18px!important;
-  line-height:1.35!important;font-weight:var(--weight-regular)!important
-}
-#screen-contact .support-chat-compose textarea::placeholder{
-  text-align:center!important
-}
-#screen-contact .contact-send-plane{
-  fill:none!important;stroke:#fff!important;stroke-width:1.65!important;
-  stroke-linecap:round!important;stroke-linejoin:round!important;
-}
-#screen-contact .contact-send-plane .paper-plane-outline{
-  fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round
-}
-#screen-contact .contact-send-plane .paper-plane-fold{
-  fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round;opacity:.9
-}
-
-
 /* Owner inbox: Telegram-like conversations, timestamps and unread counters. */
 #screen-profile .support-unread-badge{
   min-width:24px!important;padding:2px 8px!important;
@@ -2476,18 +2432,21 @@ html.contact-screen-active #screen-contact.active{
 html.contact-screen-active #screen-contact .contact-intro{
   flex:0 0 auto;
 }
+/* Final user contact layout: fixed header, scrollable history, bottom composer. */
 html.contact-screen-active #screen-contact .support-chat{
-  display:flex!important;flex:1 1 auto!important;
+  display:flex!important;flex:1 1 0!important;
   flex-direction:column!important;min-height:0!important;
-  width:100%;gap:0!important;
+  height:auto!important;width:100%;gap:0!important;
 }
 html.contact-screen-active #screen-contact .support-chat-messages{
-  flex:1 1 auto!important;min-height:0!important;
-  max-height:none!important;overflow-y:auto;
+  display:flex!important;flex:1 1 0!important;
+  min-height:0!important;height:auto!important;
+  max-height:none!important;padding:0 1px 10px!important;
+  justify-content:flex-start!important;overflow-y:auto!important;
 }
 html.contact-screen-active #screen-contact .support-chat-compose{
-  flex:0 0 64px!important;margin-top:auto!important;
-  margin-bottom:0!important;min-height:64px!important;
+  flex:0 0 64px!important;min-height:64px!important;
+  margin:0!important;margin-top:auto!important;
 }
 html.contact-screen-active #screen-contact .support-chat-compose textarea{
   height:48px!important;min-height:48px!important;max-height:48px!important;
@@ -2527,12 +2486,7 @@ html.contact-screen-active #screen-contact .contact-intro-copy h2,
 html.contact-screen-active #screen-contact .contact-intro-copy p{
   text-align:center!important;
 }
-html.contact-screen-active #screen-contact .support-chat{
-  flex:0 0 auto!important;
-}
-html.contact-screen-active #screen-contact.active:has(.contact-intro[hidden]) .support-chat{
-  flex:1 1 auto!important;
-}
+
 
 /* Final shared send icon: soft, fully filled white paper-plane silhouette. */
 #screen-contact .contact-send-plane,

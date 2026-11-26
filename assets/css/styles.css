@@ -2504,6 +2504,18 @@ html.contact-screen-active #screen-contact .support-chat-compose{
   margin:0!important;
   margin-top:auto!important;
 }
+html.contact-screen-active #screen-contact .support-chat-compose textarea{
+  height:48px!important;
+  min-height:48px!important;
+  max-height:48px!important;
+  box-sizing:border-box!important;
+  padding:13px 0!important;
+  line-height:22px!important;
+  text-align:left!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose textarea::placeholder{
+  text-align:left!important;
+}
 html.contact-screen-active #screen-contact .contact-intro#contact-intro{
   display:flex!important;
   flex:0 0 124px!important;

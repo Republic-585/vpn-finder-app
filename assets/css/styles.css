@@ -2480,7 +2480,7 @@ html.contact-screen-active #screen-contact .support-chat{
   min-height:0!important;
   height:auto!important;
   flex-direction:column!important;
-  gap:0!important;
+  gap:10px!important;
 }
 html.contact-screen-active #screen-contact .support-chat-messages{
   display:flex!important;

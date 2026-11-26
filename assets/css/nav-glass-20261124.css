@@ -75,3 +75,80 @@
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
   .bottom-nav-dock .bottom-nav{background:rgba(48,51,58,.96)}
 }
+
+
+/* iOS Liquid Tab Bar adaptation: icon-only VPN Finder navigation. */
+.bottom-nav-dock{
+  width:min(calc(100% - 28px),430px);
+  gap:10px;
+}
+.bottom-nav-dock .bottom-nav{
+  height:64px;
+  min-height:64px;
+  padding:4px;
+  overflow:visible;
+  border:0;
+  border-radius:32px;
+  background:rgba(22,22,24,.75);
+  -webkit-backdrop-filter:blur(30px) saturate(180%) contrast(110%);
+  backdrop-filter:blur(30px) saturate(180%) contrast(110%);
+  box-shadow:0 10px 30px rgba(0,0,0,.28);
+  touch-action:pan-y;
+}
+.bottom-nav-dock .bottom-nav::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:10;
+  padding:1px;
+  border-radius:inherit;
+  pointer-events:none;
+  background:linear-gradient(135deg,
+    rgba(255,255,255,.52) 0%,
+    rgba(255,255,255,.055) 30%,
+    rgba(255,255,255,0) 65%,
+    rgba(255,255,255,.22) 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  mask-composite:exclude;
+}
+.bottom-nav-dock .nav-indicator{
+  top:4px;
+  bottom:4px;
+  border:0;
+  border-radius:28px;
+  background:#3a3a3c;
+  box-shadow:0 2px 10px rgba(0,0,0,.18);
+  transition:transform .42s cubic-bezier(.2,.8,.2,1),width .42s cubic-bezier(.2,.8,.2,1);
+}
+.bottom-nav-dock .bottom-nav .nav-item,
+.bottom-nav-dock .bottom-nav .nav-item:active,
+.bottom-nav-dock .bottom-nav .nav-item:focus,
+.bottom-nav-dock .bottom-nav .nav-item:focus-visible{
+  gap:0;
+  color:#98989d;
+  touch-action:pan-y;
+}
+.bottom-nav-dock .bottom-nav .nav-item svg{
+  width:24px;
+  height:24px;
+  flex:0 0 24px;
+  stroke-width:1.9;
+}
+.bottom-nav-dock .bottom-nav .nav-item span{
+  display:none!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item.active,
+.bottom-nav-dock .bottom-nav .nav-item.active:active{
+  color:#0a84ff;
+}
+.bottom-nav-dock .profile-nav-button{
+  flex-basis:58px;
+  width:58px;
+  height:58px;
+  min-width:58px;
+}
+@media(prefers-reduced-motion:reduce){
+  .bottom-nav-dock .nav-indicator{transition:none!important}
+}

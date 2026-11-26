@@ -2442,14 +2442,14 @@ html.contact-screen-active body{
   overscroll-behavior:none;
 }
 html.contact-screen-active .app-shell{
-  height:100dvh!important;
+  height:var(--contact-viewport-height,100dvh)!important;
   min-height:0!important;
   overflow:hidden!important;
 }
 html.contact-screen-active .main-content{
   display:flex!important;
   flex-direction:column!important;
-  height:100dvh!important;
+  height:var(--contact-viewport-height,100dvh)!important;
   min-height:0!important;
   padding-top:0!important;
   padding-bottom:env(safe-area-inset-bottom)!important;

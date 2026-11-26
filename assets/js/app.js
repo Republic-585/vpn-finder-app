@@ -934,41 +934,52 @@ if (navBar) {
   indicator.className = "nav-indicator";
   indicator.setAttribute("aria-hidden", "true");
   navBar.prepend(indicator);
+
   let draggingNav = false;
   let dragMoved = false;
   let startX = 0;
   let suppressNavClickUntil = 0;
+  let lastActiveNavItem = null;
 
   const setIndicator = (left, width) => {
-    const inset = 5;
+    const inset = 4;
     indicator.style.width = Math.max(0, width - inset * 2) + "px";
     indicator.style.transform = `translateX(${left + inset}px)`;
   };
   const getNavItemBounds = item => {
     const navRect = navBar.getBoundingClientRect();
     const itemRect = item.getBoundingClientRect();
-    return { left: itemRect.left - navRect.left, width: itemRect.width, center: itemRect.left + itemRect.width / 2 - navRect.left };
+    return {
+      left: itemRect.left - navRect.left,
+      width: itemRect.width,
+      center: itemRect.left + itemRect.width / 2 - navRect.left
+    };
   };
+
   moveIndicator = () => {
-    const active = nav.find(button => button.classList.contains("active"));
-    if (active) {
-      const bounds = getNavItemBounds(active);
-      if (!bounds.width || !navBar.getBoundingClientRect().width) return;
-      indicator.hidden = false;
-      setIndicator(bounds.left, bounds.width);
-      indicator.classList.remove("is-switching");
-      void indicator.offsetWidth;
-      indicator.classList.add("is-switching");
-    } else {
+    const active = nav.find(item => item.classList.contains("active"));
+    if (!active) {
       indicator.hidden = true;
+      lastActiveNavItem = null;
+      return;
+    }
+    const bounds = getNavItemBounds(active);
+    if (!bounds.width || !navBar.getBoundingClientRect().width) return;
+    indicator.hidden = false;
+    setIndicator(bounds.left, bounds.width);
+
+    const changed = lastActiveNavItem !== null && lastActiveNavItem !== active;
+    lastActiveNavItem = active;
+    if (changed) {
+      indicator.classList.remove("is-settling");
+      void indicator.offsetWidth;
+      indicator.classList.add("is-settling");
     }
   };
+
   const slideIndicatorToFinger = clientX => {
     const navRect = navBar.getBoundingClientRect();
-    const points = nav.map(item => {
-      const bounds = getNavItemBounds(item);
-      return { left: bounds.left, width: bounds.width, center: bounds.center };
-    });
+    const points = nav.map(item => getNavItemBounds(item));
     if (!points.length) return;
     const x = Math.max(points[0].center, Math.min(clientX - navRect.left, points[points.length - 1].center));
     const right = points.findIndex(point => point.center >= x);
@@ -976,11 +987,16 @@ if (navBar) {
       setIndicator(points[0].left, points[0].width);
       return;
     }
-    const a = points[right - 1];
-    const b = points[right];
-    const t = (x - a.center) / (b.center - a.center);
-    setIndicator(a.left + (b.left - a.left) * t, a.width + (b.width - a.width) * t);
+    const leftPoint = points[right - 1];
+    const rightPoint = points[right];
+    const distance = rightPoint.center - leftPoint.center || 1;
+    const progress = (x - leftPoint.center) / distance;
+    setIndicator(
+      leftPoint.left + (rightPoint.left - leftPoint.left) * progress,
+      leftPoint.width + (rightPoint.width - leftPoint.width) * progress
+    );
   };
+
   const nearestItem = () => {
     const rect = indicator.getBoundingClientRect();
     const center = rect.left + rect.width / 2;
@@ -1003,35 +1019,38 @@ if (navBar) {
     navResizeObserver.observe(navBar);
     nav.forEach(item => navResizeObserver.observe(item));
   }
+
+  const clearPressState = () => {
+    navBar.classList.remove("is-pressed");
+    navBar.querySelectorAll(".nav-item.is-pressed").forEach(item => item.classList.remove("is-pressed"));
+    byId("profile-nav-button")?.classList.remove("is-pressed");
+  };
   navBar.addEventListener("pointerdown", event => {
+    navBar.classList.add("is-pressed");
     const pressedItem = event.target.closest(".nav-item");
     if (pressedItem) pressedItem.classList.add("is-pressed");
-  });
-  const clearPressedItem = event => {
-    const pressedItem = event.target.closest?.(".nav-item");
-    if (pressedItem) pressedItem.classList.remove("is-pressed");
-    navBar.querySelectorAll(".nav-item.is-pressed").forEach(item => item.classList.remove("is-pressed"));
-  };
-  navBar.addEventListener("pointerup", clearPressedItem);
-  navBar.addEventListener("pointercancel", clearPressedItem);
-  navBar.addEventListener("pointerleave", () => navBar.querySelectorAll(".nav-item.is-pressed").forEach(item => item.classList.remove("is-pressed")));
 
-  navBar.addEventListener("pointerdown", event => {
-    const item = event.target.closest(".nav-item");
-    if (!item || !item.classList.contains("active") || event.pointerType === "mouse") return;
+    if (!pressedItem || !pressedItem.classList.contains("active") || event.pointerType === "mouse") return;
     draggingNav = true;
     dragMoved = false;
     startX = event.clientX;
+    navBar.classList.add("is-dragging");
     try { navBar.setPointerCapture(event.pointerId); } catch (_) {}
   });
   navBar.addEventListener("pointermove", event => {
     if (!draggingNav) return;
     if (Math.abs(event.clientX - startX) > 6) dragMoved = true;
-    if (dragMoved) slideIndicatorToFinger(event.clientX);
+    if (dragMoved) {
+      event.preventDefault();
+      slideIndicatorToFinger(event.clientX);
+    }
   });
+
   const stopDragging = event => {
+    clearPressState();
     if (!draggingNav) return;
     draggingNav = false;
+    navBar.classList.remove("is-dragging");
     try { navBar.releasePointerCapture(event.pointerId); } catch (_) {}
     if (event.type === "pointercancel" || !dragMoved) {
       moveIndicator();
@@ -1047,17 +1066,24 @@ if (navBar) {
   };
   navBar.addEventListener("pointerup", stopDragging);
   navBar.addEventListener("pointercancel", stopDragging);
-  const profileButton = document.querySelector(".profile-nav-button");
+  navBar.addEventListener("lostpointercapture", event => {
+    if (!draggingNav) return;
+    draggingNav = false;
+    navBar.classList.remove("is-dragging");
+    clearPressState();
+    moveIndicator();
+  });
+  window.addEventListener("pointerup", clearPressState);
+  window.addEventListener("pointercancel", clearPressState);
+
+  const profileButton = byId("profile-nav-button");
   if (profileButton) {
     profileButton.addEventListener("pointerdown", () => profileButton.classList.add("is-pressed"));
-    ["pointerup","pointercancel","pointerleave"].forEach(type => profileButton.addEventListener(type, () => profileButton.classList.remove("is-pressed")));
+    ["pointerup", "pointercancel", "pointerleave", "blur"].forEach(type => {
+      profileButton.addEventListener(type, () => profileButton.classList.remove("is-pressed"));
+    });
   }
-  navBar.addEventListener("lostpointercapture", () => {
-    if (draggingNav) {
-      draggingNav = false;
-      moveIndicator();
-    }
-  });
+
   navBar.addEventListener("click", event => {
     if (Date.now() < suppressNavClickUntil) {
       event.preventDefault();
@@ -1163,15 +1189,6 @@ document.addEventListener("touchcancel", () => { tabSwipeStart = null; }, { pass
 
 // Navigation is handled once by the delegated document click listener below.
 
-// Explicit press state for iOS Safari, where :active can be unreliable in embedded apps.
-const profileNavButton = byId("profile-nav-button");
-if (profileNavButton) {
-  const setProfilePressed = pressed => profileNavButton.classList.toggle("is-pressed", pressed);
-  profileNavButton.addEventListener("pointerdown", () => setProfilePressed(true));
-  ["pointerup", "pointercancel", "pointerleave", "blur"].forEach(type => {
-    profileNavButton.addEventListener(type, () => setProfilePressed(false));
-  });
-}
 byId("profile-shortcut")?.addEventListener("click", () => showScreen("profile"));
 
 let profileReady = false;

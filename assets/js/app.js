@@ -2168,22 +2168,25 @@ function formatSupportMessageDateTime(value) {
   const time = date.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
   return day + " · " + time;
 }
-function renderSupportMessages(root, messages, includeDate = false, adminLastReadAt = null) {
+function renderSupportMessages(root, messages, viewerRole = "user", lastReadAt = null) {
   if (!root) return;
   const items = messages || [];
-  if (!items.length && !includeDate) {
+  if (!items.length && viewerRole === "user") {
     root.innerHTML = '<div class="contact-empty-state"><strong>Чем можем помочь?</strong><span>Задайте вопрос, поделитесь идеей или расскажите о проблеме…</span></div>';
     return;
   }
-  const readAt = adminLastReadAt ? Date.parse(adminLastReadAt) : NaN;
+  const readAt = lastReadAt ? Date.parse(lastReadAt) : NaN;
+  const checkIcon = read => read
+    ? '<svg class="support-read-icon is-read" viewBox="0 0 18 12" aria-hidden="true"><path d="m1 6 3.2 3.2L10 2.5M6.5 6l3.2 3.2L17 2.5"/></svg>'
+    : '<svg class="support-read-icon" viewBox="0 0 12 12" aria-hidden="true"><path d="m1.5 6 3.2 3.2L10.5 2.5"/></svg>';
   root.innerHTML = items.map(message => {
-    const time = includeDate ? formatSupportMessageDateTime(message.created_at) : formatSupportTime(message.created_at);
-    const isOutgoing = !includeDate && message.sender !== "admin";
+    const time = viewerRole === "admin" ? formatSupportMessageDateTime(message.created_at) : formatSupportTime(message.created_at);
+    const isOutgoing = message.sender === viewerRole;
     const isRead = isOutgoing && Number.isFinite(readAt) && Date.parse(message.created_at) <= readAt;
     const status = isOutgoing
-      ? '<span class="support-message-status' + (isRead ? ' is-read' : '') + '" aria-label="' + (isRead ? 'Прочитано администратором' : 'Отправлено') + '" title="' + (isRead ? 'Прочитано администратором' : 'Отправлено') + '">' + (isRead ? '✓✓' : '✓') + '</span>'
+      ? '<span class="support-message-status" aria-label="' + (isRead ? 'Прочитано' : 'Отправлено') + '" title="' + (isRead ? 'Прочитано' : 'Отправлено') + '">' + checkIcon(isRead) + '</span>'
       : '';
-    return '<div class="support-message ' + (message.sender === "admin" ? "support-message-admin" : "support-message-user") + '">' +
+    return '<div class="support-message ' + (isOutgoing ? 'support-message-outgoing' : 'support-message-incoming') + '">' +
       '<span class="support-message-body">' + esc(message.body) + '</span>' +
       (time ? '<time class="support-message-time" datetime="' + esc(message.created_at) + '">' + esc(time) + status + '</time>' : '') +
       '</div>';
@@ -2255,7 +2258,7 @@ async function loadContactConversation() {
   if (!root || !tg?.initData) return;
   try {
     const result = await supportRequest("get");
-    renderSupportMessages(root, result.messages, false, result.thread?.admin_last_read_at);
+    renderSupportMessages(root, result.messages, "user", result.thread?.admin_last_read_at);
     renderContactUnreadBadge(0);
   } catch (_) {}
 }
@@ -2382,7 +2385,7 @@ async function openSupportThread(threadId, name) {
       fallback.textContent = initial;
       threadAvatar.replaceWith(fallback);
     }, { once: true });
-    renderSupportMessages(byId("support-inbox-messages"), result.messages, true);
+    renderSupportMessages(byId("support-inbox-messages"), result.messages, "admin", result.thread?.user_last_read_at);
     loadSupportUnreadBadge();
   } catch (_) {}
 }
@@ -2409,7 +2412,7 @@ byId("support-reply-form")?.addEventListener("submit", async event => {
     await supportRequest("reply", { thread_id: activeSupportThreadId, message });
     form.reset();
     const result = await supportRequest("get", { thread_id: activeSupportThreadId });
-    renderSupportMessages(byId("support-inbox-messages"), result.messages, true);
+    renderSupportMessages(byId("support-inbox-messages"), result.messages, "admin", result.thread?.user_last_read_at);
   } catch (_) {
   } finally {
     button.disabled = false;

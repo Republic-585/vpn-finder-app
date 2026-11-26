@@ -2516,41 +2516,6 @@ html.contact-screen-active #screen-contact .support-chat-compose textarea{
 html.contact-screen-active #screen-contact .support-chat-compose textarea::placeholder{
   text-align:left!important;
 }
-html.contact-screen-active #screen-contact .contact-intro#contact-intro{
-  display:flex!important;
-  flex:0 0 124px!important;
-  height:124px!important;
-  min-height:124px!important;
-  max-height:124px!important;
-  margin-top:calc(12px + env(safe-area-inset-top))!important;
-}
-html.contact-screen-active #screen-contact .support-chat{
-  display:flex!important;
-  flex:1 1 0!important;
-  min-height:0!important;
-  height:auto!important;
-}
-html.contact-screen-active #screen-contact .support-chat-messages{
-  display:flex!important;
-  flex:1 1 0!important;
-  min-height:0!important;
-  height:auto!important;
-  justify-content:flex-start!important;
-  overflow-y:auto!important;
-}
-html.contact-screen-active #screen-contact .contact-empty-state{
-  flex:1 1 0!important;
-  min-height:0!important;
-  height:100%!important;
-  justify-content:center!important;
-}
-html.contact-screen-active #screen-contact .support-chat-compose{
-  flex:0 0 64px!important;
-  margin:0!important;
-  margin-top:auto!important;
-}
-
-
 /* Reuse the animated profile ring on both support-chat identity avatars. */
 #screen-contact .contact-support-avatar,
 html.support-inbox-chat-mode #screen-support-inbox .support-thread-header-avatar{

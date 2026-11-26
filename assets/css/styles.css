@@ -2212,8 +2212,11 @@ body.contact-no-bottom-navigation .bottom-nav-dock{display:none!important}
   font-size:10px;line-height:1.1;font-weight:500
 }
 .support-message-time{display:inline-flex;align-items:center;gap:4px}
-.support-message-status{font-size:11px;line-height:1;font-weight:700;letter-spacing:-2px;color:rgba(255,255,255,.78)}
-.support-message-status.is-read{color:#eaf6ff;opacity:1}
+.support-message-outgoing{align-self:flex-end;background:#3390ec!important;color:#fff!important;border:0!important;border-bottom-right-radius:6px!important}
+.support-message-incoming{align-self:flex-start;background:var(--panel)!important;color:var(--text)!important;border:1px solid var(--line)!important;border-bottom-left-radius:6px!important}
+.support-message-status{display:inline-flex;align-items:center;margin-left:2px;vertical-align:-1px}
+.support-read-icon{display:block;width:12px;height:12px;fill:none;stroke:rgba(255,255,255,.76);stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+.support-read-icon.is-read{width:17px;stroke:#eaf6ff}
 
 
 /* Management inbox: immersive chat layout with scrolling limited to the message history. */

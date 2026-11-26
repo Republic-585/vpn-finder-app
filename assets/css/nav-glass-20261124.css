@@ -1,212 +1,245 @@
-/* Canonical bottom navigation and profile control.
-   This file is the sole owner of navigation layout, typography and interaction styles. */
-.bottom-nav-dock{position:fixed;z-index:20;left:50%;bottom:calc(9px + env(safe-area-inset-bottom));width:min(calc(100% - 28px),520px);display:flex;align-items:center;gap:10px;transform:translateX(-50%)}
-.bottom-nav-dock .bottom-nav{position:relative;inset:auto;left:auto;bottom:auto;box-sizing:border-box;flex:1 1 auto;min-width:0;width:auto;height:68px;min-height:68px;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;overflow:hidden;isolation:isolate;border:1px solid transparent;outline:0;border-radius:999px;background:linear-gradient(rgba(32,33,36,.20),rgba(32,33,36,.20)) padding-box;-webkit-backdrop-filter:blur(2px) saturate(200%);backdrop-filter:blur(2px) saturate(200%);box-shadow:none}
-.bottom-nav-dock .bottom-nav::before{content:"";position:absolute;inset:0;z-index:0;display:block;padding:1px;border-radius:inherit;pointer-events:none;background:linear-gradient(90deg,transparent 0%,rgba(145,148,156,.16) 16%,rgba(145,148,156,.16) 84%,transparent 100%),linear-gradient(90deg,transparent 0%,rgba(145,148,156,.16) 16%,rgba(145,148,156,.16) 84%,transparent 100%),radial-gradient(ellipse 34% 100% at 0% 0%,rgba(145,148,156,.48) 0%,rgba(145,148,156,.16) 38%,transparent 78%),radial-gradient(ellipse 34% 100% at 100% 0%,rgba(145,148,156,.48) 0%,rgba(145,148,156,.16) 38%,transparent 78%),radial-gradient(ellipse 34% 100% at 0% 100%,rgba(145,148,156,.48) 0%,rgba(145,148,156,.16) 38%,transparent 78%),radial-gradient(ellipse 34% 100% at 100% 100%,rgba(145,148,156,.48) 0%,rgba(145,148,156,.16) 38%,transparent 78%);background-size:100% 1px,100% 1px,auto,auto,auto,auto;background-position:top,bottom,center,center,center,center;background-repeat:no-repeat;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude}
-.bottom-nav-dock .bottom-nav::after{content:none;display:none}
-.bottom-nav-dock .nav-indicator{position:absolute;z-index:1;left:0;top:5px;bottom:5px;height:auto;box-sizing:border-box;width:0;border:0;border-radius:999px;background:rgba(91,93,99,.72);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 2px 7px rgba(0,0,0,.12);pointer-events:none;transition:transform .2s cubic-bezier(.2,.8,.2,1),width .2s cubic-bezier(.2,.8,.2,1)}
-.bottom-nav-dock .bottom-nav .nav-item,.bottom-nav-dock .bottom-nav .nav-item:active,.bottom-nav-dock .bottom-nav .nav-item.active,.bottom-nav-dock .bottom-nav .nav-item:focus,.bottom-nav-dock .bottom-nav .nav-item:focus-visible{position:relative;z-index:2;box-sizing:border-box;width:100%;min-width:0;height:100%;margin:0;padding:0 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:0;border-radius:999px;outline:0;background:transparent;color:#fff;text-align:center;font-family:inherit;font-size:11px!important;line-height:14px!important;font-weight:500!important;letter-spacing:normal!important;cursor:pointer;-webkit-tap-highlight-color:transparent;transform:none!important;filter:none!important;animation:none!important;transition:none!important}
-.bottom-nav-dock .bottom-nav .nav-item svg{display:block;flex:0 0 22px;width:22px;height:22px;margin:0;fill:none;stroke:currentColor;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round;overflow:visible;transform:none!important;filter:none!important;animation:none!important;transition:none!important}
-.bottom-nav-dock .bottom-nav .nav-item span{position:static;display:block;flex:0 0 12px;width:auto;max-width:100%;height:12px;margin:0;padding:0;color:inherit;font-family:inherit;font-size:11px!important;line-height:14px!important;font-weight:500!important;letter-spacing:normal!important;white-space:nowrap;text-align:center;transform:none!important;filter:none!important;animation:none!important;transition:none!important}
-.bottom-nav-dock .bottom-nav .nav-item.active{color:#fff;background:transparent;box-shadow:none}
-.bottom-nav-dock .bottom-nav .nav-item:active{color:#fff;background:transparent;filter:none}
-
-/* Profile ring is independent from the tab indicator; graphite separates it from the avatar. */
-.bottom-nav-dock .profile-nav-button{position:relative;box-sizing:border-box;flex:0 0 62px;width:62px;height:62px;min-width:62px;padding:0;display:grid;place-items:center;overflow:visible;isolation:isolate;border:0;border-radius:50%;outline:0;background:transparent;color:#fff;box-shadow:none;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:none;transform:none!important;filter:none!important}
-.bottom-nav-dock .profile-nav-button::before{content:none;display:none}
-.bottom-nav-dock .profile-nav-button::after{content:"";position:absolute;inset:-3px;z-index:3;padding:3px;border-radius:50%;pointer-events:none;background:conic-gradient(from 0deg,#48E6D0 0%,#6DE7A7 22%,#20C9B5 46%,#55DDBF 68%,#32DCC8 84%,#48E6D0 100%);opacity:0;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;transition:opacity .25s ease}
-.bottom-nav-dock .profile-nav-button.is-current::after{opacity:1;animation:profile-ring-flow 5.5s linear infinite,profile-ring-breathe 3.2s ease-in-out infinite}
-.bottom-nav-dock .profile-nav-button.is-pressed{filter:brightness(1.04)!important}
-.bottom-nav-dock .profile-nav-button img,.bottom-nav-dock .profile-nav-button span{position:relative;z-index:1;box-sizing:border-box;width:100%;height:100%;border:0;outline:0;border-radius:50%;box-shadow:none;filter:none}
-.bottom-nav-dock .profile-nav-button img{display:block;object-fit:cover}
-.bottom-nav-dock .profile-nav-button span{display:grid;place-items:center;background:var(--raised);color:#fff;font-family:inherit;font-size:22px;line-height:1;font-weight:650;letter-spacing:-.04em}
-.bottom-nav-dock .profile-nav-button img[hidden],.bottom-nav-dock .profile-nav-button span[hidden]{display:none}
-@keyframes profile-ring-flow{to{transform:rotate(360deg)}}
-@keyframes profile-ring-breathe{0%,100%{filter:brightness(.94) saturate(1)}50%{filter:brightness(1.2) saturate(1.22)}}
-@media(min-width:700px){.bottom-nav-dock{bottom:24px;width:min(calc(100% - 56px),520px)}}
-@media(prefers-reduced-motion:reduce){.bottom-nav-dock .nav-indicator{transition:none}.bottom-nav-dock .profile-nav-button.is-current::after{animation:none}}
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.bottom-nav-dock .bottom-nav{background:rgba(39,41,47,.88)}}
-
-
-/* Liquid Glass refinement for the existing three-tab VPN Finder navigation. */
-.bottom-nav-dock .bottom-nav{
-  border:1px solid rgba(255,255,255,.17);
-  background:linear-gradient(180deg,rgba(66,69,76,.78) 0%,rgba(42,44,50,.78) 100%);
-  -webkit-backdrop-filter:blur(24px) saturate(185%);
-  backdrop-filter:blur(24px) saturate(185%);
-  box-shadow:0 12px 34px rgba(0,0,0,.28),0 3px 9px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.19),inset 0 -1px 0 rgba(255,255,255,.035);
-}
-.bottom-nav-dock .bottom-nav::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:0;
-  display:block;
-  border-radius:inherit;
-  pointer-events:none;
-  background:linear-gradient(180deg,rgba(255,255,255,.075),transparent 38%);
-  -webkit-mask:none;
-  mask:none;
-}
-.bottom-nav-dock .nav-indicator{
-  top:5px;
-  bottom:5px;
-  border:1px solid rgba(255,255,255,.15);
-  border-radius:999px;
-  background:linear-gradient(180deg,rgba(112,177,230,.25),rgba(83,137,190,.17));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(255,255,255,.035),0 3px 12px rgba(0,0,0,.16);
-  transition:transform .38s cubic-bezier(.22,1,.36,1),width .38s cubic-bezier(.22,1,.36,1);
-}
-.bottom-nav-dock .bottom-nav .nav-item,
-.bottom-nav-dock .bottom-nav .nav-item:active,
-.bottom-nav-dock .bottom-nav .nav-item:focus,
-.bottom-nav-dock .bottom-nav .nav-item:focus-visible{
-  color:rgba(255,255,255,.68);
-  transition:color .22s ease!important;
-}
-.bottom-nav-dock .bottom-nav .nav-item.active,
-.bottom-nav-dock .bottom-nav .nav-item.active:active{
-  color:#A9D8FF;
-}
-@media(prefers-reduced-motion:reduce){
-  .bottom-nav-dock .nav-indicator{transition:none!important}
-  .bottom-nav-dock .bottom-nav .nav-item{transition:none!important}
-}
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  .bottom-nav-dock .bottom-nav{background:rgba(48,51,58,.96)}
+/* VPN Finder Liquid Glass navigation: one canonical style layer. */
+:root{
+  --nav-glass-bg:rgba(255,255,255,.08);
+  --nav-glass-border:rgba(255,255,255,.15);
+  --nav-glass-active:rgba(255,255,255,.18);
+  --nav-glass-active-border:rgba(255,255,255,.25);
+  --nav-glass-accent:#0a84ff;
+  --nav-glass-muted:rgba(255,255,255,.58);
 }
 
-
-/* iOS Liquid Tab Bar adaptation: icon-only VPN Finder navigation. */
+/* Dock keeps the profile control separate from the three-tab glass surface. */
 .bottom-nav-dock{
-  width:min(calc(100% - 28px),430px);
-  gap:10px;
+  position:fixed;
+  z-index:20;
+  left:50%;
+  bottom:calc(16px + env(safe-area-inset-bottom));
+  width:min(calc(100% - 32px),470px);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  transform:translateX(-50%);
 }
+
+/* The panel follows the supplied Liquid Glass geometry and material. */
 .bottom-nav-dock .bottom-nav{
+  position:relative;
+  flex:1 1 auto;
+  min-width:0;
+  width:auto;
   height:64px;
   min-height:64px;
+  box-sizing:border-box;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  align-items:stretch;
+  gap:0;
   padding:4px;
-  overflow:visible;
-  border:0;
-  border-radius:32px;
-  background:rgba(22,22,24,.75);
-  -webkit-backdrop-filter:blur(30px) saturate(180%) contrast(110%);
-  backdrop-filter:blur(30px) saturate(180%) contrast(110%);
-  box-shadow:0 10px 30px rgba(0,0,0,.28);
+  overflow:hidden;
+  isolation:isolate;
+  border:1px solid var(--nav-glass-border);
+  border-radius:36px;
+  outline:0;
+  background:var(--nav-glass-bg);
+  -webkit-backdrop-filter:blur(25px) saturate(180%);
+  backdrop-filter:blur(25px) saturate(180%);
+  box-shadow:0 20px 40px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.12);
+  transform:scale(1);
+  transform-origin:center;
+  transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s ease;
   touch-action:pan-y;
+  -webkit-tap-highlight-color:transparent;
 }
 .bottom-nav-dock .bottom-nav::before{
   content:"";
   position:absolute;
   inset:0;
-  z-index:10;
-  padding:1px;
+  z-index:3;
   border-radius:inherit;
   pointer-events:none;
-  background:linear-gradient(135deg,
-    rgba(255,255,255,.52) 0%,
-    rgba(255,255,255,.055) 30%,
-    rgba(255,255,255,0) 65%,
-    rgba(255,255,255,.22) 100%);
-  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor;
-  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-  mask-composite:exclude;
+  background:linear-gradient(145deg,rgba(255,255,255,.20) 0%,rgba(255,255,255,.055) 28%,transparent 62%,rgba(255,255,255,.045) 100%);
 }
+.bottom-nav-dock .bottom-nav.is-pressed{
+  transform:scale(.975);
+  box-shadow:0 12px 28px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.16);
+}
+
+/* The active glass lens is positioned by the existing navigation controller. */
 .bottom-nav-dock .nav-indicator{
+  position:absolute;
+  z-index:1;
   top:4px;
   bottom:4px;
-  border:0;
-  border-radius:28px;
-  background:#3a3a3c;
-  box-shadow:0 2px 10px rgba(0,0,0,.18);
-  transition:transform .42s cubic-bezier(.2,.8,.2,1),width .42s cubic-bezier(.2,.8,.2,1);
+  left:0;
+  width:0;
+  box-sizing:border-box;
+  border:1px solid var(--nav-glass-active-border);
+  border-radius:32px;
+  background:var(--nav-glass-active);
+  box-shadow:0 4px 12px rgba(0,0,0,.16),inset 0 1px 1px rgba(255,255,255,.24);
+  pointer-events:none;
+  transform-origin:center;
+  will-change:width,transform,scale;
+  transition:width .42s cubic-bezier(.175,.885,.32,1.15),transform .42s cubic-bezier(.175,.885,.32,1.15);
 }
+.bottom-nav-dock .bottom-nav.is-dragging .nav-indicator{
+  transition:none;
+}
+.bottom-nav-dock .nav-indicator.is-settling{
+  animation:nav-liquid-jelly .58s cubic-bezier(.175,.885,.32,1.15);
+}
+@keyframes nav-liquid-jelly{
+  0%{scale:1 1}
+  18%{scale:1.13 .88}
+  38%{scale:.94 1.10}
+  58%{scale:1.055 .96}
+  76%{scale:.985 1.025}
+  100%{scale:1 1}
+}
+
+/* Original VPN Finder SVGs remain; only their visual labels are hidden. */
 .bottom-nav-dock .bottom-nav .nav-item,
-.bottom-nav-dock .bottom-nav .nav-item:active,
 .bottom-nav-dock .bottom-nav .nav-item:focus,
 .bottom-nav-dock .bottom-nav .nav-item:focus-visible{
-  gap:0;
-  color:#98989d;
+  position:relative;
+  z-index:2;
+  box-sizing:border-box;
+  width:100%;
+  min-width:0;
+  height:100%;
+  margin:0;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  border-radius:30px;
+  outline:0;
+  background:transparent;
+  color:var(--nav-glass-muted);
+  font:inherit;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  transition:color .2s ease,scale .18s cubic-bezier(.2,.8,.2,1);
   touch-action:pan-y;
 }
 .bottom-nav-dock .bottom-nav .nav-item svg{
+  display:block;
+  flex:0 0 24px;
   width:24px;
   height:24px;
-  flex:0 0 24px;
+  margin:0;
+  fill:none;
+  stroke:currentColor;
   stroke-width:1.9;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  overflow:visible;
+  transition:none;
 }
 .bottom-nav-dock .bottom-nav .nav-item span{
   display:none!important;
 }
-.bottom-nav-dock .bottom-nav .nav-item.active,
-.bottom-nav-dock .bottom-nav .nav-item.active:active{
-  color:#0a84ff;
-}
-.bottom-nav-dock .profile-nav-button{
-  flex-basis:58px;
-  width:58px;
-  height:58px;
-  min-width:58px;
-}
-@media(prefers-reduced-motion:reduce){
-  .bottom-nav-dock .nav-indicator{transition:none!important}
-}
-
-
-/* Liquid glass: restore the translucent surface and add tactile jelly motion. */
-.bottom-nav-dock .bottom-nav{
-  background:rgba(255,255,255,.085)!important;
-  border:1px solid rgba(255,255,255,.15)!important;
-  -webkit-backdrop-filter:blur(25px) saturate(180%)!important;
-  backdrop-filter:blur(25px) saturate(180%)!important;
-  box-shadow:0 16px 34px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.16)!important;
-}
-.bottom-nav-dock .bottom-nav::before{
-  background:linear-gradient(145deg,rgba(255,255,255,.20),rgba(255,255,255,.025) 42%,transparent 72%)!important;
-}
-.bottom-nav-dock .nav-indicator{
-  background:rgba(255,255,255,.18)!important;
-  border:1px solid rgba(255,255,255,.23)!important;
-  box-shadow:0 4px 12px rgba(0,0,0,.16),inset 0 1px 1px rgba(255,255,255,.24)!important;
-  transform-origin:center;
-  will-change:transform,width;
-}
-.bottom-nav-dock .nav-indicator.is-switching{
-  animation:nav-liquid-jelly .56s cubic-bezier(.2,.8,.2,1) both;
-}
-@keyframes nav-liquid-jelly{
-  0%{scale:1 1}
-  22%{scale:1.13 .88}
-  46%{scale:.94 1.09}
-  68%{scale:1.045 .97}
-  84%{scale:.985 1.02}
-  100%{scale:1 1}
-}
-.bottom-nav-dock .bottom-nav .nav-item{
-  transition:color .18s ease,scale .18s cubic-bezier(.2,.8,.2,1)!important;
+.bottom-nav-dock .bottom-nav .nav-item.active{
+  color:var(--nav-glass-accent);
 }
 .bottom-nav-dock .bottom-nav .nav-item:active,
 .bottom-nav-dock .bottom-nav .nav-item.is-pressed{
   scale:.88;
-  color:#fff!important;
-}
-.bottom-nav-dock .bottom-nav .nav-item.active{
-  color:#0a84ff!important;
+  color:#fff;
 }
 .bottom-nav-dock .bottom-nav .nav-item.active:active,
 .bottom-nav-dock .bottom-nav .nav-item.active.is-pressed{
-  scale:.91;
-  color:#0a84ff!important;
+  scale:.92;
+  color:var(--nav-glass-accent);
 }
+
+/* The profile avatar remains an independent control with its animated ring. */
 .bottom-nav-dock .profile-nav-button{
-  transition:scale .18s cubic-bezier(.2,.8,.2,1)!important;
+  position:relative;
+  box-sizing:border-box;
+  flex:0 0 58px;
+  width:58px;
+  height:58px;
+  min-width:58px;
+  padding:0;
+  display:grid;
+  place-items:center;
+  overflow:visible;
+  isolation:isolate;
+  border:0;
+  border-radius:50%;
+  outline:0;
+  background:transparent;
+  color:#fff;
+  box-shadow:none;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  transition:scale .18s cubic-bezier(.2,.8,.2,1);
+}
+.bottom-nav-dock .profile-nav-button::before{content:none;display:none}
+.bottom-nav-dock .profile-nav-button::after{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  z-index:3;
+  padding:3px;
+  border-radius:50%;
+  pointer-events:none;
+  background:conic-gradient(from 0deg,#48E6D0 0%,#6DE7A7 22%,#20C9B5 46%,#55DDBF 68%,#32DCC8 84%,#48E6D0 100%);
+  opacity:0;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  transition:opacity .25s ease;
+}
+.bottom-nav-dock .profile-nav-button.is-current::after{
+  opacity:1;
+  animation:profile-ring-flow 5.5s linear infinite,profile-ring-breathe 3.2s ease-in-out infinite;
 }
 .bottom-nav-dock .profile-nav-button:active,
-.bottom-nav-dock .profile-nav-button.is-pressed{
-  scale:.92;
+.bottom-nav-dock .profile-nav-button.is-pressed{scale:.92}
+.bottom-nav-dock .profile-nav-button img,
+.bottom-nav-dock .profile-nav-button span{
+  position:relative;
+  z-index:1;
+  box-sizing:border-box;
+  width:100%;
+  height:100%;
+  border:0;
+  outline:0;
+  border-radius:50%;
+  box-shadow:none;
+}
+.bottom-nav-dock .profile-nav-button img{display:block;object-fit:cover}
+.bottom-nav-dock .profile-nav-button span{
+  display:grid;
+  place-items:center;
+  background:var(--raised);
+  color:#fff;
+  font-family:inherit;
+  font-size:22px;
+  line-height:1;
+  font-weight:650;
+  letter-spacing:-.04em;
+}
+.bottom-nav-dock .profile-nav-button img[hidden],
+.bottom-nav-dock .profile-nav-button span[hidden]{display:none}
+@keyframes profile-ring-flow{to{transform:rotate(360deg)}}
+@keyframes profile-ring-breathe{0%,100%{filter:brightness(.94) saturate(1)}50%{filter:brightness(1.2) saturate(1.22)}}
+
+@media(min-width:700px){
+  .bottom-nav-dock{bottom:24px}
 }
 @media(prefers-reduced-motion:reduce){
-  .bottom-nav-dock .nav-indicator.is-switching{animation:none!important}
-  .bottom-nav-dock .bottom-nav .nav-item,.bottom-nav-dock .profile-nav-button{transition:none!important}
+  .bottom-nav-dock .bottom-nav,
+  .bottom-nav-dock .bottom-nav .nav-item,
+  .bottom-nav-dock .profile-nav-button{transition:none!important}
+  .bottom-nav-dock .nav-indicator{transition:none!important}
+  .bottom-nav-dock .nav-indicator.is-settling,
+  .bottom-nav-dock .profile-nav-button.is-current::after{animation:none!important}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .bottom-nav-dock .bottom-nav{background:rgba(35,37,42,.94)}
 }

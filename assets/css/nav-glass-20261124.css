@@ -152,3 +152,61 @@
 @media(prefers-reduced-motion:reduce){
   .bottom-nav-dock .nav-indicator{transition:none!important}
 }
+
+
+/* Liquid glass: restore the translucent surface and add tactile jelly motion. */
+.bottom-nav-dock .bottom-nav{
+  background:rgba(255,255,255,.085)!important;
+  border:1px solid rgba(255,255,255,.15)!important;
+  -webkit-backdrop-filter:blur(25px) saturate(180%)!important;
+  backdrop-filter:blur(25px) saturate(180%)!important;
+  box-shadow:0 16px 34px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.16)!important;
+}
+.bottom-nav-dock .bottom-nav::before{
+  background:linear-gradient(145deg,rgba(255,255,255,.20),rgba(255,255,255,.025) 42%,transparent 72%)!important;
+}
+.bottom-nav-dock .nav-indicator{
+  background:rgba(255,255,255,.18)!important;
+  border:1px solid rgba(255,255,255,.23)!important;
+  box-shadow:0 4px 12px rgba(0,0,0,.16),inset 0 1px 1px rgba(255,255,255,.24)!important;
+  transform-origin:center;
+  will-change:transform,width;
+}
+.bottom-nav-dock .nav-indicator.is-switching{
+  animation:nav-liquid-jelly .56s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes nav-liquid-jelly{
+  0%{scale:1 1}
+  22%{scale:1.13 .88}
+  46%{scale:.94 1.09}
+  68%{scale:1.045 .97}
+  84%{scale:.985 1.02}
+  100%{scale:1 1}
+}
+.bottom-nav-dock .bottom-nav .nav-item{
+  transition:color .18s ease,scale .18s cubic-bezier(.2,.8,.2,1)!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item:active,
+.bottom-nav-dock .bottom-nav .nav-item.is-pressed{
+  scale:.88;
+  color:#fff!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item.active{
+  color:#0a84ff!important;
+}
+.bottom-nav-dock .bottom-nav .nav-item.active:active,
+.bottom-nav-dock .bottom-nav .nav-item.active.is-pressed{
+  scale:.91;
+  color:#0a84ff!important;
+}
+.bottom-nav-dock .profile-nav-button{
+  transition:scale .18s cubic-bezier(.2,.8,.2,1)!important;
+}
+.bottom-nav-dock .profile-nav-button:active,
+.bottom-nav-dock .profile-nav-button.is-pressed{
+  scale:.92;
+}
+@media(prefers-reduced-motion:reduce){
+  .bottom-nav-dock .nav-indicator.is-switching{animation:none!important}
+  .bottom-nav-dock .bottom-nav .nav-item,.bottom-nav-dock .profile-nav-button{transition:none!important}
+}

@@ -2020,10 +2020,6 @@ html.profile-screen-active #screen-profile .profile-view{padding-top:calc(8px + 
 
 
 /* Keep the Contact screen fixed in the viewport without changing scrolling elsewhere. */
-html.contact-screen-active,html.contact-screen-active body{width:100%;height:100%;overflow:hidden!important;overscroll-behavior:none}
-html.contact-screen-active .app-shell{height:100dvh;min-height:0;overflow:hidden}
-html.contact-screen-active .main-content{height:100%;min-height:0;overflow:hidden;padding-bottom:calc(112px + env(safe-area-inset-bottom))}
-html.contact-screen-active #screen-contact.active{height:calc(100dvh - 112px - env(safe-area-inset-bottom));min-height:0;overflow:hidden}
 
 
 /* Minimal two-way support chat */
@@ -2059,12 +2055,6 @@ html.contact-screen-active #screen-contact.active{height:calc(100dvh - 112px - e
 /* Layout correction: prevent horizontal page dragging and keep the contact composer in view. */
 html,body{max-width:100%;overflow-x:clip}
 .app-shell,.main-content{max-width:100%;overflow-x:clip}
-#screen-contact.active{height:calc(100dvh - 58px - 112px - env(safe-area-inset-bottom));min-height:0}
-html.contact-screen-active .app-shell{height:100dvh;min-height:0}
-html.contact-screen-active .main-content{height:calc(100dvh - 58px);min-height:0;padding-bottom:calc(112px + env(safe-area-inset-bottom));overflow:hidden}
-html.contact-screen-active #screen-contact.active{height:calc(100dvh - 58px - 112px - env(safe-area-inset-bottom));min-height:0;overflow:hidden}
-#screen-contact .support-chat{flex:1 1 auto;min-height:0}
-#screen-contact .support-chat-messages{flex:1 1 auto;min-height:0}
 
 /* Management group follows the same full-width menu geometry and shared type scale. */
 #screen-profile .profile-management-group{display:block;width:100%;margin-top:24px}
@@ -2079,8 +2069,6 @@ html.contact-screen-active #screen-contact.active{height:calc(100dvh - 58px - 11
 
 /* Contact screen: focused messenger layout without the app navigation dock. */
 body.contact-no-bottom-navigation .bottom-nav-dock{display:none!important}
-html.contact-screen-active .main-content,body.contact-screen-active .main-content{padding-bottom:calc(12px + env(safe-area-inset-bottom))!important}
-html.contact-screen-active #screen-contact.active,body.contact-screen-active #screen-contact.active{height:calc(100dvh - env(safe-area-inset-top) - 58px - env(safe-area-inset-bottom))!important;min-height:0!important;padding-bottom:0!important}
 #screen-contact .page-heading{padding:calc(18px + env(safe-area-inset-top)) 2px 14px!important}
 #screen-contact .contact-intro{display:grid;grid-template-columns:42px minmax(0,1fr);gap:11px;margin:0 0 14px;padding:15px;border:1px solid var(--line);border-radius:20px;background:var(--panel)}
 #screen-contact .contact-intro[hidden]{display:none!important}
@@ -2106,41 +2094,6 @@ html.contact-screen-active #screen-contact.active,body.contact-screen-active #sc
 
 
 /* Contact composer layout: use the full viewport because the top bar is hidden. */
-html.contact-screen-active,html.contact-screen-active body{height:100%;min-height:0;overflow:hidden!important}
-html.contact-screen-active .app-shell{height:100dvh!important;min-height:0!important;overflow:hidden}
-html.contact-screen-active .main-content{
-  display:flex!important;flex-direction:column!important;
-  height:100dvh!important;min-height:0!important;
-  padding-top:0!important;
-  padding-bottom:calc(10px + env(safe-area-inset-bottom))!important;
-  overflow:hidden!important;box-sizing:border-box
-}
-html.contact-screen-active #screen-contact.active{
-  display:flex!important;flex:1 1 auto!important;
-  width:100%;height:auto!important;min-height:0!important;
-  flex-direction:column;overflow:hidden!important;padding-bottom:0!important
-}
-#screen-contact .page-heading{flex:0 0 auto}
-#screen-contact .contact-intro{flex:0 0 auto}
-#screen-contact .support-chat{
-  display:flex;flex:1 1 auto!important;min-height:0!important;
-  flex-direction:column;gap:8px!important
-}
-#screen-contact .support-chat-messages{
-  flex:1 1 auto!important;min-height:0!important;
-  overflow-y:auto;overscroll-behavior:contain;
-  -webkit-overflow-scrolling:touch
-}
-#screen-contact .support-chat-compose{
-  box-sizing:border-box;flex:0 0 auto!important;
-  min-height:60px!important;align-items:center!important
-}
-#screen-contact .support-chat-compose textarea{
-  box-sizing:border-box;min-height:42px!important;
-  max-height:112px!important;padding:8px 0!important;
-  line-height:1.35!important;align-self:center
-}
-#screen-contact .contact-compose-note{flex:0 0 auto}
 
 
 /* Contact screen typography and Telegram-style send interaction. */
@@ -2362,68 +2315,6 @@ html.support-screen-active #screen-support .support-method-container .crypto-sup
 
 
 /* Contact screen: keep the composer at the true viewport bottom and align its placeholder. */
-html.contact-screen-active,
-html.contact-screen-active body{
-  height:100%;min-height:0;overflow:hidden!important;overscroll-behavior:none;
-}
-html.contact-screen-active .app-shell{
-  height:100dvh;min-height:0;overflow:hidden;
-}
-html.contact-screen-active .main-content{
-  height:100dvh;min-height:0;overflow:hidden;
-  padding-top:0!important;
-  padding-bottom:env(safe-area-inset-bottom)!important;
-}
-html.contact-screen-active #screen-contact.active{
-  display:flex!important;flex-direction:column!important;
-  justify-content:flex-start!important;align-items:stretch!important;
-  height:100%;min-height:0;box-sizing:border-box;
-  padding-bottom:0!important;
-}
-html.contact-screen-active #screen-contact .contact-intro{
-  flex:0 0 auto;
-}
-/* Final user contact layout: fixed header, scrollable history, bottom composer. */
-html.contact-screen-active #screen-contact .support-chat{
-  display:flex!important;flex:1 1 0!important;
-  flex-direction:column!important;min-height:0!important;
-  height:auto!important;width:100%;gap:0!important;
-}
-html.contact-screen-active #screen-contact .support-chat-messages{
-  display:flex!important;flex:1 1 0!important;
-  min-height:0!important;height:auto!important;
-  max-height:none!important;padding:0 1px 10px!important;
-  justify-content:flex-start!important;overflow-y:auto!important;
-}
-html.contact-screen-active #screen-contact .support-chat-compose{
-  flex:0 0 64px!important;min-height:64px!important;
-  margin:0!important;margin-top:auto!important;
-}
-html.contact-screen-active #screen-contact .support-chat-compose textarea{
-  height:48px!important;min-height:48px!important;max-height:48px!important;
-  box-sizing:border-box!important;padding:13px 0!important;
-  line-height:22px!important;text-align:left!important;
-}
-html.contact-screen-active #screen-contact .support-chat-compose textarea::placeholder{
-  text-align:left!important;
-}
-
-/* Contact screen: center the empty-state message in the space above the composer. */
-html.contact-screen-active #screen-contact .contact-intro{
-  display:flex!important;
-  flex:1 1 auto!important;
-  flex-direction:column!important;
-  justify-content:center!important;
-  align-items:center!important;
-  width:100%;
-  min-height:0;
-  margin:0!important;
-  padding:0 20px!important;
-  border:0!important;
-  border-radius:0!important;
-  background:transparent!important;
-  text-align:center!important;
-}
 html.contact-screen-active #screen-contact .contact-intro-icon{
   margin:0 auto 16px!important;
 }
@@ -2541,8 +2432,78 @@ html.support-inbox-chat-mode #screen-support-inbox .support-message-time{margin-
 }
 
 
-/* Final contact screen sizing: fixed identity header, flexible message area,
-   and composer anchored at the bottom. Overrides the earlier empty-intro flex rule. */
+/* Contact screen: one viewport, fixed identity header, scrollable history, bottom composer. */
+html.contact-screen-active,
+html.contact-screen-active body{
+  width:100%;
+  height:100%;
+  min-height:0;
+  overflow:hidden!important;
+  overscroll-behavior:none;
+}
+html.contact-screen-active .app-shell{
+  height:100dvh!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+html.contact-screen-active .main-content{
+  display:flex!important;
+  flex-direction:column!important;
+  height:100dvh!important;
+  min-height:0!important;
+  padding-top:0!important;
+  padding-bottom:env(safe-area-inset-bottom)!important;
+  overflow:hidden!important;
+  box-sizing:border-box;
+}
+html.contact-screen-active #screen-contact.active{
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  width:100%;
+  height:auto!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  padding-bottom:0!important;
+}
+html.contact-screen-active #screen-contact .contact-intro#contact-intro{
+  display:flex!important;
+  flex:0 0 124px!important;
+  height:124px!important;
+  min-height:124px!important;
+  max-height:124px!important;
+  margin-top:calc(12px + env(safe-area-inset-top))!important;
+}
+html.contact-screen-active #screen-contact .support-chat{
+  display:flex!important;
+  flex:1 1 0!important;
+  min-height:0!important;
+  height:auto!important;
+  flex-direction:column!important;
+  gap:0!important;
+}
+html.contact-screen-active #screen-contact .support-chat-messages{
+  display:flex!important;
+  flex:1 1 0!important;
+  min-height:0!important;
+  height:auto!important;
+  max-height:none!important;
+  justify-content:flex-start!important;
+  overflow-y:auto!important;
+  padding:0 1px 10px!important;
+}
+html.contact-screen-active #screen-contact .contact-empty-state{
+  flex:1 1 0!important;
+  min-height:0!important;
+  height:100%!important;
+  justify-content:center!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose{
+  flex:0 0 64px!important;
+  min-height:64px!important;
+  margin:0!important;
+  margin-top:auto!important;
+}
 html.contact-screen-active #screen-contact .contact-intro#contact-intro{
   display:flex!important;
   flex:0 0 124px!important;

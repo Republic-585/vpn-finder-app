@@ -2206,6 +2206,44 @@ async function loadContactUnreadBadge() {
     renderContactUnreadBadge(result.count);
   } catch (_) {}
 }
+function syncContactKeyboardViewport(scrollToLatest = false) {
+  const page = document.documentElement;
+  if (!page.classList.contains("contact-screen-active")) return;
+  const viewport = window.visualViewport;
+  const height = Math.round(viewport?.height || window.innerHeight);
+  page.style.setProperty("--contact-viewport-height", height + "px");
+  const field = byId("contact-form")?.elements?.message;
+  const keyboardOpen = Boolean(field && document.activeElement === field &&
+    (window.innerHeight - height > 80 || viewport));
+  page.classList.toggle("contact-keyboard-open", keyboardOpen);
+  if (scrollToLatest || keyboardOpen) {
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        const messages = byId("contact-messages");
+        if (messages) messages.scrollTop = messages.scrollHeight;
+      });
+    });
+  }
+}
+const contactMessageField = byId("contact-form")?.elements?.message;
+contactMessageField?.addEventListener("focus", () => {
+  window.setTimeout(() => syncContactKeyboardViewport(true), 80);
+});
+contactMessageField?.addEventListener("blur", () => {
+  window.setTimeout(() => {
+    if (document.activeElement !== contactMessageField) {
+      document.documentElement.classList.remove("contact-keyboard-open");
+      if (!document.documentElement.classList.contains("contact-screen-active")) {
+        document.documentElement.style.removeProperty("--contact-viewport-height");
+      }
+    }
+  }, 120);
+});
+window.visualViewport?.addEventListener("resize", () => syncContactKeyboardViewport(true));
+window.visualViewport?.addEventListener("scroll", () => syncContactKeyboardViewport());
+window.addEventListener("resize", () => syncContactKeyboardViewport());
+tg?.onEvent?.("viewportChanged", () => syncContactKeyboardViewport(true));
+
 async function loadContactConversation() {
   const root = byId("contact-messages");
   if (!root || !tg?.initData) return;

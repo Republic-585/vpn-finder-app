@@ -956,6 +956,9 @@ if (navBar) {
       if (!bounds.width || !navBar.getBoundingClientRect().width) return;
       indicator.hidden = false;
       setIndicator(bounds.left, bounds.width);
+      indicator.classList.remove("is-switching");
+      void indicator.offsetWidth;
+      indicator.classList.add("is-switching");
     } else {
       indicator.hidden = true;
     }
@@ -1001,6 +1004,19 @@ if (navBar) {
     nav.forEach(item => navResizeObserver.observe(item));
   }
   navBar.addEventListener("pointerdown", event => {
+    const pressedItem = event.target.closest(".nav-item");
+    if (pressedItem) pressedItem.classList.add("is-pressed");
+  });
+  const clearPressedItem = event => {
+    const pressedItem = event.target.closest?.(".nav-item");
+    if (pressedItem) pressedItem.classList.remove("is-pressed");
+    navBar.querySelectorAll(".nav-item.is-pressed").forEach(item => item.classList.remove("is-pressed"));
+  };
+  navBar.addEventListener("pointerup", clearPressedItem);
+  navBar.addEventListener("pointercancel", clearPressedItem);
+  navBar.addEventListener("pointerleave", () => navBar.querySelectorAll(".nav-item.is-pressed").forEach(item => item.classList.remove("is-pressed")));
+
+  navBar.addEventListener("pointerdown", event => {
     const item = event.target.closest(".nav-item");
     if (!item || !item.classList.contains("active") || event.pointerType === "mouse") return;
     draggingNav = true;
@@ -1031,6 +1047,11 @@ if (navBar) {
   };
   navBar.addEventListener("pointerup", stopDragging);
   navBar.addEventListener("pointercancel", stopDragging);
+  const profileButton = document.querySelector(".profile-nav-button");
+  if (profileButton) {
+    profileButton.addEventListener("pointerdown", () => profileButton.classList.add("is-pressed"));
+    ["pointerup","pointercancel","pointerleave"].forEach(type => profileButton.addEventListener(type, () => profileButton.classList.remove("is-pressed")));
+  }
   navBar.addEventListener("lostpointercapture", () => {
     if (draggingNav) {
       draggingNav = false;

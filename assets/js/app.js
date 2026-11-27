@@ -1195,6 +1195,19 @@ if (navBar) {
     const stretchX = 1 + Math.min(Math.abs(velocity) * 0.03, 0.3);
     const stretchY = 1 - Math.min(Math.abs(velocity) * 0.01, 0.1);
     blob.style.transform = `translateX(${currentX}px) scale(${stretchX}, ${stretchY})`;
+
+    // Let the entire glass dock subtly squash and stretch with the lens spring.
+    // Keep the response restrained so the dock remains stable and its contents do not shift.
+    const panelStretchX = 1 + Math.min(Math.abs(velocity) * 0.0015, 0.035);
+    const panelStretchY = 1 - Math.min(Math.abs(velocity) * 0.001, 0.022);
+    navBar.style.setProperty("--panel-spring-x", panelStretchX.toFixed(4));
+    navBar.style.setProperty("--panel-spring-y", panelStretchY.toFixed(4));
+    const springActive = draggingNav || Math.abs(velocity) > 0.12 || Math.abs(targetX - currentX) > 0.15;
+    navBar.classList.toggle("is-liquid-moving", springActive);
+    if (!springActive) {
+      navBar.style.setProperty("--panel-spring-x", "1");
+      navBar.style.setProperty("--panel-spring-y", "1");
+    }
     requestAnimationFrame(animateBlob);
   };
 

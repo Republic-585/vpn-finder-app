@@ -1147,24 +1147,38 @@ if (navBar) {
     });
   };
 
+  let lensHiddenForProfile = false;
   moveIndicator = (snap = false) => {
     const active = nav.find(item => item.classList.contains("active"));
     if (!active) {
       // The detached Profile control is active: hide the lens and clear tab emphasis.
       blob.style.opacity = "0";
+      lensHiddenForProfile = true;
       paintNearestItem();
       return;
     }
-    blob.style.opacity = "1";
     const bounds = getBounds(active);
-    if (!bounds.width || !navBar.getBoundingClientRect().width) return;
+    const navRect = navBar.getBoundingClientRect();
+    if (!bounds.width || !navRect.width) return;
     blob.style.width = bounds.width + "px";
     targetX = bounds.left;
-    if (snap) {
+
+    // On every return from Profile, launch the lens from the detached avatar.
+    // The panel clips the starting position until the spring carries it inside.
+    if (lensHiddenForProfile) {
+      const profileRect = byId("profile-nav-button")?.getBoundingClientRect();
+      if (profileRect) {
+        currentX = profileRect.left + profileRect.width / 2 - navRect.left - bounds.width / 2;
+        velocity = 0;
+        blob.style.transform = `translateX(${currentX}px)`;
+      }
+      lensHiddenForProfile = false;
+    } else if (snap) {
       currentX = targetX;
       velocity = 0;
       blob.style.transform = `translateX(${currentX}px)`;
     }
+    blob.style.opacity = "1";
     paintNearestItem();
   };
 

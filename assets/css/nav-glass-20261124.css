@@ -43,7 +43,7 @@
   -webkit-backdrop-filter:blur(30px) saturate(180%) contrast(110%);
   backdrop-filter:blur(30px) saturate(180%) contrast(110%);
   box-shadow:0 10px 32px rgba(0,0,0,.32);
-  transform:scale(1);
+  transform:scale(var(--panel-spring-x,1),var(--panel-spring-y,1));
   transform-origin:center;
   transition:transform 1.3s cubic-bezier(.22,1,.36,1),box-shadow .45s ease;
   touch-action:none;
@@ -67,12 +67,15 @@
   mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
   mask-composite:exclude;
 }
+.bottom-nav-dock .bottom-nav.is-liquid-moving{
+  transition:transform .07s linear,box-shadow .45s ease;
+}
 .bottom-nav-dock .bottom-nav.is-pressed{
-  transform:scale(1.05);
+  transform:scale(calc(var(--panel-spring-x,1) * 1.05),calc(var(--panel-spring-y,1) * 1.05));
   transition:transform .9s cubic-bezier(.22,1,.36,1),box-shadow .45s ease;
 }
 .bottom-nav-dock .bottom-nav.is-dragging{
-  transform:scale(1.06);
+  transform:scale(calc(var(--panel-spring-x,1) * 1.06),calc(var(--panel-spring-y,1) * 1.06));
   transition:transform 1.05s cubic-bezier(.22,1,.36,1),box-shadow .45s ease;
 }
 

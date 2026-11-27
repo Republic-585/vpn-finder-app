@@ -477,7 +477,7 @@ function renderMonitoringDashboard(data) {
     '</section>' +
     '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>История инцидентов</h2><span>' + fmt.format(incidents.length) + '</span></div><div class="monitoring-incident-list">' + incidentRows + '</div></section>' +
     '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>История проверок</h2><span>Последние 20</span></div>' +
-      (runs.length ? runs.map(item => '<div class="monitoring-run"><span>' + (item.check_type === "technical" ? "Техническая" : "Бизнес") + '</span><strong class="' + (item.status === "ok" ? "is-ok" : "is-warning") + '">' + (item.status === "ok" ? "Успешно" : "Ошибка") + '</strong><time>' + monitoringDate(item.finished_at || item.started_at) + '</time></div>').join("") : '<p class="monitoring-empty">Проверки ещё не запускались.</p>') +
+      (runs.length ? runs.map(item => '<div class="monitoring-run"><span>' + (item.check_type === "technical" ? "Техническая" : item.check_type === "security" ? "Аудит безопасности" : "Бизнес") + '</span><strong class="' + (item.status === "ok" ? "is-ok" : "is-warning") + '">' + (item.status === "ok" ? "Успешно" : "Ошибка") + '</strong><time>' + monitoringDate(item.finished_at || item.started_at) + '</time></div>').join("") : '<p class="monitoring-empty">Проверки ещё не запускались.</p>') +
     '</section>';
   if (!root.dataset.monitoringBound) {
     root.dataset.monitoringBound = "true";

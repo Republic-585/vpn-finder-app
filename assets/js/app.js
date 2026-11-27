@@ -988,6 +988,9 @@ function showScreen(name, backScreen = null) {
   if (name === "news") markNewsAsRead();
   document.documentElement.classList.toggle("profile-screen-active", name === "profile");
   document.body.classList.toggle("profile-screen-active", name === "profile");
+  const useContainedScreen = !["profile", "contact", "support", "support-inbox"].includes(name);
+  document.documentElement.classList.toggle("standard-screen-active", useContainedScreen);
+  document.body.classList.toggle("standard-screen-active", useContainedScreen);
   document.documentElement.classList.toggle("contact-screen-active", name === "contact");
   document.body.classList.toggle("contact-screen-active", name === "contact");
   document.body.classList.toggle("contact-no-bottom-navigation", name === "contact");

@@ -3206,3 +3206,10 @@ html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose .contac
   min-height:44px!important;
   flex-basis:44px!important;
 }
+
+
+/* Keep catalog search focus independent from iOS keyboard viewport scrolling. */
+html.catalog-search-focus-lock {
+  scroll-behavior: auto !important;
+  overscroll-behavior-y: none;
+}

@@ -54,9 +54,7 @@
       rgba(255,255,255,.045) 360deg) border-box;
   -webkit-backdrop-filter:blur(30px) saturate(180%) contrast(110%);
   backdrop-filter:blur(30px) saturate(180%) contrast(110%);
-  box-shadow:
-    0 10px 32px rgba(0,0,0,.32),
-    inset 0 1px 0 rgba(255,255,255,.09);
+  box-shadow:0 10px 32px rgba(0,0,0,.32);
   transform:scale(1);
   transform-origin:center;
   transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .22s ease;

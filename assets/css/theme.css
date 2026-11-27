@@ -1,0 +1,131 @@
+/* VPN Finder native theme system. Telegram colorScheme drives System mode. */
+:root {
+  color-scheme: dark;
+  --bg:#202124;
+  --panel:#2B2D31;
+  --raised:#35373C;
+  --line:#414349;
+  --text:#F5F5F5;
+  --muted:#92949A;
+  --secondary:#C1C3C8;
+  --blue:#3390EC;
+  --bright:#6AB2F2;
+  --card-bg:var(--panel);
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg:#F2F3F5;
+  --panel:#FFFFFF;
+  --raised:#E9ECF1;
+  --line:#DDE1E7;
+  --text:#1C1D1F;
+  --muted:#747B85;
+  --secondary:#4E5661;
+  --blue:#2481F3;
+  --bright:#1877D2;
+  --card-bg:#FFFFFF;
+}
+:root[data-theme="light"] html,
+:root[data-theme="light"] body,
+:root[data-theme="light"] .app-shell {background-color:var(--bg)!important}
+:root[data-theme="light"] .startup-splash,
+:root[data-theme="light"] .analytics-loading-overlay {background:var(--bg)!important}
+:root[data-theme="light"] .startup-brand-name,
+:root[data-theme="light"] .startup-brand-name span {color:var(--text)!important}
+:root[data-theme="light"] .startup-brand-mark svg,
+:root[data-theme="light"] .startup-loading span {stroke:var(--text)}
+:root[data-theme="light"] .startup-loading span {background:var(--blue)}
+:root[data-theme="light"] .catalog-section-heading h2,
+:root[data-theme="light"] #screen-catalog .catalog-section-heading h2 {color:var(--muted)!important}
+:root[data-theme="light"] .popular-card,
+:root[data-theme="light"] .service-list-card,
+:root[data-theme="light"] .profile-menu,
+:root[data-theme="light"] .profile-card,
+:root[data-theme="light"] .settings-list,
+:root[data-theme="light"] .profile-form,
+:root[data-theme="light"] .empty-state,
+:root[data-theme="light"] .compare-table-wrap,
+:root[data-theme="light"] .analytics-summary article,
+:root[data-theme="light"] .analytics-panel,
+:root[data-theme="light"] .monitoring-panel,
+:root[data-theme="light"] .monitoring-summary article,
+:root[data-theme="light"] .monitoring-status {background:var(--panel)!important;border-color:var(--line)!important}
+:root[data-theme="light"] .service-list-card.expanded {background:#F4F7FB!important;border-color:rgba(36,129,243,.25)!important}
+:root[data-theme="light"] .service-mini-card:active,
+:root[data-theme="light"] .profile-menu-row:active,
+:root[data-theme="light"] .home-screen-action:active {background:rgba(28,29,31,.045)!important}
+:root[data-theme="light"] .popular-service > .popular-service-open > span:last-child,
+:root[data-theme="light"] .popular-service-open > span:last-child,
+:root[data-theme="light"] .profile-menu-leading>span:last-child {color:var(--text)!important}
+:root[data-theme="light"] .service-detail-fact,
+:root[data-theme="light"] .service-detail-chips span {background:rgba(28,29,31,.045)!important}
+:root[data-theme="light"] .service-mini-arrow {stroke:#858D98}
+:root[data-theme="light"] .service-mini-dot {color:#A1A7B0}
+:root[data-theme="light"] #screen-news .news-post {background:var(--panel)!important}
+:root[data-theme="light"] #screen-news .news-post-description {color:var(--secondary)!important}
+:root[data-theme="light"] #screen-news .news-post-list li:before {background:var(--blue)!important}
+:root[data-theme="light"] #screen-news .news-inline-link {color:var(--blue)!important;text-decoration-color:rgba(36,129,243,.45)!important}
+:root[data-theme="light"] #screen-support .support-hero h1,
+:root[data-theme="light"] #screen-support .support-section-title,
+:root[data-theme="light"] #screen-support .support-preset,
+:root[data-theme="light"] #screen-support .crypto-support-card h2,
+:root[data-theme="light"] #screen-support .crypto-support-address {color:var(--text)!important}
+:root[data-theme="light"] #screen-support .support-preset {background:var(--raised)!important;border-color:var(--line)!important}
+:root[data-theme="light"] #screen-support .support-tab.is-active {background:#DCEBFC!important;color:#1769B4!important;box-shadow:none!important}
+:root[data-theme="light"] #screen-support .support-form input {background:var(--raised)!important;border-color:var(--line)!important;color:var(--text)!important}
+:root[data-theme="light"] #screen-support .crypto-support-address {background:transparent!important}
+:root[data-theme="light"] .crypto-support-card {background:var(--panel)!important;border-color:var(--line)!important}
+:root[data-theme="light"] .support-chat-compose,
+:root[data-theme="light"] html.contact-screen-active #screen-contact .support-chat-compose,
+:root[data-theme="light"] html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose {background:rgba(255,255,255,.94)!important;border-color:rgba(28,29,31,.12)!important}
+:root[data-theme="light"] html.contact-screen-active #screen-contact .contact-intro#contact-intro::before,
+:root[data-theme="light"] html.support-inbox-chat-mode #screen-support-inbox #support-thread-title::before {background:linear-gradient(to bottom,rgba(242,243,245,.94) 0%,rgba(242,243,245,.78) 62%,rgba(242,243,245,0) 100%)!important}
+:root[data-theme="light"] .support-chat-compose textarea,
+:root[data-theme="light"] .support-chat-compose input {color:var(--text)!important}
+:root[data-theme="light"] .support-message-actions button {background:rgba(28,29,31,.06)!important;color:var(--text)!important}
+:root[data-theme="light"] .support-message-user,
+:root[data-theme="light"] .support-message-outgoing {background:#2481F3!important;color:#fff!important}
+:root[data-theme="light"] .contact-intro-copy h2,
+:root[data-theme="light"] .contact-intro-username {color:var(--text)!important}
+:root[data-theme="light"] .profile-theme-row .profile-theme-value {color:var(--muted)}
+:root[data-theme="light"] .bottom-nav-dock .bottom-nav {
+  border-color:rgba(25,35,48,.07);
+  box-shadow:0 10px 32px rgba(28,39,54,.13);
+}
+:root[data-theme="light"] .bottom-nav-dock .bottom-nav::before {
+  background:
+    radial-gradient(circle at 0% 0%,rgba(255,255,255,.82) 0,rgba(255,255,255,.38) 7px,transparent 24px),
+    radial-gradient(circle at 100% 100%,rgba(255,255,255,.82) 0,rgba(255,255,255,.38) 7px,transparent 24px);
+}
+:root[data-theme="light"] .bottom-nav-dock .profile-nav-button span {color:var(--text)}
+:root[data-theme="light"] .profile-menu-row .profile-menu-chevron {color:var(--muted)}
+:root[data-theme="light"] .profile-sounds-row .profile-sounds-switch {background:#AEB5BF}
+:root[data-theme="light"] .profile-sounds-row[aria-pressed="true"] .profile-sounds-switch {background:#3390EC}
+:root[data-theme="light"] .profile-sounds-row .profile-sounds-switch i {background:#fff}
+:root[data-theme="light"] .analytics-list-item,
+:root[data-theme="light"] .analytics-section,
+:root[data-theme="light"] .analytics-event-row {border-color:var(--line)!important}
+:root[data-theme="light"] .analytics-list-item,
+:root[data-theme="light"] .analytics-list-main strong {color:var(--text)}
+:root[data-theme="light"] .analytics-list-main span,
+:root[data-theme="light"] .analytics-list-time {color:var(--muted)}
+:root[data-theme="light"] .profile-form input,
+:root[data-theme="light"] .profile-form textarea {background:var(--raised)!important;border-color:var(--line)!important;color:var(--text)!important}
+:root[data-theme="light"] .home-screen-prompt {background:var(--panel)!important;border-color:var(--line)!important}
+:root[data-theme="light"] .home-screen-copy h2,
+:root[data-theme="light"] .home-screen-copy p {color:var(--text)!important}
+:root[data-theme="light"] .home-screen-action {border-top-color:var(--line)!important;color:var(--blue)!important}
+:root[data-theme="light"] .home-screen-status {border-top-color:var(--line)!important;color:var(--secondary)!important}
+:root[data-theme="light"] .profile-management-title {color:var(--muted)!important}
+:root[data-theme="light"] .support-chat-messages {color:var(--text)}
+:root[data-theme="light"] .support-message-incoming {background:#E7EAF0!important;color:#202124!important}
+:root[data-theme="light"] .contact-intro {background:transparent}
+:root[data-theme="light"] .profile-menu-row {border-bottom-color:var(--line)!important}
+:root[data-theme="light"] .filter-chip {background:var(--panel);border-color:var(--line);color:var(--secondary)}
+:root[data-theme="light"] .search-box {background:var(--panel)!important;border-color:var(--line)!important}
+:root[data-theme="light"] .compare-table th,
+:root[data-theme="light"] .compare-table td {border-bottom-color:var(--line)!important}
+:root[data-theme="light"] .compare-table thead th,
+:root[data-theme="light"] .compare-table tbody td {color:var(--text)!important}
+:root[data-theme="light"] .compare-table tbody th {color:var(--muted)!important}
+:root[data-theme="light"] .theme-tile {background:#E6A23C!important}

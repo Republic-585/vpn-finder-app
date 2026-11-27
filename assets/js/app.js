@@ -5,6 +5,19 @@ document.addEventListener("touchmove", event => {
   if (event.touches.length > 1) event.preventDefault();
 }, { passive: false, capture: true });
 const tg = window.Telegram?.WebApp;
+const THEME_KEY = "vpn-finder-theme";
+let themePreference = (() => {
+  try {
+    const saved = localStorage.getItem(THEME_KEY);
+    return saved === "light" || saved === "dark" || saved === "system" ? saved : "system";
+  } catch (_) { return "system"; }
+})();
+function resolvedAppTheme() {
+  if (themePreference === "light" || themePreference === "dark") return themePreference;
+  if (tg?.colorScheme === "light" || tg?.colorScheme === "dark") return tg.colorScheme;
+  try { return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"; }
+  catch (_) { return "dark"; }
+}
 try {
   if (typeof tg?.disableVerticalSwipes === "function") tg.disableVerticalSwipes();
 } catch (_) {}
@@ -87,11 +100,11 @@ if (ownerPromoNativeButton) {
   }
 }
 const applyTelegramColors = () => {
-  // Match Telegram's native chrome and the startup surface before hiding Telegram's loader.
-  const appBg = "#202124";
-  document.documentElement.style.setProperty("--bg", appBg);
-  document.documentElement.style.setProperty("--tg-native-bg", appBg);
-  document.documentElement.style.colorScheme = "dark";
+  // Keep the Mini App canvas and Telegram's native chrome in the selected color scheme.
+  const scheme = resolvedAppTheme();
+  const appBg = scheme === "light" ? "#F2F3F5" : "#202124";
+  document.documentElement.dataset.theme = scheme;
+  document.documentElement.style.colorScheme = scheme;
   document.documentElement.style.backgroundColor = appBg;
   document.body.style.backgroundColor = appBg;
   const themeMeta = document.querySelector('meta[name="theme-color"]');
@@ -734,6 +747,7 @@ const translations = {
     "Удаление из избранного":"Removed from favorites","Добавление к сравнению":"Added to comparison",
     "Удаление из сравнения":"Removed from comparison","Переход к провайдеру":"Provider click","Просмотр экрана":"Screen viewed",
     "Язык":"Language","Русский":"Russian","English":"English","Выберите язык приложения":"Choose the app language",
+    "Тема":"Theme","Выберите тему приложения":"Choose the app theme","Светлая":"Light","Тёмная":"Dark","Системная":"System",
     "Откройте приложение в Telegram, чтобы сменить язык.":"Open the app in Telegram to change the language.",
     "Загрузка статистики…":"Loading statistics…","Нет доступа к статистике.":"No access to statistics.",
     "Не удалось загрузить статистику.":"Could not load statistics.","Сессии":"Sessions","События":"Events",
@@ -875,10 +889,47 @@ function translateStaticContent() {
     });
   });
   updateLanguageLabel();
+  updateThemeLabel();
 }
 function updateLanguageLabel() {
   const value = byId("profile-language-value");
   if (value) value.textContent = appLanguage === "en" ? "English" : "Русский";
+}
+function updateThemeLabel() {
+  const value = byId("profile-theme-value");
+  if (!value) return;
+  const labels = { light: "Светлая", dark: "Тёмная", system: "Системная" };
+  value.textContent = t(labels[themePreference] || "Системная");
+}
+function chooseTheme() {
+  if (typeof tg?.showPopup !== "function") {
+    try { tg?.showAlert?.(t("Откройте приложение в Telegram, чтобы сменить тему.")); } catch (_) {}
+    return;
+  }
+  const options = [
+    ["light", "Светлая"],
+    ["dark", "Тёмная"],
+    ["system", "Системная"]
+  ];
+  tg.showPopup({
+    title: t("Тема"),
+    message: t("Выберите тему приложения"),
+    buttons: [
+      ...options.map(([id, label]) => ({
+        id,
+        type: "default",
+        text: (themePreference === id ? "✓ " : "") + t(label)
+      })),
+      { type: "cancel" }
+    ]
+  }, buttonId => {
+    if (!["light", "dark", "system"].includes(buttonId) || themePreference === buttonId) return;
+    themePreference = buttonId;
+    try { localStorage.setItem(THEME_KEY, themePreference); } catch (_) {}
+    applyTelegramColors();
+    updateThemeLabel();
+    try { tg?.HapticFeedback?.selectionChanged(); } catch (_) {}
+  });
 }
 function chooseLanguage() {
   if (typeof tg?.showPopup !== "function") {
@@ -906,7 +957,9 @@ function chooseLanguage() {
   });
 }
 translateStaticContent();
+updateThemeLabel();
 byId("language-selector")?.addEventListener("click", chooseLanguage);
+byId("theme-selector")?.addEventListener("click", chooseTheme);
 
 const HOME_SCREEN_PROMPT_KEY = "vpn-finder-home-screen-prompt-hidden";
 function initHomeScreenPrompt() {

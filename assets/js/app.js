@@ -5,6 +5,9 @@ document.addEventListener("touchmove", event => {
   if (event.touches.length > 1) event.preventDefault();
 }, { passive: false, capture: true });
 const tg = window.Telegram?.WebApp;
+try {
+  if (typeof tg?.disableVerticalSwipes === "function") tg.disableVerticalSwipes();
+} catch (_) {}
 const ownerPromoNativeButton = tg?.BottomButton || tg?.MainButton || null;
 let nativeButtonMode = "hidden";
 function applyNativeButtonParams(params) {
@@ -988,9 +991,6 @@ function showScreen(name, backScreen = null) {
   if (name === "news") markNewsAsRead();
   document.documentElement.classList.toggle("profile-screen-active", name === "profile");
   document.body.classList.toggle("profile-screen-active", name === "profile");
-  const useContainedScreen = !["profile", "contact", "support", "support-inbox"].includes(name);
-  document.documentElement.classList.toggle("standard-screen-active", useContainedScreen);
-  document.body.classList.toggle("standard-screen-active", useContainedScreen);
   document.documentElement.classList.toggle("contact-screen-active", name === "contact");
   document.body.classList.toggle("contact-screen-active", name === "contact");
   document.body.classList.toggle("contact-no-bottom-navigation", name === "contact");

@@ -1495,11 +1495,20 @@ search?.addEventListener("input", () => {
 const searchBox = search?.closest(".search-box");
 let searchFocusScrollY = null;
 let searchFocusUnlockTimer = null;
+let searchViewportCorrectionFrame = null;
 function stabilizeCatalogSearchViewport() {
-  if (document.activeElement !== search || searchFocusScrollY === null) return;
-  if (Math.abs(window.scrollY - searchFocusScrollY) > 1) {
-    window.scrollTo(0, searchFocusScrollY);
-  }
+  if (searchFocusScrollY === null || searchViewportCorrectionFrame !== null) return;
+  const correctScroll = () => {
+    const difference = searchFocusScrollY - window.scrollY;
+    if (Math.abs(difference) <= 0.55) {
+      searchViewportCorrectionFrame = null;
+      return;
+    }
+    // Ease out the browser's automatic scroll correction instead of snapping.
+    window.scrollTo(0, window.scrollY + difference * 0.24);
+    searchViewportCorrectionFrame = window.requestAnimationFrame(correctScroll);
+  };
+  searchViewportCorrectionFrame = window.requestAnimationFrame(correctScroll);
 }
 searchBox?.addEventListener("pointerdown", event => {
   if (event.pointerType !== "touch" || !search || document.activeElement === search) return;
@@ -1519,17 +1528,18 @@ search?.addEventListener("blur", () => {
     if (searchSuggestions) searchSuggestions.hidden = true;
   }, 120);
   if (searchFocusUnlockTimer) window.clearTimeout(searchFocusUnlockTimer);
+  // Keep the correction active while iOS finishes dismissing its keyboard.
   searchFocusUnlockTimer = window.setTimeout(() => {
-    if (searchFocusScrollY !== null && Math.abs(window.scrollY - searchFocusScrollY) > 1) {
-      window.scrollTo(0, searchFocusScrollY);
-    }
+    stabilizeCatalogSearchViewport();
     document.documentElement.classList.remove("catalog-search-focus-lock");
     searchFocusScrollY = null;
     searchFocusUnlockTimer = null;
-  }, 360);
+  }, 520);
 });
 window.visualViewport?.addEventListener("resize", stabilizeCatalogSearchViewport);
+window.visualViewport?.addEventListener("scroll", stabilizeCatalogSearchViewport);
 window.addEventListener("resize", stabilizeCatalogSearchViewport);
+window.addEventListener("scroll", stabilizeCatalogSearchViewport, { passive: true });
 tg?.onEvent?.("viewportChanged", stabilizeCatalogSearchViewport);
 searchSuggestions?.addEventListener("click", event => {
   const button = event.target.closest("[data-suggestion]");

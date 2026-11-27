@@ -391,11 +391,24 @@ function renderMonitoringDashboard(data) {
   const incidents = Array.isArray(data.incidents) ? data.incidents : [];
   const runs = Array.isArray(data.runs) ? data.runs : [];
   const active = incidents.filter(item => item.status === "active");
-  const critical = active.some(item => item.severity === "critical");
-  const stateLabel = critical ? "Критическая проблема" : active.length ? "Есть предупреждения" : "Серьёзных отклонений нет";
-  const stateClass = critical ? "is-critical" : active.length ? "is-warning" : "is-ok";
+  const healthChecks = Array.isArray(data.health_checks) ? data.health_checks : [];
+  const audit = data.security_audit || null;
+  const checkCritical = healthChecks.some(item => item.status === "critical");
+  const checkWarning = healthChecks.some(item => item.status === "warning");
+  const critical = active.some(item => item.severity === "critical") || checkCritical;
+  const unknown = healthChecks.length === 0;
+  const stateLabel = unknown ? "Состояние не подтверждено" : critical ? "Критическая проблема" : active.length || checkWarning ? "Есть предупреждения" : "Все проверки пройдены";
+  const stateClass = unknown ? "is-unknown" : critical ? "is-critical" : active.length || checkWarning ? "is-warning" : "is-ok";
   const lastRun = runs[0];
   const fmt = new Intl.NumberFormat(appLanguage === "en" ? "en-US" : "ru-RU");
+  const healthStatusLabel = status => status === "healthy" ? "В норме" : status === "warning" ? "Внимание" : status === "critical" ? "Проблема" : "Нет данных";
+  const healthRows = healthChecks.length ? healthChecks.map(item =>
+    '<div class="monitoring-health-row"><span class="monitoring-health-name"><i class="monitoring-health-dot ' + esc(item.status) + '"></i><strong>' + esc(item.label) + '</strong></span><span class="monitoring-health-state ' + esc(item.status) + '">' + healthStatusLabel(item.status) + '</span><small>' + esc(item.detail || "") + '</small></div>'
+  ).join("") : '<p class="monitoring-empty">Нет подтверждённых результатов. Проверки ещё не запускались или последний запуск завершился ошибкой.</p>';
+  const auditFindings = Array.isArray(audit?.findings) ? audit.findings : [];
+  const auditRows = auditFindings.length ? auditFindings.map(item =>
+    '<div class="monitoring-health-row"><span class="monitoring-health-name"><i class="monitoring-health-dot ' + esc(item.severity) + '"></i><strong>' + esc(item.title) + '</strong></span><span class="monitoring-health-state ' + esc(item.severity) + '">' + (item.severity === "critical" ? "Критично" : item.severity === "warning" ? "Внимание" : "Информация") + '</span><small>' + esc(item.description || "") + '</small></div>'
+  ).join("") : '<p class="monitoring-empty">Аудит не выявил замечаний или ещё не выполнялся.</p>';
   const incidentRows = incidents.length ? incidents.map(item => {
     const level = item.severity === "critical" ? "Критично" : item.severity === "warning" ? "Внимание" : "Информация";
     return '<article class="monitoring-incident ' + (item.status === "resolved" ? "is-resolved" : "") + '"><div class="monitoring-incident-top"><strong>' + esc(item.title) + '</strong><span class="monitoring-severity ' + esc(item.severity) + '">' + level + '</span></div><p>' + esc(item.description) + '</p><div class="monitoring-incident-meta"><span>' + (item.status === "active" ? "Активно" : "Устранено") + '</span><time>' + monitoringDate(item.last_seen_at) + '</time><span>Повторений: ' + fmt.format(item.occurrences || 1) + '</span></div></article>';
@@ -413,12 +426,19 @@ function renderMonitoringDashboard(data) {
   root.innerHTML =
     '<div class="monitoring-toolbar"><span class="monitoring-status ' + stateClass + '"><i></i>' + stateLabel + '</span><button type="button" class="monitoring-action" data-monitoring-action="refresh">Обновить</button></div>' +
     '<div class="monitoring-summary">' +
-      '<article><span>Активные проблемы</span><strong>' + fmt.format(active.length) + '</strong></article>' +
-      '<article><span>События за час</span><strong>' + fmt.format(snapshot.events_1h || 0) + '</strong></article>' +
+      '<article><span>Активные проблемы</span><strong>' + fmt.format(active.length + (checkCritical ? 1 : 0)) + '</strong></article>' +
+      '<article><span>Проверки системы</span><strong>' + fmt.format(healthChecks.length) + '</strong></article>' +
       '<article><span>Ошибки за час</span><strong>' + fmt.format(snapshot.errors_1h || 0) + '</strong></article>' +
       '<article><span>Переходы за 24 часа</span><strong>' + fmt.format(snapshot.clicks_24h || 0) + '</strong></article>' +
     '</div>' +
-    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Состояние системы</h2><span>Автоматические проверки</span></div>' +
+    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Состояние системы</h2><span>' + (healthChecks.length ? 'Проверено' : 'Нет подтверждения') + '</span></div>' +
+      '<div class="monitoring-health-list">' + healthRows + '</div>' +
+    '</section>' +
+    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Аудит безопасности</h2><span>' + (audit?.generated_at ? monitoringDate(audit.generated_at) : 'Нет данных') + '</span></div>' +
+      '<div class="monitoring-summary monitoring-security-summary"><article><span>Критические</span><strong>' + fmt.format(audit?.counts?.critical || 0) + '</strong></article><article><span>Предупреждения</span><strong>' + fmt.format(audit?.counts?.warning || 0) + '</strong></article><article><span>Информация</span><strong>' + fmt.format(audit?.counts?.info || 0) + '</strong></article></div>' +
+      '<div class="monitoring-health-list">' + auditRows + '</div>' +
+    '</section>' +
+    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Показатели</h2><span>Динамика</span></div>' +
       '<div class="monitoring-metric"><span>Приём аналитических событий</span><strong>' + (lastRun?.status === "ok" ? "Проверка пройдена" : "Ожидает первой проверки") + '</strong></div>' +
       '<div class="monitoring-metric"><span>Последнее событие</span><strong>' + monitoringDate(snapshot.last_event_at) + '</strong></div>' +
       '<div class="monitoring-metric"><span>Последняя успешная запись</span><strong>' + monitoringDate(snapshot.last_ingest_success_at) + '</strong></div>' +

@@ -1496,13 +1496,30 @@ const searchBox = search?.closest(".search-box");
 let searchFocusScrollY = null;
 let searchFocusUnlockTimer = null;
 let searchViewportCorrectionFrame = null;
+let searchViewportCorrectionReady = false;
+function cancelCatalogSearchCorrection() {
+  if (searchViewportCorrectionFrame !== null) {
+    window.cancelAnimationFrame(searchViewportCorrectionFrame);
+    searchViewportCorrectionFrame = null;
+  }
+}
+function finishCatalogSearchCorrection() {
+  cancelCatalogSearchCorrection();
+  searchViewportCorrectionReady = false;
+  document.documentElement.classList.remove("catalog-search-focus-lock");
+  searchFocusScrollY = null;
+  searchFocusUnlockTimer = null;
+}
 function stabilizeCatalogSearchViewport() {
-  if (searchFocusScrollY === null || searchViewportCorrectionFrame !== null) return;
+  // Do not correct while the keyboard is opening or while the input is focused.
+  // Wait until iOS has completed its native keyboard-dismiss animation.
+  if (!searchViewportCorrectionReady || searchFocusScrollY === null ||
+      searchViewportCorrectionFrame !== null || document.activeElement === search) return;
   let previousFrameTime = 0;
   const correctScroll = timestamp => {
     const difference = searchFocusScrollY - window.scrollY;
     if (Math.abs(difference) <= 0.7) {
-      searchViewportCorrectionFrame = null;
+      finishCatalogSearchCorrection();
       return;
     }
     // Time-based easing keeps the return equally soft on 60 Hz and 120 Hz screens.
@@ -1517,13 +1534,17 @@ function stabilizeCatalogSearchViewport() {
 searchBox?.addEventListener("pointerdown", event => {
   if (event.pointerType !== "touch" || !search || document.activeElement === search) return;
   if (event.target instanceof Element && event.target.closest("#clear-search")) return;
-  searchFocusScrollY = window.scrollY;
+  if (searchFocusScrollY === null) searchFocusScrollY = window.scrollY;
   event.preventDefault();
   search.focus({ preventScroll: true });
 }, { capture: true });
 search?.addEventListener("focus", () => {
   if (searchFocusScrollY === null) searchFocusScrollY = window.scrollY;
   if (searchFocusUnlockTimer) window.clearTimeout(searchFocusUnlockTimer);
+  searchFocusUnlockTimer = null;
+  // A new keyboard cycle takes ownership of the existing saved position.
+  searchViewportCorrectionReady = false;
+  cancelCatalogSearchCorrection();
   document.documentElement.classList.add("catalog-search-focus-lock");
   renderSearchSuggestions();
 });
@@ -1532,15 +1553,13 @@ search?.addEventListener("blur", () => {
     if (searchSuggestions) searchSuggestions.hidden = true;
   }, 120);
   if (searchFocusUnlockTimer) window.clearTimeout(searchFocusUnlockTimer);
-  // Keep the correction active while iOS finishes dismissing its keyboard.
+  searchViewportCorrectionReady = false;
+  // Start correction only after iOS has finished dismissing its keyboard.
   searchFocusUnlockTimer = window.setTimeout(() => {
+    searchFocusUnlockTimer = null;
+    if (document.activeElement === search || searchFocusScrollY === null) return;
+    searchViewportCorrectionReady = true;
     stabilizeCatalogSearchViewport();
-    // Let the eased correction finish before releasing the saved scroll position.
-    searchFocusUnlockTimer = window.setTimeout(() => {
-      document.documentElement.classList.remove("catalog-search-focus-lock");
-      searchFocusScrollY = null;
-      searchFocusUnlockTimer = null;
-    }, 420);
   }, 520);
 });
 window.visualViewport?.addEventListener("resize", stabilizeCatalogSearchViewport);

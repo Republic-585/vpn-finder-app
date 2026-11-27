@@ -2,9 +2,11 @@
    Navigation targets and the detached profile control remain unchanged. */
 :root{
   --nav-glass-bg:rgba(32,33,36,.64);
-  --nav-glass-border:rgba(255,255,255,.14);
-  --nav-glass-active:rgba(51,144,236,.16);
-  --nav-glass-active-border:rgba(51,144,236,.22);
+  --nav-glass-border-top:rgba(170,176,186,.25);
+  --nav-glass-border-right:rgba(170,176,186,.14);
+  --nav-glass-border-bottom:rgba(170,176,186,.10);
+  --nav-glass-border-left:rgba(170,176,186,.18);
+  --nav-glass-active:rgba(154,160,170,.22);
   --nav-glass-accent:#3390EC;
   --nav-glass-muted:rgba(255,255,255,.62);
 }
@@ -37,8 +39,13 @@
   padding:4px;
   overflow:hidden;
   isolation:isolate;
-  border:1px solid var(--nav-glass-border);
-  border-radius:25px;
+  border-style:solid;
+  border-width:1px;
+  border-top-color:var(--nav-glass-border-top);
+  border-right-color:var(--nav-glass-border-right);
+  border-bottom-color:var(--nav-glass-border-bottom);
+  border-left-color:var(--nav-glass-border-left);
+  border-radius:999px;
   outline:0;
   background:var(--nav-glass-bg);
   -webkit-backdrop-filter:blur(18px) saturate(180%);
@@ -59,10 +66,10 @@
   left:0;
   width:0;
   box-sizing:border-box;
-  border:1px solid var(--nav-glass-active-border);
-  border-radius:20px;
+  border:0;
+  border-radius:999px;
   background:var(--nav-glass-active);
-  box-shadow:0 1px 5px rgba(0,0,0,.10);
+  box-shadow:none;
   pointer-events:none;
   transform-origin:center;
   will-change:width,transform;

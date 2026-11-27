@@ -2904,3 +2904,85 @@ html.support-inbox-chat-mode .main-content{
 html.support-inbox-screen-active .main-content{
   padding-bottom:0!important;
 }
+
+
+/* Support chat correction: restore the rounded composer and use the full screen width for messages. */
+html.contact-screen-active #screen-contact .support-chat-messages,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-messages{
+  left:-18px!important;
+  right:-18px!important;
+  width:calc(100% + 36px)!important;
+  padding-left:12px!important;
+  padding-right:12px!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose{
+  position:absolute!important;
+  z-index:6!important;
+  left:12px!important;
+  right:12px!important;
+  bottom:8px!important;
+  width:auto!important;
+  min-height:64px!important;
+  height:auto!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  margin:0!important;
+  padding:7px 8px 7px 20px!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  border-radius:999px!important;
+  background:#2b2d31!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose textarea,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose textarea{
+  flex:1 1 auto!important;
+  min-width:0!important;
+  min-height:46px!important;
+  max-height:112px!important;
+  padding:0!important;
+  border:0!important;
+  outline:0!important;
+  background:transparent!important;
+  color:var(--text)!important;
+  font-family:inherit!important;
+  font-size:var(--type-card-title)!important;
+  line-height:1.35!important;
+  font-weight:var(--weight-regular)!important;
+  resize:none!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose textarea::placeholder,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose textarea::placeholder{
+  color:var(--muted)!important;
+  opacity:1!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose .contact-send-button,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose .contact-send-button{
+  position:relative!important;
+  width:48px!important;
+  height:48px!important;
+  min-width:48px!important;
+  min-height:48px!important;
+  flex:0 0 48px!important;
+  display:grid!important;
+  place-items:center!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:50%!important;
+  background:#3390ec!important;
+  color:#fff!important;
+  box-shadow:none!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose .contact-send-plane,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose .contact-send-plane{
+  width:23px!important;
+  height:23px!important;
+  display:block!important;
+  fill:currentColor!important;
+  stroke:none!important;
+  transform:translate(-1px,1px)!important;
+}

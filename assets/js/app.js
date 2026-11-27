@@ -2270,6 +2270,7 @@ async function loadContactConversation() {
     if (requestId !== contactConversationRequestId ||
         !byId("screen-contact")?.classList.contains("active")) return;
     renderSupportMessages(root, result.messages, "user", result.thread?.admin_last_read_at);
+    contactUnreadRequestId++;
     renderContactUnreadBadge(0);
   } catch (_) {}
 }
@@ -2356,6 +2357,7 @@ async function loadSupportInbox() {
         !byId("screen-support-inbox")?.classList.contains("active") ||
         activeSupportThreadId !== null) return;
     renderSupportThreadList(result.threads);
+    supportUnreadRequestId++;
     renderSupportUnreadBadge((result.threads || []).reduce((sum, thread) => sum + (Number(thread.admin_unread_count) || 0), 0));
   } catch (_) {}
 }

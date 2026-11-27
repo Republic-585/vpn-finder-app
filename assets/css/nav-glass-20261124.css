@@ -38,20 +38,8 @@
   border:1px solid transparent;
   border-radius:32px;
   outline:0;
-  background:
-    linear-gradient(var(--nav-glass-bg),var(--nav-glass-bg)) padding-box,
-    conic-gradient(from 0deg,
-      rgba(255,255,255,.045) 0deg,
-      rgba(255,255,255,.08) 24deg,
-      rgba(255,255,255,.045) 72deg,
-      rgba(255,255,255,.08) 118deg,
-      rgba(255,255,255,.34) 150deg,
-      rgba(255,255,255,.13) 174deg,
-      rgba(255,255,255,.045) 252deg,
-      rgba(255,255,255,.08) 300deg,
-      rgba(255,255,255,.34) 330deg,
-      rgba(255,255,255,.13) 345deg,
-      rgba(255,255,255,.045) 360deg) border-box;
+  /* Keep the translucent fill isolated from the diagonal border gradient. */
+  background:linear-gradient(var(--nav-glass-bg),var(--nav-glass-bg)) padding-box;
   -webkit-backdrop-filter:blur(30px) saturate(180%) contrast(110%);
   backdrop-filter:blur(30px) saturate(180%) contrast(110%);
   box-shadow:0 10px 32px rgba(0,0,0,.32);
@@ -63,7 +51,31 @@
   user-select:none;
   -webkit-user-select:none;
 }
-.bottom-nav-dock .bottom-nav::before{content:none;display:none}
+.bottom-nav-dock .bottom-nav::before{
+  content:"";
+  position:absolute;
+  z-index:4;
+  inset:0;
+  padding:1px;
+  border-radius:inherit;
+  pointer-events:none;
+  background:conic-gradient(from 0deg,
+    rgba(255,255,255,.045) 0deg,
+    rgba(255,255,255,.08) 24deg,
+    rgba(255,255,255,.045) 72deg,
+    rgba(255,255,255,.08) 118deg,
+    rgba(255,255,255,.34) 150deg,
+    rgba(255,255,255,.13) 174deg,
+    rgba(255,255,255,.045) 252deg,
+    rgba(255,255,255,.08) 300deg,
+    rgba(255,255,255,.34) 330deg,
+    rgba(255,255,255,.13) 345deg,
+    rgba(255,255,255,.045) 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+}
 .bottom-nav-dock .bottom-nav.is-pressed{
   transform:scale(1.025);
   transition:transform .2s ease-out;

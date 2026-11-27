@@ -17,3 +17,10 @@
 .monitoring-security-summary{grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:10px}
 .monitoring-security-summary article{min-height:58px;padding:9px}
 .monitoring-security-summary article strong{font-size:18px;margin-top:5px}
+
+.monitoring-security-events{display:grid;gap:0;margin-top:8px;border-top:1px solid var(--line)}
+.monitoring-security-event{display:grid;grid-template-columns:7px minmax(0,1fr) auto;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid var(--line)}
+.monitoring-security-event>div{display:grid;gap:3px;min-width:0}
+.monitoring-security-event strong{font-size:10px;font-weight:600;overflow-wrap:anywhere}
+.monitoring-security-event small{font-size:9px;line-height:1.35;color:var(--muted);overflow-wrap:anywhere}
+.monitoring-security-event time{font-size:9px;color:var(--muted);white-space:nowrap}

@@ -2328,8 +2328,19 @@ function syncContactKeyboardViewport(scrollToLatest = false) {
     });
   }
 }
+function resizeSupportChatField(field) {
+  if (!field) return;
+  const minHeight = 44;
+  const maxHeight = 112;
+  field.style.setProperty("--composer-input-height", minHeight + "px");
+  const nextHeight = Math.min(maxHeight, Math.max(minHeight, field.scrollHeight));
+  field.style.setProperty("--composer-input-height", nextHeight + "px");
+  field.style.overflowY = field.scrollHeight > maxHeight ? "auto" : "hidden";
+}
 function bindSupportChatKeyboardField(field, viewportProperty) {
   if (!field) return;
+  field.addEventListener("input", () => resizeSupportChatField(field));
+  resizeSupportChatField(field);
   field.addEventListener("focus", () => {
     window.setTimeout(() => syncContactKeyboardViewport(true), 80);
   });
@@ -2399,6 +2410,7 @@ byId("contact-form")?.addEventListener("submit", async event => {
     await supportRequest("send", { message });
     messageSentHaptic();
     form.reset();
+    resizeSupportChatField(field);
     await loadContactConversation();
   } catch (_) {
     // Keep the draft in the input so the user can retry.
@@ -2548,6 +2560,7 @@ byId("support-reply-form")?.addEventListener("submit", async event => {
     await supportRequest("reply", { thread_id: threadId, message });
     messageSentHaptic();
     form.reset();
+    resizeSupportChatField(field);
     if (activeSupportThreadId !== threadId) return;
     const requestId = ++supportThreadRequestId;
     const result = await supportRequest("get", { thread_id: threadId });

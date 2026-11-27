@@ -454,7 +454,7 @@ function renderMonitoringDashboard(data) {
   const settingsHtml = settingRows.map(([key, label, description]) =>
     '<label class="monitoring-setting"><span><strong>' + label + '</strong><small>' + description + '</small></span><input type="checkbox" data-monitoring-setting="' + key + '" ' + (settings[key] !== false ? "checked" : "") + '></label>'
   ).join("");
-  const p95 = snapshot.p95_load_ms_24h == null ? "—" : fmt.format(Math.round(Number(snapshot.p95_load_ms_24h))) + " мс";
+  const p95 = snapshot.p95_load_ms_24h == null ? "Нет данных" : fmt.format(Math.round(Number(snapshot.p95_load_ms_24h))) + " мс";
   const statusFrom = items => {
     const statuses = items.map(item => item.status);
     if (statuses.includes("critical")) return "critical";

@@ -2208,10 +2208,18 @@ function renderContactUnreadBadge(count) {
   const menuRow = row.closest(".profile-menu-row");
   if (menuRow) menuRow.setAttribute("aria-label", value ? t("Связаться. Новых сообщений: ") + value : t("Связаться"));
 }
+let contactUnreadRequestId = 0;
+let supportUnreadRequestId = 0;
+let contactConversationRequestId = 0;
+let supportInboxListRequestId = 0;
+let supportThreadRequestId = 0;
+
 async function loadContactUnreadBadge() {
   if (!tg?.initData || Number(tg?.initDataUnsafe?.user?.id || 0) === ANALYTICS_OWNER_TELEGRAM_ID) return;
+  const requestId = ++contactUnreadRequestId;
   try {
     const result = await supportRequest("unread_count");
+    if (requestId !== contactUnreadRequestId) return;
     renderContactUnreadBadge(result.count);
   } catch (_) {}
 }
@@ -2256,8 +2264,11 @@ tg?.onEvent?.("viewportChanged", () => syncContactKeyboardViewport(true));
 async function loadContactConversation() {
   const root = byId("contact-messages");
   if (!root || !tg?.initData) return;
+  const requestId = ++contactConversationRequestId;
   try {
     const result = await supportRequest("get");
+    if (requestId !== contactConversationRequestId ||
+        !byId("screen-contact")?.classList.contains("active")) return;
     renderSupportMessages(root, result.messages, "user", result.thread?.admin_last_read_at);
     renderContactUnreadBadge(0);
   } catch (_) {}
@@ -2299,8 +2310,10 @@ function renderSupportUnreadBadge(count) {
 async function loadSupportUnreadBadge() {
   const isOwner = Number(tg?.initDataUnsafe?.user?.id || 0) === ANALYTICS_OWNER_TELEGRAM_ID;
   if (!isOwner || !tg?.initData) return;
+  const requestId = ++supportUnreadRequestId;
   try {
     const result = await supportRequest("unread_count");
+    if (requestId !== supportUnreadRequestId) return;
     renderSupportUnreadBadge(result.count);
   } catch (_) {}
 }
@@ -2324,6 +2337,8 @@ function renderSupportThreadList(threads) {
   }).join("");
 }
 async function loadSupportInbox() {
+  const listRequestId = ++supportInboxListRequestId;
+  supportThreadRequestId++;
   const row = byId("support-inbox-menu-row");
   const isOwner = Number(tg?.initDataUnsafe?.user?.id || 0) === ANALYTICS_OWNER_TELEGRAM_ID;
   if (row) row.hidden = !isOwner;
@@ -2337,6 +2352,9 @@ async function loadSupportInbox() {
   activeSupportThreadId = null;
   try {
     const result = await supportRequest("list");
+    if (listRequestId !== supportInboxListRequestId ||
+        !byId("screen-support-inbox")?.classList.contains("active") ||
+        activeSupportThreadId !== null) return;
     renderSupportThreadList(result.threads);
     renderSupportUnreadBadge((result.threads || []).reduce((sum, thread) => sum + (Number(thread.admin_unread_count) || 0), 0));
   } catch (_) {}
@@ -2360,9 +2378,13 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 async function openSupportThread(threadId, name) {
+  const requestId = ++supportThreadRequestId;
+  activeSupportThreadId = threadId;
   try {
     const result = await supportRequest("get", { thread_id: threadId });
-    activeSupportThreadId = threadId;
+    if (requestId !== supportThreadRequestId ||
+        activeSupportThreadId !== threadId ||
+        !byId("screen-support-inbox")?.classList.contains("active")) return;
     byId("support-inbox-list").hidden = true;
     byId("support-inbox-conversation").hidden = false;
     document.documentElement.classList.remove("support-inbox-list-mode");
@@ -2409,9 +2431,15 @@ byId("support-reply-form")?.addEventListener("submit", async event => {
   }
   button.disabled = true;
   try {
-    await supportRequest("reply", { thread_id: activeSupportThreadId, message });
+    const threadId = activeSupportThreadId;
+    await supportRequest("reply", { thread_id: threadId, message });
     form.reset();
-    const result = await supportRequest("get", { thread_id: activeSupportThreadId });
+    if (activeSupportThreadId !== threadId) return;
+    const requestId = ++supportThreadRequestId;
+    const result = await supportRequest("get", { thread_id: threadId });
+    if (requestId !== supportThreadRequestId ||
+        activeSupportThreadId !== threadId ||
+        !byId("screen-support-inbox")?.classList.contains("active")) return;
     renderSupportMessages(byId("support-inbox-messages"), result.messages, "admin", result.thread?.user_last_read_at);
   } catch (_) {
   } finally {

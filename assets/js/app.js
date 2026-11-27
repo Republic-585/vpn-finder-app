@@ -395,10 +395,11 @@ function renderMonitoringDashboard(data) {
   const audit = data.security_audit || null;
   const checkCritical = healthChecks.some(item => item.status === "critical");
   const checkWarning = healthChecks.some(item => item.status === "warning");
+  const checkUnknown = healthChecks.some(item => item.status === "unknown");
   const critical = active.some(item => item.severity === "critical") || checkCritical;
-  const unknown = healthChecks.length === 0;
-  const stateLabel = unknown ? "Состояние не подтверждено" : critical ? "Критическая проблема" : active.length || checkWarning ? "Есть предупреждения" : "Все проверки пройдены";
-  const stateClass = unknown ? "is-unknown" : critical ? "is-critical" : active.length || checkWarning ? "is-warning" : "is-ok";
+  const unknown = healthChecks.length === 0 || checkUnknown;
+  const stateLabel = healthChecks.length === 0 ? "Состояние не подтверждено" : critical ? "Критическая проблема" : active.length || checkWarning ? "Есть предупреждения" : unknown ? "Часть проверок не подтверждена" : "Все проверки пройдены";
+  const stateClass = healthChecks.length === 0 ? "is-unknown" : critical ? "is-critical" : active.length || checkWarning ? "is-warning" : unknown ? "is-unknown" : "is-ok";
   const lastRun = runs[0];
   const fmt = new Intl.NumberFormat(appLanguage === "en" ? "en-US" : "ru-RU");
   const healthStatusLabel = status => status === "healthy" ? "В норме" : status === "warning" ? "Внимание" : status === "critical" ? "Проблема" : "Нет данных";
@@ -426,7 +427,7 @@ function renderMonitoringDashboard(data) {
   root.innerHTML =
     '<div class="monitoring-toolbar"><span class="monitoring-status ' + stateClass + '"><i></i>' + stateLabel + '</span><button type="button" class="monitoring-action" data-monitoring-action="refresh">Обновить</button></div>' +
     '<div class="monitoring-summary">' +
-      '<article><span>Активные проблемы</span><strong>' + fmt.format(active.length + (checkCritical ? 1 : 0)) + '</strong></article>' +
+      '<article><span>Активные проблемы</span><strong>' + fmt.format(Math.max(active.length, healthChecks.filter(item => item.status === 'critical').length)) + '</strong></article>' +
       '<article><span>Проверки системы</span><strong>' + fmt.format(healthChecks.length) + '</strong></article>' +
       '<article><span>Ошибки за час</span><strong>' + fmt.format(snapshot.errors_1h || 0) + '</strong></article>' +
       '<article><span>Переходы за 24 часа</span><strong>' + fmt.format(snapshot.clicks_24h || 0) + '</strong></article>' +

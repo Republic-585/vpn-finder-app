@@ -2230,37 +2230,44 @@ async function loadContactUnreadBadge() {
 }
 function syncContactKeyboardViewport(scrollToLatest = false) {
   const page = document.documentElement;
-  if (!page.classList.contains("contact-screen-active")) return;
+  const isContact = page.classList.contains("contact-screen-active");
+  const isAdminChat = page.classList.contains("support-inbox-chat-mode");
+  if (!isContact && !isAdminChat) return;
   const viewport = window.visualViewport;
   const height = Math.round(viewport?.height || window.innerHeight);
-  page.style.setProperty("--contact-viewport-height", height + "px");
-  const field = byId("contact-form")?.elements?.message;
+  page.style.setProperty(isContact ? "--contact-viewport-height" : "--support-inbox-viewport-height", height + "px");
+  const field = byId(isContact ? "contact-form" : "support-reply-form")?.elements?.message;
   const keyboardOpen = Boolean(field && document.activeElement === field &&
     (window.innerHeight - height > 80 || viewport));
-  page.classList.toggle("contact-keyboard-open", keyboardOpen);
+  page.classList.toggle("contact-keyboard-open", isContact && keyboardOpen);
+  page.classList.toggle("support-inbox-keyboard-open", isAdminChat && keyboardOpen);
   if (scrollToLatest || keyboardOpen) {
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
-        const messages = byId("contact-messages");
+        const messages = byId(isContact ? "contact-messages" : "support-inbox-messages");
         if (messages) messages.scrollTop = messages.scrollHeight;
       });
     });
   }
 }
-const contactMessageField = byId("contact-form")?.elements?.message;
-contactMessageField?.addEventListener("focus", () => {
-  window.setTimeout(() => syncContactKeyboardViewport(true), 80);
-});
-contactMessageField?.addEventListener("blur", () => {
-  window.setTimeout(() => {
-    if (document.activeElement !== contactMessageField) {
-      document.documentElement.classList.remove("contact-keyboard-open");
-      if (!document.documentElement.classList.contains("contact-screen-active")) {
-        document.documentElement.style.removeProperty("--contact-viewport-height");
+function bindSupportChatKeyboardField(field, screenClass, viewportProperty) {
+  if (!field) return;
+  field.addEventListener("focus", () => {
+    window.setTimeout(() => syncContactKeyboardViewport(true), 80);
+  });
+  field.addEventListener("blur", () => {
+    window.setTimeout(() => {
+      if (document.activeElement !== field) {
+        document.documentElement.classList.remove("contact-keyboard-open", "support-inbox-keyboard-open");
+        if (!document.documentElement.classList.contains(screenClass)) {
+          document.documentElement.style.removeProperty(viewportProperty);
+        }
       }
-    }
-  }, 120);
-});
+    }, 120);
+  });
+}
+bindSupportChatKeyboardField(byId("contact-form")?.elements?.message, "contact-screen-active", "--contact-viewport-height");
+bindSupportChatKeyboardField(byId("support-reply-form")?.elements?.message, "support-inbox-screen-active", "--support-inbox-viewport-height");
 window.visualViewport?.addEventListener("resize", () => syncContactKeyboardViewport(true));
 window.visualViewport?.addEventListener("scroll", () => syncContactKeyboardViewport());
 window.addEventListener("resize", () => syncContactKeyboardViewport());

@@ -1216,7 +1216,6 @@ if (navBar) {
   });
 
   navBar.addEventListener("pointermove", event => {
-    if (!navBar.hasPointerCapture(event.pointerId) && !draggingNav) return;
     const deltaX = event.clientX - startX;
     if (!draggingNav && Math.abs(deltaX) > 5) {
       draggingNav = true;

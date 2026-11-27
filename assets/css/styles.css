@@ -2795,3 +2795,7 @@ html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose{
   -webkit-backdrop-filter:blur(22px) saturate(155%)!important;
   backdrop-filter:blur(22px) saturate(155%)!important;
 }
+
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-messages{
+  justify-content:flex-start!important;
+}

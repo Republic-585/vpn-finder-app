@@ -2306,6 +2306,8 @@ byId("contact-form")?.addEventListener("submit", async event => {
   const field = form.elements.message;
   const message = String(field?.value || "").trim();
   if (!message || button.disabled) return;
+  // Restore textarea focus synchronously inside the submit gesture so iOS keeps its keyboard open.
+  field.focus({ preventScroll: true });
   button.classList.remove("is-sending");
   const plane = button.querySelector(".contact-send-plane");
   if (plane) {
@@ -2447,8 +2449,11 @@ byId("support-reply-form")?.addEventListener("submit", async event => {
   event.preventDefault();
   const form = event.currentTarget;
   const button = form.querySelector('button[type="submit"]');
-  const message = String(form.elements.message?.value || "").trim();
+  const field = form.elements.message;
+  const message = String(field?.value || "").trim();
   if (!activeSupportThreadId || !message || button.disabled) return;
+  // Restore textarea focus synchronously inside the submit gesture so iOS keeps its keyboard open.
+  field.focus({ preventScroll: true });
   button.classList.remove("is-sending");
   const plane = button.querySelector(".contact-send-plane");
   if (plane) {

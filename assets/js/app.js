@@ -1101,6 +1101,10 @@ if (tg?.BackButton) {
       return;
     }
     const activeScreen = document.querySelector(".screen.active");
+    if (activeScreen?.dataset.screen === "support-inbox" && activeSupportThreadId !== null) {
+      loadSupportInbox();
+      return;
+    }
     showScreen(activeScreen?.dataset.screen === "owners" ? ownersBackScreen : activeScreen?.dataset.screen === "owner-promo" ? "catalog" : "profile");
   });
   try { tg.BackButton.hide(); } catch (_) {}
@@ -1137,6 +1141,7 @@ document.addEventListener("touchend", event => {
   if (deltaX >= 90 && deltaY <= 70 && deltaX > deltaY * 1.25) {
     const activeScreen = document.querySelector(".screen.active");
     if (activeScreen?.dataset.screen === "owner-promo") showScreen("catalog");
+    else if (activeScreen?.dataset.screen === "support-inbox" && activeSupportThreadId !== null) loadSupportInbox();
     else if (BACK_SCREENS.has(activeScreen?.dataset.screen)) showScreen(activeScreen?.dataset.screen === "owners" ? ownersBackScreen : "profile");
   }
 }, { passive: true });

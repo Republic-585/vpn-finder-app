@@ -175,18 +175,19 @@
   position:absolute;
   inset:-3px;
   z-index:3;
-  padding:3px;
+  box-sizing:border-box;
+  border:3px solid transparent;
   border-radius:50%;
   pointer-events:none;
-  background:conic-gradient(from 0deg,#39D98A 0%,#65E6A7 25%,#20C997 52%,#39D98A 76%,#39D98A 100%);
+  background:
+    linear-gradient(transparent,transparent) padding-box,
+    conic-gradient(from 0deg,#39D98A 0%,#65E6A7 25%,#20C997 52%,#39D98A 76%,#39D98A 100%) border-box;
   opacity:1;
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  mask-composite:exclude;
 }
 .bottom-nav-dock .profile-nav-button.is-current::after{
-  background:conic-gradient(from 0deg,#3390EC 0%,#69B7FF 25%,#1877D2 52%,#55A9F5 76%,#3390EC 100%);
+  background:
+    linear-gradient(transparent,transparent) padding-box,
+    conic-gradient(from 0deg,#3390EC 0%,#69B7FF 25%,#1877D2 52%,#55A9F5 76%,#3390EC 100%) border-box;
 }
 .bottom-nav-dock .profile-nav-button:active,
 .bottom-nav-dock .profile-nav-button.is-pressed{scale:.94}

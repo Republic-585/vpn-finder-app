@@ -2266,6 +2266,21 @@ function bindSupportChatKeyboardField(field, viewportProperty) {
 }
 bindSupportChatKeyboardField(byId("contact-form")?.elements?.message, "--contact-viewport-height");
 bindSupportChatKeyboardField(byId("support-reply-form")?.elements?.message, "--support-inbox-viewport-height");
+function keepSupportChatInputFocused(formId) {
+  const form = byId(formId);
+  const field = form?.elements?.message;
+  const button = form?.querySelector('.contact-send-button[type="submit"]');
+  if (!field || !button) return;
+  // On iOS, tapping the submit button can move focus away from the textarea
+  // and dismiss the software keyboard. Keep the textarea as the focused control.
+  button.addEventListener("pointerdown", event => {
+    if (event.pointerType === "touch" && document.activeElement === field) {
+      event.preventDefault();
+    }
+  });
+}
+keepSupportChatInputFocused("contact-form");
+keepSupportChatInputFocused("support-reply-form");
 window.visualViewport?.addEventListener("resize", () => syncContactKeyboardViewport(true));
 window.visualViewport?.addEventListener("scroll", () => syncContactKeyboardViewport());
 window.addEventListener("resize", () => syncContactKeyboardViewport());

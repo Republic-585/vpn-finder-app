@@ -1104,120 +1104,135 @@ function showScreen(name, backScreen = null) {
 }
 const navBar = document.querySelector(".bottom-nav");
 if (navBar) {
-  const indicator = document.createElement("span");
-  indicator.className = "nav-indicator";
-  indicator.setAttribute("aria-hidden", "true");
-  navBar.prepend(indicator);
+  const blob = document.createElement("span");
+  blob.className = "tab-blob";
+  blob.setAttribute("aria-hidden", "true");
+  navBar.prepend(blob);
 
   let draggingNav = false;
   let dragMoved = false;
   let startX = 0;
+  let startBlobX = 0;
+  let currentX = 0;
+  let targetX = 0;
+  let velocity = 0;
+  let lastPointerX = 0;
+  let lastPointerTime = performance.now();
   let suppressNavClickUntil = 0;
-  let lastActiveNavItem = null;
+  const navPadding = 4;
+  const stiffness = 0.15;
+  const damping = 0.75;
 
-  const setIndicator = (left, width) => {
-    const inset = 4;
-    indicator.style.width = Math.max(0, width - inset * 2) + "px";
-    indicator.style.transform = `translateX(${left + inset}px)`;
-  };
-  const getNavItemBounds = item => {
-    const navRect = navBar.getBoundingClientRect();
-    const itemRect = item.getBoundingClientRect();
-    return {
-      left: itemRect.left - navRect.left,
-      width: itemRect.width,
-      center: itemRect.left + itemRect.width / 2 - navRect.left
-    };
+  const getBounds = item => ({
+    left: item.offsetLeft - navPadding,
+    width: item.offsetWidth,
+    center: item.offsetLeft - navPadding + item.offsetWidth / 2
+  });
+
+  const closestItemAt = x => {
+    const center = x + blob.offsetWidth / 2;
+    return nav.reduce((best, item) => {
+      const distance = Math.abs(getBounds(item).center - center);
+      return !best || distance < best.distance ? { item, distance } : best;
+    }, null)?.item || null;
   };
 
-  moveIndicator = () => {
+  const paintNearestItem = () => {
+    const closest = closestItemAt(currentX);
+    nav.forEach(item => {
+      const selected = item === closest;
+      item.style.color = selected ? "var(--nav-glass-accent)" : "var(--nav-glass-muted)";
+      const icon = item.querySelector("svg");
+      if (icon) icon.style.transform = selected ? "scale(1.08)" : "scale(1)";
+    });
+  };
+
+  moveIndicator = (snap = false) => {
     const active = nav.find(item => item.classList.contains("active"));
     if (!active) {
-      indicator.hidden = true;
-      lastActiveNavItem = null;
+      // Keep the lens at the last selected tab while the detached Profile control is active.
+      paintNearestItem();
       return;
     }
-    const bounds = getNavItemBounds(active);
+    const bounds = getBounds(active);
     if (!bounds.width || !navBar.getBoundingClientRect().width) return;
-    indicator.hidden = false;
-    setIndicator(bounds.left, bounds.width);
-
-    const changed = lastActiveNavItem !== null && lastActiveNavItem !== active;
-    lastActiveNavItem = active;
-    if (changed) {
-      indicator.classList.remove("is-settling");
-      void indicator.offsetWidth;
-      indicator.classList.add("is-settling");
+    blob.style.width = bounds.width + "px";
+    targetX = bounds.left;
+    if (snap) {
+      currentX = targetX;
+      velocity = 0;
+      blob.style.transform = `translateX(${currentX}px)`;
     }
+    paintNearestItem();
   };
 
-  const slideIndicatorToFinger = clientX => {
-    const navRect = navBar.getBoundingClientRect();
-    const points = nav.map(item => getNavItemBounds(item));
-    if (!points.length) return;
-    const x = Math.max(points[0].center, Math.min(clientX - navRect.left, points[points.length - 1].center));
-    const right = points.findIndex(point => point.center >= x);
-    if (right <= 0) {
-      setIndicator(points[0].left, points[0].width);
-      return;
+  const animateBlob = () => {
+    if (!draggingNav) {
+      const force = (targetX - currentX) * stiffness;
+      velocity = (velocity + force) * damping;
+      currentX += velocity;
+      if (Math.abs(velocity) < 0.1 && Math.abs(targetX - currentX) < 0.1) {
+        currentX = targetX;
+        velocity = 0;
+      }
     }
-    const leftPoint = points[right - 1];
-    const rightPoint = points[right];
-    const distance = rightPoint.center - leftPoint.center || 1;
-    const progress = (x - leftPoint.center) / distance;
-    setIndicator(
-      leftPoint.left + (rightPoint.left - leftPoint.left) * progress,
-      leftPoint.width + (rightPoint.width - leftPoint.width) * progress
-    );
+    const stretchX = 1 + Math.min(Math.abs(velocity) * 0.03, 0.3);
+    const stretchY = 1 - Math.min(Math.abs(velocity) * 0.01, 0.1);
+    blob.style.transform = `translateX(${currentX}px) scale(${stretchX}, ${stretchY})`;
+    paintNearestItem();
+    requestAnimationFrame(animateBlob);
   };
 
-  const nearestItem = () => {
-    const rect = indicator.getBoundingClientRect();
-    const center = rect.left + rect.width / 2;
-    return nav.reduce((best, item) => {
-      const itemRect = item.getBoundingClientRect();
-      const distance = Math.abs(center - (itemRect.left + itemRect.width / 2));
-      return !best || distance < best.distance ? { item, distance } : best;
-    }, null)?.item;
-  };
-
-  const scheduleIndicatorLayout = () => {
-    window.requestAnimationFrame(() => window.requestAnimationFrame(moveIndicator));
-  };
-  scheduleIndicatorLayout();
-  window.addEventListener("resize", scheduleIndicatorLayout);
-  window.addEventListener("orientationchange", scheduleIndicatorLayout);
-  tg?.onEvent?.("viewportChanged", scheduleIndicatorLayout);
-  if (typeof ResizeObserver !== "undefined") {
-    const navResizeObserver = new ResizeObserver(scheduleIndicatorLayout);
-    navResizeObserver.observe(navBar);
-    nav.forEach(item => navResizeObserver.observe(item));
-  }
-
+  const nearestItem = () => closestItemAt(currentX);
   const clearPressState = () => {
     navBar.classList.remove("is-pressed");
     navBar.querySelectorAll(".nav-item.is-pressed").forEach(item => item.classList.remove("is-pressed"));
     byId("profile-nav-button")?.classList.remove("is-pressed");
   };
+
+  const scheduleNavLayout = () => requestAnimationFrame(() => requestAnimationFrame(() => moveIndicator(true)));
+  scheduleNavLayout();
+  window.addEventListener("resize", scheduleNavLayout);
+  window.addEventListener("orientationchange", scheduleNavLayout);
+  tg?.onEvent?.("viewportChanged", scheduleNavLayout);
+  if (typeof ResizeObserver !== "undefined") {
+    const navResizeObserver = new ResizeObserver(scheduleNavLayout);
+    navResizeObserver.observe(navBar);
+    nav.forEach(item => navResizeObserver.observe(item));
+  }
+
   navBar.addEventListener("pointerdown", event => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
     navBar.classList.add("is-pressed");
     const pressedItem = event.target.closest(".nav-item");
     if (pressedItem) pressedItem.classList.add("is-pressed");
-
-    if (!pressedItem || !pressedItem.classList.contains("active") || event.pointerType === "mouse") return;
-    draggingNav = true;
+    draggingNav = false;
     dragMoved = false;
     startX = event.clientX;
-    navBar.classList.add("is-dragging");
-    try { navBar.setPointerCapture(event.pointerId); } catch (_) {}
+    startBlobX = currentX;
+    lastPointerX = event.clientX;
+    lastPointerTime = performance.now();
+    velocity = 0;
   });
+
   navBar.addEventListener("pointermove", event => {
-    if (!draggingNav) return;
-    if (Math.abs(event.clientX - startX) > 6) dragMoved = true;
-    if (dragMoved) {
-      event.preventDefault();
-      slideIndicatorToFinger(event.clientX);
+    if (!navBar.hasPointerCapture(event.pointerId) && !draggingNav) return;
+    const deltaX = event.clientX - startX;
+    if (!draggingNav && Math.abs(deltaX) > 5) {
+      draggingNav = true;
+      dragMoved = true;
+      navBar.classList.add("is-dragging");
+      try { navBar.setPointerCapture(event.pointerId); } catch (_) {}
     }
+    if (!draggingNav) return;
+    event.preventDefault();
+    const maxX = Math.max(0, navBar.clientWidth - blob.offsetWidth - navPadding * 2);
+    currentX = Math.max(0, Math.min(startBlobX + deltaX, maxX));
+    const now = performance.now();
+    const dt = now - lastPointerTime;
+    if (dt > 0) velocity = (event.clientX - lastPointerX) / dt * 16;
+    lastPointerX = event.clientX;
+    lastPointerTime = now;
   });
 
   const stopDragging = event => {
@@ -1225,8 +1240,10 @@ if (navBar) {
     if (!draggingNav) return;
     draggingNav = false;
     navBar.classList.remove("is-dragging");
-    try { navBar.releasePointerCapture(event.pointerId); } catch (_) {}
-    if (event.type === "pointercancel" || !dragMoved) {
+    try {
+      if (navBar.hasPointerCapture(event.pointerId)) navBar.releasePointerCapture(event.pointerId);
+    } catch (_) {}
+    if (event.type === "pointercancel") {
       moveIndicator();
       return;
     }
@@ -1238,9 +1255,10 @@ if (navBar) {
       moveIndicator();
     }
   };
+
   navBar.addEventListener("pointerup", stopDragging);
   navBar.addEventListener("pointercancel", stopDragging);
-  navBar.addEventListener("lostpointercapture", event => {
+  navBar.addEventListener("lostpointercapture", () => {
     if (!draggingNav) return;
     draggingNav = false;
     navBar.classList.remove("is-dragging");
@@ -1264,6 +1282,8 @@ if (navBar) {
       event.stopImmediatePropagation();
     }
   }, true);
+
+  requestAnimationFrame(animateBlob);
 }
 if (tg?.BackButton) {
   tg.BackButton.onClick(() => {

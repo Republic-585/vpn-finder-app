@@ -6,6 +6,10 @@
 <meta name="theme-color" content="#202124">
 <meta name="description" content="VPN Finder">
 <title>VPN Finder</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+(()=>{try{const p=localStorage.getItem("vpn-finder-theme");const t=window.Telegram?.WebApp;const s=p==="light"||p==="dark"?p:(t?.colorScheme||(window.matchMedia?.("(prefers-color-scheme: light)").matches?"light":"dark"));document.documentElement.dataset.theme=s==="light"?"light":"dark";document.documentElement.style.colorScheme=document.documentElement.dataset.theme;}catch(_){document.documentElement.dataset.theme="dark";}})();
+</script>
 <link rel="stylesheet" href="./assets/css/styles.css?v=20261128-main-screen-300ms-v1">
 <link rel="stylesheet" href="./assets/css/nav-glass-20261124.css?v=20261128-independent-panel-spring-v15">
 <link rel="stylesheet" href="./assets/css/monitoring.css?v=20261127-monitoring-owner-minimal-v1">

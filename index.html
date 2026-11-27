@@ -83,7 +83,9 @@
         <p class="home-screen-status" id="home-screen-status" role="status" hidden></p>
         <button class="home-screen-action home-screen-dismiss" id="hide-home-screen-prompt" type="button">Скрыть</button>
       </section>
-      <nav class="profile-menu" aria-label="Разделы профиля">
+      <section class="profile-menu-group profile-settings-group" aria-labelledby="profile-settings-title">
+        <h2 class="profile-section-title" id="profile-settings-title">Настройки</h2>
+        <nav class="profile-menu" aria-label="Настройки">
         <button class="profile-menu-row profile-language-row" id="language-selector" type="button">
           <span class="profile-menu-leading"><span class="profile-icon-tile language-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M3.8 12h16.4M12 3.5c2.1 2.3 3.1 5.1 3.1 8.5s-1 6.2-3.1 8.5M12 3.5C9.9 5.8 8.9 8.6 8.9 12s1 6.2 3.1 8.5"></path></svg></span><span>Язык</span></span>
           <span class="profile-menu-trailing"><span class="profile-language-value" id="profile-language-value">Русский</span><span class="profile-menu-chevron" aria-hidden="true">›</span></span>
@@ -96,11 +98,17 @@
           <span class="profile-menu-leading"><span class="profile-icon-tile sounds-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l4 3V7l-4 3H4Z"></path><path d="M15 9a4 4 0 0 1 0 6M17.5 6.5a7.5 7.5 0 0 1 0 11"></path></svg></span><span>Звуки</span></span>
           <span class="profile-menu-trailing"><span class="profile-sounds-switch" aria-hidden="true"><i></i></span></span>
         </button>
+        </nav>
+      </section>
+      <section class="profile-menu-group profile-about-group" aria-labelledby="profile-about-title">
+        <h2 class="profile-section-title" id="profile-about-title">О проекте</h2>
+        <nav class="profile-menu" aria-label="О проекте">
         <button class="profile-menu-row" type="button" data-go="news" aria-label="Новости"><span class="profile-menu-leading"><span class="profile-icon-tile news-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.8h14a1.7 1.7 0 0 1 1.7 1.7v13a1.7 1.7 0 0 1-1.7 1.7H5a1.7 1.7 0 0 1-1.7-1.7v-13A1.7 1.7 0 0 1 5 3.8Z"></path><path d="M8 8h8M8 11.5h8M8 15h5"></path><path d="M7 3.8v3"></path></svg></span><span>Новости</span></span><span class="profile-menu-trailing"><span class="news-unread-badge" hidden>НОВОЕ</span><span class="profile-menu-chevron" aria-hidden="true">›</span></span></button>
         <button class="profile-menu-row" type="button" data-go="contact"><span class="profile-menu-leading"><span class="profile-icon-tile contact-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 11.2a7.7 7.7 0 0 1-7.7 7.7H6l-2.2 1.8v-6.1a7.7 7.7 0 1 1 16.4-3.4Z"></path><circle cx="8.5" cy="11.5" r=".8" fill="currentColor" stroke="none"></circle><circle cx="12" cy="11.5" r=".8" fill="currentColor" stroke="none"></circle><circle cx="15.5" cy="11.5" r=".8" fill="currentColor" stroke="none"></circle></svg></span><span>Связаться</span></span><span class="profile-menu-trailing"><span id="contact-unread-badge" class="news-unread-badge support-unread-badge" hidden>0</span><span class="profile-menu-chevron" aria-hidden="true">›</span></span></button>
         <button class="profile-menu-row" type="button" data-go="owners" data-back-screen="profile"><span class="profile-menu-leading"><span class="profile-icon-tile owners-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2.4"></rect><path d="M8 7V5.5A2.5 2.5 0 0 1 10.5 3h3A2.5 2.5 0 0 1 16 5.5V7M3 12h18"></path><path d="M10 12v2h4v-2"></path></svg></span><span>Владельцам VPN</span></span><span class="profile-menu-chevron" aria-hidden="true">›</span></button>
         <button class="profile-menu-row" type="button" data-go="support"><span class="profile-menu-leading"><span class="profile-icon-tile support-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.3 8.9c0 5-8.3 10.2-8.3 10.2S3.7 13.9 3.7 8.9A4.6 4.6 0 0 1 12 6.3a4.6 4.6 0 0 1 8.3 2.6Z"></path></svg></span><span>Поддержать проект</span></span><span class="profile-menu-chevron" aria-hidden="true">›</span></button>
-      </nav>
+        </nav>
+      </section>
       <div class="profile-management-group" id="profile-management-group" hidden>
         <h2 class="profile-management-title">Управление</h2>
         <nav class="profile-menu profile-management-menu" aria-label="Управление">

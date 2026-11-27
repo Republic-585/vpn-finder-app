@@ -512,9 +512,62 @@ document.addEventListener("visibilitychange",()=>{
 
 const byId = id => document.getElementById(id);
 const LANGUAGE_KEY = "vpn-finder-language";
+const SUPPORT_SOUND_KEY = "vpn-finder-support-sounds";
+let supportSoundsEnabled = true;
+let supportSoundContext = null;
+try { supportSoundsEnabled = localStorage.getItem(SUPPORT_SOUND_KEY) !== "0"; } catch (_) {}
+function updateSupportSoundToggle() {
+  const toggle = byId("profile-sounds-toggle");
+  const state = byId("profile-sounds-state");
+  if (toggle) {
+    toggle.setAttribute("aria-pressed", supportSoundsEnabled ? "true" : "false");
+    toggle.classList.toggle("is-muted", !supportSoundsEnabled);
+  }
+  if (state) state.textContent = t(supportSoundsEnabled ? "Вкл." : "Выкл.");
+}
+function unlockSupportSound() {
+  if (supportSoundContext || typeof window.AudioContext !== "function") return;
+  try {
+    supportSoundContext = new window.AudioContext();
+    if (supportSoundContext.state === "suspended") supportSoundContext.resume().catch(() => {});
+  } catch (_) { supportSoundContext = null; }
+}
+document.addEventListener("pointerdown", unlockSupportSound, { once: true, capture: true });
+document.addEventListener("keydown", unlockSupportSound, { once: true, capture: true });
+function playSupportNotificationSound() {
+  if (!supportSoundsEnabled || !supportSoundContext) return;
+  const play = () => {
+    if (!supportSoundsEnabled || supportSoundContext?.state !== "running") return;
+    const context = supportSoundContext;
+    const startAt = context.currentTime + 0.012;
+    [[880, 0], [1174.66, 0.045]].forEach(([frequency, offset]) => {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(frequency, startAt + offset);
+      gain.gain.setValueAtTime(0.0001, startAt + offset);
+      gain.gain.exponentialRampToValueAtTime(0.026, startAt + offset + 0.014);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startAt + offset + 0.17);
+      oscillator.connect(gain);
+      gain.connect(context.destination);
+      oscillator.start(startAt + offset);
+      oscillator.stop(startAt + offset + 0.18);
+    });
+  };
+  if (supportSoundContext.state === "running") play();
+  else supportSoundContext.resume().then(play).catch(() => {});
+}
+byId("profile-sounds-toggle")?.addEventListener("click", () => {
+  supportSoundsEnabled = !supportSoundsEnabled;
+  try { localStorage.setItem(SUPPORT_SOUND_KEY, supportSoundsEnabled ? "1" : "0"); } catch (_) {}
+  updateSupportSoundToggle();
+});
+updateSupportSoundToggle();
+
 const translations = {
   ru: {},
   en: {
+    "Звуки":"Sounds","Вкл.":"On","Выкл.":"Off",
     "Ошибки JavaScript":"JavaScript errors","Среднее время загрузки":"Average load time",
     "Ошибки браузера ограничены пятью событиями на один запуск приложения. Время загрузки измеряется по Navigation Timing API.":"Browser errors are capped at five events per app launch. Load time is measured with the Navigation Timing API.",
     "Ошибка JavaScript":"JavaScript error","Время загрузки":"Load time",
@@ -2294,6 +2347,10 @@ function renderContactUnreadBadge(count) {
 let contactUnreadRequestId = 0;
 let supportUnreadRequestId = 0;
 let contactConversationRequestId = 0;
+let contactMessageBaseline = null;
+let lastContactUnreadCount = null;
+let lastSupportUnreadCount = null;
+let activeSupportMessageBaseline = null;
 let supportInboxListRequestId = 0;
 let supportThreadRequestId = 0;
 
@@ -2303,7 +2360,10 @@ async function loadContactUnreadBadge() {
   try {
     const result = await supportRequest("unread_count");
     if (requestId !== contactUnreadRequestId) return;
-    renderContactUnreadBadge(result.count);
+    const count = Math.max(0, Number(result.count) || 0);
+    if (lastContactUnreadCount !== null && count > lastContactUnreadCount) playSupportNotificationSound();
+    lastContactUnreadCount = count;
+    renderContactUnreadBadge(count);
   } catch (_) {}
 }
 function syncContactKeyboardViewport(scrollToLatest = false) {
@@ -2375,7 +2435,7 @@ window.visualViewport?.addEventListener("scroll", () => syncContactKeyboardViewp
 window.addEventListener("resize", () => syncContactKeyboardViewport());
 tg?.onEvent?.("viewportChanged", () => syncContactKeyboardViewport(true));
 
-async function loadContactConversation() {
+async function loadContactConversation(notifyNewMessages = false) {
   const root = byId("contact-messages");
   if (!root || !tg?.initData) return;
   const requestId = ++contactConversationRequestId;
@@ -2383,7 +2443,17 @@ async function loadContactConversation() {
     const result = await supportRequest("get");
     if (requestId !== contactConversationRequestId ||
         !byId("screen-contact")?.classList.contains("active")) return;
-    renderSupportMessages(root, result.messages, "user", result.thread?.admin_last_read_at);
+    const messages = result.messages || [];
+    const messageKey = message => String(message.id || (String(message.created_at || "") + "|" + String(message.sender || "") + "|" + String(message.body || "")));
+    if (contactMessageBaseline !== null && notifyNewMessages) {
+      const previousIndex = messages.findIndex(message => messageKey(message) === contactMessageBaseline);
+      const hasNewIncoming = previousIndex >= 0
+        ? messages.slice(previousIndex + 1).some(message => message.sender === "admin")
+        : messages.some(message => message.sender === "admin");
+      if (hasNewIncoming) playSupportNotificationSound();
+    }
+    if (messages.length) contactMessageBaseline = messageKey(messages[messages.length - 1]);
+    renderSupportMessages(root, messages, "user", result.thread?.admin_last_read_at);
     contactUnreadRequestId++;
     renderContactUnreadBadge(0);
   } catch (_) {}
@@ -2434,7 +2504,11 @@ async function loadSupportUnreadBadge() {
   try {
     const result = await supportRequest("unread_count");
     if (requestId !== supportUnreadRequestId) return;
-    renderSupportUnreadBadge(result.count);
+    const count = Math.max(0, Number(result.count) || 0);
+    const isViewingThread = byId("screen-support-inbox")?.classList.contains("active") && activeSupportThreadId !== null;
+    if (!isViewingThread && lastSupportUnreadCount !== null && count > lastSupportUnreadCount) playSupportNotificationSound();
+    lastSupportUnreadCount = count;
+    renderSupportUnreadBadge(count);
   } catch (_) {}
 }
 let activeSupportThreadId = null;
@@ -2485,8 +2559,9 @@ loadContactUnreadBadge();
 setInterval(() => {
   if (document.visibilityState !== "visible") return;
   loadSupportUnreadBadge();
+  if (byId("screen-support-inbox")?.classList.contains("active") && activeSupportThreadId !== null) refreshActiveSupportThread(true);
   if (byId("screen-contact")?.classList.contains("active")) {
-    loadContactConversation();
+    loadContactConversation(true);
   } else {
     loadContactUnreadBadge();
   }
@@ -2495,9 +2570,30 @@ document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") {
     loadSupportUnreadBadge();
     loadContactUnreadBadge();
-    if (byId("screen-contact")?.classList.contains("active")) loadContactConversation();
+    if (byId("screen-contact")?.classList.contains("active")) loadContactConversation(true);
+    if (byId("screen-support-inbox")?.classList.contains("active") && activeSupportThreadId !== null) refreshActiveSupportThread(true);
   }
 });
+async function refreshActiveSupportThread(notifyNewMessages = false) {
+  const threadId = activeSupportThreadId;
+  if (!threadId || !byId("screen-support-inbox")?.classList.contains("active")) return;
+  const requestId = ++supportThreadRequestId;
+  try {
+    const result = await supportRequest("get", { thread_id: threadId });
+    if (requestId !== supportThreadRequestId || activeSupportThreadId !== threadId || !byId("screen-support-inbox")?.classList.contains("active")) return;
+    const messages = result.messages || [];
+    const key = message => String(message.id || (String(message.created_at || "") + "|" + String(message.sender || "") + "|" + String(message.body || "")));
+    if (activeSupportMessageBaseline !== null && notifyNewMessages) {
+      const previousIndex = messages.findIndex(message => key(message) === activeSupportMessageBaseline);
+      const hasNewIncoming = previousIndex >= 0
+        ? messages.slice(previousIndex + 1).some(message => message.sender === "user")
+        : messages.some(message => message.sender === "user");
+      if (hasNewIncoming) playSupportNotificationSound();
+    }
+    if (messages.length) activeSupportMessageBaseline = key(messages[messages.length - 1]);
+    renderSupportMessages(byId("support-inbox-messages"), messages, "admin", result.thread?.user_last_read_at);
+  } catch (_) {}
+}
 async function openSupportThread(threadId, name) {
   const requestId = ++supportThreadRequestId;
   activeSupportThreadId = threadId;
@@ -2528,7 +2624,10 @@ async function openSupportThread(threadId, name) {
       fallback.textContent = initial;
       threadAvatar.replaceWith(fallback);
     }, { once: true });
-    renderSupportMessages(byId("support-inbox-messages"), result.messages, "admin", result.thread?.user_last_read_at);
+    const messages = result.messages || [];
+    const latestMessage = messages[messages.length - 1];
+    activeSupportMessageBaseline = latestMessage ? String(latestMessage.id || (String(latestMessage.created_at || "") + "|" + String(latestMessage.sender || "") + "|" + String(latestMessage.body || ""))) : null;
+    renderSupportMessages(byId("support-inbox-messages"), messages, "admin", result.thread?.user_last_read_at);
     loadSupportUnreadBadge();
   } catch (_) {}
 }
@@ -2567,7 +2666,10 @@ byId("support-reply-form")?.addEventListener("submit", async event => {
     if (requestId !== supportThreadRequestId ||
         activeSupportThreadId !== threadId ||
         !byId("screen-support-inbox")?.classList.contains("active")) return;
-    renderSupportMessages(byId("support-inbox-messages"), result.messages, "admin", result.thread?.user_last_read_at);
+    const messages = result.messages || [];
+    const latestMessage = messages[messages.length - 1];
+    activeSupportMessageBaseline = latestMessage ? String(latestMessage.id || (String(latestMessage.created_at || "") + "|" + String(latestMessage.sender || "") + "|" + String(latestMessage.body || ""))) : null;
+    renderSupportMessages(byId("support-inbox-messages"), messages, "admin", result.thread?.user_last_read_at);
   } catch (_) {
   } finally {
     button.disabled = false;

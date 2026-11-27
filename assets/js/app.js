@@ -2443,6 +2443,7 @@ function bindSupportMessageActions(root) {
         await supportRequest("delete", values);
       } else return;
       if (tg?.HapticFeedback?.impactOccurred) tg.HapticFeedback.impactOccurred("light");
+      const previousScrollTop = root.scrollTop;
       if (viewerRole === "admin") {
         if (!activeSupportThreadId) return;
         const result = await supportRequest("get", { thread_id: activeSupportThreadId });
@@ -2450,6 +2451,7 @@ function bindSupportMessageActions(root) {
       } else {
         await loadContactConversation(false);
       }
+      root.scrollTop = previousScrollTop;
     } catch (_) {
       if (typeof tg?.showAlert === "function") tg.showAlert("Не удалось выполнить действие. Попробуйте ещё раз.");
     } finally {

@@ -3252,6 +3252,37 @@ html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose .contac
   border-radius:50%!important;
 }
 
+/* Composer shape switches with content: original pill when empty,
+   rounded rectangle while composing. Applies to user and admin chats. */
+html.contact-screen-active #screen-contact .support-chat-compose,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose{
+  border-radius:999px!important;
+  align-items:center!important;
+  transition:border-radius 160ms ease, min-height 140ms ease;
+}
+html.contact-screen-active #screen-contact .support-chat-compose.has-message,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose.has-message{
+  border-radius:22px!important;
+  align-items:flex-end!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose.is-empty,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose.is-empty{
+  border-radius:999px!important;
+  align-items:center!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose textarea,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose textarea{
+  border-radius:0!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose.has-message .contact-send-button,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose.has-message .contact-send-button{
+  align-self:flex-end!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose.is-empty .contact-send-button,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose.is-empty .contact-send-button{
+  align-self:center!important;
+}
+
 /* Keep the first-visit Home Screen prompt at its full content height.
    The profile menu must not squeeze its action rows out of view. */
 html.profile-screen-active #screen-profile .home-screen-prompt{

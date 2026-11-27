@@ -2216,7 +2216,7 @@ body.contact-no-bottom-navigation .bottom-nav-dock{display:none!important}
 .support-message-incoming{align-self:flex-start;background:var(--panel)!important;color:var(--text)!important;border:1px solid var(--line)!important;border-bottom-left-radius:6px!important}
 .support-message-status{display:inline-flex;align-items:center;margin-left:2px;vertical-align:-1px;line-height:0}
 .support-read-icon{display:block;width:12px;height:12px;fill:none;stroke:rgba(255,255,255,.76);stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
-.support-read-icon.is-read{width:18px;stroke:#eaf6ff}
+.support-read-icon.is-read{width:19px;height:12px;stroke:#eaf6ff}
 
 
 /* Management inbox: immersive chat layout with scrolling limited to the message history. */

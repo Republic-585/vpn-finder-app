@@ -1531,9 +1531,12 @@ search?.addEventListener("blur", () => {
   // Keep the correction active while iOS finishes dismissing its keyboard.
   searchFocusUnlockTimer = window.setTimeout(() => {
     stabilizeCatalogSearchViewport();
-    document.documentElement.classList.remove("catalog-search-focus-lock");
-    searchFocusScrollY = null;
-    searchFocusUnlockTimer = null;
+    // Let the eased correction finish before releasing the saved scroll position.
+    searchFocusUnlockTimer = window.setTimeout(() => {
+      document.documentElement.classList.remove("catalog-search-focus-lock");
+      searchFocusScrollY = null;
+      searchFocusUnlockTimer = null;
+    }, 420);
   }, 520);
 });
 window.visualViewport?.addEventListener("resize", stabilizeCatalogSearchViewport);

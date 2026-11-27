@@ -418,9 +418,19 @@ function renderMonitoringDashboard(data) {
     '<div class="monitoring-health-row"><span class="monitoring-health-name"><i class="monitoring-health-dot ' + esc(item.status) + '"></i><strong>' + esc(item.label) + '</strong></span><span class="monitoring-health-state ' + esc(item.status) + '">' + healthStatusLabel(item.status) + '</span><small>' + esc(item.detail || "") + '</small></div>'
   ).join("") : '<p class="monitoring-empty">Нет подтверждённых результатов. Проверки ещё не запускались или последний запуск завершился ошибкой.</p>';
   const auditFindings = Array.isArray(audit?.findings) ? audit.findings : [];
-  const auditRows = auditFindings.length ? auditFindings.map(item =>
-    '<div class="monitoring-health-row"><span class="monitoring-health-name"><i class="monitoring-health-dot ' + esc(item.severity) + '"></i><strong>' + esc(item.title) + '</strong></span><span class="monitoring-health-state ' + esc(item.severity) + '">' + (item.severity === "critical" ? "Критично" : item.severity === "warning" ? "Внимание" : "Информация") + '</span><small>' + esc(item.description || "") + '</small></div>'
-  ).join("") : '<p class="monitoring-empty">Аудит не выявил замечаний или ещё не выполнялся.</p>';
+  const actionableAuditFindings = auditFindings.filter(item => item.severity === "critical" || item.severity === "warning");
+  const informationalAuditFindings = auditFindings.filter(item => item.severity === "info");
+  const renderAuditFinding = item =>
+    '<div class="monitoring-health-row"><span class="monitoring-health-name"><i class="monitoring-health-dot ' + esc(item.severity) + '"></i><strong>' + esc(item.title) + '</strong></span><span class="monitoring-health-state ' + esc(item.severity) + '">' + (item.severity === "critical" ? "Критично" : item.severity === "warning" ? "Внимание" : "Информация") + '</span><small>' + esc(item.description || "") + '</small></div>';
+  const auditRows = actionableAuditFindings.length
+    ? actionableAuditFindings.map(renderAuditFinding).join("")
+    : '<p class="monitoring-empty">Критических угроз и предупреждений по результатам аудита нет.</p>';
+  const auditInfoRows = informationalAuditFindings.map(renderAuditFinding).join("");
+  const auditGuidance = actionableAuditFindings.some(item => String(item.title || "").includes("pg_net"))
+    ? '<p class="monitoring-note">Обнаружено расширение pg_net в публичной схеме. Это замечание конфигурации, а не подтверждение взлома или утечки. Сначала проверяются зависимости и cron-задачи. Автоматически переносить или отключать расширение нельзя.</p>'
+    : actionableAuditFindings.length
+      ? '<p class="monitoring-note">Эти замечания требуют технической проверки. Само наличие предупреждения не означает, что данные были перехвачены. Изменения защиты будут выполняться только после проверки последствий.</p>'
+      : '';
   const activityCounts = securityActivity?.counts || {};
   const activityFindings = Array.isArray(securityActivity?.findings) ? securityActivity.findings : [];
   const activityRows = activityFindings.length ? activityFindings.map(item =>
@@ -502,7 +512,10 @@ function renderMonitoringDashboard(data) {
       '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Проверки сервисов</h2><span>' + fmt.format(healthChecks.length) + '</span></div><div class="monitoring-health-list">' + healthRows + '</div></section>' +
       '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Аудит безопасности</h2><span>' + (audit?.generated_at ? monitoringDate(audit.generated_at) : "Нет данных") + '</span></div>' +
         '<div class="monitoring-summary monitoring-security-summary"><article><span>Критические</span><strong>' + fmt.format(audit?.counts?.critical || 0) + '</strong></article><article><span>Предупреждения</span><strong>' + fmt.format(audit?.counts?.warning || 0) + '</strong></article><article><span>Информация</span><strong>' + fmt.format(audit?.counts?.info || 0) + '</strong></article></div>' +
-        '<div class="monitoring-health-list">' + auditRows + '</div></section>' +
+        auditGuidance +
+        '<div class="monitoring-health-list">' + auditRows + '</div>' +
+        (informationalAuditFindings.length ? '<details class="monitoring-details"><summary>Информационные замечания · ' + fmt.format(informationalAuditFindings.length) + ' · действий не требуется</summary><div class="monitoring-details-content"><p class="monitoring-note">Эти записи описывают настройки доступа и включённую защиту. Они не являются подтверждёнными уязвимостями. Например, закрытые таблицы доступны серверной роли, но не имеют прямого доступа для anon/authenticated.</p><div class="monitoring-health-list">' + auditInfoRows + '</div></div></details>' : '') +
+        '</section>' +
       '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Подозрительная активность</h2><span>' + (securityActivity?.generated_at ? monitoringDate(securityActivity.generated_at) : "Нет данных") + '</span></div>' +
         '<div class="monitoring-summary monitoring-security-summary"><article><span>Неверная авторизация</span><strong>' + fmt.format(activityCounts.invalid_auth || 0) + '</strong></article><article><span>Отказы в доступе</span><strong>' + fmt.format(activityCounts.denied || 0) + '</strong></article><article><span>Webhook</span><strong>' + fmt.format(activityCounts.webhook_invalid_secret || 0) + '</strong></article><article><span>Внутренние ошибки</span><strong>' + fmt.format(activityCounts.service_errors || 0) + '</strong></article><article><span>Лимиты</span><strong>' + fmt.format(activityCounts.rate_limited || 0) + '</strong></article></div>' +
         '<div class="monitoring-health-list">' + activityRows + '</div><div class="monitoring-security-events">' + securityEventRows + '</div>' +

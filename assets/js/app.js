@@ -2364,6 +2364,7 @@ function bindSupportMessageActions(root) {
   root.dataset.supportActionsBound = "true";
   let holdTimer = null;
   let holdTarget = null;
+  let suppressClickForMessage = null;
   let startX = 0;
   let startY = 0;
   const closeMenus = () => root.querySelectorAll(".support-message.is-actions-open").forEach(node => {
@@ -2394,6 +2395,7 @@ function bindSupportMessageActions(root) {
     startY = event.clientY;
     holdTimer = window.setTimeout(() => {
       openMenu(holdTarget);
+      suppressClickForMessage = holdTarget;
       holdTimer = null;
       if (tg?.HapticFeedback?.impactOccurred) tg.HapticFeedback.impactOccurred("light");
     }, 520);
@@ -2413,9 +2415,15 @@ function bindSupportMessageActions(root) {
   root.addEventListener("click", async event => {
     const actionButton = event.target.closest("[data-support-message-action]");
     if (!actionButton) {
+      const clickedMessage = event.target.closest(".support-message[data-support-message-id]");
+      if (suppressClickForMessage && clickedMessage === suppressClickForMessage) {
+        suppressClickForMessage = null;
+        return;
+      }
       if (!event.target.closest(".support-message-actions")) closeMenus();
       return;
     }
+    suppressClickForMessage = null;
     event.preventDefault();
     event.stopPropagation();
     const message = actionButton.closest(".support-message[data-support-message-id]");

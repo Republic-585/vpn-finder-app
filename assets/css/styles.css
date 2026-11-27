@@ -3507,3 +3507,9 @@ html.profile-screen-active .bottom-nav-dock{
   -webkit-backdrop-filter:none!important;
   backdrop-filter:none!important;
 }
+
+
+/* Profile menu is split into settings and project information groups. */
+#screen-profile .profile-menu-group{display:block;width:100%;margin-top:22px}
+#screen-profile .profile-section-title{margin:0 0 10px;padding:0 16px;color:var(--text);font-family:inherit;font-size:var(--type-secondary);line-height:1.35;font-weight:var(--weight-semibold);letter-spacing:normal;text-align:left}
+#screen-profile .profile-menu-group .profile-menu{display:block;width:100%;margin:0!important}

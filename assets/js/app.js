@@ -562,7 +562,6 @@ byId("profile-sounds-toggle")?.addEventListener("click", () => {
   try { localStorage.setItem(SUPPORT_SOUND_KEY, supportSoundsEnabled ? "1" : "0"); } catch (_) {}
   updateSupportSoundToggle();
 });
-updateSupportSoundToggle();
 
 const translations = {
   ru: {},
@@ -708,6 +707,7 @@ Object.assign(translations.en, {
   "Нет доступа к мониторингу.":"Monitoring access denied.","Откройте приложение в Telegram, чтобы посмотреть мониторинг.":"Open the app in Telegram to view monitoring."
 });
 const t = value => translations[appLanguage]?.[value] || value;
+updateSupportSoundToggle();
 const originalTextNodes = new WeakMap();
 const originalAttributes = new WeakMap();
 function translateStaticContent() {

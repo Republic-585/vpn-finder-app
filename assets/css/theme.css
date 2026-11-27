@@ -132,3 +132,6 @@ html[data-theme="light"].support-inbox-chat-mode #screen-support-inbox #support-
 :root[data-theme="light"] .compare-table tbody td {color:var(--text)!important}
 :root[data-theme="light"] .compare-table tbody th {color:var(--muted)!important}
 :root[data-theme="light"] .theme-tile {background:#E6A23C!important}
+
+/* Match the theme value to the language value in the profile menu. */
+.profile-menu-trailing .profile-theme-value{color:var(--muted);font-size:12px;font-weight:400}

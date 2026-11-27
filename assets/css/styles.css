@@ -3452,3 +3452,58 @@ html.profile-screen-active #screen-profile .profile-management-group{
   @keyframes support-message-actions-in{from{opacity:0;transform:translateY(-4px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 }
 
+
+
+/* Profile screen: use the same document scrolling as the other screens.
+   Keep the floating navigation dock transparent so page content moves beneath it. */
+html.profile-screen-active,
+html.profile-screen-active body{
+  height:auto!important;
+  min-height:100%!important;
+  overflow-x:clip!important;
+  overflow-y:auto!important;
+  overscroll-behavior-y:auto!important;
+}
+html.profile-screen-active .app-shell{
+  height:auto!important;
+  min-height:100dvh!important;
+  overflow:visible!important;
+  background:transparent!important;
+}
+html.profile-screen-active .main-content{
+  height:auto!important;
+  min-height:0!important;
+  overflow:visible!important;
+  padding-bottom:calc(112px + env(safe-area-inset-bottom))!important;
+  background:transparent!important;
+}
+html.profile-screen-active #screen-profile.active{
+  display:block!important;
+  height:auto!important;
+  min-height:calc(100vh - 130px)!important;
+  overflow:visible!important;
+  background:transparent!important;
+}
+html.profile-screen-active #screen-profile .profile-view{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  text-align:center!important;
+  width:100%;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:visible!important;
+  overscroll-behavior:auto!important;
+  -webkit-overflow-scrolling:auto!important;
+  touch-action:auto!important;
+  padding-top:calc(8px + env(safe-area-inset-top))!important;
+  padding-bottom:8px!important;
+  background:transparent!important;
+}
+html.profile-screen-active .bottom-nav-dock{
+  background:transparent!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}

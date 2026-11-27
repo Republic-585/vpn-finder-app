@@ -136,13 +136,11 @@ html[data-theme="light"].support-inbox-chat-mode #screen-support-inbox #support-
 /* Match the theme value to the language value in the profile menu. */
 .profile-menu-row .profile-menu-trailing .profile-theme-value{color:var(--muted);font-size:var(--type-control);line-height:1.3;font-weight:var(--weight-medium)}
 
-/* Theme selector uses a dedicated Telegram red tile, distinct from the other profile items. */
-.profile-menu-leading .theme-tile {background:#527C9A!important;}
+/* Theme selector sun icon tile: a distinct warm coral accent. */
+.profile-menu-leading .theme-tile {background:#D96C5F!important;}
 
-
-/* Explicit theme icon tile color and classic monochrome yin-yang symbol. */
 #screen-profile .profile-menu-leading .profile-icon-tile.theme-tile{
-  background-color:#527C9A!important;
+  background-color:#D96C5F!important;
 }
 :root[data-theme="light"] #screen-profile .profile-section-title{
   color:var(--muted)!important;

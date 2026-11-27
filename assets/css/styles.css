@@ -3283,6 +3283,32 @@ html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose.is-empt
   align-self:center!important;
 }
 
+/* Composer geometry follows actual wrapped text height, not merely a non-empty draft. */
+html.contact-screen-active #screen-contact .support-chat-compose,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose{
+  border-radius:999px!important;
+  align-items:center!important;
+  transition:border-radius 160ms ease, min-height 140ms ease;
+}
+html.contact-screen-active #screen-contact .support-chat-compose.is-expanded,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose.is-expanded{
+  border-radius:22px!important;
+  align-items:flex-end!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose.is-collapsed,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose.is-collapsed{
+  border-radius:999px!important;
+  align-items:center!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose .contact-send-button,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose .contact-send-button{
+  align-self:center!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose.is-expanded .contact-send-button,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose.is-expanded .contact-send-button{
+  align-self:flex-end!important;
+}
+
 /* Keep the first-visit Home Screen prompt at its full content height.
    The profile menu must not squeeze its action rows out of view. */
 html.profile-screen-active #screen-profile .home-screen-prompt{
@@ -3384,4 +3410,4 @@ html.profile-screen-active #screen-profile .profile-management-group{
 }
 
 /* Telegram purple accent, distinct from the language row's blue tile. */
-#screen-profile .sounds-tile{background:#0088CC!important}
+#screen-profile .sounds-tile{background:#E15052!important}

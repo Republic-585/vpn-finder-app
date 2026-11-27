@@ -134,7 +134,7 @@ html[data-theme="light"].support-inbox-chat-mode #screen-support-inbox #support-
 
 
 /* Match the theme value to the language value in the profile menu. */
-.profile-menu-trailing .profile-theme-value{color:var(--muted);font-size:12px;font-weight:400}
+.profile-menu-row .profile-menu-trailing .profile-theme-value{color:var(--muted);font-size:var(--type-control);line-height:1.3;font-weight:var(--weight-medium)}
 
 /* Theme selector uses a dedicated Telegram red tile, distinct from the other profile items. */
-.profile-menu-leading .theme-tile {background:#E53935!important;}
+.profile-menu-leading .theme-tile {background:#527C9A!important;}

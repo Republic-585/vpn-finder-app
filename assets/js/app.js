@@ -1221,6 +1221,12 @@ if (navBar) {
     }
     navBar.style.setProperty("--panel-spring-x", panelSpringX.toFixed(4));
     navBar.style.setProperty("--panel-spring-y", panelSpringY.toFixed(4));
+    const panelMoving = draggingNav || movementEnergy >= 0.002 ||
+      Math.abs(panelSpringVelocityX) >= 0.00008 ||
+      Math.abs(panelSpringVelocityY) >= 0.00008 ||
+      Math.abs(panelSpringX - 1) >= 0.0003 ||
+      Math.abs(panelSpringY - 1) >= 0.0003;
+    navBar.classList.toggle("is-liquid-moving", panelMoving);
     requestAnimationFrame(animateBlob);
   };
 

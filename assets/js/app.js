@@ -2177,7 +2177,7 @@ function renderSupportMessages(root, messages, viewerRole = "user", lastReadAt =
   }
   const readAt = lastReadAt ? Date.parse(lastReadAt) : NaN;
   const checkIcon = read => read
-    ? '<svg class="support-read-icon is-read" viewBox="0 0 18 12" aria-hidden="true"><path d="m1.5 6 3.2 3.2L10.5 2.5"/><path d="M10.5 2.5 14.1 6"/></svg>'
+    ? '<svg class="support-read-icon is-read" viewBox="0 0 32 20" aria-hidden="true"><path d="M2 9 7 14 17 3 M18 14 28 3"/></svg>'
     : '<svg class="support-read-icon" viewBox="0 0 12 12" aria-hidden="true"><path d="m1.5 6 3.2 3.2L10.5 2.5"/></svg>';
   root.innerHTML = items.map(message => {
     const time = viewerRole === "admin" ? formatSupportMessageDateTime(message.created_at) : formatSupportTime(message.created_at);

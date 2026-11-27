@@ -2395,14 +2395,39 @@ function resizeSupportChatField(field) {
   if (!field) return;
   const minHeight = 44;
   const maxHeight = 112;
-  // Reset the measured height before reading scrollHeight so clearing a long
-  // message always collapses the textarea fully on iOS Safari.
+  const hasMessage = String(field.value || "").length > 0;
+  field.form?.classList.toggle("has-message", hasMessage);
+  field.form?.classList.toggle("is-empty", !hasMessage);
+  // Measure from the collapsed baseline to avoid stale iOS scrollHeight.
   field.style.setProperty("--composer-input-height", minHeight + "px");
   field.style.overflowY = "hidden";
   const measuredHeight = field.scrollHeight;
   const nextHeight = Math.min(maxHeight, Math.max(minHeight, measuredHeight));
   field.style.setProperty("--composer-input-height", nextHeight + "px");
   field.style.overflowY = measuredHeight > maxHeight ? "auto" : "hidden";
+}
+function clearSupportChatField(field) {
+  if (!field) return;
+  field.value = "";
+  field.defaultValue = "";
+  field.rows = 1;
+  field.scrollTop = 0;
+  field.style.setProperty("--composer-input-height", "44px");
+  field.style.overflowY = "hidden";
+  field.form?.classList.remove("has-message");
+  field.form?.classList.add("is-empty");
+  // Force WebKit to commit the empty value before the height transition.
+  void field.offsetHeight;
+  field.dispatchEvent(new Event("input", { bubbles: true }));
+  field.setSelectionRange?.(0, 0);
+  window.requestAnimationFrame(() => {
+    field.style.setProperty("--composer-input-height", "44px");
+    void field.offsetHeight;
+    window.requestAnimationFrame(() => {
+      resizeSupportChatField(field);
+      field.scrollTop = 0;
+    });
+  });
 }
 function bindSupportChatKeyboardField(field, viewportProperty) {
   if (!field) return;
@@ -2488,10 +2513,7 @@ byId("contact-form")?.addEventListener("submit", async event => {
     messageSentHaptic();
     // Clear explicitly instead of relying on form.reset(): iOS Safari can
     // leave a stale, clipped textarea rendering after a height transition.
-    field.value = "";
-    field.style.setProperty("--composer-input-height", "44px");
-    field.style.overflowY = "hidden";
-    window.requestAnimationFrame(() => resizeSupportChatField(field));
+    clearSupportChatField(field);
     await loadContactConversation();
   } catch (_) {
     // Keep the draft in the input so the user can retry.
@@ -2671,10 +2693,7 @@ byId("support-reply-form")?.addEventListener("submit", async event => {
     messageSentHaptic();
     // Clear explicitly instead of relying on form.reset(): iOS Safari can
     // leave a stale, clipped textarea rendering after a height transition.
-    field.value = "";
-    field.style.setProperty("--composer-input-height", "44px");
-    field.style.overflowY = "hidden";
-    window.requestAnimationFrame(() => resizeSupportChatField(field));
+    clearSupportChatField(field);
     if (activeSupportThreadId !== threadId) return;
     const requestId = ++supportThreadRequestId;
     const result = await supportRequest("get", { thread_id: threadId });

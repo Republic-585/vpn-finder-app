@@ -1,17 +1,14 @@
-/* Telegram iOS-inspired bottom navigation for VPN Finder.
-   Navigation targets and the detached profile control remain unchanged. */
+/* VPN Finder Liquid Glass navigation: one canonical style layer. */
 :root{
-  --nav-glass-bg:rgba(32,33,36,.64);
-  --nav-glass-border-top:rgba(170,176,186,.25);
-  --nav-glass-border-right:rgba(170,176,186,.14);
-  --nav-glass-border-bottom:rgba(170,176,186,.10);
-  --nav-glass-border-left:rgba(170,176,186,.18);
-  --nav-glass-active:rgba(154,160,170,.22);
-  --nav-glass-accent:#3390EC;
-  --nav-glass-muted:rgba(255,255,255,.62);
+  --nav-glass-bg:rgba(255,255,255,.08);
+  --nav-glass-border:rgba(255,255,255,.15);
+  --nav-glass-active:rgba(255,255,255,.18);
+  --nav-glass-active-border:rgba(255,255,255,.25);
+  --nav-glass-accent:#0a84ff;
+  --nav-glass-muted:rgba(255,255,255,.58);
 }
 
-/* Floating dock: three Telegram-style tabs plus a separate profile avatar. */
+/* Dock keeps the profile control separate from the three-tab glass surface. */
 .bottom-nav-dock{
   position:fixed;
   z-index:20;
@@ -20,44 +17,70 @@
   width:min(calc(100% - 32px),470px);
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:12px;
   transform:translateX(-50%);
 }
 
+/* The panel follows the supplied Liquid Glass geometry and material. */
 .bottom-nav-dock .bottom-nav{
   position:relative;
   flex:1 1 auto;
   min-width:0;
   width:auto;
-  height:68px;
-  min-height:68px;
+  height:64px;
+  min-height:64px;
   box-sizing:border-box;
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
   align-items:stretch;
-  gap:2px;
+  gap:0;
   padding:4px;
   overflow:hidden;
   isolation:isolate;
-  border-style:solid;
-  border-width:1px;
-  border-top-color:var(--nav-glass-border-top);
-  border-right-color:var(--nav-glass-border-right);
-  border-bottom-color:var(--nav-glass-border-bottom);
-  border-left-color:var(--nav-glass-border-left);
-  border-radius:999px;
+  border:1px solid var(--nav-glass-border);
+  border-radius:36px;
   outline:0;
   background:var(--nav-glass-bg);
-  -webkit-backdrop-filter:blur(18px) saturate(180%);
-  backdrop-filter:blur(18px) saturate(180%);
-  box-shadow:0 2px 10px rgba(0,0,0,.12);
-  transform:translateZ(0);
-  transition:background .2s ease,border-color .2s ease;
+  -webkit-backdrop-filter:blur(25px) saturate(180%);
+  backdrop-filter:blur(25px) saturate(180%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+  transform:scale(1);
+  transform-origin:center;
+  transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s ease;
   touch-action:pan-y;
   -webkit-tap-highlight-color:transparent;
 }
+.bottom-nav-dock .bottom-nav::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:3;
+  border-radius:inherit;
+  pointer-events:none;
+  background:linear-gradient(145deg,rgba(255,255,255,.20) 0%,rgba(255,255,255,.055) 28%,transparent 62%,rgba(255,255,255,.045) 100%);
+}
+.bottom-nav-dock .bottom-nav.is-pressed{
+  transform:scale(.975);
+  box-shadow:0 12px 28px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.16);
+}
 
-/* Telegram-like selected tab lens. No decorative top sheen or moving labels. */
+/* On the profile screen, keep the dock visually floating without a dark
+   shadow/backplate beneath the navigation panel or detached avatar. */
+html.profile-screen-active .bottom-nav-dock{
+  background:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+html.profile-screen-active .bottom-nav-dock .bottom-nav{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12)!important;
+}
+html.profile-screen-active .bottom-nav-dock .profile-nav-button{
+  background:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+
+/* The active glass lens is positioned by the existing navigation controller. */
 .bottom-nav-dock .nav-indicator{
   position:absolute;
   z-index:1;
@@ -66,25 +89,31 @@
   left:0;
   width:0;
   box-sizing:border-box;
-  border:0;
-  border-radius:999px;
+  border:1px solid var(--nav-glass-active-border);
+  border-radius:32px;
   background:var(--nav-glass-active);
-  box-shadow:none;
+  box-shadow:0 4px 12px rgba(0,0,0,.16),inset 0 1px 1px rgba(255,255,255,.24);
   pointer-events:none;
   transform-origin:center;
-  will-change:width,transform;
-  transition:width .34s cubic-bezier(.2,.8,.2,1),transform .34s cubic-bezier(.2,.8,.2,1);
+  will-change:width,transform,scale;
+  transition:width .42s cubic-bezier(.175,.885,.32,1.15),transform .42s cubic-bezier(.175,.885,.32,1.15);
 }
-.bottom-nav-dock .bottom-nav.is-dragging .nav-indicator{transition:none}
+.bottom-nav-dock .bottom-nav.is-dragging .nav-indicator{
+  transition:none;
+}
 .bottom-nav-dock .nav-indicator.is-settling{
-  animation:telegram-tab-settle .34s cubic-bezier(.2,.8,.2,1);
+  animation:nav-liquid-jelly .58s cubic-bezier(.175,.885,.32,1.15);
 }
-@keyframes telegram-tab-settle{
-  0%{scale:.96 .98}
-  55%{scale:1.025 1.015}
+@keyframes nav-liquid-jelly{
+  0%{scale:1 1}
+  18%{scale:1.13 .88}
+  38%{scale:.94 1.10}
+  58%{scale:1.055 .96}
+  76%{scale:.985 1.025}
   100%{scale:1 1}
 }
 
+/* Original VPN Finder SVGs remain; only their visual labels are hidden. */
 .bottom-nav-dock .bottom-nav .nav-item,
 .bottom-nav-dock .bottom-nav .nav-item:focus,
 .bottom-nav-dock .bottom-nav .nav-item:focus-visible{
@@ -95,58 +124,53 @@
   min-width:0;
   height:100%;
   margin:0;
-  padding:5px 2px 4px;
+  padding:0;
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:3px;
   border:0;
-  border-radius:20px;
+  border-radius:30px;
   outline:0;
   background:transparent;
   color:var(--nav-glass-muted);
-  font-family:inherit;
-  font-size:10px;
-  font-weight:500;
-  line-height:1.15;
-  letter-spacing:0;
+  font:inherit;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
-  transition:color .18s ease,scale .16s ease;
+  transition:color .2s ease,scale .18s cubic-bezier(.2,.8,.2,1);
   touch-action:pan-y;
 }
 .bottom-nav-dock .bottom-nav .nav-item svg{
   display:block;
-  flex:0 0 23px;
-  width:23px;
-  height:23px;
+  flex:0 0 24px;
+  width:24px;
+  height:24px;
   margin:0;
   fill:none;
   stroke:currentColor;
-  stroke-width:1.85;
+  stroke-width:1.9;
   stroke-linecap:round;
   stroke-linejoin:round;
   overflow:visible;
   transition:none;
 }
 .bottom-nav-dock .bottom-nav .nav-item span{
-  display:block!important;
-  max-width:100%;
-  overflow:hidden;
-  color:inherit;
-  font:inherit;
-  line-height:1.15;
-  text-overflow:ellipsis;
-  white-space:nowrap;
+  display:none!important;
 }
-.bottom-nav-dock .bottom-nav .nav-item.active{color:var(--nav-glass-accent)}
+.bottom-nav-dock .bottom-nav .nav-item.active{
+  color:var(--nav-glass-accent);
+}
 .bottom-nav-dock .bottom-nav .nav-item:active,
-.bottom-nav-dock .bottom-nav .nav-item.is-pressed{scale:.94}
+.bottom-nav-dock .bottom-nav .nav-item.is-pressed{
+  scale:.88;
+  color:#fff;
+}
 .bottom-nav-dock .bottom-nav .nav-item.active:active,
-.bottom-nav-dock .bottom-nav .nav-item.active.is-pressed{scale:.96}
+.bottom-nav-dock .bottom-nav .nav-item.active.is-pressed{
+  scale:.92;
+  color:var(--nav-glass-accent);
+}
 
-/* Profile remains a detached circular shortcut, not a fourth tab. */
+/* The profile avatar remains an independent control with its animated ring. */
 .bottom-nav-dock .profile-nav-button{
   position:relative;
   box-sizing:border-box;
@@ -167,7 +191,7 @@
   box-shadow:none;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
-  transition:scale .16s ease;
+  transition:scale .18s cubic-bezier(.2,.8,.2,1);
 }
 .bottom-nav-dock .profile-nav-button::before{content:none;display:none}
 .bottom-nav-dock .profile-nav-button::after{
@@ -175,22 +199,23 @@
   position:absolute;
   inset:-3px;
   z-index:3;
-  box-sizing:border-box;
-  border:3px solid transparent;
+  padding:3px;
   border-radius:50%;
   pointer-events:none;
-  background:
-    linear-gradient(transparent,transparent) padding-box,
-    conic-gradient(from 0deg,#39D98A 0%,#65E6A7 25%,#20C997 52%,#39D98A 76%,#39D98A 100%) border-box;
-  opacity:1;
+  background:conic-gradient(from 0deg,#48E6D0 0%,#6DE7A7 22%,#20C9B5 46%,#55DDBF 68%,#32DCC8 84%,#48E6D0 100%);
+  opacity:0;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  transition:opacity .25s ease;
 }
 .bottom-nav-dock .profile-nav-button.is-current::after{
-  background:
-    linear-gradient(transparent,transparent) padding-box,
-    conic-gradient(from 0deg,#3390EC 0%,#69B7FF 25%,#1877D2 52%,#55A9F5 76%,#3390EC 100%) border-box;
+  opacity:1;
+  animation:profile-ring-flow 5.5s linear infinite,profile-ring-breathe 3.2s ease-in-out infinite;
 }
 .bottom-nav-dock .profile-nav-button:active,
-.bottom-nav-dock .profile-nav-button.is-pressed{scale:.94}
+.bottom-nav-dock .profile-nav-button.is-pressed{scale:.92}
 .bottom-nav-dock .profile-nav-button img,
 .bottom-nav-dock .profile-nav-button span{
   position:relative;
@@ -217,38 +242,20 @@
 }
 .bottom-nav-dock .profile-nav-button img[hidden],
 .bottom-nav-dock .profile-nav-button span[hidden]{display:none}
+@keyframes profile-ring-flow{to{transform:rotate(360deg)}}
+@keyframes profile-ring-breathe{0%,100%{filter:brightness(.94) saturate(1)}50%{filter:brightness(1.2) saturate(1.22)}}
 
-/* Keep the dock clean on the profile screen and preserve existing visibility rules. */
-html.profile-screen-active .bottom-nav-dock,
-body.profile-screen-active .bottom-nav-dock{
-  background:transparent!important;
-  box-shadow:none!important;
-  filter:none!important;
+@media(min-width:700px){
+  .bottom-nav-dock{bottom:24px}
 }
-html.profile-screen-active .bottom-nav-dock .bottom-nav,
-body.profile-screen-active .bottom-nav-dock .bottom-nav{
-  box-shadow:0 2px 10px rgba(0,0,0,.12)!important;
-}
-html.profile-screen-active .bottom-nav-dock .profile-nav-button,
-body.profile-screen-active .bottom-nav-dock .profile-nav-button{
-  background:transparent!important;
-  box-shadow:none!important;
-  filter:none!important;
-}
-
-@media(max-width:360px){
-  .bottom-nav-dock{width:calc(100% - 24px);gap:8px}
-  .bottom-nav-dock .profile-nav-button{flex-basis:54px;width:54px;height:54px;min-width:54px}
-  .bottom-nav-dock .bottom-nav .nav-item{font-size:9.5px}
-}
-@media(min-width:700px){.bottom-nav-dock{bottom:24px}}
 @media(prefers-reduced-motion:reduce){
   .bottom-nav-dock .bottom-nav,
   .bottom-nav-dock .bottom-nav .nav-item,
-  .bottom-nav-dock .profile-nav-button,
+  .bottom-nav-dock .profile-nav-button{transition:none!important}
   .bottom-nav-dock .nav-indicator{transition:none!important}
-  .bottom-nav-dock .nav-indicator.is-settling{animation:none!important}
+  .bottom-nav-dock .nav-indicator.is-settling,
+  .bottom-nav-dock .profile-nav-button.is-current::after{animation:none!important}
 }
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  .bottom-nav-dock .bottom-nav{background:rgba(35,37,42,.96)}
+  .bottom-nav-dock .bottom-nav{background:rgba(35,37,42,.94)}
 }

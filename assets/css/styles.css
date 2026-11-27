@@ -3133,3 +3133,49 @@ html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose .contac
   background:#3390ec!important;
   box-shadow:0 2px 8px rgba(51,144,236,.28)!important;
 }
+
+
+/* Support chat refinement: restore plain identity header, remove bubble tails/outlines, refine composer glass. */
+html.contact-screen-active #screen-contact .contact-intro#contact-intro,
+html.support-inbox-chat-mode #screen-support-inbox #support-thread-title{
+  isolation:auto!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+html.contact-screen-active #screen-contact .contact-intro#contact-intro::before,
+html.support-inbox-chat-mode #screen-support-inbox #support-thread-title::before{
+  content:none!important;
+  display:none!important;
+}
+html.contact-screen-active #screen-contact .support-chat-messages .support-message-outgoing::after,
+html.contact-screen-active #screen-contact .support-chat-messages .support-message-incoming::after,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-messages .support-message-outgoing::after,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-messages .support-message-incoming::after{
+  content:none!important;
+  display:none!important;
+}
+html.contact-screen-active #screen-contact .support-chat-messages .support-message,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-messages .support-message{
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+}
+html.contact-screen-active #screen-contact .support-chat-messages .support-message-incoming,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-messages .support-message-incoming{
+  border:0!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose{
+  left:20px!important;
+  right:20px!important;
+  border:1px solid transparent!important;
+  background:
+    linear-gradient(rgba(43,45,50,.78),rgba(43,45,50,.78)) padding-box,
+    linear-gradient(112deg,rgba(255,255,255,.28) 0%,rgba(255,255,255,.10) 24%,rgba(255,255,255,.045) 55%,rgba(255,255,255,.19) 100%) border-box!important;
+  box-shadow:0 20px 40px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  -webkit-backdrop-filter:blur(25px) saturate(180%)!important;
+  backdrop-filter:blur(25px) saturate(180%)!important;
+}

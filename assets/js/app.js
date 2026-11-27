@@ -2392,10 +2392,14 @@ function resizeSupportChatField(field) {
   if (!field) return;
   const minHeight = 44;
   const maxHeight = 112;
+  // Reset the measured height before reading scrollHeight so clearing a long
+  // message always collapses the textarea fully on iOS Safari.
   field.style.setProperty("--composer-input-height", minHeight + "px");
-  const nextHeight = Math.min(maxHeight, Math.max(minHeight, field.scrollHeight));
+  field.style.overflowY = "hidden";
+  const measuredHeight = field.scrollHeight;
+  const nextHeight = Math.min(maxHeight, Math.max(minHeight, measuredHeight));
   field.style.setProperty("--composer-input-height", nextHeight + "px");
-  field.style.overflowY = field.scrollHeight > maxHeight ? "auto" : "hidden";
+  field.style.overflowY = measuredHeight > maxHeight ? "auto" : "hidden";
 }
 function bindSupportChatKeyboardField(field, viewportProperty) {
   if (!field) return;
@@ -2479,8 +2483,12 @@ byId("contact-form")?.addEventListener("submit", async event => {
   try {
     await supportRequest("send", { message });
     messageSentHaptic();
-    form.reset();
-    resizeSupportChatField(field);
+    // Clear explicitly instead of relying on form.reset(): iOS Safari can
+    // leave a stale, clipped textarea rendering after a height transition.
+    field.value = "";
+    field.style.setProperty("--composer-input-height", "44px");
+    field.style.overflowY = "hidden";
+    window.requestAnimationFrame(() => resizeSupportChatField(field));
     await loadContactConversation();
   } catch (_) {
     // Keep the draft in the input so the user can retry.
@@ -2658,8 +2666,12 @@ byId("support-reply-form")?.addEventListener("submit", async event => {
     const threadId = activeSupportThreadId;
     await supportRequest("reply", { thread_id: threadId, message });
     messageSentHaptic();
-    form.reset();
-    resizeSupportChatField(field);
+    // Clear explicitly instead of relying on form.reset(): iOS Safari can
+    // leave a stale, clipped textarea rendering after a height transition.
+    field.value = "";
+    field.style.setProperty("--composer-input-height", "44px");
+    field.style.overflowY = "hidden";
+    window.requestAnimationFrame(() => resizeSupportChatField(field));
     if (activeSupportThreadId !== threadId) return;
     const requestId = ++supportThreadRequestId;
     const result = await supportRequest("get", { thread_id: threadId });

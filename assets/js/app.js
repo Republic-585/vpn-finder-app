@@ -2395,14 +2395,16 @@ function resizeSupportChatField(field) {
   if (!field) return;
   const minHeight = 44;
   const maxHeight = 112;
-  const hasMessage = String(field.value || "").length > 0;
-  field.form?.classList.toggle("has-message", hasMessage);
-  field.form?.classList.toggle("is-empty", !hasMessage);
-  // Measure from the collapsed baseline to avoid stale iOS scrollHeight.
+  // Measure the wrapped text at the collapsed height. A non-empty one-line
+  // draft stays pill-shaped; the composer expands only when text needs a
+  // second visual line (including a line created by natural word wrapping).
   field.style.setProperty("--composer-input-height", minHeight + "px");
   field.style.overflowY = "hidden";
   const measuredHeight = field.scrollHeight;
   const nextHeight = Math.min(maxHeight, Math.max(minHeight, measuredHeight));
+  const isExpanded = measuredHeight > minHeight + 6;
+  field.form?.classList.toggle("is-expanded", isExpanded);
+  field.form?.classList.toggle("is-collapsed", !isExpanded);
   field.style.setProperty("--composer-input-height", nextHeight + "px");
   field.style.overflowY = measuredHeight > maxHeight ? "auto" : "hidden";
 }
@@ -2414,8 +2416,8 @@ function clearSupportChatField(field) {
   field.scrollTop = 0;
   field.style.setProperty("--composer-input-height", "44px");
   field.style.overflowY = "hidden";
-  field.form?.classList.remove("has-message");
-  field.form?.classList.add("is-empty");
+  field.form?.classList.remove("is-expanded");
+  field.form?.classList.add("is-collapsed");
   // Force WebKit to commit the empty value before the height transition.
   void field.offsetHeight;
   field.dispatchEvent(new Event("input", { bubbles: true }));

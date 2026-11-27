@@ -2310,8 +2310,10 @@ function formatSupportMessageDateTime(value) {
 function renderSupportMessages(root, messages, viewerRole = "user", lastReadAt = null) {
   if (!root) return;
   const items = messages || [];
+  root.dataset.supportViewerRole = viewerRole;
   if (!items.length && viewerRole === "user") {
     root.innerHTML = '<div class="contact-empty-state"><strong>Чем можем помочь?</strong><span>Задайте вопрос, поделитесь идеей или расскажите о проблеме…</span></div>';
+    bindSupportMessageActions(root);
     return;
   }
   const readAt = lastReadAt ? Date.parse(lastReadAt) : NaN;
@@ -2322,15 +2324,130 @@ function renderSupportMessages(root, messages, viewerRole = "user", lastReadAt =
     const time = viewerRole === "admin" ? formatSupportMessageDateTime(message.created_at) : formatSupportTime(message.created_at);
     const isOutgoing = message.sender === viewerRole;
     const isRead = isOutgoing && Number.isFinite(readAt) && Date.parse(message.created_at) <= readAt;
+    const deleted = Boolean(message.deleted_at);
+    const canDelete = viewerRole === "admin" || isOutgoing;
     const status = isOutgoing
       ? '<span class="support-message-status" aria-label="' + (isRead ? 'Прочитано' : 'Отправлено') + '" title="' + (isRead ? 'Прочитано' : 'Отправлено') + '">' + checkIcon(isRead) + '</span>'
       : '';
-    return '<div class="support-message ' + (isOutgoing ? 'support-message-outgoing' : 'support-message-incoming') + '">' +
-      '<span class="support-message-body">' + esc(message.body) + '</span>' +
-      (time ? '<time class="support-message-time" datetime="' + esc(message.created_at) + '">' + esc(time) + status + '</time>' : '') +
+    const reactions = message.reactions || {};
+    const up = Number(reactions.up || 0);
+    const down = Number(reactions.down || 0);
+    const mine = message.my_reaction || "";
+    const reactionSummary = !deleted && (up || down)
+      ? '<span class="support-message-reaction-summary">' +
+        (up ? '<span>👍 ' + up + '</span>' : '') +
+        (down ? '<span>👎 ' + down + '</span>' : '') +
+        '</span>'
+      : '';
+    const actionMenu = !deleted
+      ? '<span class="support-message-actions" hidden>' +
+        '<button type="button" data-support-message-action="react" data-reaction="up" aria-label="Палец вверх" aria-pressed="' + (mine === "up" ? "true" : "false") + '">👍 <span>' + up + '</span></button>' +
+        '<button type="button" data-support-message-action="react" data-reaction="down" aria-label="Палец вниз" aria-pressed="' + (mine === "down" ? "true" : "false") + '">👎 <span>' + down + '</span></button>' +
+        (canDelete ? '<button type="button" class="support-message-delete" data-support-message-action="delete">Удалить</button>' : '') +
+        '</span>'
+      : '';
+    return '<div class="support-message-wrap">' +
+      '<div class="support-message ' + (isOutgoing ? 'support-message-outgoing' : 'support-message-incoming') + (deleted ? ' is-deleted' : '') + '"' +
+      ' data-support-message-id="' + esc(message.id || "") + '">' +
+      '<span class="support-message-body">' + (deleted ? esc(t("Сообщение удалено")) : esc(message.body)) + '</span>' +
+      (!deleted && time ? '<time class="support-message-time" datetime="' + esc(message.created_at) + '">' + esc(time) + status + '</time>' : '') +
+      actionMenu +
+      '</div>' + reactionSummary +
       '</div>';
   }).join("");
+  bindSupportMessageActions(root);
   root.scrollTop = root.scrollHeight;
+}
+
+function bindSupportMessageActions(root) {
+  if (!root || root.dataset.supportActionsBound === "true") return;
+  root.dataset.supportActionsBound = "true";
+  let holdTimer = null;
+  let holdTarget = null;
+  let startX = 0;
+  let startY = 0;
+  const closeMenus = () => root.querySelectorAll(".support-message.is-actions-open").forEach(node => {
+    node.classList.remove("is-actions-open");
+    const menu = node.querySelector(".support-message-actions");
+    if (menu) menu.hidden = true;
+  });
+  const openMenu = message => {
+    if (!message || message.classList.contains("is-deleted")) return;
+    closeMenus();
+    const menu = message.querySelector(".support-message-actions");
+    if (!menu) return;
+    message.classList.add("is-actions-open");
+    menu.hidden = false;
+  };
+  const cancelHold = () => {
+    if (holdTimer !== null) window.clearTimeout(holdTimer);
+    holdTimer = null;
+    holdTarget = null;
+  };
+  root.addEventListener("pointerdown", event => {
+    if (event.target.closest(".support-message-actions")) return;
+    const message = event.target.closest(".support-message[data-support-message-id]");
+    if (!message || message.classList.contains("is-deleted")) return;
+    cancelHold();
+    holdTarget = message;
+    startX = event.clientX;
+    startY = event.clientY;
+    holdTimer = window.setTimeout(() => {
+      openMenu(holdTarget);
+      holdTimer = null;
+      if (tg?.HapticFeedback?.impactOccurred) tg.HapticFeedback.impactOccurred("light");
+    }, 520);
+  });
+  root.addEventListener("pointermove", event => {
+    if (holdTimer === null) return;
+    if (Math.abs(event.clientX - startX) > 12 || Math.abs(event.clientY - startY) > 12) cancelHold();
+  });
+  root.addEventListener("pointerup", cancelHold);
+  root.addEventListener("pointercancel", cancelHold);
+  root.addEventListener("contextmenu", event => {
+    const message = event.target.closest(".support-message[data-support-message-id]");
+    if (!message) return;
+    event.preventDefault();
+    openMenu(message);
+  });
+  root.addEventListener("click", async event => {
+    const actionButton = event.target.closest("[data-support-message-action]");
+    if (!actionButton) {
+      if (!event.target.closest(".support-message-actions")) closeMenus();
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    const message = actionButton.closest(".support-message[data-support-message-id]");
+    const messageId = message?.dataset.supportMessageId;
+    const action = actionButton.dataset.supportMessageAction;
+    if (!messageId || actionButton.disabled) return;
+    const viewerRole = root.dataset.supportViewerRole || "user";
+    actionButton.disabled = true;
+    closeMenus();
+    try {
+      const values = { message_id: messageId };
+      if (viewerRole === "admin") values.thread_id = activeSupportThreadId;
+      if (action === "react") {
+        values.reaction = actionButton.dataset.reaction;
+        await supportRequest("react", values);
+      } else if (action === "delete") {
+        await supportRequest("delete", values);
+      } else return;
+      if (tg?.HapticFeedback?.impactOccurred) tg.HapticFeedback.impactOccurred("light");
+      if (viewerRole === "admin") {
+        if (!activeSupportThreadId) return;
+        const result = await supportRequest("get", { thread_id: activeSupportThreadId });
+        renderSupportMessages(root, result.messages || [], "admin", result.thread?.user_last_read_at);
+      } else {
+        await loadContactConversation(false);
+      }
+    } catch (_) {
+      if (typeof tg?.showAlert === "function") tg.showAlert("Не удалось выполнить действие. Попробуйте ещё раз.");
+    } finally {
+      actionButton.disabled = false;
+    }
+  });
 }
 byId("contact-bot-link")?.addEventListener("click", event => {
   if (typeof tg?.openTelegramLink === "function") {

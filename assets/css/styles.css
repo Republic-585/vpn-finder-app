@@ -2984,7 +2984,7 @@ html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose .contac
   display:block!important;
   fill:currentColor!important;
   stroke:none!important;
-  transform:translate(-1px,1px)!important;
+  transform:translate(-1px,1px);
 }
 
 

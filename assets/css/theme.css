@@ -14,6 +14,10 @@
 }
 :root[data-theme="light"] {
   color-scheme: light;
+  --nav-glass-bg:rgba(248,250,253,.86);
+  --nav-glass-accent:#3390EC;
+  --nav-glass-muted:#68717D;
+  --nav-glass-blob:rgba(213,222,234,.92);
   --bg:#F2F3F5;
   --panel:#FFFFFF;
   --raised:#E9ECF1;
@@ -25,7 +29,6 @@
   --bright:#1877D2;
   --card-bg:#FFFFFF;
 }
-:root[data-theme="light"] html,
 :root[data-theme="light"] body,
 :root[data-theme="light"] .app-shell {background-color:var(--bg)!important}
 :root[data-theme="light"] .startup-splash,
@@ -76,10 +79,10 @@
 :root[data-theme="light"] #screen-support .crypto-support-address {background:transparent!important}
 :root[data-theme="light"] .crypto-support-card {background:var(--panel)!important;border-color:var(--line)!important}
 :root[data-theme="light"] .support-chat-compose,
-:root[data-theme="light"] html.contact-screen-active #screen-contact .support-chat-compose,
-:root[data-theme="light"] html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose {background:rgba(255,255,255,.94)!important;border-color:rgba(28,29,31,.12)!important}
-:root[data-theme="light"] html.contact-screen-active #screen-contact .contact-intro#contact-intro::before,
-:root[data-theme="light"] html.support-inbox-chat-mode #screen-support-inbox #support-thread-title::before {background:linear-gradient(to bottom,rgba(242,243,245,.94) 0%,rgba(242,243,245,.78) 62%,rgba(242,243,245,0) 100%)!important}
+html[data-theme="light"].contact-screen-active #screen-contact .support-chat-compose,
+html[data-theme="light"].support-inbox-chat-mode #screen-support-inbox .support-chat-compose {background:rgba(255,255,255,.94)!important;border-color:rgba(28,29,31,.12)!important}
+html[data-theme="light"].contact-screen-active #screen-contact .contact-intro#contact-intro::before,
+html[data-theme="light"].support-inbox-chat-mode #screen-support-inbox #support-thread-title::before {background:linear-gradient(to bottom,rgba(242,243,245,.94) 0%,rgba(242,243,245,.78) 62%,rgba(242,243,245,0) 100%)!important}
 :root[data-theme="light"] .support-chat-compose textarea,
 :root[data-theme="light"] .support-chat-compose input {color:var(--text)!important}
 :root[data-theme="light"] .support-message-actions button {background:rgba(28,29,31,.06)!important;color:var(--text)!important}

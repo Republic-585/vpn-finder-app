@@ -10,10 +10,10 @@
 <script>
 (()=>{try{const p=localStorage.getItem("vpn-finder-theme");const t=window.Telegram?.WebApp;const s=p==="light"?"light":p==="system"?(t?.colorScheme||(window.matchMedia?.("(prefers-color-scheme: light)")?.matches?"light":"dark")):"dark";document.documentElement.dataset.theme=s==="light"?"light":"dark";document.documentElement.style.colorScheme=document.documentElement.dataset.theme;}catch(_){document.documentElement.dataset.theme="dark";}})();
 </script>
-<link rel="stylesheet" href="./assets/css/styles.css?v=20261128-main-screen-300ms-v1">
+<link rel="stylesheet" href="./assets/css/styles.css?v=20261128-profile-menu-align-v2">
 <link rel="stylesheet" href="./assets/css/nav-glass-20261124.css?v=20261128-independent-panel-spring-v15">
 <link rel="stylesheet" href="./assets/css/monitoring.css?v=20261127-monitoring-owner-minimal-v1">
-<link rel="stylesheet" href="./assets/css/theme.css?v=20261128-theme-yin-yang-v1">
+<link rel="stylesheet" href="./assets/css/theme.css?v=20261128-theme-icon-fix-v2">
 <script src="./assets/avatars/manifest.js?v=20261123-avatar-local-v2"></script>
 <script defer src="./assets/js/app.js?v=20261128-native-theme-v1"></script>
 </head>
@@ -91,7 +91,7 @@
           <span class="profile-menu-trailing"><span class="profile-language-value" id="profile-language-value">Русский</span><span class="profile-menu-chevron" aria-hidden="true">›</span></span>
         </button>
         <button class="profile-menu-row profile-theme-row" id="theme-selector" type="button">
-          <span class="profile-menu-leading"><span class="profile-icon-tile theme-tile"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="#fff"></circle><path d="M12 3a4.5 4.5 0 0 1 0 9 4.5 4.5 0 0 0 0 9 9 9 0 0 0 0-18Z" fill="#E53935"></path><circle cx="12" cy="7.5" r="1.15" fill="#E53935"></circle><circle cx="12" cy="16.5" r="1.15" fill="#E53935"></circle></svg></span><span>Тема</span></span>
+          <span class="profile-menu-leading"><span class="profile-icon-tile theme-tile"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="#FFFFFF"></circle><path d="M12 3a4.5 4.5 0 0 1 0 9 4.5 4.5 0 0 0 0 9 9 9 0 0 0 0-18Z" fill="#202124"></path><circle cx="12" cy="7.5" r="1.15" fill="#FFFFFF"></circle><circle cx="12" cy="16.5" r="1.15" fill="#202124"></circle></svg></span><span>Тема</span></span>
           <span class="profile-menu-trailing"><span class="profile-theme-value" id="profile-theme-value">Тёмная</span><span class="profile-menu-chevron" aria-hidden="true">›</span></span>
         </button>
         <button class="profile-menu-row profile-sounds-row" id="profile-sounds-toggle" type="button" aria-pressed="true">

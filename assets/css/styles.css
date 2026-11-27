@@ -3513,3 +3513,28 @@ html.profile-screen-active .bottom-nav-dock{
 #screen-profile .profile-menu-group{display:block;width:100%;margin-top:22px}
 #screen-profile .profile-section-title{margin:0 0 10px;padding:0 16px;color:var(--text);font-family:inherit;font-size:var(--type-secondary);line-height:1.35;font-weight:var(--weight-semibold);letter-spacing:normal;text-align:left}
 #screen-profile .profile-menu-group .profile-menu{display:block;width:100%;margin:0!important}
+
+
+/* Keep the two profile menu sections aligned exactly like the Management section. */
+#screen-profile .profile-menu-group{
+  display:block;
+  width:100%;
+  flex-shrink:0;
+  margin-top:24px;
+}
+#screen-profile .profile-section-title{
+  margin:0 0 10px;
+  padding:0 16px;
+  color:var(--text);
+  font-family:inherit;
+  font-size:var(--type-secondary);
+  line-height:1.35;
+  font-weight:var(--weight-semibold);
+  letter-spacing:normal;
+  text-align:left;
+}
+#screen-profile .profile-menu-group .profile-menu{
+  display:block;
+  width:100%;
+  margin:0!important;
+}

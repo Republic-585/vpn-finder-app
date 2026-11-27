@@ -3179,3 +3179,28 @@ html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose{
   -webkit-backdrop-filter:blur(25px) saturate(180%)!important;
   backdrop-filter:blur(25px) saturate(180%)!important;
 }
+
+
+/* Support composer: slightly reduce vertical height in both chat views. */
+html.contact-screen-active #screen-contact .support-chat-compose,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose{
+  min-height:58px!important;
+  padding-top:5px!important;
+  padding-bottom:5px!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose textarea,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose textarea{
+  min-height:40px!important;
+  height:40px!important;
+  padding-top:8px!important;
+  padding-bottom:8px!important;
+  line-height:22px!important;
+}
+html.contact-screen-active #screen-contact .support-chat-compose .contact-send-button,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose .contact-send-button{
+  width:44px!important;
+  height:44px!important;
+  min-width:44px!important;
+  min-height:44px!important;
+  flex-basis:44px!important;
+}

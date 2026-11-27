@@ -828,6 +828,13 @@ function navHaptic() {
     else feedback?.selectionChanged?.();
   } catch (_) {}
 }
+function messageSentHaptic() {
+  try {
+    const feedback = tg?.HapticFeedback;
+    if (typeof feedback?.impactOccurred === "function") feedback.impactOccurred("light");
+    else feedback?.selectionChanged?.();
+  } catch (_) {}
+}
 let moveIndicator = () => {};
 const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analytics", "monitoring", "support", "support-inbox"]);
 let ownersBackScreen = "catalog";
@@ -2390,6 +2397,7 @@ byId("contact-form")?.addEventListener("submit", async event => {
   button.disabled = true;
   try {
     await supportRequest("send", { message });
+    messageSentHaptic();
     form.reset();
     await loadContactConversation();
   } catch (_) {
@@ -2538,6 +2546,7 @@ byId("support-reply-form")?.addEventListener("submit", async event => {
   try {
     const threadId = activeSupportThreadId;
     await supportRequest("reply", { thread_id: threadId, message });
+    messageSentHaptic();
     form.reset();
     if (activeSupportThreadId !== threadId) return;
     const requestId = ++supportThreadRequestId;

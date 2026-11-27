@@ -45,7 +45,7 @@
   box-shadow:0 10px 32px rgba(0,0,0,.32);
   transform:scale(1);
   transform-origin:center;
-  transition:transform .62s cubic-bezier(.16,1,.3,1),box-shadow .35s ease;
+  transition:transform .9s cubic-bezier(.22,1,.36,1),box-shadow .45s ease;
   touch-action:none;
   -webkit-tap-highlight-color:transparent;
   user-select:none;
@@ -68,11 +68,12 @@
   mask-composite:exclude;
 }
 .bottom-nav-dock .bottom-nav.is-pressed{
-  transform:scale(1.04);
-  transition:transform .62s cubic-bezier(.16,1,.3,1),box-shadow .35s ease;
+  transform:scale(1.025);
+  transition:transform .9s cubic-bezier(.22,1,.36,1),box-shadow .45s ease;
 }
 .bottom-nav-dock .bottom-nav.is-dragging{
-  transition:transform .62s cubic-bezier(.16,1,.3,1),box-shadow .35s ease;
+  transform:scale(1.035);
+  transition:transform 1.05s cubic-bezier(.22,1,.36,1),box-shadow .45s ease;
 }
 
 /* Dense, opaque moving lens. No outline on the active lens. */

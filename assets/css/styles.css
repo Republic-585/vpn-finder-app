@@ -3252,6 +3252,19 @@ html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose .contac
   border-radius:50%!important;
 }
 
+/* Keep the first-visit Home Screen prompt at its full content height.
+   The profile menu must not squeeze its action rows out of view. */
+html.profile-screen-active #screen-profile .home-screen-prompt{
+  flex:0 0 auto!important;
+  flex-shrink:0!important;
+  min-height:max-content!important;
+  overflow:hidden;
+}
+html.profile-screen-active #screen-profile .home-screen-action{
+  flex:0 0 48px!important;
+  min-height:48px!important;
+}
+
 /* Profile notification sound preference */
 .profile-sounds-row .profile-sounds-state{font-size:12px!important;font-weight:500!important;color:var(--secondary)!important}
 .profile-sounds-row .profile-sounds-switch{width:36px;height:22px;padding:2px;display:inline-flex;align-items:center;border-radius:999px;background:rgba(142,142,147,.34);transition:background 160ms ease}

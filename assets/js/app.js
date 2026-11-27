@@ -426,7 +426,7 @@ function renderMonitoringDashboard(data) {
   const activityRows = activityFindings.length ? activityFindings.map(item =>
     '<div class="monitoring-health-row"><span class="monitoring-health-name"><i class="monitoring-health-dot ' + esc(item.severity) + '"></i><strong>' + esc(item.title) + '</strong></span><span class="monitoring-health-state ' + esc(item.severity) + '">' + (item.severity === "critical" ? "Критично" : "Внимание") + '</span><small>' + esc(item.description || "") + '</small></div>'
   ).join("") : '<p class="monitoring-empty">' + (securityActivityError ? "Не удалось получить данные журнала безопасности." : "За последние 5 минут подозрительные события не зарегистрированы.") + '</p>';
-  const eventLabels = { auth_invalid_initdata: "Неверная Telegram-авторизация", admin_access_denied: "Попытка доступа к функциям владельца", message_access_denied: "Попытка доступа к чужому сообщению", profile_not_registered: "Профиль Telegram не зарегистрирован", analytics_rate_limited: "Превышен лимит аналитики", affiliate_rate_limited: "Превышен лимит переходов", webhook_invalid_secret: "Неверный секрет Telegram webhook", service_error: "Внутренняя ошибка сервиса" };
+  const eventLabels = { auth_invalid_initdata: "Неверная Telegram-авторизация", admin_access_denied: "Попытка доступа к функциям владельца", message_access_denied: "Попытка доступа к чужому сообщению", profile_not_registered: "Профиль Telegram не зарегистрирован", analytics_rate_limited: "Превышен лимит аналитики", affiliate_rate_limited: "Превышен лимит переходов", webhook_invalid_secret: "Неверный секрет Telegram webhook", service_error: "Внутренняя ошибка сервиса", request_rate_limit_observed: "Превышена обычная частота запросов" };
   const eventResponses = {
     auth_invalid_initdata: "Запрос отклонён: Telegram-подпись не прошла проверку. Доступ не предоставлен.",
     admin_access_denied: "Запрос отклонён: проверка прав владельца не пройдена.",
@@ -435,7 +435,8 @@ function renderMonitoringDashboard(data) {
     analytics_rate_limited: "Сработал лимит аналитики: запрос ограничен.",
     affiliate_rate_limited: "Сработал лимит переходов: запрос ограничен.",
     webhook_invalid_secret: "Webhook-запрос отклонён: секрет не совпал. При повторениях проверьте конфигурацию webhook.",
-    service_error: "Техническая ошибка. Она сама по себе не доказывает атаку или перехват данных; требуется диагностика."
+    service_error: "Техническая ошибка. Она сама по себе не доказывает атаку или перехват данных; требуется диагностика.",
+    request_rate_limit_observed: "Наблюдатель зафиксировал превышение частоты запросов. В режиме наблюдения запросы не блокировались."
   };
   const securityEventRows = securityEvents.length ? securityEvents.map(item =>
     '<div class="monitoring-security-event"><span class="monitoring-health-dot ' + esc(item.severity) + '"></span><div><strong>' + esc(eventLabels[item.event_type] || item.event_type) + '</strong><small>' + esc(item.endpoint || "") + (item.reason ? " · " + esc(item.reason) : "") + '</small><small>' + esc(eventResponses[item.event_type] || "Действие защиты не определено: требуется проверка события.") + '</small></div><time>' + monitoringDate(item.created_at) + '</time></div>'
@@ -475,7 +476,7 @@ function renderMonitoringDashboard(data) {
       '<div class="monitoring-security-events">' + securityEventRows + '</div>' +
       '<p class="monitoring-note">Проверяются события за последние 5 минут. Запросы с неверной авторизацией, без прав или с превышением лимита отклоняются на стороне сервера. IP-адреса не сохраняются: используется HMAC-отпечаток. Целые IP автоматически не блокируются, чтобы не затронуть пользователей общих сетей. Внутренняя ошибка сама по себе не означает перехват данных.</p>' +
     '</section>' +
-    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Показатели</h2><span>Динамика</span></div>'
+    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Показатели</h2><span>Динамика</span></div>' +
       '<div class="monitoring-metric"><span>Приём аналитических событий</span><strong>' + (lastRun?.status === "ok" ? "Проверка пройдена" : "Ожидает первой проверки") + '</strong></div>' +
       '<div class="monitoring-metric"><span>Последнее событие</span><strong>' + monitoringDate(snapshot.last_event_at) + '</strong></div>' +
       '<div class="monitoring-metric"><span>Последняя успешная запись</span><strong>' + monitoringDate(snapshot.last_ingest_success_at) + '</strong></div>' +

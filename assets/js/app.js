@@ -1191,7 +1191,13 @@ if (navBar) {
     byId("profile-nav-button")?.classList.remove("is-pressed");
   };
 
-  const scheduleNavLayout = () => requestAnimationFrame(() => requestAnimationFrame(() => moveIndicator(true)));
+  // Snap only for the first layout pass. Later viewport/profile transitions must
+  // preserve the spring's current position so the glass lens travels naturally.
+  let navLayoutInitialized = false;
+  const scheduleNavLayout = () => requestAnimationFrame(() => requestAnimationFrame(() => {
+    moveIndicator(!navLayoutInitialized);
+    navLayoutInitialized = true;
+  }));
   scheduleNavLayout();
   window.addEventListener("resize", scheduleNavLayout);
   window.addEventListener("orientationchange", scheduleNavLayout);

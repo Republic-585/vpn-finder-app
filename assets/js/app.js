@@ -1492,10 +1492,45 @@ search?.addEventListener("input", () => {
     }, 650);
   }
 });
-search?.addEventListener("focus", renderSearchSuggestions);
-search?.addEventListener("blur", () => setTimeout(() => {
-  if (searchSuggestions) searchSuggestions.hidden = true;
-}, 120));
+const searchBox = search?.closest(".search-box");
+let searchFocusScrollY = null;
+let searchFocusUnlockTimer = null;
+function stabilizeCatalogSearchViewport() {
+  if (document.activeElement !== search || searchFocusScrollY === null) return;
+  if (Math.abs(window.scrollY - searchFocusScrollY) > 1) {
+    window.scrollTo(0, searchFocusScrollY);
+  }
+}
+searchBox?.addEventListener("pointerdown", event => {
+  if (event.pointerType !== "touch" || !search || document.activeElement === search) return;
+  if (event.target instanceof Element && event.target.closest("#clear-search")) return;
+  searchFocusScrollY = window.scrollY;
+  event.preventDefault();
+  search.focus({ preventScroll: true });
+}, { capture: true });
+search?.addEventListener("focus", () => {
+  if (searchFocusScrollY === null) searchFocusScrollY = window.scrollY;
+  if (searchFocusUnlockTimer) window.clearTimeout(searchFocusUnlockTimer);
+  document.documentElement.classList.add("catalog-search-focus-lock");
+  renderSearchSuggestions();
+});
+search?.addEventListener("blur", () => {
+  setTimeout(() => {
+    if (searchSuggestions) searchSuggestions.hidden = true;
+  }, 120);
+  if (searchFocusUnlockTimer) window.clearTimeout(searchFocusUnlockTimer);
+  searchFocusUnlockTimer = window.setTimeout(() => {
+    if (searchFocusScrollY !== null && Math.abs(window.scrollY - searchFocusScrollY) > 1) {
+      window.scrollTo(0, searchFocusScrollY);
+    }
+    document.documentElement.classList.remove("catalog-search-focus-lock");
+    searchFocusScrollY = null;
+    searchFocusUnlockTimer = null;
+  }, 360);
+});
+window.visualViewport?.addEventListener("resize", stabilizeCatalogSearchViewport);
+window.addEventListener("resize", stabilizeCatalogSearchViewport);
+tg?.onEvent?.("viewportChanged", stabilizeCatalogSearchViewport);
 searchSuggestions?.addEventListener("click", event => {
   const button = event.target.closest("[data-suggestion]");
   if (!button || !search) return;

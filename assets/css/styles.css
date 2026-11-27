@@ -2708,7 +2708,7 @@ html.contact-screen-active #screen-contact .support-chat-messages{
   max-height:none!important;
   min-height:0!important;
   margin:0!important;
-  padding:calc(132px + env(safe-area-inset-top)) 18px calc(86px + env(safe-area-inset-bottom))!important;
+  padding:calc(132px + env(safe-area-inset-top)) 18px 86px!important;
   overflow-x:hidden!important;
   overflow-y:auto!important;
   overscroll-behavior:contain!important;
@@ -2719,7 +2719,7 @@ html.contact-screen-active #screen-contact .support-chat-compose{
   z-index:6!important;
   left:0!important;
   right:0!important;
-  bottom:calc(8px + env(safe-area-inset-bottom))!important;
+  bottom:8px!important;
   width:100%!important;
   margin:0!important;
   background:rgba(43,45,49,.78)!important;

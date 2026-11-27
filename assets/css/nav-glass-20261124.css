@@ -68,11 +68,11 @@
   mask-composite:exclude;
 }
 .bottom-nav-dock .bottom-nav.is-pressed{
-  transform:scale(1.025);
+  transform:scale(1.05);
   transition:transform .9s cubic-bezier(.22,1,.36,1),box-shadow .45s ease;
 }
 .bottom-nav-dock .bottom-nav.is-dragging{
-  transform:scale(1.035);
+  transform:scale(1.06);
   transition:transform 1.05s cubic-bezier(.22,1,.36,1),box-shadow .45s ease;
 }
 
@@ -189,7 +189,7 @@
   animation:profile-ring-flow 5.5s linear infinite,profile-ring-breathe 3.2s ease-in-out infinite;
 }
 .bottom-nav-dock .profile-nav-button:active,
-.bottom-nav-dock .profile-nav-button.is-pressed{transform:scale(1.025)}
+.bottom-nav-dock .profile-nav-button.is-pressed{transform:scale(1.05)}
 .bottom-nav-dock .profile-nav-button img,
 .bottom-nav-dock .profile-nav-button span{
   position:relative;

@@ -3416,3 +3416,38 @@ html.profile-screen-active #screen-profile .profile-management-group{
 /* Swap profile menu tile accents: support pink, sounds orange. */
 #screen-profile .support-tile{background:#E66BA6!important}
 #screen-profile .sounds-tile{background:#E6A23C!important}
+
+
+/* Support message actions: revealed by a deliberate long press on a bubble. */
+.support-message-wrap{position:relative;display:flex;flex-direction:column;align-items:flex-start;max-width:100%}
+.support-message-wrap:has(.support-message-outgoing){align-items:flex-end}
+.support-message{position:relative;touch-action:pan-y}
+.support-message.is-actions-open{z-index:12;margin-bottom:42px}
+.support-message.is-deleted .support-message-body{color:var(--secondary);font-style:italic}
+.support-message-actions[hidden]{display:none!important}
+.support-message-actions{
+  position:absolute;z-index:20;top:calc(100% + 7px);left:0;
+  display:flex;align-items:center;gap:5px;max-width:min(310px,calc(100vw - 48px));
+  padding:6px;border:1px solid rgba(255,255,255,.12);border-radius:16px;
+  background:rgba(39,41,46,.96);box-shadow:0 8px 24px rgba(0,0,0,.28);
+  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+}
+.support-message-outgoing .support-message-actions{left:auto;right:0}
+.support-message-actions button{
+  min-width:38px;height:34px;padding:0 9px;border:0;border-radius:11px;
+  display:inline-flex;align-items:center;justify-content:center;gap:4px;
+  background:rgba(255,255,255,.08);color:#fff;font:inherit;font-size:14px;
+  white-space:nowrap;-webkit-tap-highlight-color:transparent;
+}
+.support-message-actions button[aria-pressed="true"]{background:rgba(51,144,236,.32);box-shadow:inset 0 0 0 1px rgba(51,144,236,.6)}
+.support-message-actions .support-message-delete{font-size:12px;color:#ff777b}
+.support-message-reaction-summary{display:flex;gap:5px;margin:5px 8px 0}
+.support-message-reaction-summary span{
+  display:inline-flex;align-items:center;justify-content:center;min-height:22px;
+  padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.09);
+  color:var(--secondary);font-size:11px;line-height:1
+}
+@media(prefers-reduced-motion:no-preference){
+  .support-message-actions{animation:support-message-actions-in 140ms ease-out}
+  @keyframes support-message-actions-in{from{opacity:0;transform:translateY(-4px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+}

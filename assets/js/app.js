@@ -1086,6 +1086,7 @@ function showScreen(name, backScreen = null) {
   });
   // Keep the detached profile ring blue only while the Profile tab is selected.
   byId("profile-nav-button")?.classList.toggle("is-current", name === "profile");
+  navBar?.classList.toggle("profile-active", name === "profile");
   moveIndicator();
   if (!alreadyActive) navHaptic();
   if (name === "analytics") loadStatisticsDashboard();
@@ -1138,9 +1139,10 @@ if (navBar) {
   };
 
   const paintNearestItem = () => {
-    const closest = closestItemAt(currentX);
+    const profileActive = navBar.classList.contains("profile-active");
+    const closest = profileActive ? null : closestItemAt(currentX);
     nav.forEach(item => {
-      const selected = item === closest;
+      const selected = !profileActive && item === closest;
       item.style.color = selected ? "var(--nav-glass-accent)" : "var(--nav-glass-muted)";
       const icon = item.querySelector("svg");
       if (icon) icon.style.transform = selected ? "scale(1.08)" : "scale(1)";
@@ -1150,10 +1152,12 @@ if (navBar) {
   moveIndicator = (snap = false) => {
     const active = nav.find(item => item.classList.contains("active"));
     if (!active) {
-      // Keep the lens at the last selected tab while the detached Profile control is active.
+      // The detached Profile control is active: hide the lens and clear tab emphasis.
+      blob.style.opacity = "0";
       paintNearestItem();
       return;
     }
+    blob.style.opacity = "1";
     const bounds = getBounds(active);
     if (!bounds.width || !navBar.getBoundingClientRect().width) return;
     blob.style.width = bounds.width + "px";

@@ -9,8 +9,8 @@ const THEME_KEY = "vpn-finder-theme";
 let themePreference = (() => {
   try {
     const saved = localStorage.getItem(THEME_KEY);
-    return saved === "light" || saved === "dark" || saved === "system" ? saved : "system";
-  } catch (_) { return "system"; }
+    return saved === "light" || saved === "dark" || saved === "system" ? saved : "dark";
+  } catch (_) { return "dark"; }
 })();
 function resolvedAppTheme() {
   if (themePreference === "light" || themePreference === "dark") return themePreference;

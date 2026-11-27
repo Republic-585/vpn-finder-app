@@ -138,3 +138,12 @@ html[data-theme="light"].support-inbox-chat-mode #screen-support-inbox #support-
 
 /* Theme selector uses a dedicated Telegram red tile, distinct from the other profile items. */
 .profile-menu-leading .theme-tile {background:#527C9A!important;}
+
+
+/* Explicit theme icon tile color and classic monochrome yin-yang symbol. */
+#screen-profile .profile-menu-leading .profile-icon-tile.theme-tile{
+  background-color:#527C9A!important;
+}
+:root[data-theme="light"] #screen-profile .profile-section-title{
+  color:var(--muted)!important;
+}

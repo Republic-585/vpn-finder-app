@@ -408,7 +408,7 @@ function renderMonitoringDashboard(data) {
   const checkWarning = healthChecks.some(item => item.status === "warning");
   const checkUnknown = healthChecks.some(item => item.status === "unknown");
   const critical = active.some(item => item.severity === "critical") || checkCritical;
-  const unknown = healthChecks.length === 0 || checkUnknown;
+  const unknown = healthChecks.length === 0 || checkUnknown || !data.backup_check || data.backup_check.status === "unknown";
   const stateLabel = healthChecks.length === 0 ? "Состояние не подтверждено" : critical ? "Критическая проблема" : active.length || checkWarning ? "Есть предупреждения" : unknown ? "Часть проверок не подтверждена" : "Все проверки пройдены";
   const stateClass = healthChecks.length === 0 ? "is-unknown" : critical ? "is-critical" : active.length || checkWarning ? "is-warning" : unknown ? "is-unknown" : "is-ok";
   const lastRun = runs[0];
@@ -455,44 +455,72 @@ function renderMonitoringDashboard(data) {
     '<label class="monitoring-setting"><span><strong>' + label + '</strong><small>' + description + '</small></span><input type="checkbox" data-monitoring-setting="' + key + '" ' + (settings[key] !== false ? "checked" : "") + '></label>'
   ).join("");
   const p95 = snapshot.p95_load_ms_24h == null ? "—" : fmt.format(Math.round(Number(snapshot.p95_load_ms_24h))) + " мс";
+  const statusFrom = items => {
+    const statuses = items.map(item => item.status);
+    if (statuses.includes("critical")) return "critical";
+    if (statuses.includes("warning")) return "warning";
+    if (!statuses.length || statuses.includes("unknown")) return "unknown";
+    return "healthy";
+  };
+  const statusText = status => status === "healthy" ? "В норме" : status === "warning" ? "Внимание" : status === "critical" ? "Проблема" : "Не проверено";
+  const serviceChecks = healthChecks.filter(item => item.key !== "security");
+  const securityChecks = healthChecks.filter(item => item.key === "security");
+  const serviceStatus = statusFrom(serviceChecks);
+  const securityStatus = Number(audit?.counts?.critical || 0) > 0 || securityChecks.some(item => item.status === "critical") ? "critical" : Number(audit?.counts?.warning || 0) > 0 || securityChecks.some(item => item.status === "warning") ? "warning" : statusFrom(securityChecks);
+  const performanceSamples = Number(snapshot.performance_samples_24h || 0);
+  const performanceStatus = Number(snapshot.errors_1h || 0) >= Number(settings.error_threshold || 5) ? "warning" : performanceSamples ? "healthy" : "unknown";
+  const backupCheck = data.backup_check || null;
+  const backupStatus = backupCheck?.status || "unknown";
+  const serviceHealthy = serviceChecks.filter(item => item.status === "healthy").length;
+  const serviceDetail = serviceChecks.length ? serviceHealthy + " из " + serviceChecks.length + " проверок в норме" : "Нет подтверждённых проверок";
+  const securityDetail = "Критических: " + Number(audit?.counts?.critical || 0) + " · предупреждений: " + Number(audit?.counts?.warning || 0);
+  const performanceDetail = performanceSamples ? "p95 загрузки: " + p95 + " · ошибок за час: " + fmt.format(snapshot.errors_1h || 0) : "Пока нет пользовательских измерений";
+  const backupDetail = backupCheck?.description || "Резервное восстановление не проверено в тестовой среде";
+  const activeIncidentRows = active.length ? active.map(item => {
+    const auditDetails = item.fingerprint === "security_audit_warning" ? auditFindings.filter(finding => finding.severity === "warning").map(finding => finding.title + ": " + finding.description).join(" ") : "";
+    const description = [item.description, auditDetails].filter(Boolean).join(" ");
+    const level = item.severity === "critical" ? "Критично" : item.severity === "warning" ? "Внимание" : "Информация";
+    return '<article class="monitoring-incident"><div class="monitoring-incident-top"><strong>' + esc(item.title) + '</strong><span class="monitoring-severity ' + esc(item.severity) + '">' + level + '</span></div><p>' + esc(description) + '</p><div class="monitoring-incident-meta"><span>Активно</span><time>' + monitoringDate(item.last_seen_at) + '</time><span>Повторений: ' + fmt.format(item.occurrences || 1) + '</span></div></article>';
+  }).join("") : '<p class="monitoring-empty">Активных проблем не обнаружено.</p>';
+  const backupNotice = backupStatus === "healthy" ? "" : '<div class="monitoring-attention-note"><strong>Резервное восстановление не проверено</strong><span>Перед релизом нужно выполнить тест восстановления в отдельной среде.</span></div>';
   root.innerHTML =
     '<div class="monitoring-toolbar"><span class="monitoring-status ' + stateClass + '"><i></i>' + stateLabel + '</span><button type="button" class="monitoring-action" data-monitoring-action="refresh">Обновить</button></div>' +
-    '<div class="monitoring-summary">' +
-      '<article><span>Активные проблемы</span><strong>' + fmt.format(Math.max(active.length, healthChecks.filter(item => item.status === 'critical').length)) + '</strong></article>' +
-      '<article><span>Проверки системы</span><strong>' + fmt.format(healthChecks.length) + '</strong></article>' +
-      '<article><span>Ошибки за час</span><strong>' + fmt.format(snapshot.errors_1h || 0) + '</strong></article>' +
-      '<article><span>Переходы за 24 часа</span><strong>' + fmt.format(snapshot.clicks_24h || 0) + '</strong></article>' +
+    '<div class="monitoring-overview-grid">' +
+      '<article class="monitoring-overview-card ' + serviceStatus + '"><span>Сервисы</span><strong>' + statusText(serviceStatus) + '</strong><small>' + esc(serviceDetail) + '</small></article>' +
+      '<article class="monitoring-overview-card ' + securityStatus + '"><span>Безопасность</span><strong>' + statusText(securityStatus) + '</strong><small>' + esc(securityDetail) + '</small></article>' +
+      '<article class="monitoring-overview-card ' + performanceStatus + '"><span>Производительность</span><strong>' + (performanceStatus === "unknown" ? "Ожидает трафика" : statusText(performanceStatus)) + '</strong><small>' + esc(performanceDetail) + '</small></article>' +
+      '<article class="monitoring-overview-card ' + backupStatus + '"><span>Сохранность данных</span><strong>' + statusText(backupStatus) + '</strong><small>' + esc(backupDetail) + '</small></article>' +
     '</div>' +
-    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Состояние системы</h2><span>' + (healthChecks.length ? 'Проверено' : 'Нет подтверждения') + '</span></div>' +
-      '<div class="monitoring-health-list">' + healthRows + '</div>' +
-    '</section>' +
-    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Аудит безопасности</h2><span>' + (audit?.generated_at ? monitoringDate(audit.generated_at) : 'Нет данных') + '</span></div>' +
-      '<div class="monitoring-summary monitoring-security-summary"><article><span>Критические</span><strong>' + fmt.format(audit?.counts?.critical || 0) + '</strong></article><article><span>Предупреждения</span><strong>' + fmt.format(audit?.counts?.warning || 0) + '</strong></article><article><span>Информация</span><strong>' + fmt.format(audit?.counts?.info || 0) + '</strong></article></div>' +
-      '<div class="monitoring-health-list">' + auditRows + '</div>' +
-    '</section>' +
-    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Подозрительная активность</h2><span>' + (securityActivity?.generated_at ? monitoringDate(securityActivity.generated_at) : 'Нет данных') + '</span></div>' +
-      '<div class="monitoring-summary monitoring-security-summary"><article><span>Неверная авторизация</span><strong>' + fmt.format(activityCounts.invalid_auth || 0) + '</strong></article><article><span>Отказы в доступе</span><strong>' + fmt.format(activityCounts.denied || 0) + '</strong></article><article><span>Webhook</span><strong>' + fmt.format(activityCounts.webhook_invalid_secret || 0) + '</strong></article><article><span>Внутренние ошибки</span><strong>' + fmt.format(activityCounts.service_errors || 0) + '</strong></article><article><span>Лимиты</span><strong>' + fmt.format(activityCounts.rate_limited || 0) + '</strong></article></div>' +
-      '<div class="monitoring-health-list">' + activityRows + '</div>' +
-      '<div class="monitoring-security-events">' + securityEventRows + '</div>' +
-      '<p class="monitoring-note">Проверяются события за последние 5 минут. Запросы с неверной авторизацией, без прав или с превышением лимита отклоняются на стороне сервера. IP-адреса не сохраняются: используется HMAC-отпечаток. Целые IP автоматически не блокируются, чтобы не затронуть пользователей общих сетей. Внутренняя ошибка сама по себе не означает перехват данных.</p>' +
-    '</section>' +
-    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Показатели</h2><span>Динамика</span></div>' +
-      '<div class="monitoring-metric"><span>Приём аналитических событий</span><strong>' + (lastRun?.status === "ok" ? "Проверка пройдена" : "Ожидает первой проверки") + '</strong></div>' +
-      '<div class="monitoring-metric"><span>Последнее событие</span><strong>' + monitoringDate(snapshot.last_event_at) + '</strong></div>' +
-      '<div class="monitoring-metric"><span>Последняя успешная запись</span><strong>' + monitoringDate(snapshot.last_ingest_success_at) + '</strong></div>' +
-      '<div class="monitoring-metric"><span>p95 загрузки приложения</span><strong>' + p95 + '</strong></div>' +
-      '<div class="monitoring-metric"><span>Последняя проверка</span><strong>' + monitoringDate(lastRun?.finished_at || lastRun?.started_at) + '</strong></div>' +
-      '<p class="monitoring-note">Отсутствие новых событий само по себе не считается сбоем: при низкой посещаемости это нормально. Доступность функции приёма событий проверяется отдельно.</p>' +
-    '</section>' +
-    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Автоматические уведомления</h2><span>Telegram владельцу</span></div>' + settingsHtml +
-      '<div class="monitoring-schedule"><span>Технические проверки</span><strong>Каждые 5 минут</strong></div><div class="monitoring-schedule"><span>Аудит безопасности</span><strong>Каждые 5 минут</strong></div><div class="monitoring-schedule"><span>Бизнес-показатели</span><strong>Каждый час</strong></div><div class="monitoring-schedule"><span>Утренний отчёт</span><strong>Ежедневно в 10:00 МСК</strong></div>' +
+    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Требует внимания</h2><span>' + fmt.format(active.length + (backupStatus === "healthy" ? 0 : 1)) + '</span></div><div class="monitoring-incident-list">' + activeIncidentRows + backupNotice + '</div></section>' +
+    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Уведомления</h2><span>Telegram владельцу</span></div>' +
+      '<div class="monitoring-schedule"><span>Критические проблемы</span><strong>Сразу</strong></div>' +
+      '<div class="monitoring-schedule"><span>Предупреждения</span><strong>В отчёте · 10:00 МСК</strong></div>' +
+      '<div class="monitoring-schedule"><span>Последняя проверка</span><strong>' + monitoringDate(lastRun?.finished_at || lastRun?.started_at) + '</strong></div>' +
       '<button type="button" class="monitoring-primary-action" data-monitoring-action="test" ' + (data.telegram_configured ? "" : "disabled") + '>Отправить тестовое уведомление</button>' +
-      '<p class="monitoring-note">В Telegram сразу отправляются только критические проблемы и сообщения об их устранении. Предупреждения сохраняются здесь и включаются в ежедневный отчёт в 10:00 по Москве. Повторы одного инцидента не создают новые сообщения.</p>' +
     '</section>' +
-    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>История инцидентов</h2><span>' + fmt.format(incidents.length) + '</span></div><div class="monitoring-incident-list">' + incidentRows + '</div></section>' +
-    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>История проверок</h2><span>Последние 20</span></div>' +
-      (runs.length ? runs.map(item => '<div class="monitoring-run"><span>' + (item.check_type === "technical" ? "Техническая" : item.check_type === "security" ? "Аудит безопасности" : "Бизнес") + '</span><strong class="' + (item.status === "ok" ? "is-ok" : "is-warning") + '">' + (item.status === "ok" ? "Успешно" : "Ошибка") + '</strong><time>' + monitoringDate(item.finished_at || item.started_at) + '</time></div>').join("") : '<p class="monitoring-empty">Проверки ещё не запускались.</p>') +
-    '</section>';
+    '<details class="monitoring-details"><summary>Технические подробности</summary><div class="monitoring-details-content">' +
+      '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Проверки сервисов</h2><span>' + fmt.format(healthChecks.length) + '</span></div><div class="monitoring-health-list">' + healthRows + '</div></section>' +
+      '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Аудит безопасности</h2><span>' + (audit?.generated_at ? monitoringDate(audit.generated_at) : "Нет данных") + '</span></div>' +
+        '<div class="monitoring-summary monitoring-security-summary"><article><span>Критические</span><strong>' + fmt.format(audit?.counts?.critical || 0) + '</strong></article><article><span>Предупреждения</span><strong>' + fmt.format(audit?.counts?.warning || 0) + '</strong></article><article><span>Информация</span><strong>' + fmt.format(audit?.counts?.info || 0) + '</strong></article></div>' +
+        '<div class="monitoring-health-list">' + auditRows + '</div></section>' +
+      '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Подозрительная активность</h2><span>' + (securityActivity?.generated_at ? monitoringDate(securityActivity.generated_at) : "Нет данных") + '</span></div>' +
+        '<div class="monitoring-summary monitoring-security-summary"><article><span>Неверная авторизация</span><strong>' + fmt.format(activityCounts.invalid_auth || 0) + '</strong></article><article><span>Отказы в доступе</span><strong>' + fmt.format(activityCounts.denied || 0) + '</strong></article><article><span>Webhook</span><strong>' + fmt.format(activityCounts.webhook_invalid_secret || 0) + '</strong></article><article><span>Внутренние ошибки</span><strong>' + fmt.format(activityCounts.service_errors || 0) + '</strong></article><article><span>Лимиты</span><strong>' + fmt.format(activityCounts.rate_limited || 0) + '</strong></article></div>' +
+        '<div class="monitoring-health-list">' + activityRows + '</div><div class="monitoring-security-events">' + securityEventRows + '</div>' +
+        '<p class="monitoring-note">Проверяются события за последние 5 минут. Запросы с неверной авторизацией и без прав отклоняются на сервере. Наблюдатель частоты фиксирует превышения, но пока не блокирует запросы. Исходные IP не сохраняются: используется HMAC-отпечаток. Внутренняя ошибка сама по себе не означает перехват данных.</p></section>' +
+      '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Показатели</h2><span>Динамика</span></div>' +
+        '<div class="monitoring-metric"><span>Ошибки за час</span><strong>' + fmt.format(snapshot.errors_1h || 0) + '</strong></div>' +
+        '<div class="monitoring-metric"><span>Последнее событие</span><strong>' + monitoringDate(snapshot.last_event_at) + '</strong></div>' +
+        '<div class="monitoring-metric"><span>Последняя успешная запись</span><strong>' + monitoringDate(snapshot.last_ingest_success_at) + '</strong></div>' +
+        '<div class="monitoring-metric"><span>p95 загрузки приложения</span><strong>' + p95 + '</strong></div>' +
+        '<p class="monitoring-note">Отсутствие событий нормально до появления аудитории. Скорость приложения будет оцениваться по реальным измерениям.</p></section>' +
+      '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Настройки уведомлений</h2><span>Дополнительно</span></div>' + settingsHtml +
+        '<div class="monitoring-schedule"><span>Технические проверки</span><strong>Каждые 5 минут</strong></div><div class="monitoring-schedule"><span>Аудит безопасности</span><strong>Каждые 5 минут</strong></div><div class="monitoring-schedule"><span>Бизнес-показатели</span><strong>Каждый час</strong></div><div class="monitoring-schedule"><span>Утренний отчёт</span><strong>Ежедневно в 10:00 МСК</strong></div>' +
+        '<p class="monitoring-note">Критические проблемы отправляются сразу. Предупреждения включаются в ежедневную сводку. Повторы одного инцидента не создают новые сообщения.</p></section>' +
+      '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>История инцидентов</h2><span>' + fmt.format(incidents.length) + '</span></div><div class="monitoring-incident-list">' + incidentRows + '</div></section>' +
+      '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>История проверок</h2><span>Последние 20</span></div>' +
+        (runs.length ? runs.map(item => '<div class="monitoring-run"><span>' + (item.check_type === "technical" ? "Техническая" : item.check_type === "security" ? "Аудит безопасности" : "Бизнес") + '</span><strong class="' + (item.status === "ok" ? "is-ok" : "is-warning") + '">' + (item.status === "ok" ? "Успешно" : "Ошибка") + '</strong><time>' + monitoringDate(item.finished_at || item.started_at) + '</time></div>').join("") : '<p class="monitoring-empty">Проверки ещё не запускались.</p>') +
+      '</section>' +
+    '</div></details>';
   if (!root.dataset.monitoringBound) {
     root.dataset.monitoringBound = "true";
     root.addEventListener("click", async event => {

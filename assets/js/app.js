@@ -1139,13 +1139,11 @@ if (navBar) {
   };
 
   const paintNearestItem = () => {
-    const profileActive = navBar.classList.contains("profile-active");
-    const closest = profileActive ? null : closestItemAt(currentX);
+    // Icon emphasis follows the committed screen, never the moving glass lens.
+    // This keeps icons perfectly still while the user drags between tabs.
     nav.forEach(item => {
-      const selected = !profileActive && item === closest;
+      const selected = item.classList.contains("active") && !navBar.classList.contains("profile-active");
       item.style.color = selected ? "var(--nav-glass-accent)" : "var(--nav-glass-muted)";
-      const icon = item.querySelector("svg");
-      if (icon) icon.style.transform = selected ? "scale(1.08)" : "scale(1)";
     });
   };
 
@@ -1183,7 +1181,6 @@ if (navBar) {
     const stretchX = 1 + Math.min(Math.abs(velocity) * 0.03, 0.3);
     const stretchY = 1 - Math.min(Math.abs(velocity) * 0.01, 0.1);
     blob.style.transform = `translateX(${currentX}px) scale(${stretchX}, ${stretchY})`;
-    paintNearestItem();
     requestAnimationFrame(animateBlob);
   };
 

@@ -1117,6 +1117,10 @@ if (navBar) {
   let currentX = 0;
   let targetX = 0;
   let velocity = 0;
+  let panelSpringX = 1;
+  let panelSpringY = 1;
+  let panelSpringVelocityX = 0;
+  let panelSpringVelocityY = 0;
   let lastPointerX = 0;
   let lastPointerTime = performance.now();
   let suppressNavClickUntil = 0;
@@ -1196,18 +1200,33 @@ if (navBar) {
     const stretchY = 1 - Math.min(Math.abs(velocity) * 0.01, 0.1);
     blob.style.transform = `translateX(${currentX}px) scale(${stretchX}, ${stretchY})`;
 
-    // Let the entire glass dock subtly squash and stretch with the lens spring.
-    // Keep the response restrained so the dock remains stable and its contents do not shift.
-    const panelStretchX = 1 + Math.min(Math.abs(velocity) * 0.0015, 0.035);
-    const panelStretchY = 1 - Math.min(Math.abs(velocity) * 0.001, 0.022);
-    navBar.style.setProperty("--panel-spring-x", panelStretchX.toFixed(4));
-    navBar.style.setProperty("--panel-spring-y", panelStretchY.toFixed(4));
-    const springActive = draggingNav || Math.abs(velocity) > 0.12 || Math.abs(targetX - currentX) > 0.15;
-    navBar.classList.toggle("is-liquid-moving", springActive);
-    if (!springActive) {
-      navBar.style.setProperty("--panel-spring-x", "1");
-      navBar.style.setProperty("--panel-spring-y", "1");
+    // The dock has its own damped spring, separate from the moving tab lens.
+    // Motion energy only sets a gentle target; the panel eases toward it and settles independently.
+    const movementEnergy = Math.min(Math.abs(velocity) / 14, 1);
+    const panelTargetX = 1 + movementEnergy * 0.024;
+    const panelTargetY = 1 - movementEnergy * 0.014;
+    panelSpringVelocityX = (panelSpringVelocityX + (panelTargetX - panelSpringX) * 0.14) * 0.72;
+    panelSpringVelocityY = (panelSpringVelocityY + (panelTargetY - panelSpringY) * 0.14) * 0.72;
+    panelSpringX += panelSpringVelocityX;
+    panelSpringY += panelSpringVelocityY;
+    if (!draggingNav && movementEnergy < 0.002 &&
+        Math.abs(panelSpringVelocityX) < 0.00008 &&
+        Math.abs(panelSpringVelocityY) < 0.00008 &&
+        Math.abs(panelSpringX - 1) < 0.0003 &&
+        Math.abs(panelSpringY - 1) < 0.0003) {
+      panelSpringX = 1;
+      panelSpringY = 1;
+      panelSpringVelocityX = 0;
+      panelSpringVelocityY = 0;
     }
+    navBar.style.setProperty("--panel-spring-x", panelSpringX.toFixed(4));
+    navBar.style.setProperty("--panel-spring-y", panelSpringY.toFixed(4));
+    const panelMoving = draggingNav || movementEnergy >= 0.002 ||
+      Math.abs(panelSpringVelocityX) >= 0.00008 ||
+      Math.abs(panelSpringVelocityY) >= 0.00008 ||
+      Math.abs(panelSpringX - 1) >= 0.0003 ||
+      Math.abs(panelSpringY - 1) >= 0.0003;
+    navBar.classList.toggle("is-liquid-moving", panelMoving);
     requestAnimationFrame(animateBlob);
   };
 

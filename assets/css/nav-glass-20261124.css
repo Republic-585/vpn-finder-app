@@ -68,7 +68,7 @@
   mask-composite:exclude;
 }
 .bottom-nav-dock .bottom-nav.is-liquid-moving{
-  transition:transform .07s linear,box-shadow .45s ease;
+  transition:transform .12s linear,box-shadow .45s ease;
 }
 .bottom-nav-dock .bottom-nav.is-pressed{
   transform:scale(calc(var(--panel-spring-x,1) * 1.05),calc(var(--panel-spring-y,1) * 1.05));

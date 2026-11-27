@@ -2308,11 +2308,12 @@ byId("contact-form")?.addEventListener("submit", async event => {
   if (!message || button.disabled) return;
   // Restore textarea focus synchronously inside the submit gesture so iOS keeps its keyboard open.
   field.focus({ preventScroll: true });
-  button.classList.remove("is-sending");
   const plane = button.querySelector(".contact-send-plane");
   if (plane) {
+    button.classList.remove("is-sending");
+    plane.getAnimations?.().forEach(animation => animation.cancel());
+    void plane.offsetWidth;
     plane.addEventListener("animationend", () => button.classList.remove("is-sending"), { once: true });
-    void button.offsetWidth;
     button.classList.add("is-sending");
   }
   button.disabled = true;
@@ -2454,11 +2455,12 @@ byId("support-reply-form")?.addEventListener("submit", async event => {
   if (!activeSupportThreadId || !message || button.disabled) return;
   // Restore textarea focus synchronously inside the submit gesture so iOS keeps its keyboard open.
   field.focus({ preventScroll: true });
-  button.classList.remove("is-sending");
   const plane = button.querySelector(".contact-send-plane");
   if (plane) {
+    button.classList.remove("is-sending");
+    plane.getAnimations?.().forEach(animation => animation.cancel());
+    void plane.offsetWidth;
     plane.addEventListener("animationend", () => button.classList.remove("is-sending"), { once: true });
-    void button.offsetWidth;
     button.classList.add("is-sending");
   }
   button.disabled = true;

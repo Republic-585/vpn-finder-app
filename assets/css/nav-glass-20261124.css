@@ -40,12 +40,17 @@
   outline:0;
   background:
     linear-gradient(var(--nav-glass-bg),var(--nav-glass-bg)) padding-box,
-    linear-gradient(118deg,
-      rgba(255,255,255,.34) 0%,
-      rgba(255,255,255,.13) 21%,
-      rgba(255,255,255,.045) 52%,
-      rgba(255,255,255,.10) 76%,
-      rgba(255,255,255,.28) 100%) border-box;
+    conic-gradient(from 0deg,
+      rgba(255,255,255,.34) 0deg,
+      rgba(255,255,255,.13) 24deg,
+      rgba(255,255,255,.045) 72deg,
+      rgba(255,255,255,.08) 118deg,
+      rgba(255,255,255,.34) 150deg,
+      rgba(255,255,255,.13) 174deg,
+      rgba(255,255,255,.045) 252deg,
+      rgba(255,255,255,.08) 300deg,
+      rgba(255,255,255,.34) 330deg,
+      rgba(255,255,255,.34) 360deg) border-box;
   -webkit-backdrop-filter:blur(30px) saturate(180%) contrast(110%);
   backdrop-filter:blur(30px) saturate(180%) contrast(110%);
   box-shadow:

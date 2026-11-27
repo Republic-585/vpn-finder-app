@@ -120,8 +120,11 @@
   touch-action:none;
 }
 .bottom-nav-dock .bottom-nav .nav-item svg{
+  position:absolute;
+  left:50%;
+  top:50%;
   display:block;
-  flex:0 0 24px;
+  flex:none;
   width:24px;
   height:24px;
   margin:0;
@@ -131,11 +134,13 @@
   stroke-linecap:round;
   stroke-linejoin:round;
   overflow:visible;
+  transform:translate3d(-50%,-50%,0) scale(1);
+  transform-origin:50% 50%;
   transition:transform .22s cubic-bezier(.2,.8,.2,1);
 }
 .bottom-nav-dock .bottom-nav .nav-item span{display:none!important}
 .bottom-nav-dock .bottom-nav .nav-item.active{color:var(--nav-glass-accent)}
-.bottom-nav-dock .bottom-nav .nav-item.active svg{transform:scale(1.08)}
+.bottom-nav-dock .bottom-nav .nav-item.active svg{transform:translate3d(-50%,-50%,0) scale(1.08)}
 
 /* Profile avatar is intentionally unchanged and stays outside the moving panel. */
 .bottom-nav-dock .profile-nav-button{

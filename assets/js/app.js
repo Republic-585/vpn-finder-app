@@ -1498,14 +1498,18 @@ let searchFocusUnlockTimer = null;
 let searchViewportCorrectionFrame = null;
 function stabilizeCatalogSearchViewport() {
   if (searchFocusScrollY === null || searchViewportCorrectionFrame !== null) return;
-  const correctScroll = () => {
+  let previousFrameTime = 0;
+  const correctScroll = timestamp => {
     const difference = searchFocusScrollY - window.scrollY;
-    if (Math.abs(difference) <= 0.55) {
+    if (Math.abs(difference) <= 0.7) {
       searchViewportCorrectionFrame = null;
       return;
     }
-    // Ease out the browser's automatic scroll correction instead of snapping.
-    window.scrollTo(0, window.scrollY + difference * 0.24);
+    // Time-based easing keeps the return equally soft on 60 Hz and 120 Hz screens.
+    const elapsed = previousFrameTime ? Math.min(timestamp - previousFrameTime, 32) : 16;
+    previousFrameTime = timestamp;
+    const progress = 1 - Math.exp(-elapsed / 150);
+    window.scrollTo(0, window.scrollY + difference * progress);
     searchViewportCorrectionFrame = window.requestAnimationFrame(correctScroll);
   };
   searchViewportCorrectionFrame = window.requestAnimationFrame(correctScroll);

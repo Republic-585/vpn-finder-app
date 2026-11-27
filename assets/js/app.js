@@ -2250,7 +2250,7 @@ function syncContactKeyboardViewport(scrollToLatest = false) {
     });
   }
 }
-function bindSupportChatKeyboardField(field, screenClass, viewportProperty) {
+function bindSupportChatKeyboardField(field, viewportProperty) {
   if (!field) return;
   field.addEventListener("focus", () => {
     window.setTimeout(() => syncContactKeyboardViewport(true), 80);
@@ -2259,15 +2259,13 @@ function bindSupportChatKeyboardField(field, screenClass, viewportProperty) {
     window.setTimeout(() => {
       if (document.activeElement !== field) {
         document.documentElement.classList.remove("contact-keyboard-open", "support-inbox-keyboard-open");
-        if (!document.documentElement.classList.contains(screenClass)) {
-          document.documentElement.style.removeProperty(viewportProperty);
-        }
+        document.documentElement.style.removeProperty(viewportProperty);
       }
     }, 120);
   });
 }
-bindSupportChatKeyboardField(byId("contact-form")?.elements?.message, "contact-screen-active", "--contact-viewport-height");
-bindSupportChatKeyboardField(byId("support-reply-form")?.elements?.message, "support-inbox-screen-active", "--support-inbox-viewport-height");
+bindSupportChatKeyboardField(byId("contact-form")?.elements?.message, "--contact-viewport-height");
+bindSupportChatKeyboardField(byId("support-reply-form")?.elements?.message, "--support-inbox-viewport-height");
 window.visualViewport?.addEventListener("resize", () => syncContactKeyboardViewport(true));
 window.visualViewport?.addEventListener("scroll", () => syncContactKeyboardViewport());
 window.addEventListener("resize", () => syncContactKeyboardViewport());

@@ -398,6 +398,9 @@ function renderMonitoringDashboard(data) {
       : item
   ) : [];
   const audit = data.security_audit || null;
+  const securityActivity = data.security_activity || null;
+  const securityEvents = Array.isArray(data.security_events) ? data.security_events : [];
+  const securityActivityError = data.security_activity_error === true;
   const checkCritical = healthChecks.some(item => item.status === "critical");
   const checkWarning = healthChecks.some(item => item.status === "warning");
   const checkUnknown = healthChecks.some(item => item.status === "unknown");
@@ -415,6 +418,15 @@ function renderMonitoringDashboard(data) {
   const auditRows = auditFindings.length ? auditFindings.map(item =>
     '<div class="monitoring-health-row"><span class="monitoring-health-name"><i class="monitoring-health-dot ' + esc(item.severity) + '"></i><strong>' + esc(item.title) + '</strong></span><span class="monitoring-health-state ' + esc(item.severity) + '">' + (item.severity === "critical" ? "Критично" : item.severity === "warning" ? "Внимание" : "Информация") + '</span><small>' + esc(item.description || "") + '</small></div>'
   ).join("") : '<p class="monitoring-empty">Аудит не выявил замечаний или ещё не выполнялся.</p>';
+  const activityCounts = securityActivity?.counts || {};
+  const activityFindings = Array.isArray(securityActivity?.findings) ? securityActivity.findings : [];
+  const activityRows = activityFindings.length ? activityFindings.map(item =>
+    '<div class="monitoring-health-row"><span class="monitoring-health-name"><i class="monitoring-health-dot ' + esc(item.severity) + '"></i><strong>' + esc(item.title) + '</strong></span><span class="monitoring-health-state ' + esc(item.severity) + '">' + (item.severity === "critical" ? "Критично" : "Внимание") + '</span><small>' + esc(item.description || "") + '</small></div>'
+  ).join("") : '<p class="monitoring-empty">' + (securityActivityError ? "Не удалось получить данные журнала безопасности." : "За последние 5 минут порогов подозрительной активности не обнаружено.") + '</p>';
+  const eventLabels = { auth_invalid_initdata: "Неверная Telegram-авторизация", admin_access_denied: "Попытка доступа к функциям владельца", message_access_denied: "Попытка доступа к чужому сообщению", profile_not_registered: "Профиль Telegram не зарегистрирован", analytics_rate_limited: "Превышен лимит аналитики" };
+  const securityEventRows = securityEvents.length ? securityEvents.map(item =>
+    '<div class="monitoring-security-event"><span class="monitoring-health-dot ' + esc(item.severity) + '"></span><div><strong>' + esc(eventLabels[item.event_type] || item.event_type) + '</strong><small>' + esc(item.endpoint || "") + (item.reason ? " · " + esc(item.reason) : "") + '</small></div><time>' + monitoringDate(item.created_at) + '</time></div>'
+  ).join("") : '<p class="monitoring-empty">' + (securityActivityError ? "История событий недоступна." : "Записанных событий пока нет.") + '</p>';
   const incidentRows = incidents.length ? incidents.map(item => {
     const level = item.severity === "critical" ? "Критично" : item.severity === "warning" ? "Внимание" : "Информация";
     return '<article class="monitoring-incident ' + (item.status === "resolved" ? "is-resolved" : "") + '"><div class="monitoring-incident-top"><strong>' + esc(item.title) + '</strong><span class="monitoring-severity ' + esc(item.severity) + '">' + level + '</span></div><p>' + esc(item.description) + '</p><div class="monitoring-incident-meta"><span>' + (item.status === "active" ? "Активно" : "Устранено") + '</span><time>' + monitoringDate(item.last_seen_at) + '</time><span>Повторений: ' + fmt.format(item.occurrences || 1) + '</span></div></article>';
@@ -444,7 +456,13 @@ function renderMonitoringDashboard(data) {
       '<div class="monitoring-summary monitoring-security-summary"><article><span>Критические</span><strong>' + fmt.format(audit?.counts?.critical || 0) + '</strong></article><article><span>Предупреждения</span><strong>' + fmt.format(audit?.counts?.warning || 0) + '</strong></article><article><span>Информация</span><strong>' + fmt.format(audit?.counts?.info || 0) + '</strong></article></div>' +
       '<div class="monitoring-health-list">' + auditRows + '</div>' +
     '</section>' +
-    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Показатели</h2><span>Динамика</span></div>' +
+    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Подозрительная активность</h2><span>' + (securityActivity?.generated_at ? monitoringDate(securityActivity.generated_at) : 'Нет данных') + '</span></div>' +
+      '<div class="monitoring-summary monitoring-security-summary"><article><span>Неверная авторизация</span><strong>' + fmt.format(activityCounts.invalid_auth || 0) + '</strong></article><article><span>Отказы в доступе</span><strong>' + fmt.format(activityCounts.denied || 0) + '</strong></article><article><span>Лимиты</span><strong>' + fmt.format(activityCounts.rate_limited || 0) + '</strong></article></div>' +
+      '<div class="monitoring-health-list">' + activityRows + '</div>' +
+      '<div class="monitoring-security-events">' + securityEventRows + '</div>' +
+      '<p class="monitoring-note">Проверяются события за последние 5 минут. IP-адреса не сохраняются: для выявления повторных запросов используется необратимый HMAC-отпечаток.</p>' +
+    '</section>' +
+    '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Показатели</h2><span>Динамика</span></div>'
       '<div class="monitoring-metric"><span>Приём аналитических событий</span><strong>' + (lastRun?.status === "ok" ? "Проверка пройдена" : "Ожидает первой проверки") + '</strong></div>' +
       '<div class="monitoring-metric"><span>Последнее событие</span><strong>' + monitoringDate(snapshot.last_event_at) + '</strong></div>' +
       '<div class="monitoring-metric"><span>Последняя успешная запись</span><strong>' + monitoringDate(snapshot.last_ingest_success_at) + '</strong></div>' +
@@ -516,6 +534,18 @@ async function loadMonitoringDashboard(force = false) {
     });
     const result = await response.json().catch(() => null);
     if (!response.ok || !result?.ok) throw new Error("Monitoring dashboard request failed");
+    try {
+      const securityResponse = await fetch(SUPABASE_URL + "/functions/v1/security-monitor", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode: "dashboard", initData: tg.initData })
+      });
+      const securityResult = await securityResponse.json().catch(() => null);
+      if (securityResponse.ok && securityResult?.ok) {
+        result.security_activity = securityResult.activity;
+        result.security_events = securityResult.events;
+        result.security_activity_error = false;
+      } else result.security_activity_error = true;
+    } catch (_) { result.security_activity_error = true; }
     renderMonitoringDashboard(result);
     root.dataset.loaded = "true";
   } catch (_) {

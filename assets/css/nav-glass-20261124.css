@@ -45,7 +45,7 @@
   box-shadow:0 10px 32px rgba(0,0,0,.32);
   transform:scale(1);
   transform-origin:center;
-  transition:transform .9s cubic-bezier(.22,1,.36,1),box-shadow .45s ease;
+  transition:transform 1.3s cubic-bezier(.22,1,.36,1),box-shadow .45s ease;
   touch-action:none;
   -webkit-tap-highlight-color:transparent;
   user-select:none;
@@ -164,7 +164,7 @@
   box-shadow:none;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
-  transition:transform .9s cubic-bezier(.22,1,.36,1);
+  transition:transform 1.3s cubic-bezier(.22,1,.36,1);
 }
 .bottom-nav-dock .profile-nav-button::before{content:none;display:none}
 .bottom-nav-dock .profile-nav-button::after{

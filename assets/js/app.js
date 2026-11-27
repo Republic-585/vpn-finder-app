@@ -391,7 +391,12 @@ function renderMonitoringDashboard(data) {
   const incidents = Array.isArray(data.incidents) ? data.incidents : [];
   const runs = Array.isArray(data.runs) ? data.runs : [];
   const active = incidents.filter(item => item.status === "active");
-  const healthChecks = Array.isArray(data.health_checks) ? data.health_checks : [];
+  const latestTechnicalRun = runs.find(item => item.check_type === "technical");
+  const healthChecks = Array.isArray(data.health_checks) ? data.health_checks.map(item =>
+    item.key === "monitoring" && latestTechnicalRun && latestTechnicalRun.status !== "ok"
+      ? { ...item, status: "warning", detail: "Последняя техническая проверка завершилась ошибкой" }
+      : item
+  ) : [];
   const audit = data.security_audit || null;
   const checkCritical = healthChecks.some(item => item.status === "critical");
   const checkWarning = healthChecks.some(item => item.status === "warning");

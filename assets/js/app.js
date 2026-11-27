@@ -119,16 +119,49 @@ if (tg) {
   };
   tg.onEvent?.("fullscreenChanged", syncTelegramFullscreenClass);
   syncTelegramFullscreenClass();
-  try { tg.expand(); } catch (_) {}
-  // The static splash and first interface frame are already in the DOM.
-  try { tg.ready(); } catch (_) {}
-  // Ask Telegram for immersive fullscreen when the client supports Bot API 8.0+.
-  try {
-    if (typeof tg.requestFullscreen === "function" &&
-        (typeof tg.isVersionAtLeast !== "function" || tg.isVersionAtLeast("8.0"))) {
+
+  let telegramReadySent = false;
+  const signalTelegramReady = () => {
+    if (telegramReadySent) return;
+    telegramReadySent = true;
+    try { tg.ready(); } catch (_) {}
+  };
+  const supportsFullscreen = typeof tg.requestFullscreen === "function" &&
+    (typeof tg.isVersionAtLeast !== "function" || tg.isVersionAtLeast("8.0"));
+
+  if (supportsFullscreen && !tg.isFullscreen) {
+    let fullscreenStartupFinished = false;
+    const finishFullscreenStartup = () => {
+      if (fullscreenStartupFinished) return;
+      fullscreenStartupFinished = true;
+      signalTelegramReady();
+    };
+    tg.onEvent?.("fullscreenChanged", () => {
+      syncTelegramFullscreenClass();
+      if (tg.isFullscreen) finishFullscreenStartup();
+    });
+    tg.onEvent?.("fullscreenFailed", () => {
+      // Keep the best available expanded layout if this Telegram client rejects fullscreen.
+      try { tg.expand(); } catch (_) {}
+      finishFullscreenStartup();
+    });
+    try {
+      // Request fullscreen before telling Telegram to reveal the Mini App.
+      // This keeps the initial Telegram loading surface visible during the mode switch.
       tg.requestFullscreen();
+      if (tg.isFullscreen) finishFullscreenStartup();
+      // Avoid leaving the Telegram loader visible indefinitely on clients that omit the event.
+      window.setTimeout(finishFullscreenStartup, 900);
+    } catch (_) {
+      try { tg.expand(); } catch (_) {}
+      finishFullscreenStartup();
     }
-  } catch (_) {}
+  } else {
+    if (!supportsFullscreen && !tg.isFullscreen) {
+      try { tg.expand(); } catch (_) {}
+    }
+    signalTelegramReady();
+  }
   // Protect users from accidentally closing the Mini App.
   try {
     if (typeof tg.enableClosingConfirmation === "function") {

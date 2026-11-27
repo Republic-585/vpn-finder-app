@@ -919,8 +919,7 @@ function chooseTheme() {
         id,
         type: "default",
         text: (themePreference === id ? "✓ " : "") + t(label)
-      })),
-      { type: "cancel" }
+      }))
     ]
   }, buttonId => {
     if (!["light", "dark", "system"].includes(buttonId) || themePreference === buttonId) return;

@@ -2361,7 +2361,7 @@ async function loadContactUnreadBadge() {
     const result = await supportRequest("unread_count");
     if (requestId !== contactUnreadRequestId) return;
     const count = Math.max(0, Number(result.count) || 0);
-    if (lastContactUnreadCount !== null && count > lastContactUnreadCount) playSupportNotificationSound();
+    if (!byId("screen-contact")?.classList.contains("active") && lastContactUnreadCount !== null && count > lastContactUnreadCount) playSupportNotificationSound();
     lastContactUnreadCount = count;
     renderContactUnreadBadge(count);
   } catch (_) {}
@@ -2449,7 +2449,7 @@ async function loadContactConversation(notifyNewMessages = false) {
       const previousIndex = messages.findIndex(message => messageKey(message) === contactMessageBaseline);
       const hasNewIncoming = previousIndex >= 0
         ? messages.slice(previousIndex + 1).some(message => message.sender === "admin")
-        : messages.some(message => message.sender === "admin");
+        : messages[messages.length - 1]?.sender === "admin";
       if (hasNewIncoming) playSupportNotificationSound();
     }
     if (messages.length) contactMessageBaseline = messageKey(messages[messages.length - 1]);
@@ -2587,7 +2587,7 @@ async function refreshActiveSupportThread(notifyNewMessages = false) {
       const previousIndex = messages.findIndex(message => key(message) === activeSupportMessageBaseline);
       const hasNewIncoming = previousIndex >= 0
         ? messages.slice(previousIndex + 1).some(message => message.sender === "user")
-        : messages.some(message => message.sender === "user");
+        : messages[messages.length - 1]?.sender === "user";
       if (hasNewIncoming) playSupportNotificationSound();
     }
     if (messages.length) activeSupportMessageBaseline = key(messages[messages.length - 1]);

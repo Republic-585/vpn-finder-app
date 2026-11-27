@@ -471,7 +471,7 @@ function renderMonitoringDashboard(data) {
       '<p class="monitoring-note">Отсутствие новых событий само по себе не считается сбоем: при низкой посещаемости это нормально. Доступность функции приёма событий проверяется отдельно.</p>' +
     '</section>' +
     '<section class="monitoring-panel"><div class="monitoring-panel-heading"><h2>Автоматические уведомления</h2><span>Telegram владельцу</span></div>' + settingsHtml +
-      '<div class="monitoring-schedule"><span>Технические проверки</span><strong>Каждые 5 минут</strong></div><div class="monitoring-schedule"><span>Бизнес-показатели</span><strong>Каждый час</strong></div><div class="monitoring-schedule"><span>Утренний отчёт</span><strong>Ежедневно в 10:00 МСК</strong></div>' +
+      '<div class="monitoring-schedule"><span>Технические проверки</span><strong>Каждые 5 минут</strong></div><div class="monitoring-schedule"><span>Аудит безопасности</span><strong>Каждые 5 минут</strong></div><div class="monitoring-schedule"><span>Бизнес-показатели</span><strong>Каждый час</strong></div><div class="monitoring-schedule"><span>Утренний отчёт</span><strong>Ежедневно в 10:00 МСК</strong></div>' +
       '<button type="button" class="monitoring-primary-action" data-monitoring-action="test" ' + (data.telegram_configured ? "" : "disabled") + '>Отправить тестовое уведомление</button>' +
       '<p class="monitoring-note">В Telegram сразу отправляются только критические проблемы и сообщения об их устранении. Предупреждения сохраняются здесь и включаются в ежедневный отчёт в 10:00 по Москве. Повторы одного инцидента не создают новые сообщения.</p>' +
     '</section>' +

@@ -1952,12 +1952,12 @@ html.profile-screen-active #screen-profile .profile-view{padding-top:calc(8px + 
 /* Profile menu spacing and Telegram-style right-to-left page entrance. */
 #screen-profile .profile-menu{margin-top:42px}
 .screen.active.profile-menu-slide-in{
-  animation:profile-menu-page-in .42s cubic-bezier(.22,1,.36,1) both!important;
-  will-change:opacity,transform;
+  animation:profile-menu-page-in .3s cubic-bezier(.2,.7,.2,1) both!important;
+  will-change:transform;
 }
 @keyframes profile-menu-page-in{
-  from{opacity:0;transform:translate3d(18px,0,0) scale(.995)}
-  to{opacity:1;transform:translate3d(0,0,0) scale(1)}
+  from{transform:translate3d(100%,0,0)}
+  to{transform:translate3d(0,0,0)}
 }
 @media(prefers-reduced-motion:reduce){
   .screen.active.profile-menu-slide-in{animation:none!important;will-change:auto}

@@ -776,10 +776,16 @@ function initHomeScreenPrompt() {
     status.textContent = message;
     status.hidden = !message;
   };
+  const dismissPrompt = () => {
+    prompt.hidden = true;
+    try { localStorage.setItem(HOME_SCREEN_PROMPT_KEY, "1"); } catch (_) {}
+  };
   const markAdded = () => {
     addButton.textContent = t("Добавлено на экран Домой");
     addButton.disabled = true;
     showStatus(t("Finder VPN теперь можно открывать с домашнего экрана."));
+    // Dismiss only after Telegram confirms the shortcut was added.
+    dismissPrompt();
   };
 
   try {
@@ -787,10 +793,7 @@ function initHomeScreenPrompt() {
   } catch (_) {
     prompt.hidden = false;
   }
-  hideButton.addEventListener("click", () => {
-    prompt.hidden = true;
-    try { localStorage.setItem(HOME_SCREEN_PROMPT_KEY, "1"); } catch (_) {}
-  });
+  hideButton.addEventListener("click", dismissPrompt);
 
   if (tg?.onEvent) {
     tg.onEvent("homeScreenAdded", markAdded);

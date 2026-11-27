@@ -3213,3 +3213,20 @@ html.catalog-search-focus-lock {
   scroll-behavior: auto !important;
   overscroll-behavior-y: none;
 }
+
+/* Telegram-style expanding chat composer: grow upward, then scroll within the field. */
+html.contact-screen-active #screen-contact .support-chat-compose textarea,
+html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose textarea{
+  height:var(--composer-input-height,44px)!important;
+  min-height:44px!important;
+  max-height:112px!important;
+  box-sizing:border-box!important;
+  transition:height 140ms ease;
+  will-change:height;
+}
+@media (prefers-reduced-motion:reduce){
+  html.contact-screen-active #screen-contact .support-chat-compose textarea,
+  html.support-inbox-chat-mode #screen-support-inbox .support-chat-compose textarea{
+    transition:none;
+  }
+}

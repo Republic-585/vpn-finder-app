@@ -3409,5 +3409,5 @@ html.profile-screen-active #screen-profile .profile-management-group{
   flex-shrink:0;
 }
 
-/* Telegram purple accent, distinct from the language row's blue tile. */
-#screen-profile .sounds-tile{background:#E15052!important}
+/* Telegram pink accent, distinct from the other profile menu tiles. */
+#screen-profile .sounds-tile{background:#E66BA6!important}

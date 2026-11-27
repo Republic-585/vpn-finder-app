@@ -114,7 +114,7 @@
   font:inherit;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
-  transition:color .3s ease,scale .18s cubic-bezier(.2,.8,.2,1);
+  transition:color .3s ease;
   touch-action:none;
 }
 .bottom-nav-dock .bottom-nav .nav-item svg{
@@ -129,12 +129,11 @@
   stroke-linecap:round;
   stroke-linejoin:round;
   overflow:visible;
-  transition:transform .3s cubic-bezier(.2,.8,.2,1);
+  transition:transform .22s cubic-bezier(.2,.8,.2,1);
 }
 .bottom-nav-dock .bottom-nav .nav-item span{display:none!important}
 .bottom-nav-dock .bottom-nav .nav-item.active{color:var(--nav-glass-accent)}
-.bottom-nav-dock .bottom-nav .nav-item:active,
-.bottom-nav-dock .bottom-nav .nav-item.is-pressed{scale:.92}
+.bottom-nav-dock .bottom-nav .nav-item.active svg{transform:scale(1.08)}
 
 /* Profile avatar is intentionally unchanged and stays outside the moving panel. */
 .bottom-nav-dock .profile-nav-button{

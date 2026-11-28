@@ -98,7 +98,7 @@ Deno.serve(async(req:Request)=>{
    if(applicationId){
     const existingRows=await db("partner_applications?select=id,status&applicant_telegram_id=eq."+uid+"&id=eq."+encodeURIComponent(applicationId)+"&limit=1"),existing=Array.isArray(existingRows)?existingRows[0]:null;
     if(!existing||existing.status!=="changes_requested")return out({ok:false,error:"Эту заявку нельзя изменить."},409);
-    const updated=await db("partner_applications?id=eq."+encodeURIComponent(applicationId),{method:"PATCH",headers:{Prefer:"return=representation"},body:JSON.stringify({service_name:name,payload,status:"submitted",admin_note:null,updated_at:new Date().toISOString()})});
+    const updated=await db("partner_applications?id=eq."+encodeURIComponent(applicationId),{method:"PATCH",headers:{Prefer:"return=representation"},body:JSON.stringify({partner_id:ms[0]?.partner_id||null,service_name:name,payload,status:"submitted",admin_note:null,updated_at:new Date().toISOString()})});
     return out({ok:true,application:Array.isArray(updated)?updated[0]:null});
    }
    const prev=await db("partner_applications?select=id&applicant_telegram_id=eq."+uid+"&status=in.(submitted,reviewing,changes_requested,approved)&limit=1");

@@ -2687,9 +2687,15 @@ function bindSupportMessageActions(root) {
   });
 }
 byId("contact-bot-link")?.addEventListener("click", event => {
-  if (typeof tg?.openTelegramLink === "function") {
-    event.preventDefault();
-    tg.openTelegramLink("https://t.me/vpn_view_bot");
+  const link = event.currentTarget;
+  const url = link?.href || "https://t.me/vpn_view_bot";
+  if (typeof tg?.openTelegramLink !== "function") return;
+  event.preventDefault();
+  try {
+    tg.openTelegramLink(url);
+  } catch (error) {
+    // Keep a working browser fallback if Telegram's native link handler is unavailable.
+    window.open(url, "_blank", "noopener,noreferrer");
   }
 });
 function renderContactUnreadBadge(count) {

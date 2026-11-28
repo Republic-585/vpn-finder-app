@@ -1049,6 +1049,8 @@ function messageSentHaptic() {
 let moveIndicator = () => {};
 const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analytics", "monitoring", "support", "support-inbox"]);
 let ownersBackScreen = "catalog";
+let screenNavigationHistory = [];
+let savedProfileMenuScrollTop = 0;
 
 // Update this version whenever a new news publication is added.
 const NEWS_LATEST_ID = "2026-11-24-project-growth-v1";
@@ -1071,7 +1073,21 @@ function markNewsAsRead() {
 }
 updateNewsBadge();
 
-function showScreen(name, backScreen = null) {
+function showScreen(name, backScreen = null, isHistoryBack = false) {
+  const previousScreenName = document.querySelector(".screen.active")?.dataset.screen;
+  if (previousScreenName === "profile" && name !== "profile") {
+    savedProfileMenuScrollTop = document.querySelector("#screen-profile .profile-view")?.scrollTop || 0;
+  }
+  if (!isHistoryBack && previousScreenName && previousScreenName !== name) {
+    if (BACK_SCREENS.has(name)) {
+      const historyDestination = name === "owners" ? (backScreen || previousScreenName) : previousScreenName;
+      if (screenNavigationHistory[screenNavigationHistory.length - 1] !== historyDestination) {
+        screenNavigationHistory.push(historyDestination);
+      }
+    } else {
+      screenNavigationHistory = [];
+    }
+  }
   if (tg?.initData && name !== "analytics") trackEvent("screen_view", { screen: name });
   if (name === "profile") loadContactUnreadBadge();
   if (name === "news") markNewsAsRead();
@@ -1108,7 +1124,6 @@ function showScreen(name, backScreen = null) {
     document.body.classList.remove("catalog-promo-open");
   }
   if ((name === "analytics" || name === "support-inbox" || name === "monitoring") && Number(tg?.initDataUnsafe?.user?.id || 0) !== ANALYTICS_OWNER_TELEGRAM_ID) return;
-  const previousScreenName = document.querySelector(".screen.active")?.dataset.screen;
   const animateFromProfileMenu = previousScreenName === "profile" && BACK_SCREENS.has(name) && previousScreenName !== name;
   const alreadyActive = screens.some(screen => screen.dataset.screen === name && screen.classList.contains("active"));
   screens.forEach(screen => {
@@ -1137,7 +1152,11 @@ function showScreen(name, backScreen = null) {
   if (name === "monitoring") loadMonitoringDashboard();
   if (name === "contact") loadContactConversation();
   if (name === "support-inbox") loadSupportInbox();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  if (name !== "profile") window.scrollTo({ top: 0, behavior: "smooth" });
+  else requestAnimationFrame(() => {
+    const profileView = document.querySelector("#screen-profile .profile-view");
+    if (profileView) profileView.scrollTop = savedProfileMenuScrollTop;
+  });
   if (name === "favorites") renderFavorites();
   if (name === "compare") renderCompare();
   if (name === "profile") { syncTelegramProfile(); if (!analyticsAccessChecked) loadStatisticsDashboard(); loadSupportUnreadBadge(); }
@@ -1400,42 +1419,120 @@ if (tg?.BackButton) {
   try { tg.BackButton.hide(); } catch (_) {}
 }
 
-// iOS-style edge swipe: start at the left edge and move right to go back.
-let backSwipeStart = null;
+// Telegram-style interactive swipe-back: drag the current page to the right.
+function goBackToPreviousScreen() {
+  if (!screenNavigationHistory.length) return false;
+  const previous = screenNavigationHistory.pop();
+  showScreen(previous, null, true);
+  return true;
+}
+
+let backDrag = null;
+const backSwipeExcluded = [
+  "button", "a", "input", "textarea", "select", "label",
+  "[contenteditable='true']", "[data-no-back-swipe]"
+].join(",");
+const clearBackDragStyles = (current, previous) => {
+  if (current) {
+    current.classList.remove("swipe-back-current", "swipe-back-settling");
+    current.style.removeProperty("transform");
+    current.style.removeProperty("border-radius");
+    current.style.removeProperty("box-shadow");
+  }
+  if (previous) {
+    previous.classList.remove("swipe-back-underlay");
+    previous.style.removeProperty("transform");
+    previous.style.removeProperty("opacity");
+  }
+};
 document.addEventListener("touchstart", event => {
-  if (event.touches.length !== 1 || !document.querySelector(".screen.active")) {
-    backSwipeStart = null;
+  if (event.touches.length !== 1 || !screenNavigationHistory.length) {
+    backDrag = null;
     return;
   }
-  const activeScreen = document.querySelector(".screen.active");
-  if (!BACK_SCREENS.has(activeScreen?.dataset.screen)) {
-    backSwipeStart = null;
+  const current = document.querySelector(".screen.active");
+  if (!current || !BACK_SCREENS.has(current.dataset.screen) || event.target.closest(backSwipeExcluded)) {
+    backDrag = null;
+    return;
+  }
+  if (current.dataset.screen === "support-inbox" && activeSupportThreadId !== null) {
+    backDrag = null;
+    return;
+  }
+  const previousName = screenNavigationHistory[screenNavigationHistory.length - 1];
+  const previous = screens.find(screen => screen.dataset.screen === previousName);
+  if (!previous) {
+    backDrag = null;
     return;
   }
   const touch = event.touches[0];
-  if (touch.clientX > 64 || event.target.closest("input, textarea, select, [data-no-back-swipe]")) {
-    backSwipeStart = null;
-    return;
-  }
-  backSwipeStart = { x: touch.clientX, y: touch.clientY };
+  backDrag = {
+    current, previous, startX: touch.clientX, startY: touch.clientY,
+    lastX: touch.clientX, lastTime: performance.now(),
+    startedAt: performance.now(), dragging: false
+  };
 }, { passive: true });
-document.addEventListener("touchend", event => {
-  if (!backSwipeStart || event.changedTouches.length !== 1) {
-    backSwipeStart = null;
-    return;
+
+document.addEventListener("touchmove", event => {
+  if (!backDrag || event.touches.length !== 1) return;
+  const touch = event.touches[0];
+  const dx = touch.clientX - backDrag.startX;
+  const dy = touch.clientY - backDrag.startY;
+  if (!backDrag.dragging) {
+    if (Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx)) {
+      backDrag = null;
+      return;
+    }
+    if (dx < 8 || dx < Math.abs(dy) * 1.2) return;
+    backDrag.dragging = true;
+    backDrag.previous.classList.add("swipe-back-underlay");
+    backDrag.current.classList.add("swipe-back-current");
   }
-  const touch = event.changedTouches[0];
-  const deltaX = touch.clientX - backSwipeStart.x;
-  const deltaY = Math.abs(touch.clientY - backSwipeStart.y);
-  backSwipeStart = null;
-  if (deltaX >= 90 && deltaY <= 70 && deltaX > deltaY * 1.25) {
-    const activeScreen = document.querySelector(".screen.active");
-    if (activeScreen?.dataset.screen === "owner-promo") showScreen("catalog");
-    else if (activeScreen?.dataset.screen === "support-inbox" && activeSupportThreadId !== null) loadSupportInbox();
-    else if (BACK_SCREENS.has(activeScreen?.dataset.screen)) showScreen(activeScreen?.dataset.screen === "owners" ? ownersBackScreen : "profile");
+  if (dx <= 0) return;
+  event.preventDefault();
+  const width = Math.max(1, window.innerWidth);
+  const progress = Math.min(1, dx / width);
+  backDrag.current.style.transform = "translate3d(" + dx + "px,0,0)";
+  backDrag.current.style.borderRadius = (18 * progress) + "px";
+  backDrag.current.style.boxShadow = "0 0 34px rgba(0,0,0," + (0.08 + progress * 0.14) + ")";
+  backDrag.previous.style.transform = "translate3d(" + ((progress - 1) * 26) + "%,0,0)";
+  backDrag.previous.style.opacity = String(0.82 + progress * 0.18);
+  backDrag.lastX = touch.clientX;
+  backDrag.lastTime = performance.now();
+}, { passive: false });
+
+const finishBackDrag = (cancelled = false) => {
+  if (!backDrag) return;
+  const drag = backDrag;
+  backDrag = null;
+  if (!drag.dragging) return;
+  const dx = Math.max(0, drag.lastX - drag.startX);
+  const elapsed = Math.max(1, performance.now() - drag.lastTime);
+  const velocity = (drag.lastX - drag.startX) / Math.max(1, performance.now() - drag.startedAt);
+  const shouldCommit = !cancelled && (dx > window.innerWidth * 0.28 || (dx > 54 && velocity > 0.48));
+  drag.current.classList.add("swipe-back-settling");
+  drag.previous.style.transition = "transform .24s cubic-bezier(.22,1,.36,1), opacity .24s ease";
+  drag.current.style.transition = "transform .24s cubic-bezier(.22,1,.36,1), border-radius .24s ease";
+  if (shouldCommit) {
+    drag.current.style.transform = "translate3d(105vw,0,0)";
+    drag.current.style.borderRadius = "18px";
+    drag.previous.style.transform = "translate3d(0,0,0)";
+    drag.previous.style.opacity = "1";
+    window.setTimeout(() => {
+      clearBackDragStyles(drag.current, drag.previous);
+      goBackToPreviousScreen();
+    }, 245);
+  } else {
+    drag.current.style.transform = "translate3d(0,0,0)";
+    drag.current.style.borderRadius = "0";
+    drag.current.style.boxShadow = "none";
+    drag.previous.style.transform = "translate3d(-26%,0,0)";
+    drag.previous.style.opacity = ".82";
+    window.setTimeout(() => clearBackDragStyles(drag.current, drag.previous), 250);
   }
-}, { passive: true });
-document.addEventListener("touchcancel", () => { backSwipeStart = null; }, { passive: true });
+};
+document.addEventListener("touchend", () => finishBackDrag(false), { passive: true });
+document.addEventListener("touchcancel", () => finishBackDrag(true), { passive: true });
 
 // Horizontal navigation between the four primary tabs.
 // Gestures start only on free page space; content and controls keep their native behavior.

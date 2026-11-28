@@ -112,8 +112,10 @@
           views:acc.views+Number(x.views||0), clicks:acc.clicks+Number(x.clicks||0),
           unique:acc.unique+Number(x.unique_clicks||0), conversions:acc.conversions+Number(x.conversions||0)
         }),{views:0,clicks:0,unique:0,conversions:0});
+        const conversionsAvailable=total.conversions>0||(group.integrations||[]).some(x=>x.status==="active");
+        const conversionDisplay=conversionsAvailable?fmt(total.conversions):"—";
         const cards = '<div class="partner-stat-grid">' +
-          [['Просмотры',total.views],['Переходы',total.clicks],['Уникальные',total.unique],['Подтверждённые',total.conversions]].map(x =>
+          [['Просмотры',total.views],['Переходы',total.clicks],['Уникальные',total.unique],['Подтверждённые',conversionDisplay]].map(x =>
             '<div class="partner-stat"><strong>'+fmt(x[1])+'</strong><span>'+x[0]+'</span></div>').join("") + '</div>';
         const serviceRows = services.length ? services.map(service => {
           const stat=serviceStats(group.stats,service.id);

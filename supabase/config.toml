@@ -1,0 +1,2 @@
+[functions.partner-portal]
+verify_jwt = false

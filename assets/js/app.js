@@ -1419,7 +1419,7 @@ if (tg?.BackButton) {
   try { tg.BackButton.hide(); } catch (_) {}
 }
 
-// Telegram-style interactive swipe-back: drag the current page to the right.
+// Native-feeling interactive back navigation, modeled on the iOS edge gesture.
 function goBackToPreviousScreen() {
   if (!screenNavigationHistory.length) return false;
   const previous = screenNavigationHistory.pop();
@@ -1438,15 +1438,23 @@ const clearBackDragStyles = (current, previous) => {
     current.style.removeProperty("transform");
     current.style.removeProperty("border-radius");
     current.style.removeProperty("box-shadow");
+    current.style.removeProperty("transition");
   }
   if (previous) {
-    previous.classList.remove("swipe-back-underlay");
+    previous.classList.remove("swipe-back-underlay", "swipe-back-revealed");
     previous.style.removeProperty("transform");
     previous.style.removeProperty("opacity");
+    previous.style.removeProperty("transition");
   }
 };
 document.addEventListener("touchstart", event => {
   if (event.touches.length !== 1 || !screenNavigationHistory.length) {
+    backDrag = null;
+    return;
+  }
+  const touch = event.touches[0];
+  // iOS back navigation begins at the left screen edge, not anywhere on the page.
+  if (touch.clientX > 28) {
     backDrag = null;
     return;
   }
@@ -1465,11 +1473,10 @@ document.addEventListener("touchstart", event => {
     backDrag = null;
     return;
   }
-  const touch = event.touches[0];
+  const now = performance.now();
   backDrag = {
     current, previous, startX: touch.clientX, startY: touch.clientY,
-    lastX: touch.clientX, lastTime: performance.now(),
-    startedAt: performance.now(), dragging: false
+    lastX: touch.clientX, lastTime: now, velocity: 0, dragging: false
   };
 }, { passive: true });
 
@@ -1479,26 +1486,33 @@ document.addEventListener("touchmove", event => {
   const dx = touch.clientX - backDrag.startX;
   const dy = touch.clientY - backDrag.startY;
   if (!backDrag.dragging) {
-    if (Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx)) {
+    if (Math.abs(dy) > 9 && Math.abs(dy) > Math.abs(dx)) {
       backDrag = null;
       return;
     }
-    if (dx < 8 || dx < Math.abs(dy) * 1.2) return;
+    if (dx < 5 || dx < Math.abs(dy) * 1.15) return;
     backDrag.dragging = true;
     backDrag.previous.classList.add("swipe-back-underlay");
     backDrag.current.classList.add("swipe-back-current");
   }
   if (dx <= 0) return;
   event.preventDefault();
-  const width = Math.max(1, window.innerWidth);
-  const progress = Math.min(1, dx / width);
-  backDrag.current.style.transform = "translate3d(" + dx + "px,0,0)";
-  backDrag.current.style.borderRadius = (18 * progress) + "px";
-  backDrag.current.style.boxShadow = "0 0 34px rgba(0,0,0," + (0.08 + progress * 0.14) + ")";
-  backDrag.previous.style.transform = "translate3d(" + ((progress - 1) * 26) + "%,0,0)";
-  backDrag.previous.style.opacity = String(0.82 + progress * 0.18);
+  const now = performance.now();
+  const sampleTime = Math.max(1, now - backDrag.lastTime);
+  backDrag.velocity = (touch.clientX - backDrag.lastX) / sampleTime;
   backDrag.lastX = touch.clientX;
-  backDrag.lastTime = performance.now();
+  backDrag.lastTime = now;
+
+  const width = Math.max(1, window.innerWidth);
+  // A small resistance after the page edge reaches the viewport width gives the
+  // gesture a physical limit without abruptly stopping the finger-follow motion.
+  const visualX = dx <= width ? dx : width + (dx - width) * 0.18;
+  const progress = Math.min(1, visualX / width);
+  backDrag.current.style.transform = "translate3d(" + visualX + "px,0,0)";
+  backDrag.current.style.borderRadius = "12px 0 0 12px";
+  backDrag.current.style.boxShadow = "0 0 28px rgba(0,0,0," + (0.10 + progress * 0.12) + ")";
+  backDrag.previous.style.transform = "translate3d(" + ((progress - 1) * 24) + "px,0,0)";
+  backDrag.previous.style.opacity = String(0.96 + progress * 0.04);
 }, { passive: false });
 
 const finishBackDrag = (cancelled = false) => {
@@ -1506,30 +1520,48 @@ const finishBackDrag = (cancelled = false) => {
   const drag = backDrag;
   backDrag = null;
   if (!drag.dragging) return;
+
   const dx = Math.max(0, drag.lastX - drag.startX);
-  const elapsed = Math.max(1, performance.now() - drag.lastTime);
-  const velocity = (drag.lastX - drag.startX) / Math.max(1, performance.now() - drag.startedAt);
-  const shouldCommit = !cancelled && (dx > window.innerWidth * 0.28 || (dx > 54 && velocity > 0.48));
+  const width = Math.max(1, window.innerWidth);
+  const projectedDistance = dx + Math.max(0, drag.velocity) * 180;
+  const shouldCommit = !cancelled && (
+    dx > width * 0.32 ||
+    (dx > 24 && drag.velocity > 0.62) ||
+    (projectedDistance > width * 0.38 && drag.velocity > 0.28)
+  );
+
   drag.current.classList.add("swipe-back-settling");
-  drag.previous.style.transition = "transform .24s cubic-bezier(.22,1,.36,1), opacity .24s ease";
-  drag.current.style.transition = "transform .24s cubic-bezier(.22,1,.36,1), border-radius .24s ease";
+  drag.previous.style.transition = "transform 300ms cubic-bezier(.32,.72,0,1), opacity 300ms ease";
+  drag.current.style.transition = "transform 300ms cubic-bezier(.32,.72,0,1), border-radius 300ms cubic-bezier(.32,.72,0,1)";
+  let completed = false;
+  const finish = () => {
+    if (completed) return;
+    completed = true;
+    if (shouldCommit) {
+      drag.previous.classList.add("swipe-back-revealed");
+      goBackToPreviousScreen();
+      requestAnimationFrame(() => clearBackDragStyles(drag.current, drag.previous));
+    } else {
+      clearBackDragStyles(drag.current, drag.previous);
+    }
+  };
+  drag.current.addEventListener("transitionend", event => {
+    if (event.target === drag.current && event.propertyName === "transform") finish();
+  }, { once: true });
+
   if (shouldCommit) {
     drag.current.style.transform = "translate3d(105vw,0,0)";
-    drag.current.style.borderRadius = "18px";
+    drag.current.style.borderRadius = "12px 0 0 12px";
     drag.previous.style.transform = "translate3d(0,0,0)";
     drag.previous.style.opacity = "1";
-    window.setTimeout(() => {
-      clearBackDragStyles(drag.current, drag.previous);
-      goBackToPreviousScreen();
-    }, 245);
   } else {
     drag.current.style.transform = "translate3d(0,0,0)";
     drag.current.style.borderRadius = "0";
     drag.current.style.boxShadow = "none";
-    drag.previous.style.transform = "translate3d(-26%,0,0)";
-    drag.previous.style.opacity = ".82";
-    window.setTimeout(() => clearBackDragStyles(drag.current, drag.previous), 250);
+    drag.previous.style.transform = "translate3d(-24px,0,0)";
+    drag.previous.style.opacity = ".96";
   }
+  window.setTimeout(finish, 340);
 };
 document.addEventListener("touchend", () => finishBackDrag(false), { passive: true });
 document.addEventListener("touchcancel", () => finishBackDrag(true), { passive: true });

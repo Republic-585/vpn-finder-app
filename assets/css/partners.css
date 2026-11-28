@@ -56,3 +56,7 @@
 .partner-dashboard-content .connect-button{width:100%;min-height:44px;border-radius:999px}
 #screen-partner-edit-section[hidden],.partner-edit-section[hidden]{display:none!important}
 @media(max-width:360px){.partner-stat{padding:11px}.partner-stat strong{font-size:21px}.partner-inline-field{align-items:stretch;flex-direction:column}.partner-small-button{width:100%}}
+
+.app-shell:has(#screen-partner-apply.active) .bottom-nav-dock,
+.app-shell:has(#screen-partner-dashboard.active) .bottom-nav-dock,
+.app-shell:has(#screen-partner-admin.active) .bottom-nav-dock{display:none!important}

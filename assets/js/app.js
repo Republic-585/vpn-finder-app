@@ -1415,7 +1415,9 @@ if (tg?.BackButton) {
       loadSupportInbox();
       return;
     }
-    const currentName = activeScreen?.dataset.screen;\n    const partnerBack = { "partner-apply": "owners", "partner-dashboard": "owners", "partner-admin": "profile" };\n    showScreen(currentName === "owners" ? ownersBackScreen : partnerBack[currentName] || (currentName === "owner-promo" ? "catalog" : "profile"));
+    const currentName = activeScreen?.dataset.screen;
+    const partnerBack = { "partner-apply": "owners", "partner-dashboard": "owners", "partner-admin": "profile" };
+    showScreen(currentName === "owners" ? ownersBackScreen : partnerBack[currentName] || (currentName === "owner-promo" ? "catalog" : "profile"));
   });
   try { tg.BackButton.hide(); } catch (_) {}
 }

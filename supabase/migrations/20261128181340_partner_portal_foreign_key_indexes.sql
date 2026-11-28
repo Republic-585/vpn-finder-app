@@ -1,0 +1,12 @@
+create index if not exists affiliate_conversions_click_id_idx on public.affiliate_conversions(click_id);
+create index if not exists affiliate_programs_service_id_idx on public.affiliate_programs(service_id);
+create index if not exists partner_applications_partner_id_idx on public.partner_applications(partner_id);
+create index if not exists partner_applications_service_id_idx on public.partner_applications(service_id);
+create index if not exists partner_integrations_service_id_idx on public.partner_integrations(service_id);
+create index if not exists partner_invites_partner_id_idx on public.partner_invites(partner_id);
+create index if not exists partner_invites_created_by_idx on public.partner_invites(created_by_telegram_id);
+create index if not exists partner_invites_accepted_by_idx on public.partner_invites(accepted_by_telegram_id);
+create index if not exists partner_memberships_telegram_id_idx on public.partner_memberships(telegram_id);
+create index if not exists partner_memberships_invited_by_idx on public.partner_memberships(invited_by_telegram_id);
+create index if not exists partner_service_versions_partner_id_idx on public.partner_service_versions(partner_id);
+create index if not exists partner_service_versions_submitted_by_idx on public.partner_service_versions(submitted_by_telegram_id);

@@ -1500,7 +1500,8 @@ function renderTelegramProfile(profile) {
   const telegramUsername = String(profile.username || "").replace(/^@/, "");
   if (username) {
     username.textContent = telegramUsername ? "@" + telegramUsername : "";
-    username.href = telegramUsername ? "https://t.me/" + encodeURIComponent(telegramUsername) : "#";
+    const telegramUserId = Number(tg?.initDataUnsafe?.user?.id || 0);
+    username.href = telegramUserId ? "tg://user?id=" + telegramUserId : "#";
     username.hidden = !telegramUsername;
   }
   const initial = (profile.first_name || "V").slice(0, 1).toLocaleUpperCase("ru-RU");

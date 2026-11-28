@@ -226,7 +226,7 @@
       min_price:get("min_price"),price_currency:get("price_currency")||"RUB",trial_days:get("trial_days"),countries_count:get("countries_count"),
       plans:parsePlans(get("plans"),get("price_currency")||"RUB"),refund_policy:get("refund_policy"),
       referral_url:get("referral_url"),commission_model:get("commission_model")||"manual",commission_value:get("commission_value"),
-      commission_currency:"RUB",confirmation_method:get("confirmation_method")||"manual"
+      commission_currency:get("commission_currency")||"RUB",confirmation_method:get("confirmation_method")||"manual"
     };
   }
   async function submitApplication(form) {

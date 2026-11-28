@@ -1,0 +1,9 @@
+create policy partner_client_deny on public.partners for all to anon, authenticated using (false) with check (false);
+create policy partner_client_deny on public.partner_memberships for all to anon, authenticated using (false) with check (false);
+create policy partner_client_deny on public.partner_applications for all to anon, authenticated using (false) with check (false);
+create policy partner_client_deny on public.partner_services for all to anon, authenticated using (false) with check (false);
+create policy partner_client_deny on public.partner_service_versions for all to anon, authenticated using (false) with check (false);
+create policy partner_client_deny on public.affiliate_programs for all to anon, authenticated using (false) with check (false);
+create policy partner_client_deny on public.affiliate_conversions for all to anon, authenticated using (false) with check (false);
+create policy partner_client_deny on public.partner_invites for all to anon, authenticated using (false) with check (false);
+create policy partner_client_deny on public.partner_integrations for all to anon, authenticated using (false) with check (false);

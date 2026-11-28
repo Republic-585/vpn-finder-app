@@ -14,8 +14,10 @@
 <link rel="stylesheet" href="./assets/css/nav-glass-20261124.css?v=20261128-independent-panel-spring-v15">
 <link rel="stylesheet" href="./assets/css/monitoring.css?v=20261127-monitoring-owner-minimal-v1">
 <link rel="stylesheet" href="./assets/css/theme.css?v=20261128-theme-sun-icon-v1">
+<link rel="stylesheet" href="./assets/css/partners.css?v=20261128-partners-v2">
 <script src="./assets/avatars/manifest.js?v=20261123-avatar-local-v2"></script>
-<script defer src="./assets/js/app.js?v=20261128-standard-screen-transitions-v7"></script>
+<script defer src="./assets/js/app.js?v=20261128-partner-navigation-v8"></script>
+<script defer src="./assets/js/partners.js?v=20261128-partners-v2"></script>
 </head>
 <body>
 <div class="startup-splash" id="startup-splash" role="status" aria-label="VPN Finder загружается">
@@ -115,6 +117,7 @@
           <button class="profile-menu-row" id="analytics-menu-row" type="button" data-go="analytics" hidden><span class="profile-menu-leading"><span class="profile-icon-tile analytics-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5V4.5M4 19.5h16"></path><path d="m7.5 14.5 3.2-3.7 3.1 2 4.8-6"></path><circle cx="18.6" cy="6.8" r="1.4"></circle></svg></span><span>Статистика</span></span><span class="profile-menu-chevron" aria-hidden="true">›</span></button>
           <button class="profile-menu-row" id="monitoring-menu-row" type="button" data-go="monitoring" hidden><span class="profile-menu-leading"><span class="profile-icon-tile analytics-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2 19 6v5.2c0 4.5-2.9 7.6-7 9.6-4.1-2-7-5.1-7-9.6V6l7-2.8Z"></path><path d="m8.7 12.2 2.1 2.1 4.6-4.7"></path></svg></span><span>Мониторинг</span></span><span class="profile-menu-chevron" aria-hidden="true">›</span></button>
           <button class="profile-menu-row" id="support-inbox-menu-row" type="button" data-go="support-inbox" hidden><span class="profile-menu-leading"><span class="profile-icon-tile messages-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 11.2a7.7 7.7 0 0 1-7.7 7.7H6l-2.2 1.8v-6.1a7.7 7.7 0 1 1 16.4-3.4Z"></path><path d="M8 10h8M8 13.5h5"></path></svg></span><span>Сообщения</span></span><span class="profile-menu-trailing"><span class="news-unread-badge support-unread-badge" hidden>0</span><span class="profile-menu-chevron" aria-hidden="true">›</span></span></button>
+          <button class="profile-menu-row" id="partners-admin-menu-row" type="button" data-go="partner-admin" hidden><span class="profile-menu-leading"><span class="profile-icon-tile analytics-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 18.5V20"></path><circle cx="10" cy="7.5" r="3.5"></circle><path d="M17 11a3.5 3.5 0 0 0 0-7M20 20v-1.5a3.5 3.5 0 0 0-2.5-3.35"></path></svg></span><span>Партнёры</span></span><span class="profile-menu-chevron" aria-hidden="true">›</span></button>
         </nav>
       </div>
 
@@ -269,17 +272,108 @@
     </div>
   </section>
 
-  <section class="screen" id="screen-owners" data-screen="owners">
-    <div class="page-heading"><h1>Владельцам VPN</h1><p>Добавьте свой сервис в каталог VPN Finder.</p></div>
-    <form class="profile-form" id="provider-form">
-      <label>Название сервиса<input name="serviceName" maxlength="100" placeholder="Название VPN"></label>
-      <label>Оф сайт или ссылка ТГ<input name="website" type="text" maxlength="300" placeholder="Сайт или ссылка на Telegram"></label>
-      <label>Описание<textarea name="description" rows="4" maxlength="1500" placeholder="Расскажите о сервисе"></textarea></label>
-      <label>Контакт для связи<input name="contact" type="text" maxlength="150" placeholder="@username, email или другой контакт"></label>
-      <button class="connect-button" type="submit">Отправить заявку</button>
-      <p class="profile-form-status" id="provider-status" role="status"></p>
-    </form>
+  <section class="screen partner-screen" id="screen-owners" data-screen="owners">
+    <div class="page-heading"><h1>VPN Finder Partners</h1><p>Партнёрство и размещение VPN-сервисов.</p></div>
+    <div id="partner-entry-guest" class="partner-entry" hidden>
+      <div class="partner-benefits">
+        <div class="partner-benefit"><span>Бесплатное размещение</span></div>
+        <div class="partner-benefit"><span>Статистика переходов</span></div>
+        <div class="partner-benefit"><span>Партнёрская комиссия</span></div>
+      </div>
+      <button class="connect-button partner-primary" type="button" data-go="partner-apply">Добавить VPN-сервис</button>
+      <div class="partner-invite-box">
+        <label for="partner-invite-code">Есть приглашение?</label>
+        <div class="partner-inline-field"><input id="partner-invite-code" type="text" autocomplete="off"><button type="button" class="partner-small-button" data-action="partner-accept-invite">Принять</button></div>
+        <p class="profile-form-status" id="partner-invite-status" role="status"></p>
+      </div>
+    </div>
+    <div id="partner-entry-member" class="partner-member-entry" hidden>
+      <div class="partner-state-line"><span class="partner-state-dot"></span><span>Доступ к кабинету активен</span></div>
+      <button class="connect-button partner-primary" type="button" data-go="partner-dashboard">Открыть кабинет</button>
+      <div id="partner-entry-member-update" class="partner-application-state" hidden></div>
+    </div>
+    <div id="partner-entry-application" class="partner-application-state" hidden></div>
+    <p class="profile-form-status" id="partner-entry-status" role="status"></p>
+  </section>
 
+  <section class="screen partner-screen" id="screen-partner-apply" data-screen="partner-apply">
+    <div class="page-heading"><h1>Добавить VPN</h1><p>Заявка на размещение</p></div>
+    <form class="profile-form partner-form" id="partner-application-form" novalidate>
+      <input type="hidden" name="application_id">
+      <div class="partner-progress"><span id="partner-step-label">1 / 4</span><span id="partner-step-name">Сервис</span></div>
+      <div class="partner-step is-active" data-partner-step="1">
+        <label>Название VPN<input name="service_name" maxlength="120" required></label>
+        <label>Сайт<input name="website_url" type="url" maxlength="300" required></label>
+        <label>Telegram-бот или канал<input name="telegram_url" maxlength="300"></label>
+        <label>Описание<textarea name="description" rows="3" maxlength="1500"></textarea></label>
+        <label>Ссылка на логотип<input name="logo_url" type="url" maxlength="500"></label>
+      </div>
+      <div class="partner-step" data-partner-step="2" hidden>
+        <label>Минимальная цена<input name="min_price" type="number" min="0" step="0.01" inputmode="decimal"></label>
+        <label>Валюта<select name="price_currency"><option value="RUB">RUB</option><option value="USD">USD</option><option value="EUR">EUR</option></select></label>
+        <label>Пробный период, дней<input name="trial_days" type="number" min="0" max="365" step="1" inputmode="numeric"></label>
+        <label>Количество стран<input name="countries_count" type="number" min="0" max="250" step="1" inputmode="numeric"></label>
+        <label>Платформы<input name="platforms" maxlength="160"></label>
+        <label>Тарифы · название — цена — срок<textarea name="plans" rows="3" maxlength="1200"></textarea></label>
+        <label>Условия возврата<textarea name="refund_policy" rows="2" maxlength="500"></textarea></label>
+      </div>
+      <div class="partner-step" data-partner-step="3" hidden>
+        <label>Партнёрская ссылка<input name="referral_url" type="url" maxlength="2048" required></label>
+        <label>Модель вознаграждения<select name="commission_model"><option value="manual">По договорённости</option><option value="cpa">CPA</option><option value="revshare">RevShare</option><option value="hybrid">Hybrid</option></select></label>
+        <label>Размер комиссии<input name="commission_value" type="number" min="0" step="0.01" inputmode="decimal"></label>
+        <label>Валюта комиссии<select name="commission_currency"><option value="RUB">RUB</option><option value="USD">USD</option><option value="EUR">EUR</option></select></label>
+        <label>Предпочтительный способ подтверждения<select name="confirmation_method"><option value="manual">Вручную</option><option value="api">API</option><option value="webhook">Webhook</option><option value="import">Импорт отчёта</option></select></label>
+      </div>
+      <div class="partner-step" data-partner-step="4" hidden>
+        <label>Telegram для связи<input name="contact_telegram" maxlength="80" required></label>
+        <div class="partner-review-note">После отправки заявка поступит на проверку. Публикация возможна только после одобрения.</div>
+      </div>
+      <div class="partner-step-actions">
+        <button class="partner-secondary-button" type="button" data-action="partner-step-back" hidden>Назад</button>
+        <button class="connect-button" type="button" data-action="partner-step-next">Далее</button>
+        <button class="connect-button" type="submit" id="partner-submit-button" hidden>Отправить заявку</button>
+      </div>
+      <p class="profile-form-status" id="partner-application-status" role="status"></p>
+    </form>
+  </section>
+
+  <section class="screen partner-screen" id="screen-partner-dashboard" data-screen="partner-dashboard">
+    <div class="page-heading"><h1>Кабинет партнёра</h1><p id="partner-dashboard-name"></p></div>
+    <div id="partner-dashboard-content" class="partner-dashboard-content"><div class="loading-state"></div></div>
+    <section class="partner-edit-section" id="partner-edit-section" hidden>
+      <div class="page-heading"><h2>Изменить данные</h2></div>
+      <form class="profile-form partner-form" id="partner-edit-form" novalidate>
+        <input type="hidden" name="partner_id"><input type="hidden" name="service_id">
+        <label>Название<input name="name" maxlength="120" required></label>
+        <label>Описание<textarea name="description" rows="3" maxlength="1500"></textarea></label>
+        <label>Логотип<input name="logo_url" type="url" maxlength="500"></label>
+        <label>Партнёрская ссылка<input name="referral_url" type="url" maxlength="2048"></label>
+        <label>Минимальная цена<input name="min_price" type="number" min="0" step="0.01"></label>
+        <label>Валюта<select name="price_currency"><option value="RUB">RUB</option><option value="USD">USD</option><option value="EUR">EUR</option></select></label>
+        <label>Пробный период, дней<input name="trial_days" type="number" min="0" max="365" step="1"></label>
+        <label>Количество стран<input name="countries_count" type="number" min="0" max="250" step="1"></label>
+        <label>Платформы<input name="platforms" maxlength="160"></label>
+        <label>Тарифы<textarea name="plans" rows="3" maxlength="1200"></textarea></label>
+        <label>Условия возврата<textarea name="refund_policy" rows="2" maxlength="500"></textarea></label>
+        <div class="partner-step-actions"><button type="button" class="partner-secondary-button" data-action="partner-cancel-edit">Отмена</button><button type="submit" class="connect-button">Отправить на модерацию</button></div>
+        <p class="profile-form-status" id="partner-edit-status" role="status"></p>
+      </form>
+    </section>
+  </section>
+
+  <section class="screen partner-screen" id="screen-partner-admin" data-screen="partner-admin">
+    <div class="page-heading"><h1>Партнёры</h1><p>Заявки и модерация</p></div>
+    <div class="partner-admin-block"><h2>Заявки</h2><div id="partner-admin-applications"></div></div>
+    <div class="partner-admin-block"><h2>Изменения</h2><div id="partner-admin-versions"></div></div>
+    <div class="partner-admin-block"><h2>Пригласить владельца</h2>
+      <form class="profile-form partner-form" id="partner-invite-form">
+        <label>Название партнёра<input name="partner_name" maxlength="120" required></label>
+        <label>Telegram ID владельца<input name="telegram_id" type="number" min="1" step="1"></label>
+        <button class="connect-button" type="submit">Создать приглашение</button>
+        <p class="profile-form-status" id="partner-invite-create-status" role="status"></p>
+        <div id="partner-invite-result" class="partner-invite-result" hidden></div>
+      </form>
+    </div>
   </section>
 </main>
 

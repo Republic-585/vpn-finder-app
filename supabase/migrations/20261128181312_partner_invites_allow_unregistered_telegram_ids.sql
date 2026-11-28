@@ -1,0 +1,1 @@
+alter table public.partner_invites drop constraint if exists partner_invites_preassigned_telegram_id_fkey;

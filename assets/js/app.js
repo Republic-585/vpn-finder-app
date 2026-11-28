@@ -1047,7 +1047,7 @@ function messageSentHaptic() {
   } catch (_) {}
 }
 let moveIndicator = () => {};
-const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analytics", "monitoring", "support", "support-inbox"]);
+const BACK_SCREENS = new Set(["news", "contact", "owners", "owner-promo", "analytics", "monitoring", "support", "support-inbox", "partner-apply", "partner-dashboard", "partner-admin"]);
 let ownersBackScreen = "catalog";
 let screenNavigationHistory = [];
 let savedProfileMenuScrollTop = 0;
@@ -1105,11 +1105,11 @@ function showScreen(name, backScreen = null, isHistoryBack = false) {
   document.body.classList.toggle("support-screen-active", name === "support");
   const supportMethod = document.querySelector("[data-support-tab].is-active")?.dataset.supportTab || "stars";
   const useNativeOwnerPromoButton = name === "owner-promo" && !!ownerPromoNativeButton;
-  const useNativeProviderSubmitButton = name === "owners" && !!ownerPromoNativeButton;
+  const useNativeProviderSubmitButton = false;
   const useNativeSupportButton = name === "support" && !!ownerPromoNativeButton;
   document.body.classList.toggle("owner-promo-native-cta", useNativeOwnerPromoButton);
   document.body.classList.toggle("owners-native-cta", useNativeProviderSubmitButton);
-  document.body.classList.toggle("owners-no-bottom-navigation", name === "owners");
+  document.body.classList.toggle("owners-no-bottom-navigation", ["owners", "partner-apply", "partner-dashboard", "partner-admin"].includes(name));
   document.body.classList.toggle("support-native-cta", useNativeSupportButton);
   if (useNativeOwnerPromoButton) setNativeButton("owner-promo");
   else if (useNativeProviderSubmitButton) setNativeButton("provider-submit");
@@ -1415,7 +1415,9 @@ if (tg?.BackButton) {
       loadSupportInbox();
       return;
     }
-    showScreen(activeScreen?.dataset.screen === "owners" ? ownersBackScreen : activeScreen?.dataset.screen === "owner-promo" ? "catalog" : "profile");
+    const currentName = activeScreen?.dataset.screen;
+    const partnerBack = { "partner-apply": "owners", "partner-dashboard": "owners", "partner-admin": "profile" };
+    showScreen(currentName === "owners" ? ownersBackScreen : partnerBack[currentName] || (currentName === "owner-promo" ? "catalog" : "profile"));
   });
   try { tg.BackButton.hide(); } catch (_) {}
 }
@@ -1452,7 +1454,7 @@ document.addEventListener("touchend", event => {
     const activeScreen = document.querySelector(".screen.active");
     if (activeScreen?.dataset.screen === "owner-promo") showScreen("catalog");
     else if (activeScreen?.dataset.screen === "support-inbox" && activeSupportThreadId !== null) loadSupportInbox();
-    else if (BACK_SCREENS.has(activeScreen?.dataset.screen)) showScreen(activeScreen?.dataset.screen === "owners" ? ownersBackScreen : "profile");
+    else if (BACK_SCREENS.has(activeScreen?.dataset.screen)) { const currentName = activeScreen?.dataset.screen; const partnerBack = { "partner-apply": "owners", "partner-dashboard": "owners", "partner-admin": "profile" }; showScreen(currentName === "owners" ? ownersBackScreen : partnerBack[currentName] || "profile"); }
   }
 }, { passive: true });
 document.addEventListener("touchcancel", () => { backSwipeStart = null; }, { passive: true });

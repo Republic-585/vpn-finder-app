@@ -30,7 +30,7 @@ function slug(s:string){return s.toLowerCase().normalize("NFKD").replace(/[\u030
 async function memberships(uid:number,pid?:string){const q="partner_memberships?select=id,partner_id,role,status&telegram_id=eq."+uid+"&status=eq.active"+(pid?"&partner_id=eq."+encodeURIComponent(pid):"");const r=await db(q);return Array.isArray(r)?r:[];}
 async function stats(ids:string[]){return ids.length?await db("rpc/partner_dashboard_stats",{method:"POST",body:JSON.stringify({p_service_ids:ids,p_since:null})}):[];}
 async function dashboard(uid:number){
- const ms=await memberships(uid),apps=await db("partner_applications?select=id,service_name,status,admin_note,created_at,updated_at&applicant_telegram_id=eq."+uid+"&order=created_at.desc&limit=20");
+ const ms=await memberships(uid),apps=await db("partner_applications?select=id,service_name,status,admin_note,payload,created_at,updated_at&applicant_telegram_id=eq."+uid+"&order=created_at.desc&limit=20");
  if(!ms.length)return {memberships:[],applications:Array.isArray(apps)?apps:[]};
  const result=[];
  for(const m of ms){
@@ -84,8 +84,7 @@ Deno.serve(async(req:Request)=>{
    const name=clean(b.service_name,120),p=b.payload&&typeof b.payload==="object"&&!Array.isArray(b.payload)?b.payload:{};
    const website=url(p.website_url,false),ref=url(p.referral_url),contact=clean(p.contact_telegram,80);
    if(name.length<2||!website||!ref||!contact)return out({ok:false,error:"Заполните название, сайт, партнёрскую ссылку и контакт."},400);
-   const prev=await db("partner_applications?select=id&applicant_telegram_id=eq."+uid+"&status=in.(submitted,reviewing,changes_requested,approved)&limit=1");
-   if(Array.isArray(prev)&&prev.length)return out({ok:false,error:"У вас уже есть заявка в работе."},409);
+   const applicationId=clean(b.application_id,64);
    const ms=await memberships(uid),payload={
     website_url:website,telegram_url:url(p.telegram_url),description:clean(p.description,1500),logo_url:url(p.logo_url,false),
     contact_telegram:contact,platforms:Array.isArray(p.platforms)?p.platforms.filter((x:unknown)=>typeof x==="string").slice(0,12):[],plans:Array.isArray(p.plans)?p.plans.slice(0,12):[],countries_count:p.countries_count===""?null:Number(p.countries_count),
@@ -96,6 +95,14 @@ Deno.serve(async(req:Request)=>{
     commission_currency:/^[A-Z]{3}$/.test(clean(p.commission_currency,3))?p.commission_currency:"RUB",
     confirmation_method:["manual","api","webhook","import"].includes(p.confirmation_method)?p.confirmation_method:"manual"
    };
+   if(applicationId){
+    const existingRows=await db("partner_applications?select=id,status&applicant_telegram_id=eq."+uid+"&id=eq."+encodeURIComponent(applicationId)+"&limit=1"),existing=Array.isArray(existingRows)?existingRows[0]:null;
+    if(!existing||existing.status!=="changes_requested")return out({ok:false,error:"Эту заявку нельзя изменить."},409);
+    const updated=await db("partner_applications?id=eq."+encodeURIComponent(applicationId),{method:"PATCH",headers:{Prefer:"return=representation"},body:JSON.stringify({service_name:name,payload,status:"submitted",admin_note:null,updated_at:new Date().toISOString()})});
+    return out({ok:true,application:Array.isArray(updated)?updated[0]:null});
+   }
+   const prev=await db("partner_applications?select=id&applicant_telegram_id=eq."+uid+"&status=in.(submitted,reviewing,changes_requested,approved)&limit=1");
+   if(Array.isArray(prev)&&prev.length)return out({ok:false,error:"У вас уже есть заявка в работе."},409);
    const row=await db("partner_applications",{method:"POST",headers:{Prefer:"return=representation"},body:JSON.stringify({applicant_telegram_id:uid,partner_id:ms[0]?.partner_id||null,application_type:"new_service",service_name:name,payload,status:"submitted"})});
    return out({ok:true,application:Array.isArray(row)?row[0]:null});
   }

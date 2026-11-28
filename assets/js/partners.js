@@ -250,7 +250,8 @@
   async function adminAction(action,id,decision) {
     if(!window.confirm(decision==="approved"?"Одобрить изменения?":decision==="rejected"?"Отклонить?":decision==="publish"?"Опубликовать VPN в каталоге?":"Запросить изменения?"))return;
     try{
-      const note=document.querySelector('.partner-admin-note[data-note-id="'+CSS.escape(id)+'"]')?.value||"";
+      const note=document.querySelector('.partner-admin-note[data-note-id="'+CSS.escape(id)+'"]')?.value.trim()||"";
+      if(decision==="changes_requested"&&!note){tg?.showAlert?.("Добавьте комментарий для владельца.");return;}
       if(action==="application")await api("admin_review",{application_id:id,decision,note});
       if(action==="publish")await api("admin_publish",{application_id:id});
       if(action==="version")await api("admin_version_review",{version_id:id,decision,note});

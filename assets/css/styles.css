@@ -3558,10 +3558,8 @@ html.profile-screen-active .bottom-nav-dock{
   min-height:calc(100vh - 130px);
   pointer-events:none!important;
   animation:none!important;
-  transform:translate3d(-18px,0,0) scale(.985);
-  transform-origin:left center;
+  transform:none!important;
   opacity:1;
-  will-change:transform;
   backface-visibility:hidden;
 }
 .screen.swipe-back-current{

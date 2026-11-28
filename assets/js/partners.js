@@ -310,7 +310,8 @@
     else if(action==="partner-accept-invite"){acceptInvite();}
     else if(action==="partner-edit"){openEdit(button.dataset.serviceId,button.dataset.partnerId);}
     else if(action==="partner-cancel-edit"){$("partner-edit-section").hidden=true;}
-    else if(action==="partner-copy-code"){copyCode();}\n    else if(action==="partner-copy-ref"){copyValue(button.dataset.url||"");}
+    else if(action==="partner-copy-code"){copyCode();}
+    else if(action==="partner-copy-ref"){copyValue(button.dataset.url||"");}
     else if(action==="partner-admin-review"){adminAction("application",button.dataset.id,button.dataset.decision);}
     else if(action==="partner-admin-publish"){adminAction("publish",button.dataset.id,"publish");}
     else if(action==="partner-version-review"){adminAction("version",button.dataset.id,button.dataset.decision);}

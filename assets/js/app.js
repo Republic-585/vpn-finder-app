@@ -1500,6 +1500,7 @@ function renderTelegramProfile(profile) {
   const telegramUsername = String(profile.username || "").replace(/^@/, "");
   if (username) {
     username.textContent = telegramUsername ? "@" + telegramUsername : "";
+    username.href = telegramUsername ? "https://t.me/" + encodeURIComponent(telegramUsername) : "#";
     username.hidden = !telegramUsername;
   }
   const initial = (profile.first_name || "V").slice(0, 1).toLocaleUpperCase("ru-RU");
@@ -2686,18 +2687,7 @@ function bindSupportMessageActions(root) {
     }
   });
 }
-byId("contact-bot-link")?.addEventListener("click", event => {
-  const link = event.currentTarget;
-  const url = link?.href || "https://t.me/vpn_view_bot";
-  if (typeof tg?.openTelegramLink !== "function") return;
-  event.preventDefault();
-  try {
-    tg.openTelegramLink(url);
-  } catch (error) {
-    // Keep a working browser fallback if Telegram's native link handler is unavailable.
-    window.open(url, "_blank", "noopener,noreferrer");
-  }
-});
+// Telegram profile links use native anchors so iOS can open them reliably.
 function renderContactUnreadBadge(count) {
   const row = byId("contact-unread-badge");
   if (!row) return;

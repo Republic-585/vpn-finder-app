@@ -3538,3 +3538,10 @@ html.profile-screen-active .bottom-nav-dock{
   width:100%;
   margin:0!important;
 }
+
+
+/* Profile section headings use the same muted tone as the language value. */
+#screen-profile .profile-section-title,
+#screen-profile .profile-management-title{
+  color:var(--muted)!important;
+}

@@ -40,7 +40,8 @@ async function dashboard(uid:number){
   const services=ids.length?await db("vpn_services?select=id,name,slug,logo_url,description,min_price,min_price_rub,price_currency,platforms,plans,trial_days,countries_count,refund_policy,status,updated_at&id=in.("+ids.map(encodeURIComponent).join(",")+")"):[];
   const programs=ids.length?await db("affiliate_programs?select=service_id,referral_url,commission_model,commission_value,commission_currency,confirmation_method,status&partner_id=eq."+p.id):[];
   const versions=ids.length?await db("partner_service_versions?select=id,service_id,version_number,status,moderator_note,created_at,reviewed_at&partner_id=eq."+p.id+"&order=created_at.desc&limit=30"):[];
-  result.push({partner:p,role:m.role,links,services,programs,stats:await stats(ids),versions});
+  const integrations=ids.length?await db("partner_integrations?select=service_id,integration_type,status&partner_id=eq."+p.id):[];
+  result.push({partner:p,role:m.role,links,services,programs,stats:await stats(ids),versions,integrations});
  }
  return {memberships:result,applications:Array.isArray(apps)?apps:[]};
 }

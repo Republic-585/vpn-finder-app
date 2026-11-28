@@ -60,3 +60,7 @@
 .app-shell:has(#screen-partner-apply.active) .bottom-nav-dock,
 .app-shell:has(#screen-partner-dashboard.active) .bottom-nav-dock,
 .app-shell:has(#screen-partner-admin.active) .bottom-nav-dock{display:none!important}
+
+.partner-admin-note{width:100%;min-height:58px;padding:10px 11px;border:1px solid var(--line);border-radius:11px;background:var(--raised);color:var(--text);font:inherit;font-size:var(--type-secondary);line-height:1.4;resize:vertical}
+.partner-admin-note::placeholder{color:var(--muted)}
+.partner-admin-note:focus{outline:none;border-color:var(--bright)}

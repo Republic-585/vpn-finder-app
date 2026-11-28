@@ -37,7 +37,7 @@ async function dashboard(uid:number){
   const ps=await db("partners?select=id,name,status,created_at&id=eq."+m.partner_id+"&limit=1"),p=Array.isArray(ps)?ps[0]:null;if(!p)continue;
   const links=await db("partner_services?select=service_id,status,created_at&partner_id=eq."+p.id+"&order=created_at.desc");
   const ids=Array.isArray(links)?links.map((x:any)=>x.service_id):[];
-  const services=ids.length?await db("vpn_services?select=id,name,slug,logo_url,description,min_price,min_price_rub,price_currency,platforms,plans,status,updated_at&id=in.("+ids.map(encodeURIComponent).join(",")+")"):[];
+  const services=ids.length?await db("vpn_services?select=id,name,slug,logo_url,description,min_price,min_price_rub,price_currency,platforms,plans,trial_days,countries_count,refund_policy,status,updated_at&id=in.("+ids.map(encodeURIComponent).join(",")+")"):[];
   const programs=ids.length?await db("affiliate_programs?select=service_id,referral_url,commission_model,commission_value,commission_currency,confirmation_method,status&partner_id=eq."+p.id):[];
   const versions=ids.length?await db("partner_service_versions?select=id,service_id,version_number,status,moderator_note,created_at,reviewed_at&partner_id=eq."+p.id+"&order=created_at.desc&limit=30"):[];
   result.push({partner:p,role:m.role,links,services,programs,stats:await stats(ids),versions});
@@ -56,7 +56,7 @@ async function makeService(app:any,pid:string){
    min_price_rub:p.price_currency==="RUB"&&price!==null&&Number.isFinite(price)?Math.round(Math.max(0,price)):null,
    price_currency:/^[A-Z]{3}$/.test(clean(p.price_currency,3))?p.price_currency:"RUB",
    platforms:Array.isArray(p.platforms)?p.platforms.filter((x:unknown)=>typeof x==="string").slice(0,12):[],
-   plans:Array.isArray(p.plans)?p.plans.slice(0,12):[],features:[],whitelist_support:false,status:"draft",sort_order:0,
+   plans:Array.isArray(p.plans)?p.plans.slice(0,12):[],trial_days:p.trial_days===""||p.trial_days===null?null:Math.max(0,Math.min(365,Number(p.trial_days))),countries_count:p.countries_count===""||p.countries_count===null?null:Math.max(0,Math.min(250,Number(p.countries_count))),refund_policy:clean(p.refund_policy,500)||null,features:[],whitelist_support:false,status:"draft",sort_order:0,
    source_urls:[url(p.website_url,false),url(p.telegram_url)].filter(Boolean),data_checked_at:null
   })});
   await db("partner_applications?id=eq."+encodeURIComponent(app.id),{method:"PATCH",headers:{Prefer:"return=minimal"},body:JSON.stringify({partner_id:pid,service_id:sid,updated_at:new Date().toISOString()})});
@@ -88,7 +88,7 @@ Deno.serve(async(req:Request)=>{
    if(Array.isArray(prev)&&prev.length)return out({ok:false,error:"У вас уже есть заявка в работе."},409);
    const ms=await memberships(uid),payload={
     website_url:website,telegram_url:url(p.telegram_url),description:clean(p.description,1500),logo_url:url(p.logo_url,false),
-    contact_telegram:contact,platforms:Array.isArray(p.platforms)?p.platforms.filter((x:unknown)=>typeof x==="string").slice(0,12):[],
+    contact_telegram:contact,platforms:Array.isArray(p.platforms)?p.platforms.filter((x:unknown)=>typeof x==="string").slice(0,12):[],plans:Array.isArray(p.plans)?p.plans.slice(0,12):[],countries_count:p.countries_count===""?null:Number(p.countries_count),
     min_price:p.min_price===""?null:Number(p.min_price),price_currency:/^[A-Z]{3}$/.test(clean(p.price_currency,3))?p.price_currency:"RUB",
     trial_days:p.trial_days===""?null:Math.max(0,Math.min(365,Number(p.trial_days))),refund_policy:clean(p.refund_policy,500),
     referral_url:ref,commission_model:["cpa","revshare","hybrid","manual"].includes(p.commission_model)?p.commission_model:"manual",
@@ -174,6 +174,9 @@ Deno.serve(async(req:Request)=>{
     if(Array.isArray(p.plans))patch.plans=p.plans.slice(0,12);
     if(p.min_price!==undefined){patch.min_price=p.min_price===null?null:Number(p.min_price);patch.min_price_rub=p.price_currency==="RUB"&&p.min_price!==null?Math.round(Number(p.min_price)):null;}
     if(typeof p.price_currency==="string"&&/^[A-Z]{3}$/.test(p.price_currency))patch.price_currency=p.price_currency;
+    if(p.trial_days!==undefined)patch.trial_days=p.trial_days===null?null:Number(p.trial_days);
+    if(p.countries_count!==undefined)patch.countries_count=p.countries_count===null?null:Number(p.countries_count);
+    if(typeof p.refund_policy==="string")patch.refund_policy=clean(p.refund_policy,500)||null;
     await db("vpn_services?id=eq."+encodeURIComponent(ver.service_id),{method:"PATCH",headers:{Prefer:"return=minimal"},body:JSON.stringify(patch)});
     if(typeof p.referral_url==="string"){const ref=url(p.referral_url);if(ref)await db("affiliate_programs?partner_id=eq."+ver.partner_id+"&service_id=eq."+encodeURIComponent(ver.service_id),{method:"PATCH",headers:{Prefer:"return=minimal"},body:JSON.stringify({referral_url:ref,updated_at:new Date().toISOString()})});}
    }

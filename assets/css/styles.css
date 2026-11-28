@@ -3545,36 +3545,3 @@ html.profile-screen-active .bottom-nav-dock{
 #screen-profile .profile-management-title{
   color:var(--muted)!important;
 }
-
-
-/* iOS-like interactive back transition: the active page is always the
-   foreground layer; the previous page is revealed underneath with parallax. */
-.main-content.swipe-back-active{isolation:isolate}
-.screen.swipe-back-underlay{
-  position:absolute!important;
-  z-index:1!important;
-  top:0;
-  left:0;
-  right:0;
-  display:block!important;
-  min-height:calc(100vh - 130px);
-  pointer-events:none!important;
-  animation:none!important;
-  opacity:1;
-  will-change:transform;
-  backface-visibility:hidden;
-}
-.screen.swipe-back-current{
-  position:relative!important;
-  z-index:2!important;
-  animation:none!important;
-  will-change:transform,border-radius,box-shadow;
-  backface-visibility:hidden;
-  touch-action:pan-y;
-}
-.screen.swipe-back-settling{pointer-events:none!important}
-.screen.swipe-back-revealed.active,
-.screen.swipe-back-no-entry.active{animation:none!important}
-@media(prefers-reduced-motion:reduce){
-  .screen.swipe-back-settling{transition:none!important}
-}

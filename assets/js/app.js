@@ -1420,180 +1420,42 @@ if (tg?.BackButton) {
   try { tg.BackButton.hide(); } catch (_) {}
 }
 
-// Interactive iOS navigation: the foreground page follows the finger;
-// the previous page stays behind and reveals with a restrained parallax.
-function goBackToPreviousScreen() {
-  if (!screenNavigationHistory.length) return false;
-  const previous = screenNavigationHistory.pop();
-  showScreen(previous, null, true);
-  previousScreenForSwipe?.classList.add("swipe-back-no-entry");
-  return true;
-}
-
-let previousScreenForSwipe = null;
-let backDrag = null;
-const backSwipeExcluded = [
-  "button", "a", "input", "textarea", "select", "label",
-  "[contenteditable='true']", "[data-no-back-swipe]"
-].join(",");
-const clearBackDragStyles = (current, previous) => {
-  if (current) {
-    current.classList.remove("swipe-back-current", "swipe-back-settling");
-    current.style.removeProperty("transform");
-    current.style.removeProperty("border-radius");
-    current.style.removeProperty("box-shadow");
-    current.style.removeProperty("transition");
-  }
-  if (previous) {
-    previous.classList.remove("swipe-back-underlay", "swipe-back-revealed");
-    previous.style.removeProperty("transform");
-    previous.style.removeProperty("transition");
-  }
-  current?.closest(".main-content")?.classList.remove("swipe-back-active");
-};
+// iOS-style edge swipe: start at the left edge and move right to go back.
+let backSwipeStart = null;
 document.addEventListener("touchstart", event => {
-  if (event.touches.length !== 1 || !screenNavigationHistory.length) {
-    backDrag = null;
+  if (event.touches.length !== 1 || !document.querySelector(".screen.active")) {
+    backSwipeStart = null;
+    return;
+  }
+  const activeScreen = document.querySelector(".screen.active");
+  if (!BACK_SCREENS.has(activeScreen?.dataset.screen)) {
+    backSwipeStart = null;
     return;
   }
   const touch = event.touches[0];
-  if (touch.clientX > 28) {
-    backDrag = null;
+  if (touch.clientX > 64 || event.target.closest("input, textarea, select, [data-no-back-swipe]")) {
+    backSwipeStart = null;
     return;
   }
-  const current = document.querySelector(".screen.active");
-  if (!current || !BACK_SCREENS.has(current.dataset.screen) || event.target.closest(backSwipeExcluded)) {
-    backDrag = null;
-    return;
-  }
-  if (current.dataset.screen === "support-inbox" && activeSupportThreadId !== null) {
-    backDrag = null;
-    return;
-  }
-  const previousName = screenNavigationHistory[screenNavigationHistory.length - 1];
-  const previous = screens.find(screen => screen.dataset.screen === previousName);
-  if (!previous) {
-    backDrag = null;
-    return;
-  }
-  const now = performance.now();
-  backDrag = {
-    current, previous, startX: touch.clientX, startY: touch.clientY,
-    lastX: touch.clientX, lastTime: now, velocity: 0, dragging: false
-  };
+  backSwipeStart = { x: touch.clientX, y: touch.clientY };
 }, { passive: true });
-
-document.addEventListener("touchmove", event => {
-  if (!backDrag || event.touches.length !== 1) return;
-  const touch = event.touches[0];
-  const dx = touch.clientX - backDrag.startX;
-  const dy = touch.clientY - backDrag.startY;
-  if (!backDrag.dragging) {
-    if (Math.abs(dy) > 8 && Math.abs(dy) > Math.abs(dx)) {
-      backDrag = null;
-      return;
-    }
-    if (dx < 4 || dx < Math.abs(dy) * 1.12) return;
-    backDrag.dragging = true;
-    backDrag.current.closest(".main-content")?.classList.add("swipe-back-active");
-    backDrag.previous.classList.add("swipe-back-underlay");
-    backDrag.current.classList.add("swipe-back-current");
-    backDrag.previous.style.transform = "translate3d(-24px,0,0)";
-  }
-  if (dx <= 0) return;
-  event.preventDefault();
-
-  const now = performance.now();
-  const sampleTime = Math.max(1, now - backDrag.lastTime);
-  const instantVelocity = (touch.clientX - backDrag.lastX) / sampleTime;
-  backDrag.velocity = backDrag.velocity * 0.55 + instantVelocity * 0.45;
-  backDrag.lastX = touch.clientX;
-  backDrag.lastTime = now;
-
-  const width = Math.max(1, window.innerWidth);
-  const visualX = dx <= width ? dx : width + (dx - width) * 0.16;
-  const progress = Math.min(1, visualX / width);
-
-  // The page under the finger is the foreground layer. The previous page
-  // only has the subtle left-to-right parallax used by native iOS navigation.
-  backDrag.current.style.transform = "translate3d(" + visualX + "px,0,0)";
-  backDrag.previous.style.transform = "translate3d(" + (-24 * (1 - progress)) + "px,0,0)";
-  backDrag.current.style.borderRadius = "14px 0 0 14px";
-  backDrag.current.style.boxShadow = "0 4px 34px rgba(0,0,0," + (0.08 + progress * 0.13) + ")";
-}, { passive: false });
-
-const finishBackDrag = (cancelled = false, endTouch = null) => {
-  if (!backDrag) return;
-  const drag = backDrag;
-  backDrag = null;
-  if (!drag.dragging) return;
-
-  if (endTouch) {
-    const now = performance.now();
-    const dt = Math.max(1, now - drag.lastTime);
-    const finalVelocity = (endTouch.clientX - drag.lastX) / dt;
-    drag.velocity = drag.velocity * 0.45 + finalVelocity * 0.55;
-    drag.lastX = endTouch.clientX;
-  }
-  const dx = Math.max(0, drag.lastX - drag.startX);
-  const width = Math.max(1, window.innerWidth);
-  const velocity = drag.velocity;
-  const projectedDistance = dx + Math.max(0, velocity) * 220;
-  const shouldCommit = !cancelled && (
-    dx > width * 0.30 ||
-    (dx > 28 && velocity > 0.55) ||
-    (projectedDistance > width * 0.38 && velocity > 0.26)
-  );
-
-  const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-  const settleDuration = reducedMotion ? 1 : shouldCommit
-    ? Math.max(180, Math.min(320, 210 + ((width - dx) / width) * 110 - Math.max(0, velocity) * 55))
-    : 260;
-
-  drag.current.classList.add("swipe-back-settling");
-  const easing = "cubic-bezier(.32,.72,0,1)";
-  const transition = "transform " + settleDuration + "ms " + easing;
-  drag.current.style.transition = transition + ", border-radius " + settleDuration + "ms " + easing + ", box-shadow " + settleDuration + "ms ease";
-  drag.previous.style.transition = transition;
-
-  let completed = false;
-  let fallbackTimer = null;
-  const finish = () => {
-    if (completed) return;
-    completed = true;
-    if (fallbackTimer !== null) window.clearTimeout(fallbackTimer);
-    drag.current.removeEventListener("transitionend", onTransitionEnd);
-    if (shouldCommit) {
-      drag.previous.classList.add("swipe-back-revealed");
-      previousScreenForSwipe = drag.previous;
-      goBackToPreviousScreen();
-      requestAnimationFrame(() => clearBackDragStyles(drag.current, drag.previous));
-    } else {
-      clearBackDragStyles(drag.current, drag.previous);
-    }
-  };
-  const onTransitionEnd = event => {
-    if (event.target === drag.current && event.propertyName === "transform") finish();
-  };
-  drag.current.addEventListener("transitionend", onTransitionEnd);
-
-  if (shouldCommit) {
-    drag.current.style.transform = "translate3d(105vw,0,0)";
-    drag.previous.style.transform = "translate3d(0,0,0)";
-    drag.current.style.borderRadius = "14px 0 0 14px";
-    drag.current.style.boxShadow = "0 4px 34px rgba(0,0,0,.18)";
-  } else {
-    drag.current.style.transform = "translate3d(0,0,0)";
-    drag.previous.style.transform = "translate3d(-24px,0,0)";
-    drag.current.style.borderRadius = "0";
-    drag.current.style.boxShadow = "none";
-  }
-  fallbackTimer = window.setTimeout(finish, settleDuration + 90);
-};
 document.addEventListener("touchend", event => {
-  finishBackDrag(false, event.changedTouches?.[0] || null);
+  if (!backSwipeStart || event.changedTouches.length !== 1) {
+    backSwipeStart = null;
+    return;
+  }
+  const touch = event.changedTouches[0];
+  const deltaX = touch.clientX - backSwipeStart.x;
+  const deltaY = Math.abs(touch.clientY - backSwipeStart.y);
+  backSwipeStart = null;
+  if (deltaX >= 90 && deltaY <= 70 && deltaX > deltaY * 1.25) {
+    const activeScreen = document.querySelector(".screen.active");
+    if (activeScreen?.dataset.screen === "owner-promo") showScreen("catalog");
+    else if (activeScreen?.dataset.screen === "support-inbox" && activeSupportThreadId !== null) loadSupportInbox();
+    else if (BACK_SCREENS.has(activeScreen?.dataset.screen)) showScreen(activeScreen?.dataset.screen === "owners" ? ownersBackScreen : "profile");
+  }
 }, { passive: true });
-document.addEventListener("touchcancel", () => finishBackDrag(true), { passive: true });
+document.addEventListener("touchcancel", () => { backSwipeStart = null; }, { passive: true });
 
 // Horizontal navigation between the four primary tabs.
 // Gestures start only on free page space; content and controls keep their native behavior.

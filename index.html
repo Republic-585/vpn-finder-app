@@ -314,14 +314,14 @@
         <label>Пробный период, дней<input name="trial_days" type="number" min="0" max="365" step="1" inputmode="numeric"></label>
         <label>Количество стран<input name="countries_count" type="number" min="0" max="250" step="1" inputmode="numeric"></label>
         <label>Платформы<input name="platforms" maxlength="160"></label>
-        <label>Тарифы<textarea name="plans" rows="3" maxlength="1200"></textarea></label>
+        <label>Тарифы · название — цена — срок<textarea name="plans" rows="3" maxlength="1200"></textarea></label>
         <label>Условия возврата<textarea name="refund_policy" rows="2" maxlength="500"></textarea></label>
       </div>
       <div class="partner-step" data-partner-step="3" hidden>
         <label>Партнёрская ссылка<input name="referral_url" type="url" maxlength="2048" required></label>
         <label>Модель вознаграждения<select name="commission_model"><option value="manual">По договорённости</option><option value="cpa">CPA</option><option value="revshare">RevShare</option><option value="hybrid">Hybrid</option></select></label>
         <label>Размер комиссии<input name="commission_value" type="number" min="0" step="0.01" inputmode="decimal"></label>
-        <label>Подтверждение конверсий<select name="confirmation_method"><option value="manual">Вручную</option><option value="api">API</option><option value="webhook">Webhook</option><option value="import">Импорт отчёта</option></select></label>
+        <label>Предпочтительный способ подтверждения<select name="confirmation_method"><option value="manual">Вручную</option><option value="api">API</option><option value="webhook">Webhook</option><option value="import">Импорт отчёта</option></select></label>
       </div>
       <div class="partner-step" data-partner-step="4" hidden>
         <label>Telegram для связи<input name="contact_telegram" maxlength="80" required></label>

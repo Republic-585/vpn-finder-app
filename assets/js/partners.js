@@ -133,7 +133,7 @@
         }).join("") : '<div class="partner-empty">Сервис ещё не добавлен.</div><button class="connect-button" type="button" data-go="partner-apply">Добавить VPN-сервис</button>';
         const versions=(group.versions||[]).slice(0,5).map(v=>'<div class="partner-service-row"><div class="partner-service-head"><strong>Изменение №'+fmt(v.version_number)+'</strong><span class="partner-status '+statusClass(v.status)+'">'+esc(statusText(v.status))+'</span></div><div class="partner-service-meta">'+(v.moderator_note?esc(v.moderator_note):"Ожидает решения команды")+'</div></div>').join("");
         return '<section><h2>'+esc(group.partner.name)+'</h2>'+cards+
-          '<div><h2>Мой VPN</h2>'+serviceRows+'</div>'+
+          '<div><h2>Мой VPN</h2>'+serviceRows+'<button class="connect-button" type="button" data-go="partner-apply">Добавить VPN-сервис</button></div>'+
           '<div><h2>История изменений</h2>'+(versions||'<div class="partner-empty">Изменений пока нет.</div>')+'</div></section>';
       }).join("");
       $("partner-dashboard-name").textContent = groups.length===1 ? groups[0].partner.name : "Ваши партнёрства";

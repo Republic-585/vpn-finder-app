@@ -7,6 +7,7 @@
   const userId = Number(tg?.initDataUnsafe?.user?.id || 0);
   const isOwner = userId === 7838131644;
   let currentDashboard = null;
+  let currentApplication = null;
   let currentAdmin = null;
   let entryLoading = false;
   let dashboardLoading = false;
@@ -69,12 +70,14 @@
         showEntryState("member");
       } else {
         const app = data.applications?.[0];
+        currentApplication = app?.status === "changes_requested" ? app : null;
         if (app) {
           showEntryState("application");
           $("partner-entry-application").innerHTML =
             '<strong>' + esc(app.service_name) + '</strong>' +
             '<span class="partner-status ' + statusClass(app.status) + '">' + esc(statusText(app.status)) + '</span>' +
-            '<p>' + esc(app.admin_note || (app.status === "changes_requested" ? "Проверьте комментарий команды и свяжитесь с поддержкой." : "Мы проверяем заявку. Статус обновится здесь.")) + '</p>';
+            '<p>' + esc(app.admin_note || (app.status === "changes_requested" ? "Нужно внести изменения." : "Мы проверяем заявку. Статус обновится здесь.")) + '</p>' +
+            (app.status === "changes_requested" ? '<button class="partner-secondary-button" type="button" data-action="partner-edit-application">Исправить заявку</button>' : "");
         } else showEntryState("guest");
       }
     } catch (error) {
@@ -222,9 +225,9 @@
   async function submitApplication(form) {
     const button=$("partner-submit-button");button.disabled=true;feedback("partner-application-status","Отправляем…");
     try{
-      const name=String(new FormData(form).get("service_name")||"").trim();
-      await api("submit_application",{service_name:name,payload:formPayload(form)});
-      form.reset();setStep(1);feedback("partner-application-status","Заявка отправлена.");
+      const fd=new FormData(form),name=String(fd.get("service_name")||"").trim(),applicationId=String(fd.get("application_id")||"").trim();
+      await api("submit_application",{application_id:applicationId||null,service_name:name,payload:formPayload(form)});
+      form.reset();currentApplication=null;setStep(1);feedback("partner-application-status","Заявка отправлена.");
       setTimeout(()=>{if(document.querySelector('#screen-owners.active'))loadEntry();},350);
       if(tg?.HapticFeedback?.notificationOccurred)tg.HapticFeedback.notificationOccurred("success");
       setTimeout(()=>document.querySelector('[data-go="owners"]')?.click(),900);
@@ -280,6 +283,21 @@
       await loadAdmin();
     }catch(error){tg?.showAlert?.(error.message||"Ошибка");}
   }
+  function openApplicationEdit() {
+    const app=currentApplication;if(!app)return;
+    const form=$("partner-application-form"),f=form.elements,p=app.payload||{};
+    f.application_id.value=app.id;f.service_name.value=app.service_name||"";
+    f.website_url.value=p.website_url||"";f.telegram_url.value=p.telegram_url||"";
+    f.description.value=p.description||"";f.logo_url.value=p.logo_url||"";
+    f.min_price.value=p.min_price??"";f.price_currency.value=p.price_currency||"RUB";
+    f.trial_days.value=p.trial_days??"";f.countries_count.value=p.countries_count??"";
+    f.platforms.value=(p.platforms||[]).join(", ");
+    f.plans.value=(p.plans||[]).map(x=>typeof x==="string"?x:[x.name,x.price_rub??x.price??"",x.duration_days?(x.duration_days+" дней"):x.duration_months?(x.duration_months+" мес."):x.period??""].filter(y=>y!==null&&y!==undefined&&y!=="").join(" — ")).join("\n");
+    f.refund_policy.value=p.refund_policy||"";f.referral_url.value=p.referral_url||"";
+    f.commission_model.value=p.commission_model||"manual";f.commission_value.value=p.commission_value??"";
+    f.confirmation_method.value=p.confirmation_method||"manual";f.contact_telegram.value=p.contact_telegram||"";
+    setStep(1);document.querySelector('[data-go="partner-apply"]')?.click();
+  }
   async function acceptInvite() {
     const code=String($("partner-invite-code")?.value||"").trim();
     if(!code){feedback("partner-invite-status","Введите код приглашения.",true);return;}
@@ -308,6 +326,7 @@
     if(action==="partner-step-next"){if(validateStep())setStep(step+1);haptic();}
     else if(action==="partner-step-back"){setStep(step-1);haptic();}
     else if(action==="partner-accept-invite"){acceptInvite();}
+    else if(action==="partner-edit-application"){openApplicationEdit();}
     else if(action==="partner-edit"){openEdit(button.dataset.serviceId,button.dataset.partnerId);}
     else if(action==="partner-cancel-edit"){$("partner-edit-section").hidden=true;}
     else if(action==="partner-copy-code"){copyCode();}

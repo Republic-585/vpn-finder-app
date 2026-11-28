@@ -45,12 +45,12 @@ async function dashboard(uid:number){
  return {memberships:result,applications:Array.isArray(apps)?apps:[]};
 }
 async function makeService(app:any,pid:string){
- const p=app.payload||{},sid=app.service_id||"partner-"+crypto.randomUUID(),ref=url(p.referral_url);
+ const p=app.payload||{},sid=app.service_id||"partner-"+app.id,ref=url(p.referral_url);
  if(!app.service_id){
   if(!ref)throw new Error("Partner URL is missing");
   const price=p.min_price===""||p.min_price===null?null:Number(p.min_price);
-  await db("vpn_services",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({
-   id:sid,slug:slug(app.service_name)+"-"+crypto.randomUUID().slice(0,6),name:app.service_name,
+  await db("vpn_services?on_conflict=id",{method:"POST",headers:{Prefer:"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({
+   id:sid,slug:slug(app.service_name)+"-"+String(app.id).slice(0,6),name:app.service_name,
    bot_url:url(p.telegram_url)||null,referral_url:ref,logo_url:url(p.logo_url,false)||null,
    description:clean(p.description,1500)||null,min_price:price!==null&&Number.isFinite(price)?Math.max(0,price):null,
    min_price_rub:p.price_currency==="RUB"&&price!==null&&Number.isFinite(price)?Math.round(Math.max(0,price)):null,
@@ -59,9 +59,10 @@ async function makeService(app:any,pid:string){
    plans:Array.isArray(p.plans)?p.plans.slice(0,12):[],features:[],whitelist_support:false,status:"draft",sort_order:0,
    source_urls:[url(p.website_url,false),url(p.telegram_url)].filter(Boolean),data_checked_at:null
   })});
+  await db("partner_applications?id=eq."+encodeURIComponent(app.id),{method:"PATCH",headers:{Prefer:"return=minimal"},body:JSON.stringify({partner_id:pid,service_id:sid,updated_at:new Date().toISOString()})});
  }
- await db("partner_services",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({partner_id:pid,service_id:sid,status:"pending"})});
- if(ref)await db("affiliate_programs",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({
+ await db("partner_services?on_conflict=partner_id,service_id",{method:"POST",headers:{Prefer:"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({partner_id:pid,service_id:sid,status:"pending"})});
+ if(ref)await db("affiliate_programs?on_conflict=partner_id,service_id",{method:"POST",headers:{Prefer:"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({
   partner_id:pid,service_id:sid,referral_url:ref,
   commission_model:["cpa","revshare","hybrid","manual"].includes(p.commission_model)?p.commission_model:"manual",
   commission_value:p.commission_value!==""&&Number.isFinite(Number(p.commission_value))?Number(p.commission_value):null,
@@ -141,7 +142,7 @@ Deno.serve(async(req:Request)=>{
    if(decision!=="approved"||["approved","published"].includes(app.status))return out({ok:false,error:"Невозможно изменить статус заявки."},409);
    let partner:any=null;
    if(app.partner_id){const existing=await db("partners?select=id,name,status&id=eq."+encodeURIComponent(app.partner_id)+"&limit=1");partner=Array.isArray(existing)?existing[0]:null;}
-   else {const pr=await db("partners",{method:"POST",headers:{Prefer:"return=representation"},body:JSON.stringify({name:app.service_name,status:"active"})});partner=Array.isArray(pr)?pr[0]:null;}
+   else {const pr=await db("partners",{method:"POST",headers:{Prefer:"return=representation"},body:JSON.stringify({name:app.service_name,status:"active"})});partner=Array.isArray(pr)?pr[0]:null;if(partner?.id)await db("partner_applications?id=eq."+encodeURIComponent(id),{method:"PATCH",headers:{Prefer:"return=minimal"},body:JSON.stringify({partner_id:partner.id,updated_at:new Date().toISOString()})});}
    if(!partner?.id)throw new Error("Partner create failed");
    if(!(await memberships(Number(app.applicant_telegram_id),partner.id)).length)await db("partner_memberships",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({partner_id:partner.id,telegram_id:app.applicant_telegram_id,role:"owner",status:"active",invited_by_telegram_id:uid})});
    const sid=await makeService(app,partner.id);

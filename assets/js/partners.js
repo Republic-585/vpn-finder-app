@@ -192,12 +192,22 @@
     }
     return true;
   }
+  function parsePlans(value) {
+    return String(value||"").split(/\r?\n/).map(line=>{
+      const parts=line.split(/[—–|]/).map(x=>x.trim()).filter(Boolean);
+      if(!parts.length)return null;
+      const priceText=parts[1]||"";
+      const price=Number(priceText.replace(/[^0-9,\.]/g,"").replace(",","."));
+      return {name:parts[0],price:priceText&&Number.isFinite(price)?price:null,period:parts[2]||null};
+    }).filter(Boolean).slice(0,12);
+  }
   function formPayload(form) {
     const f=new FormData(form),get=n=>String(f.get(n)||"").trim();
     return {
       website_url:get("website_url"),telegram_url:get("telegram_url"),description:get("description"),logo_url:get("logo_url"),
       contact_telegram:get("contact_telegram"),platforms:get("platforms").split(",").map(x=>x.trim()).filter(Boolean),
-      min_price:get("min_price"),price_currency:get("price_currency")||"RUB",trial_days:get("trial_days"),refund_policy:get("refund_policy"),
+      min_price:get("min_price"),price_currency:get("price_currency")||"RUB",trial_days:get("trial_days"),countries_count:get("countries_count"),
+      plans:parsePlans(get("plans")),refund_policy:get("refund_policy"),
       referral_url:get("referral_url"),commission_model:get("commission_model")||"manual",commission_value:get("commission_value"),
       commission_currency:"RUB",confirmation_method:get("confirmation_method")||"manual"
     };
@@ -224,6 +234,9 @@
     f.description.value=service.description||"";f.logo_url.value=service.logo_url||"";
     f.referral_url.value=program.referral_url||"";f.min_price.value=service.min_price??service.min_price_rub??"";
     f.price_currency.value=service.price_currency||"RUB";f.platforms.value=(service.platforms||[]).join(", ");
+    f.trial_days.value=service.trial_days??"";f.countries_count.value=service.countries_count??"";
+    f.refund_policy.value=service.refund_policy||"";
+    f.plans.value=(service.plans||[]).map(p=>typeof p==="string"?p:[p.name,p.price,p.period].filter(x=>x!==null&&x!==undefined&&x!=="").join(" — ")).join("\n");
     $("partner-edit-section").hidden=false;
     $("partner-edit-section").scrollIntoView({behavior:"smooth",block:"start"});
   }
@@ -231,7 +244,7 @@
     const f=new FormData(form),get=n=>String(f.get(n)||"").trim(),button=form.querySelector('button[type="submit"]');
     button.disabled=true;feedback("partner-edit-status","Отправляем на модерацию…");
     try{
-      const payload={name:get("name"),description:get("description"),logo_url:get("logo_url"),referral_url:get("referral_url"),min_price:get("min_price")===""?null:Number(get("min_price")),price_currency:get("price_currency"),platforms:get("platforms").split(",").map(x=>x.trim()).filter(Boolean)};
+      const payload={name:get("name"),description:get("description"),logo_url:get("logo_url"),referral_url:get("referral_url"),min_price:get("min_price")===""?null:Number(get("min_price")),price_currency:get("price_currency"),platforms:get("platforms").split(",").map(x=>x.trim()).filter(Boolean),trial_days:get("trial_days")===""?null:Number(get("trial_days")),countries_count:get("countries_count")===""?null:Number(get("countries_count")),plans:parsePlans(get("plans")),refund_policy:get("refund_policy")};
       await api("request_update",{partner_id:get("partner_id"),service_id:get("service_id"),payload});
       feedback("partner-edit-status","Изменения отправлены на модерацию.");
       $("partner-edit-section").hidden=true;await loadDashboard();

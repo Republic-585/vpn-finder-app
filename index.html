@@ -310,7 +310,9 @@
         <label>Минимальная цена<input name="min_price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Необязательно"></label>
         <label>Валюта<select name="price_currency"><option value="RUB">RUB</option><option value="USD">USD</option><option value="EUR">EUR</option></select></label>
         <label>Пробный период, дней<input name="trial_days" type="number" min="0" max="365" step="1" inputmode="numeric" placeholder="Необязательно"></label>
+        <label>Количество стран<input name="countries_count" type="number" min="0" max="250" step="1" inputmode="numeric" placeholder="Необязательно"></label>
         <label>Платформы<input name="platforms" maxlength="160" placeholder="iOS, Android, Windows, macOS"></label>
+        <label>Тарифы<textarea name="plans" rows="3" maxlength="1200" placeholder="1 месяц — 199 — 30 дней&#10;3 месяца — 499 — 90 дней"></textarea></label>
         <label>Условия возврата<textarea name="refund_policy" rows="2" maxlength="500" placeholder="Необязательно"></textarea></label>
       </div>
       <div class="partner-step" data-partner-step="3" hidden>
@@ -345,7 +347,11 @@
         <label>Партнёрская ссылка<input name="referral_url" type="url" maxlength="2048"></label>
         <label>Минимальная цена<input name="min_price" type="number" min="0" step="0.01"></label>
         <label>Валюта<select name="price_currency"><option value="RUB">RUB</option><option value="USD">USD</option><option value="EUR">EUR</option></select></label>
+        <label>Пробный период, дней<input name="trial_days" type="number" min="0" max="365" step="1"></label>
+        <label>Количество стран<input name="countries_count" type="number" min="0" max="250" step="1"></label>
         <label>Платформы<input name="platforms" maxlength="160"></label>
+        <label>Тарифы<textarea name="plans" rows="3" maxlength="1200"></textarea></label>
+        <label>Условия возврата<textarea name="refund_policy" rows="2" maxlength="500"></textarea></label>
         <div class="partner-step-actions"><button type="button" class="partner-secondary-button" data-action="partner-cancel-edit">Отмена</button><button type="submit" class="connect-button">Отправить на модерацию</button></div>
         <p class="profile-form-status" id="partner-edit-status" role="status"></p>
       </form>

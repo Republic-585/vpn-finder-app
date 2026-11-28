@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T00:46:02.421Z",
+  "generatedAt": "2026-11-28T00:40:01.169Z",
   "count": 35,
   "avatars": [
     {
@@ -311,11 +311,11 @@
     {
       "id": "VPN-040",
       "name": "Official VPN",
-      "file": "VPN-040.jpg",
-      "bytes": 11811,
-      "sha256": "f0efd70627feb482c495881bcb329e2edb928b2b70157d317ccd11d0a0d6ea3a",
-      "sourceHost": "cdn4.telesco.pe",
-      "finalHost": "cdn4.telesco.pe"
+      "file": "VPN-040.png",
+      "bytes": 28159,
+      "sha256": "d192071ec08c1fdc1f43922eca1c5d4394f6577d1a3a00387e86852194ae864c",
+      "sourceHost": "telegram.org",
+      "finalHost": "telegram.org"
     }
   ]
 }

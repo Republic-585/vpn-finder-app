@@ -121,12 +121,12 @@
           const link=(group.links||[]).find(x=>x.service_id===service.id)||{};
           const details=[service.min_price!==null&&service.min_price!==undefined?String(service.min_price)+" "+(service.price_currency||"RUB"):"",service.trial_days? "Пробный период "+service.trial_days+" дн.":"",service.countries_count?service.countries_count+" стран":"",(service.platforms||[]).join(", ")].filter(Boolean).join(" · ");
           const plans=(service.plans||[]).map(p=>typeof p==="string"?p:[p.name,p.price_rub!==undefined?String(p.price_rub)+" ₽":p.price!==undefined?String(p.price)+" "+(p.currency||service.price_currency||""):"",p.duration_days?(p.duration_days+" дн."):p.duration_months?(p.duration_months+" мес."):p.period??""].filter(x=>x!==null&&x!==undefined&&x!=="").join(" · ")).filter(Boolean).join(" / ");
+          const commissionText=program.commission_model==="revshare"?(program.commission_value!==null&&program.commission_value!==undefined?String(program.commission_value)+"%":"RevShare"):program.commission_model==="cpa"?(program.commission_value!==null&&program.commission_value!==undefined?String(program.commission_value)+" "+(program.commission_currency||"RUB"):"CPA"):program.commission_model==="hybrid"?"Hybrid · условия согласуются":"По договорённости";
           return '<div class="partner-service-row"><div class="partner-service-head"><strong>'+esc(service.name)+'</strong><span class="partner-status '+statusClass(link.status)+'">'+esc(statusText(link.status))+'</span></div>'+
             '<div class="partner-service-meta">'+fmt(stat.views)+' просмотров · '+fmt(stat.clicks)+' переходов · '+fmt(stat.unique_clicks)+' уникальных</div>'+
             (details?'<div class="partner-service-meta">'+esc(details)+'</div>':"")+
             (plans?'<div class="partner-service-meta">Тарифы: '+esc(plans)+'</div>':"")+
-            '<div class="partner-service-meta">Комиссия: '+esc(program.commission_model==="cpa"?"CPA":program.commission_model==="revshare"?"RevShare":program.commission_model==="hybrid"?"Hybrid":"По договорённости")+
-            (program.commission_value!==null&&program.commission_value!==undefined?" · "+esc(program.commission_value)+" "+esc(program.commission_currency||""):"")+'</div>'+
+            '<div class="partner-service-meta">Комиссия: '+esc(commissionText)+'</div>'+
             '<div class="partner-service-meta">Подтверждение: '+esc(program.confirmation_method==="api"?"API":program.confirmation_method==="webhook"?"Webhook":program.confirmation_method==="import"?"Импорт":"Вручную")+'</div>'+
             '<div class="partner-action-row">'+(program.referral_url?'<button type="button" data-action="partner-copy-ref" data-url="'+esc(program.referral_url)+'">Скопировать ссылку</button>':"")+
             '<button type="button" data-action="partner-edit" data-service-id="'+esc(service.id)+'" data-partner-id="'+esc(group.partner.id)+'">Предложить изменения</button></div></div>';

@@ -1420,7 +1420,8 @@ if (tg?.BackButton) {
   try { tg.BackButton.hide(); } catch (_) {}
 }
 
-// Interactive iOS-style edge navigation with finger tracking and spring-like settling.
+// Interactive iOS navigation: the foreground page follows the finger;
+// the previous page stays behind and reveals with a restrained parallax.
 function goBackToPreviousScreen() {
   if (!screenNavigationHistory.length) return false;
   const previous = screenNavigationHistory.pop();
@@ -1446,9 +1447,9 @@ const clearBackDragStyles = (current, previous) => {
   if (previous) {
     previous.classList.remove("swipe-back-underlay", "swipe-back-revealed");
     previous.style.removeProperty("transform");
-    previous.style.removeProperty("opacity");
     previous.style.removeProperty("transition");
   }
+  current?.closest(".main-content")?.classList.remove("swipe-back-active");
 };
 document.addEventListener("touchstart", event => {
   if (event.touches.length !== 1 || !screenNavigationHistory.length) {
@@ -1494,8 +1495,10 @@ document.addEventListener("touchmove", event => {
     }
     if (dx < 4 || dx < Math.abs(dy) * 1.12) return;
     backDrag.dragging = true;
+    backDrag.current.closest(".main-content")?.classList.add("swipe-back-active");
     backDrag.previous.classList.add("swipe-back-underlay");
     backDrag.current.classList.add("swipe-back-current");
+    backDrag.previous.style.transform = "translate3d(-24px,0,0)";
   }
   if (dx <= 0) return;
   event.preventDefault();
@@ -1510,7 +1513,11 @@ document.addEventListener("touchmove", event => {
   const width = Math.max(1, window.innerWidth);
   const visualX = dx <= width ? dx : width + (dx - width) * 0.16;
   const progress = Math.min(1, visualX / width);
+
+  // The page under the finger is the foreground layer. The previous page
+  // only has the subtle left-to-right parallax used by native iOS navigation.
   backDrag.current.style.transform = "translate3d(" + visualX + "px,0,0)";
+  backDrag.previous.style.transform = "translate3d(" + (-24 * (1 - progress)) + "px,0,0)";
   backDrag.current.style.borderRadius = "14px 0 0 14px";
   backDrag.current.style.boxShadow = "0 4px 34px rgba(0,0,0," + (0.08 + progress * 0.13) + ")";
 }, { passive: false });
@@ -1544,15 +1551,13 @@ const finishBackDrag = (cancelled = false, endTouch = null) => {
     : 260;
 
   drag.current.classList.add("swipe-back-settling");
-  drag.current.style.transition = "transform " + settleDuration + "ms cubic-bezier(.22,.78,.18,1), border-radius " + settleDuration + "ms cubic-bezier(.22,.78,.18,1), box-shadow " + settleDuration + "ms ease";
+  const easing = "cubic-bezier(.32,.72,0,1)";
+  const transition = "transform " + settleDuration + "ms " + easing;
+  drag.current.style.transition = transition + ", border-radius " + settleDuration + "ms " + easing + ", box-shadow " + settleDuration + "ms ease";
+  drag.previous.style.transition = transition;
 
   let completed = false;
   let fallbackTimer = null;
-  const onTransitionEnd = event => {
-    if (event.target !== drag.current || event.propertyName !== "transform") return;
-    drag.current.removeEventListener("transitionend", onTransitionEnd);
-    finish();
-  };
   const finish = () => {
     if (completed) return;
     completed = true;
@@ -1567,14 +1572,19 @@ const finishBackDrag = (cancelled = false, endTouch = null) => {
       clearBackDragStyles(drag.current, drag.previous);
     }
   };
+  const onTransitionEnd = event => {
+    if (event.target === drag.current && event.propertyName === "transform") finish();
+  };
   drag.current.addEventListener("transitionend", onTransitionEnd);
 
   if (shouldCommit) {
     drag.current.style.transform = "translate3d(105vw,0,0)";
+    drag.previous.style.transform = "translate3d(0,0,0)";
     drag.current.style.borderRadius = "14px 0 0 14px";
     drag.current.style.boxShadow = "0 4px 34px rgba(0,0,0,.18)";
   } else {
     drag.current.style.transform = "translate3d(0,0,0)";
+    drag.previous.style.transform = "translate3d(-24px,0,0)";
     drag.current.style.borderRadius = "0";
     drag.current.style.boxShadow = "none";
   }

@@ -116,7 +116,7 @@
             '<div class="partner-service-meta">Комиссия: '+esc(program.commission_model==="cpa"?"CPA":program.commission_model==="revshare"?"RevShare":program.commission_model==="hybrid"?"Hybrid":"По договорённости")+
             (program.commission_value!==null&&program.commission_value!==undefined?" · "+esc(program.commission_value)+" "+esc(program.commission_currency||""):"")+'</div>'+
             '<div class="partner-action-row"><button type="button" data-action="partner-edit" data-service-id="'+esc(service.id)+'" data-partner-id="'+esc(group.partner.id)+'">Предложить изменения</button></div></div>';
-        }).join("") : '<div class="partner-empty">Сервис ещё не добавлен.</div>';
+        }).join("") : '<div class="partner-empty">Сервис ещё не добавлен.</div><button class="connect-button" type="button" data-go="partner-apply">Добавить VPN-сервис</button>';
         const versions=(group.versions||[]).slice(0,5).map(v=>'<div class="partner-service-row"><div class="partner-service-head"><strong>Изменение №'+fmt(v.version_number)+'</strong><span class="partner-status '+statusClass(v.status)+'">'+esc(statusText(v.status))+'</span></div><div class="partner-service-meta">'+(v.moderator_note?esc(v.moderator_note):"Ожидает решения команды")+'</div></div>').join("");
         return '<section><h2>'+esc(group.partner.name)+'</h2>'+cards+
           '<div><h2>Мой VPN</h2>'+serviceRows+'</div>'+
@@ -135,6 +135,7 @@
       '<div class="partner-admin-meta">'+esc(p.description||"Описание не указано")+'</div>'+
       '<div class="partner-admin-meta">Комиссия: '+esc(p.commission_model||"manual")+' · Подтверждение: '+esc(p.confirmation_method||"manual")+'</div>'+
       (app.admin_note?'<div class="partner-admin-meta">Комментарий: '+esc(app.admin_note)+'</div>':"")+
+      '<textarea class="partner-admin-note" data-note-id="'+esc(app.id)+'" rows="2" maxlength="1000" placeholder="Комментарий владельцу"></textarea>'+
       '<div class="partner-action-row">'+
       (app.status==="submitted"||app.status==="reviewing"||app.status==="changes_requested"?
         '<button class="is-primary" type="button" data-action="partner-admin-review" data-id="'+esc(app.id)+'" data-decision="approved">Одобрить</button>'+
@@ -157,6 +158,7 @@
         '<div class="partner-admin-row"><div class="partner-admin-head"><strong>Изменение №'+fmt(v.version_number)+'</strong><span class="partner-status is-pending">На модерации</span></div>'+
         '<div class="partner-admin-meta">Сервис '+esc(v.service_id)+' · Партнёр '+esc(v.partner_id)+'</div>'+
         '<div class="partner-admin-meta">'+esc(JSON.stringify(v.payload||{}).slice(0,500))+'</div>'+
+        '<textarea class="partner-admin-note" data-note-id="'+esc(v.id)+'" rows="2" maxlength="1000" placeholder="Комментарий владельцу"></textarea>'+
         '<div class="partner-action-row"><button class="is-primary" type="button" data-action="partner-version-review" data-id="'+esc(v.id)+'" data-decision="approved">Одобрить</button>'+
         '<button type="button" data-action="partner-version-review" data-id="'+esc(v.id)+'" data-decision="changes_requested">Запросить изменения</button>'+
         '<button type="button" data-action="partner-version-review" data-id="'+esc(v.id)+'" data-decision="rejected">Отклонить</button></div></div>').join(""):'<div class="partner-empty">Новых изменений нет.</div>';
@@ -248,9 +250,10 @@
   async function adminAction(action,id,decision) {
     if(!window.confirm(decision==="approved"?"Одобрить изменения?":decision==="rejected"?"Отклонить?":decision==="publish"?"Опубликовать VPN в каталоге?":"Запросить изменения?"))return;
     try{
-      if(action==="application")await api("admin_review",{application_id:id,decision,note:""});
+      const note=document.querySelector('.partner-admin-note[data-note-id="'+CSS.escape(id)+'"]')?.value||"";
+      if(action==="application")await api("admin_review",{application_id:id,decision,note});
       if(action==="publish")await api("admin_publish",{application_id:id});
-      if(action==="version")await api("admin_version_review",{version_id:id,decision,note:""});
+      if(action==="version")await api("admin_version_review",{version_id:id,decision,note});
       await loadAdmin();
     }catch(error){tg?.showAlert?.(error.message||"Ошибка");}
   }

@@ -1510,14 +1510,9 @@ document.addEventListener("touchmove", event => {
   const width = Math.max(1, window.innerWidth);
   const visualX = dx <= width ? dx : width + (dx - width) * 0.16;
   const progress = Math.min(1, visualX / width);
-  const underlayOffset = -18 * (1 - progress);
-  const underlayScale = 0.985 + progress * 0.015;
-
   backDrag.current.style.transform = "translate3d(" + visualX + "px,0,0)";
   backDrag.current.style.borderRadius = "14px 0 0 14px";
   backDrag.current.style.boxShadow = "0 4px 34px rgba(0,0,0," + (0.08 + progress * 0.13) + ")";
-  backDrag.previous.style.transform = "translate3d(" + underlayOffset + "px,0,0) scale(" + underlayScale + ")";
-  backDrag.previous.style.opacity = "1";
 }, { passive: false });
 
 const finishBackDrag = (cancelled = false, endTouch = null) => {
@@ -1549,7 +1544,6 @@ const finishBackDrag = (cancelled = false, endTouch = null) => {
     : 260;
 
   drag.current.classList.add("swipe-back-settling");
-  drag.previous.style.transition = "transform " + settleDuration + "ms cubic-bezier(.22,.78,.18,1), opacity " + settleDuration + "ms ease";
   drag.current.style.transition = "transform " + settleDuration + "ms cubic-bezier(.22,.78,.18,1), border-radius " + settleDuration + "ms cubic-bezier(.22,.78,.18,1), box-shadow " + settleDuration + "ms ease";
 
   let completed = false;
@@ -1579,14 +1573,10 @@ const finishBackDrag = (cancelled = false, endTouch = null) => {
     drag.current.style.transform = "translate3d(105vw,0,0)";
     drag.current.style.borderRadius = "14px 0 0 14px";
     drag.current.style.boxShadow = "0 4px 34px rgba(0,0,0,.18)";
-    drag.previous.style.transform = "translate3d(0,0,0) scale(1)";
-    drag.previous.style.opacity = "1";
   } else {
     drag.current.style.transform = "translate3d(0,0,0)";
     drag.current.style.borderRadius = "0";
     drag.current.style.boxShadow = "none";
-    drag.previous.style.transform = "translate3d(-18px,0,0) scale(.985)";
-    drag.previous.style.opacity = "1";
   }
   fallbackTimer = window.setTimeout(finish, settleDuration + 90);
 };

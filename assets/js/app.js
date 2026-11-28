@@ -185,15 +185,9 @@ if (tg) {
 const startupSplashStartedAt = performance.now();
 let startupSplashFinished = false;
 let startupCatalogReady = false;
-let startupHapticTimer = null;
-let startupHapticStage = 0;
-const startupHapticLevels = ["soft", "medium", "heavy"];
-const startupHapticDurations = [12, 22, 34];
 const revealStartupApp = () => {
   if (startupSplashFinished) return;
   startupSplashFinished = true;
-  if (startupHapticTimer) window.clearTimeout(startupHapticTimer);
-  startupHapticTimer = null;
   const splash = document.getElementById("startup-splash");
   document.body.classList.add("app-ready");
   if (!splash) return;
@@ -207,45 +201,10 @@ const revealStartupApp = () => {
     });
   }, entranceRemaining);
 };
-const pulseStartupHaptic = () => {
-  if (startupSplashFinished || document.visibilityState === "hidden") return;
-  if (startupHapticStage >= 2 && !startupCatalogReady) {
-    startupHapticTimer = null;
-    return;
-  }
-  const level = startupHapticLevels[startupHapticStage];
-  try {
-    if (tg?.HapticFeedback?.impactOccurred) {
-      tg.HapticFeedback.impactOccurred(level);
-    } else if (typeof navigator.vibrate === "function") {
-      navigator.vibrate(startupHapticDurations[startupHapticStage]);
-    }
-  } catch (_) {}
-  startupHapticStage += 1;
-  if (startupHapticStage === 3) {
-    // The third, strongest pulse and the main-screen reveal happen together.
-    revealStartupApp();
-    return;
-  }
-  startupHapticTimer = window.setTimeout(pulseStartupHaptic, 420);
-};
-const startStartupHaptics = () => {
-  if (startupHapticTimer || startupSplashFinished || startupHapticStage >= 3) return;
-  pulseStartupHaptic();
-};
 const finishStartupSplash = () => {
   startupCatalogReady = true;
-  if (startupHapticStage >= 2 && !startupHapticTimer) pulseStartupHaptic();
+  revealStartupApp();
 };
-
-startStartupHaptics();
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible" && !startupSplashFinished && !startupHapticTimer) startStartupHaptics();
-  else if (document.visibilityState === "hidden" && startupHapticTimer) {
-    window.clearTimeout(startupHapticTimer);
-    startupHapticTimer = null;
-  }
-});
 
 const SUPABASE_URL = "https://januqesxribuqzmmmdun.supabase.co";
 const SUPABASE_KEY = "sb_publishable_BaYxtXvRZCmfEzMHJbSCog_ebs4k6oK";

@@ -111,8 +111,12 @@
           const stat=serviceStats(group.stats,service.id);
           const program=(group.programs||[]).find(x=>x.service_id===service.id)||{};
           const link=(group.links||[]).find(x=>x.service_id===service.id)||{};
+          const details=[service.min_price!==null&&service.min_price!==undefined?String(service.min_price)+" "+(service.price_currency||"RUB"):"",service.trial_days? "Пробный период "+service.trial_days+" дн.":"",service.countries_count?service.countries_count+" стран":"",(service.platforms||[]).join(", ")].filter(Boolean).join(" · ");
+          const plans=(service.plans||[]).map(p=>typeof p==="string"?p:[p.name,p.price,p.period].filter(x=>x!==null&&x!==undefined&&x!=="").join(" · ")).filter(Boolean).join(" / ");
           return '<div class="partner-service-row"><div class="partner-service-head"><strong>'+esc(service.name)+'</strong><span class="partner-status '+statusClass(link.status)+'">'+esc(statusText(link.status))+'</span></div>'+
             '<div class="partner-service-meta">'+fmt(stat.views)+' просмотров · '+fmt(stat.clicks)+' переходов · '+fmt(stat.unique_clicks)+' уникальных</div>'+
+            (details?'<div class="partner-service-meta">'+esc(details)+'</div>':"")+
+            (plans?'<div class="partner-service-meta">Тарифы: '+esc(plans)+'</div>':"")+
             '<div class="partner-service-meta">Комиссия: '+esc(program.commission_model==="cpa"?"CPA":program.commission_model==="revshare"?"RevShare":program.commission_model==="hybrid"?"Hybrid":"По договорённости")+
             (program.commission_value!==null&&program.commission_value!==undefined?" · "+esc(program.commission_value)+" "+esc(program.commission_currency||""):"")+'</div>'+
             '<div class="partner-service-meta">Подтверждение: '+esc(program.confirmation_method==="api"?"API":program.confirmation_method==="webhook"?"Webhook":program.confirmation_method==="import"?"Импорт":"Вручную")+'</div>'+

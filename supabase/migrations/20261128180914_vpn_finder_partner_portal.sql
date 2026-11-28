@@ -92,7 +92,7 @@ create table if not exists public.partner_invites (
   id uuid primary key default gen_random_uuid(),
   partner_id uuid not null references public.partners(id) on delete cascade,
   invite_code_hash text not null unique,
-  preassigned_telegram_id bigint,
+  preassigned_telegram_id bigint references public.telegram_profiles(telegram_id) on delete cascade,
   created_by_telegram_id bigint not null references public.telegram_profiles(telegram_id) on delete restrict,
   expires_at timestamptz not null,
   accepted_at timestamptz,

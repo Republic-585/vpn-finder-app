@@ -66,11 +66,16 @@
     try {
       const data = await api("dashboard");
       currentDashboard = data;
+      const app = data.applications?.[0];
+      currentApplication = app?.status === "changes_requested" ? app : null;
       if (data.memberships?.length) {
         showEntryState("member");
+        const update=$("partner-entry-member-update");
+        if(currentApplication&&update){
+          update.hidden=false;
+          update.innerHTML='<strong>'+esc(app.service_name)+'</strong><span class="partner-status is-pending">Нужны изменения</span><p>'+esc(app.admin_note||"Нужно внести изменения.")+'</p><button class="partner-secondary-button" type="button" data-action="partner-edit-application">Исправить заявку</button>';
+        }else if(update){update.hidden=true;update.innerHTML="";}
       } else {
-        const app = data.applications?.[0];
-        currentApplication = app?.status === "changes_requested" ? app : null;
         if (app) {
           showEntryState("application");
           $("partner-entry-application").innerHTML =

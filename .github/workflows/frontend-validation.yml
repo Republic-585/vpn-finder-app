@@ -16,4 +16,6 @@ jobs:
         with:
           node-version: 22
       - name: Check application JavaScript syntax
-        run: node --check assets/js/app.js
+        run: |
+          node --check assets/js/app.js
+          node --check assets/js/partners.js

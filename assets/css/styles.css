@@ -3547,7 +3547,7 @@ html.profile-screen-active .bottom-nav-dock{
 }
 
 
-/* Interactive Telegram-style page swipe-back. */
+/* Interactive iOS-style edge swipe-back transition. */
 .screen.swipe-back-underlay{
   position:absolute!important;
   z-index:0!important;
@@ -3558,18 +3558,24 @@ html.profile-screen-active .bottom-nav-dock{
   min-height:calc(100vh - 130px);
   pointer-events:none!important;
   animation:none!important;
-  transform:translate3d(-26%,0,0);
-  opacity:.82;
+  transform:translate3d(-24px,0,0);
+  opacity:.96;
   will-change:transform,opacity;
+  backface-visibility:hidden;
 }
 .screen.swipe-back-current{
   position:relative;
   z-index:1;
   animation:none!important;
-  will-change:transform;
+  will-change:transform,border-radius;
+  backface-visibility:hidden;
+  transform:translate3d(0,0,0);
 }
 .screen.swipe-back-settling{
-  transition:transform .24s cubic-bezier(.22,1,.36,1),border-radius .24s ease!important;
+  pointer-events:none!important;
+}
+.screen.swipe-back-revealed.active{
+  animation:none!important;
 }
 @media(prefers-reduced-motion:reduce){
   .screen.swipe-back-settling{transition:none!important}

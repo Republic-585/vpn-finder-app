@@ -112,7 +112,7 @@
           const program=(group.programs||[]).find(x=>x.service_id===service.id)||{};
           const link=(group.links||[]).find(x=>x.service_id===service.id)||{};
           const details=[service.min_price!==null&&service.min_price!==undefined?String(service.min_price)+" "+(service.price_currency||"RUB"):"",service.trial_days? "Пробный период "+service.trial_days+" дн.":"",service.countries_count?service.countries_count+" стран":"",(service.platforms||[]).join(", ")].filter(Boolean).join(" · ");
-          const plans=(service.plans||[]).map(p=>typeof p==="string"?p:[p.name,p.price,p.period].filter(x=>x!==null&&x!==undefined&&x!=="").join(" · ")).filter(Boolean).join(" / ");
+          const plans=(service.plans||[]).map(p=>typeof p==="string"?p:[p.name,p.price_rub!==undefined?String(p.price_rub)+" ₽":p.price!==undefined?String(p.price)+" "+(p.currency||service.price_currency||""):"",p.duration_days?(p.duration_days+" дн."):p.duration_months?(p.duration_months+" мес."):p.period??""].filter(x=>x!==null&&x!==undefined&&x!=="").join(" · ")).filter(Boolean).join(" / ");
           return '<div class="partner-service-row"><div class="partner-service-head"><strong>'+esc(service.name)+'</strong><span class="partner-status '+statusClass(link.status)+'">'+esc(statusText(link.status))+'</span></div>'+
             '<div class="partner-service-meta">'+fmt(stat.views)+' просмотров · '+fmt(stat.clicks)+' переходов · '+fmt(stat.unique_clicks)+' уникальных</div>'+
             (details?'<div class="partner-service-meta">'+esc(details)+'</div>':"")+
@@ -196,13 +196,16 @@
     }
     return true;
   }
-  function parsePlans(value) {
+  function parsePlans(value,currency="RUB") {
     return String(value||"").split(/\r?\n/).map(line=>{
       const parts=line.split(/[—–|]/).map(x=>x.trim()).filter(Boolean);
       if(!parts.length)return null;
-      const priceText=parts[1]||"";
-      const price=Number(priceText.replace(/[^0-9,\.]/g,"").replace(",","."));
-      return {name:parts[0],price:priceText&&Number.isFinite(price)?price:null,period:parts[2]||null};
+      const priceText=parts[1]||"",price=Number(priceText.replace(/[^0-9,\.]/g,"").replace(",","."));
+      const period=parts[2]||"",duration=Number((period.match(/\d+/)||[])[0]||0);
+      const plan={name:parts[0]};
+      if(priceText&&Number.isFinite(price)){if(currency==="RUB")plan.price_rub=price;else{plan.price=price;plan.currency=currency;}}
+      if(duration){if(/мес|month/i.test(period))plan.duration_months=duration;else plan.duration_days=duration;}
+      return plan;
     }).filter(Boolean).slice(0,12);
   }
   function formPayload(form) {
@@ -211,7 +214,7 @@
       website_url:get("website_url"),telegram_url:get("telegram_url"),description:get("description"),logo_url:get("logo_url"),
       contact_telegram:get("contact_telegram"),platforms:get("platforms").split(",").map(x=>x.trim()).filter(Boolean),
       min_price:get("min_price"),price_currency:get("price_currency")||"RUB",trial_days:get("trial_days"),countries_count:get("countries_count"),
-      plans:parsePlans(get("plans")),refund_policy:get("refund_policy"),
+      plans:parsePlans(get("plans"),get("price_currency")||"RUB"),refund_policy:get("refund_policy"),
       referral_url:get("referral_url"),commission_model:get("commission_model")||"manual",commission_value:get("commission_value"),
       commission_currency:"RUB",confirmation_method:get("confirmation_method")||"manual"
     };
@@ -240,7 +243,7 @@
     f.price_currency.value=service.price_currency||"RUB";f.platforms.value=(service.platforms||[]).join(", ");
     f.trial_days.value=service.trial_days??"";f.countries_count.value=service.countries_count??"";
     f.refund_policy.value=service.refund_policy||"";
-    f.plans.value=(service.plans||[]).map(p=>typeof p==="string"?p:[p.name,p.price,p.period].filter(x=>x!==null&&x!==undefined&&x!=="").join(" — ")).join("\n");
+    f.plans.value=(service.plans||[]).map(p=>typeof p==="string"?p:[p.name,p.price_rub??p.price??"",p.duration_days?(p.duration_days+" дней"):p.duration_months?(p.duration_months+" мес."):p.period??""].filter(x=>x!==null&&x!==undefined&&x!=="").join(" — ")).join("\n");
     $("partner-edit-section").hidden=false;
     $("partner-edit-section").scrollIntoView({behavior:"smooth",block:"start"});
   }
@@ -248,7 +251,7 @@
     const f=new FormData(form),get=n=>String(f.get(n)||"").trim(),button=form.querySelector('button[type="submit"]');
     button.disabled=true;feedback("partner-edit-status","Отправляем на модерацию…");
     try{
-      const payload={name:get("name"),description:get("description"),logo_url:get("logo_url"),referral_url:get("referral_url"),min_price:get("min_price")===""?null:Number(get("min_price")),price_currency:get("price_currency"),platforms:get("platforms").split(",").map(x=>x.trim()).filter(Boolean),trial_days:get("trial_days")===""?null:Number(get("trial_days")),countries_count:get("countries_count")===""?null:Number(get("countries_count")),plans:parsePlans(get("plans")),refund_policy:get("refund_policy")};
+      const payload={name:get("name"),description:get("description"),logo_url:get("logo_url"),referral_url:get("referral_url"),min_price:get("min_price")===""?null:Number(get("min_price")),price_currency:get("price_currency"),platforms:get("platforms").split(",").map(x=>x.trim()).filter(Boolean),trial_days:get("trial_days")===""?null:Number(get("trial_days")),countries_count:get("countries_count")===""?null:Number(get("countries_count")),plans:parsePlans(get("plans"),get("price_currency")||"RUB"),refund_policy:get("refund_policy")};
       await api("request_update",{partner_id:get("partner_id"),service_id:get("service_id"),payload});
       feedback("partner-edit-status","Изменения отправлены на модерацию.");
       $("partner-edit-section").hidden=true;await loadDashboard();

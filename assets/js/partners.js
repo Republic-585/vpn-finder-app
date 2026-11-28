@@ -105,7 +105,7 @@
           unique:acc.unique+Number(x.unique_clicks||0), conversions:acc.conversions+Number(x.conversions||0)
         }),{views:0,clicks:0,unique:0,conversions:0});
         const cards = '<div class="partner-stat-grid">' +
-          [['Просмотры',total.views],['Переходы',total.clicks],['Уникальные',total.unique],['Конверсии',total.conversions]].map(x =>
+          [['Просмотры',total.views],['Переходы',total.clicks],['Уникальные',total.unique],['Подтверждённые',total.conversions]].map(x =>
             '<div class="partner-stat"><strong>'+fmt(x[1])+'</strong><span>'+x[0]+'</span></div>').join("") + '</div>';
         const serviceRows = services.length ? services.map(service => {
           const stat=serviceStats(group.stats,service.id);
@@ -115,7 +115,9 @@
             '<div class="partner-service-meta">'+fmt(stat.views)+' просмотров · '+fmt(stat.clicks)+' переходов · '+fmt(stat.unique_clicks)+' уникальных</div>'+
             '<div class="partner-service-meta">Комиссия: '+esc(program.commission_model==="cpa"?"CPA":program.commission_model==="revshare"?"RevShare":program.commission_model==="hybrid"?"Hybrid":"По договорённости")+
             (program.commission_value!==null&&program.commission_value!==undefined?" · "+esc(program.commission_value)+" "+esc(program.commission_currency||""):"")+'</div>'+
-            '<div class="partner-action-row"><button type="button" data-action="partner-edit" data-service-id="'+esc(service.id)+'" data-partner-id="'+esc(group.partner.id)+'">Предложить изменения</button></div></div>';
+            '<div class="partner-service-meta">Подтверждение: '+esc(program.confirmation_method==="api"?"API":program.confirmation_method==="webhook"?"Webhook":program.confirmation_method==="import"?"Импорт":"Вручную")+'</div>'+
+            '<div class="partner-action-row">'+(program.referral_url?'<button type="button" data-action="partner-copy-ref" data-url="'+esc(program.referral_url)+'">Скопировать ссылку</button>':"")+
+            '<button type="button" data-action="partner-edit" data-service-id="'+esc(service.id)+'" data-partner-id="'+esc(group.partner.id)+'">Предложить изменения</button></div></div>';
         }).join("") : '<div class="partner-empty">Сервис ещё не добавлен.</div><button class="connect-button" type="button" data-go="partner-apply">Добавить VPN-сервис</button>';
         const versions=(group.versions||[]).slice(0,5).map(v=>'<div class="partner-service-row"><div class="partner-service-head"><strong>Изменение №'+fmt(v.version_number)+'</strong><span class="partner-status '+statusClass(v.status)+'">'+esc(statusText(v.status))+'</span></div><div class="partner-service-meta">'+(v.moderator_note?esc(v.moderator_note):"Ожидает решения команды")+'</div></div>').join("");
         return '<section><h2>'+esc(group.partner.name)+'</h2>'+cards+
@@ -264,6 +266,13 @@
     try{await api("invite_accept",{code});feedback("partner-invite-status","Приглашение принято.");$("partner-invite-code").value="";await loadEntry();}
     catch(error){feedback("partner-invite-status",error.message,true);}
   }
+  async function copyValue(value) {
+    if(!value)return;
+    try{await navigator.clipboard.writeText(value);}catch(_){
+      const area=document.createElement("textarea");area.value=value;area.style.position="fixed";area.style.opacity="0";document.body.append(area);area.select();document.execCommand("copy");area.remove();
+    }
+    tg?.showPopup?.({title:"Готово",message:"Ссылка скопирована.",buttons:[{type:"ok"}]});
+  }
   async function copyCode() {
     const value=$("partner-created-code")?.textContent||"";if(!value)return;
     try{await navigator.clipboard.writeText(value);}catch(_){
@@ -281,7 +290,7 @@
     else if(action==="partner-accept-invite"){acceptInvite();}
     else if(action==="partner-edit"){openEdit(button.dataset.serviceId,button.dataset.partnerId);}
     else if(action==="partner-cancel-edit"){$("partner-edit-section").hidden=true;}
-    else if(action==="partner-copy-code"){copyCode();}
+    else if(action==="partner-copy-code"){copyCode();}\n    else if(action==="partner-copy-ref"){copyValue(button.dataset.url||"");}
     else if(action==="partner-admin-review"){adminAction("application",button.dataset.id,button.dataset.decision);}
     else if(action==="partner-admin-publish"){adminAction("publish",button.dataset.id,"publish");}
     else if(action==="partner-version-review"){adminAction("version",button.dataset.id,button.dataset.decision);}
